@@ -1,0 +1,102 @@
+# Created by elliottcable (elliottcable.name)
+# Licensed as Creative Commons BY-NC-SA 3.0 (creativecommons.org/licenses/by-nc-sa/3.0)
+# -------------------------------------
+# A bash configuration file to set up my prompt. Included by /etc/bashrc at bash launch.
+
+# PS1='\h:\w \u\$ ' #Default
+
+# Colors
+CLEAR='\e[00m'
+N='\n'
+
+BLACK='\e[0;30m'
+RED='\e[0;31m'
+GREEN='\e[0;32m'
+YELLOW='\e[0;33m'
+BLUE='\e[0;34m'
+PURPLE='\e[0;35m'
+CYAN='\e[0;36m'
+WHITE='\e[0;37m'
+
+BLACK_BOLD='\e[1;30m'
+RED_BOLD='\e[1;31m'
+GREEN_BOLD='\e[1;32m'
+YELLOW_BOLD='\e[1;33m'
+BLUE_BOLD='\e[1;34m'
+PURPLE_BOLD='\e[1;35m'
+CYAN_BOLD='\e[1;36m'
+WHITE_BOLD='\e[1;37m'
+
+# Colors, width-count escaped (I think?)
+CLEAR_E='\[\e[00m\]'
+N_E='\[\n\]'
+
+BLACK_E='\[\e[0;30m\]'
+RED_E='\[\e[0;31m\]'
+GREEN_E='\[\e[0;32m\]'
+YELLOW_E='\[\e[0;33m\]'
+BLUE_E='\[\e[0;34m\]'
+PURPLE_E='\[\e[0;35m\]'
+CYAN_E='\[\e[0;36m\]'
+WHITE_E='\[\e[0;37m\]'
+
+BLACK_BOLD_E='\[\e[1;30m\]'
+RED_BOLD_E='\[\e[1;31m\]'
+GREEN_BOLD_E='\[\e[1;32m\]'
+YELLOW_BOLD_E='\[\e[1;33m\]'
+BLUE_BOLD_E='\[\e[1;34m\]'
+PURPLE_BOLD_E='\[\e[1;35m\]'
+CYAN_BOLD_E='\[\e[1;36m\]'
+WHITE_BOLD_E='\[\e[1;37m\]'
+
+case "$COLORIZE_AS" in
+  'red')
+    MY_COLOR=$RED
+    MY_COLOR_BOLD=$RED_BOLD
+    MY_COLOR_E=$RED_E
+    MY_COLOR_BOLD_E=$RED_BOLD_E
+  ;;
+  'yellow')
+    MY_COLOR=$YELLOW
+    MY_COLOR_BOLD=$YELLOW_BOLD
+    MY_COLOR_E=$YELLOW_E
+    MY_COLOR_BOLD_E=$YELLOW_BOLD_E
+  ;;
+  'green')
+    MY_COLOR=$GREEN
+    MY_COLOR_BOLD=$GREEN_BOLD
+    MY_COLOR_E=$GREEN_E
+    MY_COLOR_BOLD_E=$GREEN_BOLD_E
+  ;;
+  'blue')
+    MY_COLOR=$BLUE
+    MY_COLOR_BOLD=$BLUE_BOLD
+    MY_COLOR_E=$BLUE_E
+    MY_COLOR_BOLD_E=$BLUE_BOLD_E
+  ;;
+  'cyan')
+    MY_COLOR=$CYAN
+    MY_COLOR_BOLD=$CYAN_BOLD
+    MY_COLOR_E=$CYAN_E
+    MY_COLOR_BOLD_E=$CYAN_BOLD_E
+  ;;
+  'purple')
+    MY_COLOR=$PURPLE
+    MY_COLOR_BOLD=$PURPLE_BOLD
+    MY_COLOR_E=$PURPLE_E
+    MY_COLOR_BOLD_E=$PURPLE_BOLD_E
+  ;;
+esac
+
+case "$COLORIZE_AS" in
+  'red')
+    SS="$(echo `case $? in 0) echo -e "$GREEN--$CLEAR";; *) echo -e "$RED--$CLEAR";; esac`)"
+    SS_E="$(echo `case $? in 0) echo -e "$GREEN_E--$CLEAR_E";; *) echo -e "$RED_E--$CLEAR_E";; esac`)"
+  ;;
+  *)
+    SS="$(echo `case $? in 0) echo -e "$MY_COLOR--$CLEAR";; *) echo -e "$RED--$CLEAR";; esac`)"
+    SS_E="$(echo `case $? in 0) echo -e "$MY_COLOR_E--$CLEAR_E";; *) echo -e "$RED_E--$CLEAR_E";; esac`)"
+  ;;
+esac
+PS1="\[$WHITE_BOLD[$MY_COLOR\d$WHITE_BOLD - $MY_COLOR\t$WHITE_BOLD] [$MY_COLOR\u$MY_COLOR_BOLD @ $MY_COLOR\h$WHITE_BOLD] [$MY_COLOR\w/$WHITE_BOLD]\]\n$SS_E\[$CLEAR\] "
+export PS1

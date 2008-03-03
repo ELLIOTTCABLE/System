@@ -1,0 +1,33 @@
+# Created by elliottcable (elliottcable.name)
+# Licensed as Creative Commons BY-NC-SA 3.0 (creativecommons.org/licenses/by-nc-sa/3.0)
+# -------------------------------------
+# File to set up screen settings.
+
+# Set the escape sequence to just a single backtick instead of '^a'. FTFW!
+escape ``
+
+# UTF stuff
+setenv LC_CTYPE en_US.UTF-8
+defutf8 on
+
+# Obvious...
+startup_message off
+autodetach on
+vbell on
+shell -bash
+
+# My awesome hardstatus d-:
+hardstatus alwayslastline "%{=b kW}[ %{= B}$USER @ %H %{b W}][%= %{= kw}%?%-Lw%?%{B}(%{W}%n*%f%t%?(%u)%?%{B})%{w}%?%+Lw%?%?%= %{b W}][%{= B} %l %{b W}][%{= B} %d/%m %{B}%c %{b W}]"
+
+# More randomness
+activity "%c activity -> %n%f %t"
+bell "%c bell -> %n%f %t^G"
+vbell_msg " visual bell, bitch "
+
+# # # Open various useful things at startup
+# screen -t irb       0   irb
+# screen -t nzb       2   /opt/local/bin/hellanzb.py
+# screen -t ssh       1   ssh elliottcable.name
+# 
+# # Double-check to force the focus to SSH after boot
+# select 1
