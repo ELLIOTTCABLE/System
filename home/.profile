@@ -118,6 +118,7 @@ alias erails="ruby $ERAILS/railties/bin/rails"
 
 # Merb
 alias mat='merb -a thin'
+alias aok='rake aok'
 
 # Server control
 
