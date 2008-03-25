@@ -1,0 +1,3 @@
+Run before using home/.gitignore:
+
+    $ git config --global core.excludesfile ~/.gitignore
