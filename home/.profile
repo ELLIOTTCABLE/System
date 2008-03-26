@@ -166,6 +166,7 @@ alias glean='g clean'
 alias go='g co'
 alias gin='g ci'
 alias ganch='g branch'
+alias gash='g stash'
 
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
@@ -219,9 +220,13 @@ MANPATH="real men dont need man"
 WOMANPATH="/opt/share/man:/usr/local/share/man:/usr/share/man"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:/System/Software/sbin:$PATH"
-	WOMANPATH="/System/Software/share/man:/opt/local/share/man$PATH"
+	WOMANPATH="/System/Software/share/man:/opt/local/share/man:$WOMANPATH"
 fi
 export PATH
+export WOMANPATH
+MANPATH=$WOMANPATH
+export MANPATH
+
 . ~/.profile_unprintable
 
 export LC_CTYPE=en_US.UTF-8
