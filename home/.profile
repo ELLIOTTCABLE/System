@@ -168,6 +168,8 @@ alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
 
+alias diff='colordiff'
+
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
 fi
