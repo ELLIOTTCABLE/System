@@ -126,7 +126,7 @@ alias aok='rake aok'
 alias edit=$EDITOR
 alias e='edit'
 if [[ $EDITOR =~ 'mate' ]]; then
-  alias et='edit ./*'
+  alias et='edit .'
   alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
 fi
 
@@ -167,6 +167,7 @@ alias go='g co'
 alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
+alias giff='g diff'
 
 alias diff='colordiff'
 
