@@ -14,13 +14,14 @@ task :setup do
   
   Dir['*'].each do |location|
     next unless File.directory? location
+    next if ENV['DIR'] && ENV['DIR'] != location
     
     # Damn the ghey Dir['*']'s ignoring of dotfiles!
     files = Dir.new(location).entries # Get all the files
     files = files.reject { |file| file =~ /\.\.?$/ } # Remove superfluous '.' and '..' entries
     files = files.map { |file| File.join(location, file) } # Finally, create an absolute path from our working directory
     
-    puts "Linking:"
+    puts "Linking in #{location}:"
     files.each do |file|
       next unless File.file? file
       
@@ -42,13 +43,14 @@ task :setup do
           
           if File.exist? toto
             print "+~file already exists! r)emove, or s)kip? "
-            order = gets.chomp
+            order = STDIN.gets.chomp
             
             case order
             when 'r'
               print '   ! Removing... '
               sudo { FileUtils.rm toto }
             when 's'
+              puts '   ! Okay, skipped '
               next
             else
               puts "   ! Invalid entry, so skipping"
