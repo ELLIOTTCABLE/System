@@ -168,6 +168,9 @@ alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
 alias giff='g diff'
+alias giff1='giff' # Diff unstaged and staged
+alias giff2='giff --cached' # Diff staged and last commit
+alias giff2='giff HEAD^ HEAD' # Diff last commit and the previous commit
 
 alias diff='colordiff'
 
@@ -183,7 +186,6 @@ alias dad='d add'
 alias dog='d log'
 alias dicom='d comment'
 alias dow='d show'
-
 
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
