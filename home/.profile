@@ -171,6 +171,20 @@ alias giff='g diff'
 
 alias diff='colordiff'
 
+## ditz
+alias d='ditz'
+alias dido='d todo'
+alias dido-full='d todo-full'
+alias dart='d start'
+alias dose='d close'
+alias dause='g stop' # pause
+alias digup='d drop' # give up
+alias dad='d add'
+alias dog='d log'
+alias dicom='d comment'
+alias dow='d show'
+
+
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
 fi
