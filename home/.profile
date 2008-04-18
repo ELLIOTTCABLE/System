@@ -167,9 +167,15 @@ alias go='g co'
 alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
-alias giff='g diff' # Diff unstaged (against staged)
-alias giffstage='giff --cached' # Diff staged (against last commit)
-alias giffin='giff HEAD^ HEAD' # Diff last gin (against HEAD^)
+alias giff='g diff'
+
+## alternatives, using the 'stage' metaphor
+alias stage='gad'
+alias unstage='germ'
+alias staged='gist'
+alias unstiff='giff' # unstaged diff
+alias stiff='giff --cached' # staged diff
+alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
 alias diff='colordiff'
 
