@@ -126,7 +126,7 @@ alias aok='rake aok'
 alias edit=$EDITOR
 alias e='edit'
 if [[ $EDITOR =~ 'mate' ]]; then
-  alias et='edit ./*'
+  alias et='edit .'
   alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
 fi
 
@@ -167,8 +167,30 @@ alias go='g co'
 alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
+alias giff='g diff'
+
+## alternatives, using the 'stage' metaphor
+alias stage='gad'
+alias unstage='germ'
+alias staged='gist'
+alias unstiff='giff' # unstaged diff
+alias stiff='giff --cached' # staged diff
+alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
 alias diff='colordiff'
+
+## ditz
+alias d='ditz'
+alias dido='d todo'
+alias dido-full='d todo-full'
+alias dart='d start'
+alias dose='d close'
+alias dause='g stop' # pause
+alias digup='d drop' # give up
+alias dad='d add'
+alias dog='d log'
+alias dicom='d comment'
+alias dow='d show'
 
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
