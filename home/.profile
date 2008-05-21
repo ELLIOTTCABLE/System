@@ -217,7 +217,7 @@ set -o ignoreeof
 set -o nounset
 
 #### OVERWRITE ALL THE PATH SHIT GOING ON ####
-PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:/opt/bin:/opt/sbin:/bin:/sbin:/opt/local/lib/postgresql83/bin"
+PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/opt/local/lib/postgresql83/bin"
 MANPATH="real men dont need man"
 WOMANPATH="/opt/share/man:/usr/local/share/man:/usr/share/man"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
