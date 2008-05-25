@@ -171,7 +171,7 @@ alias giff='g diff'
 
 ## alternatives, using the 'stage' metaphor
 alias stage='gad'
-alias unstage='germ'
+alias unstage='germ --cached'
 alias staged='gist'
 alias unstiff='giff' # unstaged diff
 alias stiff='giff --cached' # staged diff
