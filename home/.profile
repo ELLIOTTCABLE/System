@@ -29,10 +29,8 @@ if [ -f ~/.profile_local ]; then
   . ~/.profile_local
 fi
 
-if [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
-  cd ~/Documents/Work/
-elif [[ $SYSTEM =~ $SYSTEM_TIGER ]]; then
-  cd /w
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  cd ~/Code/
 else
   cd ~/
 fi
@@ -239,18 +237,16 @@ set -o ignoreeof
 set -o nounset
 
 #### OVERWRITE ALL THE PATH SHIT GOING ON ####
-PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/opt/local/lib/postgresql83/bin"
-MANPATH="real men dont need man"
-WOMANPATH="/opt/share/man:/usr/local/share/man:/usr/share/man"
+PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/System/Software/bin:/System/Software/sbin:$PATH"
-	WOMANPATH="/System/Software/share/man:/opt/local/share/man:$WOMANPATH"
+  PATH="/System/Software/bin:$PATH"
+	MANPATH="/System/Software/share/man:/opt/local/share/man:$WOMANPATH"
 fi
 export PATH
-export WOMANPATH
-MANPATH=$WOMANPATH
 export MANPATH
 
-. ~/.profile_unprintable
+if [ -f ~/.profile_unprintable ]; then
+  . ~/.profile_unprintable
+fi
 
 export LC_CTYPE=en_US.UTF-8
