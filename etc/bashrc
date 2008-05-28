@@ -5,31 +5,31 @@
 
 # System-wide .bashrc file for interactive bash(1) shells.
 if [ $UID -gt 99 ] && [ "`id -gn`" = "`id -un`" ]; then
-	umask 002
+  umask 002
 else
-	umask 022
+  umask 022
 fi
 
 # are we an interactive shell?
 if [ "$PS1" ]; then
     case $TERM in
-	xterm*)
-		if [ -e /etc/sysconfig/bash-prompt-xterm ]; then
-			PROMPT_COMMAND=/etc/sysconfig/bash-prompt-xterm
-		else
-	    	PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\007"'
-		fi
-		;;
-	screen)
-		if [ -e /etc/sysconfig/bash-prompt-screen ]; then
-			PROMPT_COMMAND=/etc/sysconfig/bash-prompt-screen
-		else
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\033\\"'
-		fi
-		;;
-	*)
-		[ -e /etc/sysconfig/bash-prompt-default ] && PROMPT_COMMAND=/etc/sysconfig/bash-prompt-default
-	    ;;
+  xterm*)
+    if [ -e /etc/sysconfig/bash-prompt-xterm ]; then
+      PROMPT_COMMAND=/etc/sysconfig/bash-prompt-xterm
+    else
+        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\007"'
+    fi
+    ;;
+  screen)
+    if [ -e /etc/sysconfig/bash-prompt-screen ]; then
+      PROMPT_COMMAND=/etc/sysconfig/bash-prompt-screen
+    else
+    PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\033\\"'
+    fi
+    ;;
+  *)
+    [ -e /etc/sysconfig/bash-prompt-default ] && PROMPT_COMMAND=/etc/sysconfig/bash-prompt-default
+      ;;
     esac
     # Turn on checkwinsize
     shopt -s checkwinsize
@@ -37,24 +37,24 @@ if [ "$PS1" ]; then
 fi
 
 if ! shopt -q login_shell ; then # We're not a login shell
-	# Need to redefine pathmunge, it get's undefined at the end of /etc/profile
+  # Need to redefine pathmunge, it get's undefined at the end of /etc/profile
     pathmunge () {
-		if ! echo $PATH | /bin/egrep -q "(^|:)$1($|:)" ; then
-			if [ "$2" = "after" ] ; then
-				PATH=$PATH:$1
-			else
-				PATH=$1:$PATH
-			fi
-		fi
-	}
+    if ! echo $PATH | /usr/bin/egrep -q "(^|:)$1($|:)" ; then
+      if [ "$2" = "after" ] ; then
+        PATH=$PATH:$1
+      else
+        PATH=$1:$PATH
+      fi
+    fi
+  }
 
-	for i in /etc/profile.d/*.sh; do
-		if [ -r "$i" ]; then
-			. $i
-	fi
-	done
-	unset i
-	unset pathmunge
+  for i in /etc/profile.d/*.sh; do
+    if [ -r "$i" ]; then
+      . $i
+  fi
+  done
+  unset i
+  unset pathmunge
 fi
 
 export COLORIZE_AS='red'

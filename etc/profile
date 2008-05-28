@@ -4,35 +4,35 @@
 # Functions and aliases go in /etc/bashrc
 
 pathmunge () {
-	if ! echo $PATH | /bin/egrep -q "(^|:)$1($|:)" ; then
-	   if [ "$2" = "after" ] ; then
-	      PATH=$PATH:$1
-	   else
-	      PATH=$1:$PATH
-	   fi
-	fi
+  if ! echo $PATH | /usr/bin/egrep -q "(^|:)$1($|:)" ; then
+     if [ "$2" = "after" ] ; then
+        PATH=$PATH:$1
+     else
+        PATH=$1:$PATH
+     fi
+  fi
 }
 
 # ksh workaround
 if [ -z "$EUID" -a -x /usr/bin/id ]; then 
-	EUID=`id -u`
-	UID=`id -ru`
+  EUID=`id -u`
+  UID=`id -ru`
 fi
 
 # Path manipulation
 if [ "$EUID" = "0" ]; then
-	pathmunge /sbin
-	pathmunge /usr/sbin
-	pathmunge /usr/local/sbin
+  pathmunge /sbin
+  pathmunge /usr/sbin
+  pathmunge /usr/local/sbin
 fi
 
 # No core files by default
 ulimit -S -c 0 > /dev/null 2>&1
 
 if [ -x /usr/bin/id ]; then
-	USER="`id -un`"
-	LOGNAME=$USER
-	MAIL="/var/spool/mail/$USER"
+  USER="`id -un`"
+  LOGNAME=$USER
+  MAIL="/var/spool/mail/$USER"
 fi
 
 HOSTNAME=`/bin/hostname`
@@ -46,7 +46,7 @@ export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE INPUTRC
 
 for i in /etc/profile.d/*.sh ; do
     if [ -r "$i" ]; then
-    	. $i
+      . $i
     fi
 done
 
@@ -57,9 +57,9 @@ unset i
 unset pathmunge
 
 if [ -x /usr/libexec/path_helper ]; then
-	eval `/usr/libexec/path_helper -s`
+  eval `/usr/libexec/path_helper -s`
 fi
 
 if [ "${BASH-no}" != "no" ]; then
-	[ -r /etc/bashrc ] && . /etc/bashrc
+  [ -r /etc/bashrc ] && . /etc/bashrc
 fi
