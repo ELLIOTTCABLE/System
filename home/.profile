@@ -240,7 +240,7 @@ set -o nounset
 PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:$PATH"
-	MANPATH="/System/Software/share/man:/opt/local/share/man:$WOMANPATH"
+	MANPATH="/System/Software/share/man:/opt/local/share/man:$MANPATH"
 fi
 export PATH
 export MANPATH
