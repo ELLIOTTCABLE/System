@@ -211,6 +211,20 @@ elif [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
   alias gem="MACOSX_DEPLOYMENT_TARGET=10.5 gem"
 fi
 
+# From http://stephencelis.com/archive/2008/6/bashfully-yours-gem-shortcuts
+gemdoc() {
+  local gemdir=`gem env gemdir`
+  open $gemdir/doc/`ls $gemdir/doc/ | grep $1 | sort | tail -1`/rdoc/index.html
+}
+
+_gemdocomplete() {
+  COMPREPLY=($(compgen -W '$(ls `gem env gemdir`/doc)' -- ${COMP_WORDS[COMP_CWORD]}))
+  return 0
+}
+
+complete -o default -o nospace -F _gemdocomplete gemdoc
+
+
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export FIGNORE=DS_Store
 fi
