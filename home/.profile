@@ -214,13 +214,16 @@ fi
 # From http://stephencelis.com/archive/2008/6/bashfully-yours-gem-shortcuts
 gemdoc() {
   local gemdir=`gem env gemdir`
-  open $gemdir/doc/`ls $gemdir/doc/ | grep $1 | sort | tail -1`/rdoc/index.html
+  open $gemdir/doc/`$(which ls) $gemdir/doc/ | grep $1 | sort | tail -1`/rdoc/index.html
 }
 
 _gemdocomplete() {
-  COMPREPLY=($(compgen -W '$(ls `gem env gemdir`/doc)' -- ${COMP_WORDS[COMP_CWORD]}))
+  COMPREPLY=($(compgen -W '$(`which ls` `gem env gemdir`/doc)' -- ${COMP_WORDS[COMP_CWORD]}))
   return 0
 }
+
+# Gem RDoc, grd, grid!
+alias grid="gemdoc"
 
 complete -o default -o nospace -F _gemdocomplete gemdoc
 
