@@ -179,8 +179,8 @@ alias diff='colordiff'
 
 ## ditz
 alias d='ditz'
-alias dido='d todo'
-alias dido-full='d todo-full'
+alias dodo='d todo'
+alias dodo-full='d todo-full'
 alias dart='d start'
 alias dose='d close'
 alias dause='g stop' # pause
