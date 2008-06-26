@@ -1,0 +1,3 @@
+set mainfont {Panic Sans 13}
+set textfont {Panic Sans 13}
+set uifont {Monaco 10}
