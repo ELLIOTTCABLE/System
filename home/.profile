@@ -60,14 +60,14 @@ export LD_LIBRARY_PATH=/usr/local/lib # for pound
 
 # EC2 stuff
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export EC2_HOME=/Users/elliottcable/Documents/Work/EC2
+  export EC2_HOME=/Users/elliottcable/Documents/EC2
   export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home/
 else
   export EC2_HOME=/home/elliottcable/ec2
+  export PATH=$PATH:$EC2_HOME/bin
 fi
-export PATH=$PATH:$EC2_HOME/bin
-export EC2_PRIVATE_KEY=$EC2_HOME/pk-GSQHGRW4ZSJDIFMY7VXOZO7Q5SELY5RL.pem
-export EC2_CERT=$EC2_HOME/cert-GSQHGRW4ZSJDIFMY7VXOZO7Q5SELY5RL.pem
+export EC2_PRIVATE_KEY=$EC2_HOME/pk-K5WKX2BKZQED6RGPH75EX5PNSRLSLAW4.pem
+export EC2_CERT=$EC2_HOME/cert-K5WKX2BKZQED6RGPH75EX5PNSRLSLAW4.pem
 
 alias q='exit'
 alias m='mate'
