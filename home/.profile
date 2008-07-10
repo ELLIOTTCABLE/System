@@ -190,6 +190,10 @@ alias dog='d log'
 alias dicom='d comment'
 alias dow='d show'
 
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
+fi
+
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion
 fi
