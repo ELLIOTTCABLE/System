@@ -168,8 +168,8 @@ alias gash='g stash'
 alias giff='g diff'
 
 ## alternatives, using the 'stage' metaphor
-alias stage='gad'
-alias unstage='germ --cached'
+alias stage='g add'
+alias unstage='g reset'
 alias staged='gist'
 alias unstiff='giff' # unstaged diff
 alias stiff='giff --cached' # staged diff
