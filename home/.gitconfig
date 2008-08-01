@@ -1,0 +1,28 @@
+[user]
+	name = elliottcable
+	email = git@elliottcable.name
+[color]
+	status = auto
+	diff = auto
+	branch = auto
+	interactive = auto
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	staged = diff --cached
+	unstaged = diff
+	both = diff HEAD
+	oneline = log --pretty=oneline
+	amend = commit --amend
+[merge]
+	tool = opendiff
+[format]
+	numbered = auto
+[core]
+	legacyheaders = false
+	excludesfile = /Users/elliottcable/.gitignore
+[repack]
+	usedeltabaseoffset = true
+[branch]
+	autosetupmerge = true
