@@ -16,7 +16,7 @@
 # * hpricot for parsing HTML/XML
 # * what_methods ("hello".what? == 5 #=> ["length", "size"])
 # * stringIO for custom less and more commands
-%w{rubygems wirble irb/completion ostruct open-uri color etc extensions/all hpricot what_methods stringio pp map_by_method}.each { |lib| require lib }
+%w{rubygems wirble ostruct open-uri color etc extensions/all hpricot what_methods stringio map_by_method}.each { |lib| require lib }
 
 unless self.class.const_defined? "IRBRC_HAS_LOADED"
   begin # god knows what all...
