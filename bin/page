@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+/opt/local/bin/highlight --ansi --force "$*" | /opt/local/bin/less -r

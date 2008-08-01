@@ -36,8 +36,10 @@ else
 fi
 
 # fix less
-export PAGER='less'
+# export PAGER='less'
 # export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
+
+export PAGER='page'
 
 export HISTIGNORE=''
 export HISTSIZE=100000
@@ -52,7 +54,6 @@ else
   export EDITOR='vi'
   export VISUAL='vi'
 fi
-export PAGER='less'
 export CLICOLOR='yes'
 export INPUTRC='~/.inputrc'
 export EVENT_NOKQUEUE=1               # for memcached
@@ -258,10 +259,10 @@ set -o ignoreeof
 set -o nounset
 
 #### OVERWRITE ALL THE PATH SHIT GOING ON ####
-PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
+PATH="$HOME/.files/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:$PATH"
-	MANPATH="/System/Software/share/man:/opt/local/share/man:$MANPATH"
+  MANPATH="/System/Software/share/man:/opt/local/share/man:$MANPATH"
 fi
 export PATH
 export MANPATH
