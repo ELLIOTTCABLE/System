@@ -259,6 +259,7 @@ set -o ignoreeof
 set -o nounset
 
 #### OVERWRITE ALL THE PATH SHIT GOING ON ####
+# Make sure to update ~/.MacOSX/environment.plist as well if you edit this
 PATH="$HOME/.files/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:$PATH"
