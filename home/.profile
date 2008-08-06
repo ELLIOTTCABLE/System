@@ -60,15 +60,13 @@ export EVENT_NOKQUEUE=1               # for memcached
 export LD_LIBRARY_PATH=/usr/local/lib # for pound
 
 # EC2 stuff
+export AWS_ACCOUNT_KEY='316177411691'
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export EC2_HOME=/Users/elliottcable/Documents/EC2
   export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home/
-else
-  export EC2_HOME=/home/elliottcable/ec2
-  export PATH=$PATH:$EC2_HOME/bin
 fi
-export EC2_PRIVATE_KEY=$EC2_HOME/pk-K5WKX2BKZQED6RGPH75EX5PNSRLSLAW4.pem
-export EC2_CERT=$EC2_HOME/cert-K5WKX2BKZQED6RGPH75EX5PNSRLSLAW4.pem
+export EC2_HOME=$HOME/.ec2
+export EC2_PRIVATE_KEY=$EC2_HOME/pk-NP5YLIXWYSZYTRFMCTMX7ZN24UEFBFEU.pem
+export EC2_CERT=$EC2_HOME/cert-NP5YLIXWYSZYTRFMCTMX7ZN24UEFBFEU.pem
 
 alias q='exit'
 alias m='mate'
@@ -260,7 +258,7 @@ set -o nounset
 
 #### OVERWRITE ALL THE PATH SHIT GOING ON ####
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit this
-PATH="$HOME/.files/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin"
+PATH="$HOME/.files/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:$PATH"
   MANPATH="/System/Software/share/man:/opt/local/share/man:$MANPATH"
