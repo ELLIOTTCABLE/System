@@ -9,13 +9,6 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-# Haven't got $SYSTEM yet
-if [ `uname` != Darwin ]; then
-  if [ -f /etc/profile ]; then
-    source /etc/profile
-  fi
-fi
-
 export SYSTEM_OSX='Mac OS X'
 export SYSTEM_TIGER='Mac OS X 10.4'
 export SYSTEM_LEOPARD='Mac OS X 10.5'
