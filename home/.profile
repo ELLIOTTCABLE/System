@@ -1,8 +1,8 @@
-# .profile (1.0.2)
-# Created by elliottcable (elliottcable.name)
-# Licensed as Creative Commons BY-NC-SA 3.0 (creativecommons.org/licenses/by-nc-sa/3.0)
-# -------------------------------------
-# The allmighty .profile!
+if test -n "$INITS"; then
+  export INITS="~/.profile:$INITS"
+else
+  export INITS="~/.profile"
+fi
 
 if [[ $- != *i* ]] ; then
   # Shell is non-interactive.  Be done now!

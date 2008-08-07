@@ -1,3 +1,9 @@
+if test -n "$INITS"; then
+  export INITS="/etc/profile:$INITS"
+else
+  export INITS="/etc/profile"
+fi
+
 export PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 export INPUTRC="/etc/inputrc"
 
