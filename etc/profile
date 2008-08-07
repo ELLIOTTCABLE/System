@@ -8,8 +8,16 @@ export COLUMNS LINES
 shopt -s checkwinsize
 
 export COLORIZE_AS='red'
-. /etc/system
 . /etc/prompt
+
+if [ ! -f /etc/system ]; then
+  # No system type! Can't use this bash profile.
+  echo -e "** No /etc/system file! ${RED}Going down NOW.${CLEAR} **"
+  sleep 2
+  exit
+else
+  . /etc/system
+fi
 
 umask 022
 
