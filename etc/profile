@@ -1,65 +1,28 @@
-# /etc/profile
+export PATH="/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+export INPUTRC="/etc/inputrc"
 
-# System wide environment and startup programs, for login setup
-# Functions and aliases go in /etc/bashrc
+export LC_COLLATE="C"
 
-pathmunge () {
-  if ! echo $PATH | /usr/bin/egrep -q "(^|:)$1($|:)" ; then
-     if [ "$2" = "after" ] ; then
-        PATH=$PATH:$1
-     else
-        PATH=$1:$PATH
-     fi
-  fi
-}
+export COLUMNS LINES
 
-# ksh workaround
-if [ -z "$EUID" -a -x /usr/bin/id ]; then 
-  EUID=`id -u`
-  UID=`id -ru`
-fi
+shopt -s checkwinsize
 
-# Path manipulation
-if [ "$EUID" = "0" ]; then
-  pathmunge /sbin
-  pathmunge /usr/sbin
-  pathmunge /usr/local/sbin
-fi
+export COLORIZE_AS='red'
+. /etc/system
+. /etc/prompt
 
-# No core files by default
-ulimit -S -c 0 > /dev/null 2>&1
+umask 022
 
-if [ -x /usr/bin/id ]; then
-  USER="`id -un`"
-  LOGNAME=$USER
-  MAIL="/var/spool/mail/$USER"
-fi
-
-HOSTNAME=`/bin/hostname`
-HISTSIZE=1000
-
-if [ -z "$INPUTRC" -a ! -f "$HOME/.inputrc" ]; then
-    INPUTRC=/etc/inputrc
-fi
-
-export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE INPUTRC
-
-for i in /etc/profile.d/*.sh ; do
-    if [ -r "$i" ]; then
-      . $i
+if [ `ls -A1 /etc/profile.d/ | wc -l` -gt 0 ]; then
+  for profile in /etc/profile.d/*.sh; do
+    if [ -x $profile ]; then
+      . $profile
     fi
-done
-
-pathmunge /opt/local/sbin
-pathmunge /opt/local/bin
-
-unset i
-unset pathmunge
-
-if [ -x /usr/libexec/path_helper ]; then
-  eval `/usr/libexec/path_helper -s`
+  done
+  unset profile
 fi
 
-if [ "${BASH-no}" != "no" ]; then
-  [ -r /etc/bashrc ] && . /etc/bashrc
-fi
+export DISPLAY=:0.0
+export LC_CTYPE=en_US.UTF-8
+
+stty erase ^H

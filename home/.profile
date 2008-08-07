@@ -256,15 +256,12 @@ set -o ignoreeof
 #Treat undefined variables as errors
 set -o nounset
 
-#### OVERWRITE ALL THE PATH SHIT GOING ON ####
-# Make sure to update ~/.MacOSX/environment.plist as well if you edit this
-PATH="$HOME/.files/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11/bin:$EC2_HOME/bin"
+# Make sure to update ~/.MacOSX/environment.plist as well if you edit these
+PATH="$HOME/.files/bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/System/Software/bin:$PATH"
-  MANPATH="/System/Software/share/man:/opt/local/share/man:$MANPATH"
+  PATH="/System/Software/bin:$PATH:/usr/X11/bin"
 fi
 export PATH
-export MANPATH
 
 if [ -f ~/.profile_unprintable ]; then
   . ~/.profile_unprintable
