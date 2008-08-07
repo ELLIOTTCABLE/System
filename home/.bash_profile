@@ -3,3 +3,5 @@ if test -n "$INITS"; then
 else
   export INITS="~/.bash_profile"
 fi
+
+. $HOME/.profile
