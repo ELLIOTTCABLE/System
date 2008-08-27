@@ -26,3 +26,5 @@
 	usedeltabaseoffset = true
 [branch]
 	autosetupmerge = true
+[pager]
+	status = false
