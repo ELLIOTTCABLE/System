@@ -22,6 +22,7 @@
 [core]
 	legacyheaders = false
 	excludesfile = /Users/elliottcable/.gitignore
+	editor = nano
 [repack]
 	usedeltabaseoffset = true
 [branch]
