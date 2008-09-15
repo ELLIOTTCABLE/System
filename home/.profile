@@ -157,7 +157,7 @@ alias go='g co'
 alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
-alias giff='g diff'
+alias giff='g --no-pager diff'
 
 ## alternatives, using the 'stage' metaphor
 alias stage='g add'
