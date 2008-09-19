@@ -1,1 +1,2 @@
-export SYSTEM='Mac OS X 10.5 Leopard'
+export SYSTEM='Unknown'
+export COLORIZE_AS='white'

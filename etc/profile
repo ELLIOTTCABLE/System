@@ -13,8 +13,7 @@ export COLUMNS LINES
 
 shopt -s checkwinsize
 
-export COLORIZE_AS='red'
-. /etc/prompt
+. /etc/colours
 
 if [ ! -f /etc/system ]; then
   # No system type! Can't use this bash profile.
@@ -24,6 +23,8 @@ if [ ! -f /etc/system ]; then
 else
   . /etc/system
 fi
+
+. /etc/prompt
 
 umask 022
 
