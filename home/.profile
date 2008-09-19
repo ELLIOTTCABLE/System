@@ -17,6 +17,7 @@ export SYSTEM_CENTOS='Centos'
 export SYSTEM_CENTOS5='Centos 5'
 export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
+export SYSTEM_ARCH='Arch'
 
 if [ -f ~/.profile_local ]; then
   . ~/.profile_local
