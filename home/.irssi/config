@@ -1,0 +1,931 @@
+servers = (
+  { address = "silc.silcnet.org"; chatnet = "SILC"; port = "706"; },
+  {
+    address = "irc.freenode.net";
+    chatnet = "Freenode";
+    port = "6667";
+    password = "";
+    use_ssl = "no";
+    ssl_verify = "no";
+    family = "inet";
+    autoconnect = "yes";
+  },
+  {
+    address = "irc.mozilla.org";
+    chatnet = "Mozilla";
+    port = "6667";
+    password = "";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  }
+);
+
+chatnets = {
+  SILC = { type = "SILC"; };
+  Freenode = {
+    type = "IRC";
+    nick = "elliottcable";
+    username = "ec";
+    realname = "elliottcable";
+  };
+  Mozilla = {
+    type = "IRC";
+    nick = "elliottcable";
+    username = "ec";
+    realname = "elliottcable";
+  };
+};
+
+channels = (
+  { name = "##Sporks"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#git-blog"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#XTT"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#MacOSX"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Adium"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##TextMate"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#MacPorts"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#MacDev"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#WebKit"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##iPhone"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RubyNoob"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RubyForce"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#OffRails"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby-OSX"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Rspec"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Merb"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#thin"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#HAML"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#YARD"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#StrokeDB"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#io"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##C"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#D"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Git"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#GitHub"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#ArchLinux"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#SVG"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#XML"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#HTML"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Web"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##JavaScript"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#AJAX"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#CSS"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##SexyCSS"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Typophiles"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Regex"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Lighttpd"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#NginX"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Startups"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Freenode"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#irssi"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Math"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Photogeeks"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Electronics"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Arduino"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Robotics"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Unicode"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#FireBug"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#FireFox"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "#JS"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "#FireBug"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "#Chromium"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##BSD"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Alaska"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Cappuccino"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Integrity"; chatnet = "Freenode"; autojoin = "yes"; }
+);
+
+aliases = {
+  J = "join";
+  WJOIN = "join -window";
+  WQUERY = "query -window";
+  LEAVE = "part";
+  BYE = "quit";
+  EXIT = "quit";
+  SIGNOFF = "quit";
+  DESCRIBE = "action";
+  DATE = "time";
+  HOST = "userhost";
+  LAST = "lastlog";
+  SAY = "msg *";
+  WI = "whois";
+  WII = "whois $0 $0";
+  WW = "whowas";
+  W = "who";
+  N = "names";
+  M = "msg";
+  T = "topic";
+  C = "clear";
+  CL = "clear";
+  K = "kick";
+  KB = "kickban";
+  KN = "knockout";
+  BANS = "ban";
+  B = "ban";
+  MUB = "unban *";
+  UB = "unban";
+  IG = "ignore";
+  UNIG = "unignore";
+  SB = "scrollback";
+  UMODE = "mode $N";
+  WC = "window close";
+  WN = "window new hide";
+  SV = "say Irssi $J ($V) - http://irssi.org/";
+  GOTO = "sb goto";
+  CHAT = "dcc chat";
+  RUN = "SCRIPT LOAD";
+  CALC = "exec - if which bc &>/dev/null\\; then echo '$*' | bc | awk '{print \"$*=\"$$1}'\\; else echo bc was not found\\; fi";
+  SBAR = "STATUSBAR";
+  INVITELIST = "mode $C +I";
+  Q = "QUERY";
+  "MANUAL-WINDOWS" = "set use_status_window off;set autocreate_windows off;set autocreate_query_level none;set autoclose_windows off;set reuse_unused_windows on;save";
+  EXEMPTLIST = "mode $C +e";
+  ATAG = "WINDOW SERVER";
+};
+
+statusbar = {
+  # formats:
+  # when using {templates}, the template is shown only if it's argument isn't
+  # empty unless no argument is given. for example {sb} is printed always,
+  # but {sb $T} is printed only if $T isn't empty.
+
+  items = {
+    # start/end text in statusbars
+    barstart = "{sbstart}";
+    barend = "{sbend}";
+
+    topicbarstart = "{topicsbstart}";
+    topicbarend = "{topicsbend}";
+
+    # treated "normally", you could change the time/user name to whatever
+    time = "{sb $Z}";
+    user = "{sb {sbnickmode $cumode}$N{sbmode $usermode}{sbaway $A}}";
+
+    # treated specially .. window is printed with non-empty windows,
+    # window_empty is printed with empty windows
+    window = "{sb $winref:$tag/$itemname{sbmode $M}}";
+    window_empty = "{sb $winref{sbservertag $tag}}";
+    prompt = "{prompt $[.15]itemname}";
+    prompt_empty = "{prompt $winname}";
+    topic = " $topic";
+    topic_empty = " Irssi v$J - http://irssi.org/help/";
+
+    # all of these treated specially, they're only displayed when needed
+    lag = "{sb Lag: $0-}";
+    act = "{sb Act: $0-}";
+    more = "-- more --";
+  };
+
+  # there's two type of statusbars. root statusbars are either at the top
+  # of the screen or at the bottom of the screen. window statusbars are at
+  # the top/bottom of each split window in screen.
+  default = {
+    # the "default statusbar" to be displayed at the bottom of the window.
+    # contains all the normal items.
+    window = {
+      disabled = "no";
+
+      # window, root
+      type = "window";
+      # top, bottom
+      placement = "bottom";
+      # number
+      position = "1";
+      # active, inactive, always
+      visible = "active";
+
+      # list of items in statusbar in the display order
+      items = {
+        barstart = { priority = "100"; };
+        time = { };
+        user = { };
+        window = { };
+        window_empty = { };
+        lag = { priority = "-1"; };
+        more = { priority = "-1"; alignment = "right"; };
+        barend = { priority = "100"; alignment = "right"; };
+        usercount = { };
+      };
+    };
+
+    # statusbar to use in inactive split windows
+    window_inact = {
+      type = "window";
+      placement = "bottom";
+      position = "1";
+      visible = "inactive";
+      items = {
+        barstart = { priority = "100"; };
+        window = { };
+        window_empty = { };
+        more = { priority = "-1"; alignment = "right"; };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+
+    # we treat input line as yet another statusbar :) It's possible to
+    # add other items before or after the input line item.
+    prompt = {
+      type = "root";
+      placement = "bottom";
+      # we want to be at the bottom always
+      position = "100";
+      visible = "always";
+      items = {
+        prompt = { priority = "-1"; };
+        prompt_empty = { priority = "-1"; };
+        # treated specially, this is the real input line.
+        input = { priority = "10"; };
+      };
+    };
+
+    # topicbar
+    topic = {
+      type = "root";
+      placement = "top";
+      position = "1";
+      visible = "always";
+      items = {
+        topicbarstart = { priority = "100"; };
+        topic = { };
+        topic_empty = { };
+        topicbarend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_0 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_0 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_1 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_1 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_2 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_2 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_3 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_3 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_4 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_4 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_5 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_5 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+  };
+};
+settings = {
+  core = {
+    real_name = "elliottcable";
+    user_name = "elliottcable";
+    nick = "elliottcable";
+    timestamp_format = "%H:%M:%S";
+  };
+  "fe-text" = { actlist_sort = "refnum"; };
+  "fe-common/core" = {
+    theme = "fear2";
+    autocreate_own_query = "yes";
+    autocreate_query_level = "MSGS DCCMSGS";
+    use_status_window = "yes";
+    use_msgs_window = "no";
+    autoclose_windows = "no";
+  };
+  "perl/core/scripts" = {
+    awl_display_key = "$Q%K|%n$H$C$S";
+    awl_block = "-14";
+    awl_display_nokey = "$H$C$S";
+  };
+  "irc/core" = { part_message = "〆"; };
+};
+windows = {
+  1 = {
+    immortal = "yes";
+    name = "(status)";
+    level = "CRAP PUBLICS NOTICES SNOTES CTCPS JOINS PARTS QUITS KICKS MODES TOPICS WALLOPS INVITES NICKS DCC CLIENTNOTICES CLIENTCRAP CLIENTERRORS HILIGHTS";
+    sticky = "yes";
+    parent = "38";
+  };
+  2 = { immortal = "yes"; name = "hilight"; sticky = "yes"; };
+  3 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#git-blog";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  4 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#XTT";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  5 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#MacOSX";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  6 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Adium";
+        tag = "Freenode";
+      }
+    );
+  };
+  7 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##TextMate";
+        tag = "Freenode";
+      }
+    );
+  };
+  8 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#MacPorts";
+        tag = "Freenode";
+      }
+    );
+  };
+  9 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#MacDev";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  10 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##iPhone";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  11 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#WebKit";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  12 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Chromium";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  13 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Ruby";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  14 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#RubyNoob";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  15 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#RubyForce";
+        tag = "Freenode";
+      }
+    );
+  };
+  16 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#OffRails";
+        tag = "Freenode";
+      }
+    );
+  };
+  17 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Ruby-OSX";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  18 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Rspec";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  19 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Merb";
+        tag = "Freenode";
+      }
+    );
+  };
+  20 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#thin";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  21 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Halcyon";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  22 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#HAML";
+        tag = "Freenode";
+      }
+    );
+  };
+  23 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#YARD";
+        tag = "Freenode";
+      }
+    );
+  };
+  24 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#StrokeDB";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  25 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#io";
+        tag = "Freenode";
+      }
+    );
+  };
+  26 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##C";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  27 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#D";
+        tag = "Freenode";
+      }
+    );
+  };
+  28 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Git";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  29 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#GitHub";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  30 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##BSD";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  31 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#ArchLinux";
+        tag = "Freenode";
+      }
+    );
+  };
+  32 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Unicode";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  33 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#XML";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  34 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#HTML";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  35 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Web";
+        tag = "Freenode";
+      }
+    );
+  };
+  36 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##JavaScript";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  37 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#AJAX";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  38 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Cappuccino";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+  };
+  39 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#SVG";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  40 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#CSS";
+        tag = "Freenode";
+      }
+    );
+  };
+  41 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##SexyCSS";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  42 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##Typophiles";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  43 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Regex";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  44 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Lighttpd";
+        tag = "Freenode";
+      }
+    );
+  };
+  45 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#NginX";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  46 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Startups";
+        tag = "Freenode";
+      }
+    );
+  };
+  47 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#HellaNZB";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  48 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##overflow";
+        tag = "Freenode";
+      }
+    );
+  };
+  49 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#irssi";
+        tag = "Freenode";
+      }
+    );
+  };
+  50 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Math";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  51 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Photogeeks";
+        tag = "Freenode";
+      }
+    );
+  };
+  52 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "##Electronics";
+        tag = "Freenode";
+      }
+    );
+  };
+  53 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Arduino";
+        tag = "Freenode";
+      }
+    );
+  };
+  54 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Robotics";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  55 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Microformats";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "38";
+  };
+  56 = {
+    items = (
+      {
+        type = "CHANNEL"
