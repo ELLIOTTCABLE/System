@@ -79,9 +79,9 @@ fi
 
 # Setup directory listing
 if [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
-  alias ls='ls --color=always -lAFh'
+  alias ls='ls --color=always -alAGhp'
 else
-  alias ls='ls -lAFh'
+  alias ls='ls -alAGhp'
 fi
 alias cdd='cd - '                     # goto last dir cd'ed from
 
