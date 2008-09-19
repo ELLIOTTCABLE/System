@@ -250,7 +250,7 @@ set -o ignoreeof
 set -o nounset
 
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
-PATH="$HOME/.files/bin:$PATH:$EC2_HOME/bin"
+PATH="/etc/dotfiles/bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:$PATH:/usr/X11/bin"
 fi

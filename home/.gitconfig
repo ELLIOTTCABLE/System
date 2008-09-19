@@ -21,7 +21,7 @@
 	numbered = auto
 [core]
 	legacyheaders = false
-	excludesfile = /Users/elliottcable/.gitignore
+	excludesfile = /etc/dotfiles/etc/.gitignore
 	editor = nano
 [repack]
 	usedeltabaseoffset = true
