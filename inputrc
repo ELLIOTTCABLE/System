@@ -45,4 +45,3 @@ $endif
 # "yp":yank-pop
 # "G":end-of-history
 # "gg":beginning-of-history
-$include /etc/inputrc
