@@ -4,9 +4,6 @@ task :default => :setup
 
 desc 'Installs dotfiles from this distribution for the first time'
 task :setup do
-  
-  # `sudo stfu`
-  raise "Please re-run as root!" unless Process.uid == 0
     
   files = Dir['*'] # Get all the files
   files = files.reject {|f| f =~ /^(Rakefile|README)/i}
