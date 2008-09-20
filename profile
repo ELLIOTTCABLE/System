@@ -3,7 +3,7 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-. ./.colours
+. $HOME/.colours
 
 if [ ! -f $HOME/.system ]; then
   # No system type! Can't use this bash profile.
@@ -12,10 +12,10 @@ if [ ! -f $HOME/.system ]; then
   export SYSTEM='unknown'
   export COLORIZE_AS='white'
 else
-  . ./.system
+  . $HOME/.system
 fi
 
-. ./.prompt
+. $HOME/.prompt
 
 export SYSTEM_OSX='Mac OS X'
 export SYSTEM_TIGER='Mac OS X 10.4'
@@ -27,14 +27,14 @@ export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
 export SYSTEM_ARCH='Arch'
 
-if [ -f ~/.profile_local ]; then
-  . ~/.profile_local
+if [ -f $HOME/.profile_local ]; then
+  . $HOME/.profile_local
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  cd ~/Code/
+  cd $HOME/Code/
 else
-  cd ~/
+  cd $HOME/
 fi
 
 # fix less
@@ -200,11 +200,11 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Cache, and complete, Cheats
-if [ ! -r ~/.cheats ]; then
+if [ ! -r $HOME/.cheats ]; then
         echo "Rebuilding Cheat cache... "
-        cheat sheets | egrep '^ ' | awk {'print $1'} > ~/.cheats
+        cheat sheets | egrep '^ ' | awk {'print $1'} > $HOME/.cheats
 fi
-complete -W "$(cat ~/.cheats)" cheat
+complete -W "$(cat $HOME/.cheats)" cheat
 
 if [ -f /usr/local/bin/rake_completion ]; then
   complete -C /usr/local/bin/rake_completion -o default rake
@@ -265,8 +265,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 export PATH
 
-if [ -f ~/.profile_unprintable ]; then
-  . ~/.profile_unprintable
+if [ -f $HOME/.profile_unprintable ]; then
+  . $HOME/.profile_unprintable
 fi
 
 export DISPLAY=:0.0
