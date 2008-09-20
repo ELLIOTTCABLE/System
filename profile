@@ -3,11 +3,9 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-. $HOME/.colours
-
 if [ ! -f $HOME/.system ]; then
   # No system type! Can't use this bash profile.
-  echo -e "** No ~/.system file! Assuming ${RED}unknown${CLEAR} **"
+  echo -e "** No ~/.system file! Assuming unknown **"
   sleep 2
   export SYSTEM='unknown'
   export COLORIZE_AS='white'
@@ -15,6 +13,7 @@ else
   . $HOME/.system
 fi
 
+. $HOME/.colours
 . $HOME/.prompt
 
 export SYSTEM_OSX='Mac OS X'
@@ -261,7 +260,7 @@ set -o nounset
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
 PATH="/etc/dotfiles/bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/System/Software/bin:$PATH:/usr/X11/bin"
+  PATH="/System/Software/bin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin"
 fi
 export PATH
 
