@@ -86,7 +86,7 @@ fi
 
 # Setup directory listing
 if [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
-  alias ls='ls --color=always -alAGhp'
+  alias ls='ls --color=always -alAFhp'
 else
   alias ls='ls -alAGhp'
 fi
