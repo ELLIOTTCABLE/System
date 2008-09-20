@@ -5,7 +5,7 @@ fi
 
 . ./.colours
 
-if [ ! -f /etc/system ]; then
+if [ ! -f $HOME/.system ]; then
   # No system type! Can't use this bash profile.
   echo -e "** No ~/.system file! Assuming ${RED}unknown${CLEAR} **"
   sleep 2
