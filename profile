@@ -260,7 +260,7 @@ set -o nounset
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
 PATH="/etc/dotfiles/bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/System/Software/bin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin"
+  PATH="/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin"
 fi
 export PATH
 
