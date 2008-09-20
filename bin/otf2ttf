@@ -1,2 +1,0 @@
-#!/bin/bash
-fontforge -script ~/.files/bin/script-otf2ttf.sh $1

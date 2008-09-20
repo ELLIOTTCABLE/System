@@ -1,5 +1,0 @@
-if test -n "$INITS"; then
-  export INITS="/etc/bash_profile:$INITS"
-else
-  export INITS="/etc/bash_profile"
-fi

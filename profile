@@ -1,13 +1,21 @@
-if test -n "$INITS"; then
-  export INITS="~/.profile:$INITS"
-else
-  export INITS="~/.profile"
-fi
-
 if [[ $- != *i* ]] ; then
   # Shell is non-interactive.  Be done now!
   return
 fi
+
+. ./.colours
+
+if [ ! -f /etc/system ]; then
+  # No system type! Can't use this bash profile.
+  echo -e "** No ~/.system file! Assuming ${RED}unknown${CLEAR} **"
+  sleep 2
+  export SYSTEM='unknown'
+  export COLORIZE_AS='white'
+else
+  . ./.system
+fi
+
+. ./.prompt
 
 export SYSTEM_OSX='Mac OS X'
 export SYSTEM_TIGER='Mac OS X 10.4'
@@ -261,4 +269,8 @@ if [ -f ~/.profile_unprintable ]; then
   . ~/.profile_unprintable
 fi
 
+export DISPLAY=:0.0
 export LC_CTYPE=en_US.UTF-8
+
+# putting this last, so I can: echo 'stty erase "⌃v⌃H"' 1>>./profile
+stty erase ""
