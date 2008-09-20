@@ -35,7 +35,7 @@ task :setup do
           case order
           when 'r'
             print '   ! Removing... '
-            sudo { FileUtils.rm toto }
+            FileUtils.rm toto
           when 's'
             puts '   ! Okay, skipped '
             next
@@ -45,11 +45,11 @@ task :setup do
           end
         end
       
-        sudo { FileUtils.mv to, toto }
+        FileUtils.mv to, toto
         puts "Done!"
       end
     end
     
-    # sudo { FileUtils.symlink(from, to) }
+    FileUtils.symlink(from, to)
   end
 end
