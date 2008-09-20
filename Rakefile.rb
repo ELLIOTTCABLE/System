@@ -1,9 +1,13 @@
+require 'fileutils'
+
+task :default => :setup
+
 desc 'Installs dotfiles from this distribution for the first time'
 task :setup do
-  require 'fileutils'
   
   def sudo &block
-    raise "error - try running as root" unless yield
+    raise "Please re-run as root!" unless %x[whoami] == 'root'
+    yield
   end
   
   # Map special locations
