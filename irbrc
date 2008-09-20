@@ -1,9 +1,3 @@
-# ~/.irbrc (1.0)
-# Created by elliottcable (elliottcable.name)
-# Licensed as Creative Commons BY-NC-SA 3.0 (creativecommons.org/licenses/by-nc-sa/3.0)
-# -------------------------------------
-# What could one do without an .irbrc file? (-:
-
 # Load various things...
 # * rubygems for some of the following
 # * wirble for IRB tools
