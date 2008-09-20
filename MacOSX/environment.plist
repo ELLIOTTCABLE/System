@@ -1,1 +1,1 @@
-{ PATH = "/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"; }
+{ PATH = "/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"; LC_CTYPE = "en_US.UTF-8"; }
