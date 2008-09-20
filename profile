@@ -26,8 +26,8 @@ export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
 export SYSTEM_ARCH='Arch'
 
-if [ -f $HOME/.profile_local ]; then
-  . $HOME/.profile_local
+if [ -f $HOME/.profile.local ]; then
+  . $HOME/.profile.local
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
