@@ -265,12 +265,9 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 export PATH
 
-if [ -f $HOME/.profile_unprintable ]; then
-  . $HOME/.profile_unprintable
+if [ -f $HOME/.profile.unprintable ]; then
+  . $HOME/.profile.unprintable
 fi
 
 export DISPLAY=:0.0
 export LC_CTYPE=en_US.UTF-8
-
-# putting this last, so I can: echo 'stty erase "⌃v⌃H"' 1>>./profile
-stty erase ""
