@@ -12,7 +12,7 @@ vbell on
 shell -bash
 
 # My awesome hardstatus d-:
-hardstatus alwayslastline "%{=b kW}[ %{= B}$USER @ %H %{b W}][%= %{= kw}%?%-Lw%?%{B}(%{W}%n*%f%t%?(%u)%?%{B})%{w}%?%+Lw%?%?%= %{b W}][%{= B} %l %{b W}][%{= B} %d/%m %{B}%c %{b W}]"
+hardstatus alwayslastline "%{=b kW}[ $USER @ %H %{b W}][%= %{= kw}%?%-Lw%?(%{W}%n*%f%t%?(%u)%?)%{w}%?%+Lw%?%?%= %{b W}][ %l %{b W}][ %d/%m %c %{b W}]"
 
 # More randomness
 activity "%c activity -> %n%f %t"
@@ -26,3 +26,4 @@ vbell_msg " visual bell, bitch "
 # 
 # # Double-check to force the focus to SSH after boot
 # select 1
+source $HOME/.screenrc.local
