@@ -23,6 +23,7 @@
 	legacyheaders = false
 	excludesfile = /etc/dotfiles/etc/.gitignore
 	editor = nano
+	whitespace = -trailing-space
 [repack]
 	usedeltabaseoffset = true
 [branch]
