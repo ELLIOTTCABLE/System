@@ -21,7 +21,7 @@
 	numbered = auto
 [core]
 	legacyheaders = false
-	excludesfile = /etc/dotfiles/etc/.gitignore
+	excludesfile = ~/.gitignore
 	editor = nano
 	whitespace = -trailing-space
 [repack]
