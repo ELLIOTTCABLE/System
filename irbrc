@@ -98,8 +98,9 @@ unless self.class.const_defined? "IRBRC_HAS_LOADED"
 
     if IRB and IRB.conf[:PROMPT]
       # :XMP
-      IRB.conf[:PROMPT][:XMP][:RETURN] = "\# => %s\n"
+      IRB.conf[:PROMPT][:XMP][:RETURN] = "\010\# => %s\n"
       IRB.conf[:PROMPT][:XMP][:PROMPT_I] = ""
+      IRB.conf[:PROMPT][:XMP][:AUTO_INDENT] = true
       
       # :SD
       IRB.conf[:PROMPT][:SD] = {
