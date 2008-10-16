@@ -1,6 +1,6 @@
 # Load various things...
 # * rubygems for some of the following
-# * utility_belt (and thus wirble) for IRB tools
+# * utility_belt (and wirble) for IRB tools
 # * ostruct for OpenStruct.new
 # * open-uri (because sometimes rfuzz suxx)
 # * color (gem, not default library! see http://rubyforge.org/projects/color/)
@@ -10,7 +10,7 @@
 # * hpricot for parsing HTML/XML
 # * what_methods ("hello".what? == 5 #=> ["length", "size"])
 # * stringIO for custom less and more commands
-%w{rubygems utility_belt ostruct open-uri color etc extensions/all hpricot what_methods stringio map_by_method}.each { |lib| require lib }
+%w{rubygems wirble utility_belt ostruct open-uri color etc hpricot what_methods stringio map_by_method}.each { |lib| require lib }
 
 unless self.class.const_defined? "IRBRC_HAS_LOADED"
   begin # god knows what all...
