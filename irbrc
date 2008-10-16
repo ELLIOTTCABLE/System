@@ -198,3 +198,5 @@ unless self.class.const_defined? "IRBRC_HAS_LOADED"
   ARGV.concat [ "--readline", "--prompt-mode", "simple" ]
   IRBRC_HAS_LOADED = true
 end
+
+puts '# IRB loaded…' if IRBRC_HAS_LOADED
