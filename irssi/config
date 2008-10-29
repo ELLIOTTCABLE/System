@@ -78,7 +78,9 @@ channels = (
   { name = "#Integrity"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Ruby-Lang"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MPlayer"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#GNU"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#GNU"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby-Pro"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Fauna"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -280,6 +282,13 @@ statusbar = {
         barend = { priority = "100"; alignment = "right"; };
       };
     };
+    awl_6 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_6 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
   };
 };
 settings = {
@@ -297,6 +306,8 @@ settings = {
     use_status_window = "yes";
     use_msgs_window = "no";
     autoclose_windows = "no";
+    autolog = "yes";
+    autolog_path = "~/.irssi/logs/$tag/$0.log";
   };
   "perl/core/scripts" = {
     awl_display_key = "$Q%K|%n$H$C$S";
@@ -311,7 +322,7 @@ windows = {
     name = "(status)";
     level = "CRAP PUBLICS NOTICES SNOTES CTCPS JOINS PARTS QUITS KICKS MODES TOPICS WALLOPS INVITES NICKS DCC CLIENTNOTICES CLIENTCRAP CLIENTERRORS HILIGHTS";
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   2 = { immortal = "yes"; name = "hilight"; sticky = "yes"; };
   3 = {
@@ -324,7 +335,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   4 = {
     items = (
@@ -336,7 +347,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   5 = {
     items = (
@@ -348,7 +359,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   6 = {
     items = (
@@ -379,6 +390,8 @@ windows = {
         tag = "Freenode";
       }
     );
+    sticky = "yes";
+    parent = "2";
   };
   9 = {
     items = (
@@ -390,7 +403,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   10 = {
     items = (
@@ -402,7 +415,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   11 = {
     items = (
@@ -414,7 +427,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   12 = {
     items = (
@@ -426,7 +439,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   13 = {
     items = (
@@ -443,36 +456,13 @@ windows = {
       {
         type = "CHANNEL";
         chat_type = "IRC";
-        name = "#Mplayer";
-        tag = "Freenode";
-      }
-    );
-    sticky = "yes";
-    parent = "52";
-  };
-  15 = {
-    items = (
-      {
-        type = "CHANNEL";
-        chat_type = "IRC";
         name = "#irssi";
         tag = "Freenode";
       }
     );
   };
+  15 = { sticky = "yes"; parent = "50"; };
   16 = {
-    items = (
-      {
-        type = "CHANNEL";
-        chat_type = "IRC";
-        name = "#Ruby-Lang";
-        tag = "Freenode";
-      }
-    );
-    sticky = "yes";
-    parent = "52";
-  };
-  17 = {
     items = (
       {
         type = "CHANNEL";
@@ -482,9 +472,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  18 = {
+  17 = {
     items = (
       {
         type = "CHANNEL";
@@ -494,9 +484,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  19 = {
+  18 = {
     items = (
       {
         type = "CHANNEL";
@@ -505,6 +495,18 @@ windows = {
         tag = "Freenode";
       }
     );
+  };
+  19 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Fauna";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "50";
   };
   20 = {
     items = (
@@ -526,7 +528,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   22 = {
     items = (
@@ -538,7 +540,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   23 = {
     items = (
@@ -560,7 +562,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   25 = {
     items = (
@@ -592,7 +594,7 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
   28 = {
     items = (
@@ -609,24 +611,14 @@ windows = {
       {
         type = "CHANNEL";
         chat_type = "IRC";
-        name = "#io";
-        tag = "Freenode";
-      }
-    );
-  };
-  30 = {
-    items = (
-      {
-        type = "CHANNEL";
-        chat_type = "IRC";
         name = "##C";
         tag = "Freenode";
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  31 = {
+  30 = {
     items = (
       {
         type = "CHANNEL";
@@ -636,19 +628,7 @@ windows = {
       }
     );
   };
-  32 = {
-    items = (
-      {
-        type = "CHANNEL";
-        chat_type = "IRC";
-        name = "#Git";
-        tag = "Freenode";
-      }
-    );
-    sticky = "yes";
-    parent = "52";
-  };
-  33 = {
+  31 = {
     items = (
       {
         type = "CHANNEL";
@@ -658,9 +638,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  34 = {
+  32 = {
     items = (
       {
         type = "CHANNEL";
@@ -670,9 +650,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  35 = {
+  33 = {
     items = (
       {
         type = "CHANNEL";
@@ -681,8 +661,10 @@ windows = {
         tag = "Freenode";
       }
     );
+    sticky = "yes";
+    parent = "50";
   };
-  36 = {
+  34 = {
     items = (
       {
         type = "CHANNEL";
@@ -692,9 +674,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  37 = {
+  35 = {
     items = (
       {
         type = "CHANNEL";
@@ -704,9 +686,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  38 = {
+  36 = {
     items = (
       {
         type = "CHANNEL";
@@ -716,9 +698,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  39 = {
+  37 = {
     items = (
       {
         type = "CHANNEL";
@@ -728,7 +710,7 @@ windows = {
       }
     );
   };
-  40 = {
+  38 = {
     items = (
       {
         type = "CHANNEL";
@@ -738,9 +720,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  41 = {
+  39 = {
     items = (
       {
         type = "CHANNEL";
@@ -750,9 +732,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  42 = {
+  40 = {
     items = (
       {
         type = "CHANNEL";
@@ -762,9 +744,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  43 = {
+  41 = {
     items = (
       {
         type = "CHANNEL";
@@ -774,9 +756,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  44 = {
+  42 = {
     items = (
       {
         type = "CHANNEL";
@@ -786,7 +768,7 @@ windows = {
       }
     );
   };
-  45 = {
+  43 = {
     items = (
       {
         type = "CHANNEL";
@@ -796,9 +778,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  46 = {
+  44 = {
     items = (
       {
         type = "CHANNEL";
@@ -808,9 +790,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  47 = {
+  45 = {
     items = (
       {
         type = "CHANNEL";
@@ -820,9 +802,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  48 = {
+  46 = {
     items = (
       {
         type = "CHANNEL";
@@ -832,7 +814,7 @@ windows = {
       }
     );
   };
-  49 = {
+  47 = {
     items = (
       {
         type = "CHANNEL";
@@ -842,9 +824,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  50 = {
+  48 = {
     items = (
       {
         type = "CHANNEL";
@@ -854,7 +836,7 @@ windows = {
       }
     );
   };
-  51 = {
+  49 = {
     items = (
       {
         type = "CHANNEL";
@@ -864,9 +846,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  52 = {
+  50 = {
     items = (
       {
         type = "CHANNEL";
@@ -877,7 +859,7 @@ windows = {
     );
     sticky = "yes";
   };
-  53 = {
+  51 = {
     items = (
       {
         type = "CHANNEL";
@@ -887,7 +869,7 @@ windows = {
       }
     );
   };
-  54 = {
+  52 = {
     items = (
       {
         type = "CHANNEL";
@@ -897,7 +879,7 @@ windows = {
       }
     );
   };
-  55 = {
+  53 = {
     items = (
       {
         type = "CHANNEL";
@@ -907,9 +889,9 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
   };
-  56 = {
+  54 = {
     items = (
       {
         type = "CHANNEL";
@@ -919,7 +901,7 @@ windows = {
       }
     );
   };
-  57 = {
+  55 = {
     items = (
       {
         type = "CHANNEL";
@@ -929,7 +911,7 @@ windows = {
       }
     );
   };
-  58 = {
+  56 = {
     items = (
       {
         type = "CHANNEL";
@@ -939,10 +921,55 @@ windows = {
       }
     );
     sticky = "yes";
-    parent = "52";
+    parent = "50";
+  };
+  57 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Git";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "50";
+  };
+  58 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#MPlayer";
+        tag = "Freenode";
+      }
+    );
+    sticky = "yes";
+    parent = "50";
+  };
+  59 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#io";
+        tag = "Freenode";
+      }
+    );
+  };
+  60 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#Ruby-Pro";
+        tag = "Freenode";
+      }
+    );
   };
 };
 mainwindows = {
-  52 = { first_line = "8"; lines = "24"; };
+  50 = { first_line = "8"; lines = "24"; };
   2 = { first_line = "1"; lines = "7"; };
 };
+ignores = ( { mask = "jibot"; level = "ALL"; } );
