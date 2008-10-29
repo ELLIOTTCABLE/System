@@ -21,7 +21,7 @@
 	numbered = auto
 [core]
 	legacyheaders = false
-	excludesfile = $HOME/.gitignore
+	excludesfile = ~/.gitignore
 	editor = nano
 	whitespace = -trailing-space
 [repack]
