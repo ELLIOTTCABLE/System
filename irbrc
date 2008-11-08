@@ -200,4 +200,4 @@ unless self.class.const_defined? "IRBRC_HAS_LOADED"
   IRBRC_HAS_LOADED = true
 end
 
-puts '# IRB loaded…' if IRBRC_HAS_LOADED
+puts '# IRB loaded...' if IRBRC_HAS_LOADED
