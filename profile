@@ -103,6 +103,7 @@ alias surd='screen -aAURD'
 # Ruby
 # alias irb='irb --readline -r irb/completion'
 alias ri='ri -Tf ansi'
+alias shoes='/Applications/Shoes.app/Contents/MacOS/shoes'
 
 # Rails
 alias sc='./script/console'
