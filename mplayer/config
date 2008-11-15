@@ -1,3 +1,6 @@
+alang="en"
+slang="en"
+
 cache=8192 # 8 MB
 
 # This is all necessary to open the video on the TV, centered, in fullscreen.
@@ -15,24 +18,21 @@ vf="expand=0:-400:0:0"
 # framedrop=1
 
 # This should reduce the sync-wandering defined above.
-mc=100
 # autosync=30
+mc=100
 
-# This is only relevant if you've built mplayer against the multithreaded
-# ffmpeg branch.
-lavdopts="fast:threads=4:skiploopfilter=all"
-
-alang="en"
-
-# This should help with subtitles
+# This should help get subtitles 'right'
 sub-fuzziness=1
 utf8=yes
 unicode=yes
-subfont-encoding=unicode
-embeddedfonts=yes
 font='Bitstream Vera Sans'
 subpos=100
 subalign=2
-subfont-autoscale=2
-subfont-blur=2.0
-subfont-text-scale=4.4
+
+[lavdopts]
+  fast=1
+  skiploopfilter="all"
+
+  # This is only relevant if you've built mplayer against the multithreaded
+  # ffmpeg branch.
+  threads=4
