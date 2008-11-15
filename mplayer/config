@@ -15,7 +15,7 @@ vf="expand=0:-400:0:0"
 
 # This is to prevent 'wandering' of the audio/video sync; I'd prefer to see
 # skipping than having to get up every 5 minutes to re-sync the audio/video
-# framedrop=1
+framedrop=1
 
 # This should reduce the sync-wandering defined above.
 # autosync=30
