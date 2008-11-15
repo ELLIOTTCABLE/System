@@ -8,7 +8,7 @@ if [ ! -f $HOME/.system ]; then
   echo -e "** No ~/.system file! Assuming unknown **"
   sleep 2
   export SYSTEM='unknown'
-  export COLORIZE_AS='white'
+  export COLOURIZE_AS='white'
 else
   . $HOME/.system
 fi
