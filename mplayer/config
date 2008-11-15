@@ -35,4 +35,4 @@ subalign=2
 
   # This is only relevant if you've built mplayer against the multithreaded
   # ffmpeg branch.
-  threads=4
+  threads=12
