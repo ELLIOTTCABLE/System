@@ -20,7 +20,7 @@ CYAN_BOLD='\e[1;36m'
 WHITE_BOLD='\e[1;37m'
 
 # Width-count escaped (I think?)
-CLEAR_E='\[\e[00m\]'
+CLEAR_COLOUR_E='\[\e[00m\]'
 N_E='\[\n\]'
 
 BLACK_E='\[\e[0;30m\]'
