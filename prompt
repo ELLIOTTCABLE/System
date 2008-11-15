@@ -2,14 +2,14 @@
 
 case "$COLORIZE_AS" in
   'red')
-    SS="$(echo `case $? in 0) echo -e "$GREEN--$CLEAR";; *) echo -e "$RED--$CLEAR";; esac`)"
-    SS_E="$(echo `case $? in 0) echo -e "$GREEN_E--$CLEAR_E";; *) echo -e "$RED_E--$CLEAR_E";; esac`)"
+    SS="$(echo `case $? in 0) echo -e "$GREEN--$CLEAR_COLOUR";; *) echo -e "$RED--$CLEAR_COLOUR";; esac`)"
+    SS_E="$(echo `case $? in 0) echo -e "$GREEN_E--$CLEAR_COLOUR_E";; *) echo -e "$RED_E--$CLEAR_COLOUR_E";; esac`)"
   ;;
   *)
-    SS="$(echo `case $? in 0) echo -e "$SYSTEM_COLOR--$CLEAR";; *) echo -e "$RED--$CLEAR";; esac`)"
-    SS_E="$(echo `case $? in 0) echo -e "$SYSTEM_COLOR_E--$CLEAR_E";; *) echo -e "$RED_E--$CLEAR_E";; esac`)"
+    SS="$(echo `case $? in 0) echo -e "$SYSTEM_COLOR--$CLEAR_COLOUR";; *) echo -e "$RED--$CLEAR_COLOUR";; esac`)"
+    SS_E="$(echo `case $? in 0) echo -e "$SYSTEM_COLOR_E--$CLEAR_COLOUR_E";; *) echo -e "$RED_E--$CLEAR_COLOUR_E";; esac`)"
   ;;
 esac
 
-PS1="\[$WHITE_BOLD[$SYSTEM_COLOR\d$WHITE_BOLD - $SYSTEM_COLOR\t$WHITE_BOLD] [$SYSTEM_COLOR\u$SYSTEM_COLOR_BOLD @ $SYSTEM_COLOR\h$WHITE_BOLD] [$SYSTEM_COLOR\w/$WHITE_BOLD]\]\n$SS_E\[$CLEAR\] "
+PS1="\[$WHITE_BOLD[$SYSTEM_COLOR\d$WHITE_BOLD - $SYSTEM_COLOR\t$WHITE_BOLD] [$SYSTEM_COLOR\u$SYSTEM_COLOR_BOLD @ $SYSTEM_COLOR\h$WHITE_BOLD] [$SYSTEM_COLOR\w/$WHITE_BOLD]\]\n$SS_E\[$CLEAR_COLOUR\] "
 export PS1

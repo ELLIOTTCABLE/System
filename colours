@@ -1,4 +1,4 @@
-CLEAR='\e[00m'
+CLEAR_COLOUR='\e[00m'
 N='\n'
 
 BLACK='\e[0;30m'
