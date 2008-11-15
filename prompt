@@ -1,6 +1,17 @@
 # PS1='\h:\w \u\$ ' #Default
 
 case "$COLORIZE_AS" in
+  "purple")
+    ALERT_COLOUR=$GREEN
+    ALERT_COLOUR_BOLD=$GREEN_BOLD
+  ;;
+  *)
+    ALERT_COLOUR=$PURPLE
+    ALERT_COLOUR_BOLD=$PURPLE_BOLD
+  ;;
+esac
+
+case "$COLORIZE_AS" in
   'red')
     SS="$(echo `case $? in 0) echo -e "$GREEN--$CLEAR_COLOUR";; *) echo -e "$RED--$CLEAR_COLOUR";; esac`)"
     SS_E="$(echo `case $? in 0) echo -e "$GREEN_E--$CLEAR_COLOUR_E";; *) echo -e "$RED_E--$CLEAR_COLOUR_E";; esac`)"
@@ -11,5 +22,30 @@ case "$COLORIZE_AS" in
   ;;
 esac
 
-PS1="\[$WHITE_BOLD[$SYSTEM_COLOR\d$WHITE_BOLD - $SYSTEM_COLOR\t$WHITE_BOLD] [$SYSTEM_COLOR\u$SYSTEM_COLOR_BOLD @ $SYSTEM_COLOR\h$WHITE_BOLD] [$SYSTEM_COLOR\w/$WHITE_BOLD]\]\n$SS_E\[$CLEAR_COLOUR\] "
-export PS1
+export SS
+export SS_E
+
+PROMPT_COMMAND='
+OLD_STATUS=$?
+
+git status &> /dev/null
+if [[ $? == 1 ]]; then
+  branch=$(/opt/local/bin/git-name-rev --always --no-undefined HEAD | sed -e "s/^HEAD //")
+  tag=$(/opt/local/bin/git-name-rev --tags --always --no-undefined HEAD | sed -e "s/^HEAD //")
+  
+  if [[ $branch == "master" ]]; then
+    GIT_BRANCH_PROMPT="$SYSTEM_COLOR${branch}$CLEAR_COLOUR"
+  else
+    GIT_BRANCH_PROMPT="$ALERT_COLOUR${branch}$CLEAR_COLOUR"
+  fi
+  
+  GIT_PROMPT=" [$GIT_BRANCH_PROMPT$WHITE_BOLD @ $SYSTEM_COLOR${tag}$WHITE_BOLD]"
+else
+  GIT_PROMPT=""
+fi
+
+( exit $OLD_STATUS )
+
+PS1="\[$WHITE_BOLD[$SYSTEM_COLOR\d$WHITE_BOLD - $SYSTEM_COLOR\t$WHITE_BOLD] [$SYSTEM_COLOR\u$SYSTEM_COLOR_BOLD @ $SYSTEM_COLOR\h$WHITE_BOLD] [$SYSTEM_COLOR\w/$WHITE_BOLD]$GIT_PROMPT\]\n$SS_E\[$CLEAR_COLOUR\] "
+'
+export PROMPT_COMMAND
