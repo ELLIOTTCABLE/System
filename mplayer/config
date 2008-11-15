@@ -1,0 +1,38 @@
+cache=8192 # 8 MB
+
+# This is all necessary to open the video on the TV, centered, in fullscreen.
+# Gotchas:
+# * the device_id is ignored unless you *open* in fullscreen, with -fs
+# * '-vo macosx' uses CoreVideo, '-vo quartz' doesn't
+# * My TV is fucked up, so I have to add an artifical 400 pixels of black at
+#   the bottom of my video output.
+fs=1
+vo="macosx:device_id=1"
+vf="expand=0:-400:0:0"
+
+# This is to prevent 'wandering' of the audio/video sync; I'd prefer to see
+# skipping than having to get up every 5 minutes to re-sync the audio/video
+# framedrop=1
+
+# This should reduce the sync-wandering defined above.
+mc=100
+# autosync=30
+
+# This is only relevant if you've built mplayer against the multithreaded
+# ffmpeg branch.
+lavdopts="fast:threads=4:skiploopfilter=all"
+
+alang="en"
+
+# This should help with subtitles
+sub-fuzziness=1
+utf8=yes
+unicode=yes
+subfont-encoding=unicode
+embeddedfonts=yes
+font='Bitstream Vera Sans'
+subpos=100
+subalign=2
+subfont-autoscale=2
+subfont-blur=2.0
+subfont-text-scale=4.4
