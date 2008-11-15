@@ -38,20 +38,6 @@ case "$COLOURIZE_AS" in
   ;;
 esac
 
-case "$COLOURIZE_AS" in
-  'red')
-    SS="$(echo `case $? in 0) echo -e "$GREEN--$CLEAR_COLOUR";; *) echo -e "$RED--$CLEAR_COLOUR";; esac`)"
-    SS_E="$(echo `case $? in 0) echo -e "$GREEN_E--$CLEAR_COLOUR_E";; *) echo -e "$RED_E--$CLEAR_COLOUR_E";; esac`)"
-  ;;
-  *)
-    SS="$(echo `case $? in 0) echo -e "$SYSTEM_COLOUR--$CLEAR_COLOUR";; *) echo -e "$RED--$CLEAR_COLOUR";; esac`)"
-    SS_E="$(echo `case $? in 0) echo -e "$SYSTEM_COLOUR_E--$CLEAR_COLOUR_E";; *) echo -e "$RED_E--$CLEAR_COLOUR_E";; esac`)"
-  ;;
-esac
-
-export SS
-export SS_E
-
 PROMPT_COMMAND='
 OLD_STATUS=$?
 
@@ -73,6 +59,12 @@ fi
 
 ( exit $OLD_STATUS )
 
-PS1="\[$WHITE_BOLD[$SYSTEM_COLOR\d$WHITE_BOLD - $SYSTEM_COLOR\t$WHITE_BOLD] [$SYSTEM_COLOR\u$SYSTEM_COLOR_BOLD @ $SYSTEM_COLOR\h$WHITE_BOLD] [$SYSTEM_COLOR\w/$WHITE_BOLD]$GIT_PROMPT\]\n$SS_E\[$CLEAR_COLOUR\] "
+if [[ $? == 0 ]]; then
+  STATUS_PROMPT="$SUCCESS_COLOUR_E--$CLEAR_COLOUR_E"
+else
+  STATUS_PROMPT="$FAILURE_COLOUR_E--$CLEAR_COLOUR_E"
+fi
+
+PS1="\[$WHITE_BOLD[$SYSTEM_COLOUR\d$WHITE_BOLD - $SYSTEM_COLOUR\t$WHITE_BOLD] [$SYSTEM_COLOUR\u$SYSTEM_COLOUR_BOLD @ $SYSTEM_COLOUR\h$WHITE_BOLD] [$SYSTEM_COLOUR\w/$WHITE_BOLD]$GIT_PROMPT\]\n$STATUS_PROMPT "
 '
 export PROMPT_COMMAND
