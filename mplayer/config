@@ -11,7 +11,7 @@ cache=8192 # 8 MB
 #   the bottom of my video output.
 fs=1
 vo="macosx:device_id=1"
-vf="expand=0:-400:0:0"
+vf="expand=0:-150:0:0"
 
 # This is to prevent 'wandering' of the audio/video sync; I'd prefer to see
 # skipping than having to get up every 5 minutes to re-sync the audio/video
