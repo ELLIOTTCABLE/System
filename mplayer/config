@@ -1,7 +1,7 @@
 alang="en"
 slang="en"
 
-cache=8192 # 8 MB
+cache=32768 # 32 MB
 
 # This is all necessary to open the video on the TV, centered, in fullscreen.
 # Gotchas:
