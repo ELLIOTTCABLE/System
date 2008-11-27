@@ -16,7 +16,9 @@
 	oneline = log --pretty=oneline
 	amend = commit --amend
 [merge]
-	tool = opendiff
+	tool = git-chdiff
+[diff]
+  mnemonicprefix = true
 [format]
 	numbered = auto
 [core]
