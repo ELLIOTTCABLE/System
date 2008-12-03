@@ -27,7 +27,6 @@ demuxer="lavf"
 sub-fuzziness=1
 utf8=yes
 unicode=yes
-font='Bitstream Vera Sans'
 subpos=100
 subalign=2
 
