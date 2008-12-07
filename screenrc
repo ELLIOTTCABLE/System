@@ -1,6 +1,3 @@
-# Set the escape sequence to just a single backtick instead of '^a'. FTFW!
-escape ``
-
 # UTF stuff
 setenv LC_CTYPE en_US.UTF-8
 defutf8 on
@@ -19,11 +16,11 @@ activity "%c activity -> %n%f %t"
 bell "%c bell -> %n%f %t^G"
 vbell_msg " visual bell, bitch "
 
-# # # Open various useful things at startup
-# screen -t irb       0   irb
-# screen -t nzb       2   /opt/local/bin/hellanzb.py
-# screen -t ssh       1   ssh elliottcable.name
-# 
+# Open various useful things at startup
+screen -a -t irc 0 ssh disarray.yreality.net
+screen -a -t nzb 1 hellanzb.py
+screen -a -t jello 2 jello -v grabup shorten
+
 # # Double-check to force the focus to SSH after boot
-# select 1
+select 0
 source $HOME/.screenrc.local

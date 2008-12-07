@@ -96,9 +96,10 @@ fi
 alias cdd='cd - '                     # goto last dir cd'ed from
 
 # Screen tools
-alias sus='screen -US'
+alias screen='screen -U'
+alias sus='screen -S'
 alias sls='screen -list'
-alias surd='screen -aAURD'
+alias surd='screen -aARD'
 
 # Ruby
 # alias irb='irb --readline -r irb/completion'
