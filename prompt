@@ -26,8 +26,8 @@ fi
 
 git status &> /dev/null
 if [[ $? == 1 ]]; then
-  branch=$(/usr/local/bin/git name-rev --always --no-undefined HEAD | sed -e "s/^HEAD //")
-  tag=$(/usr/local/bin/git name-rev --tags --always --no-undefined HEAD | sed -e "s/^HEAD //")
+  branch=$(git name-rev --always --no-undefined HEAD | sed -e "s/^HEAD //")
+  tag=$(git name-rev --tags --always --no-undefined HEAD | sed -e "s/^HEAD //")
   
   if [[ $branch == "master" ]]; then
     GIT_BRANCH_PROMPT="$SYSTEM_COLOUR${branch}$CLEAR_COLOUR"
