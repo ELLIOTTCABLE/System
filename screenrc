@@ -16,11 +16,4 @@ activity "%c activity -> %n%f %t"
 bell "%c bell -> %n%f %t^G"
 vbell_msg " ¡visual bell! "
 
-# Open various useful things at startup
-screen -a -t irc 0 ssh disarray.yreality.net
-screen -a -t nzb 1 hellanzb.py
-screen -a -t jello 2 jello -v grabup shorten
-
-# # Double-check to force the focus to SSH after boot
-select 0
 source $HOME/.screenrc.local
