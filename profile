@@ -133,6 +133,10 @@ if [[ $EDITOR =~ 'mate' ]]; then
   alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
 fi
 
+alias espresso='open -a Espresso'
+alias esp='espresso'
+alias xcode='open -a Xcode'
+
 alias df='df -kTh'
 
 alias grep='grep --color=auto'
