@@ -14,6 +14,6 @@ hardstatus alwayslastline "%{=b kW}[ $USER @ %H %{b W}][%= %{= kw}%?%-Lw%?(%{W}%
 # More randomness
 activity "%c activity -> %n%f %t"
 bell "%c bell -> %n%f %t^G"
-vbell_msg " ¡visual bell! "
+vbell_msg " !visual bell! "
 
 source $HOME/.screenrc.local
