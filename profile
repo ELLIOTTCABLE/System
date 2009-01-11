@@ -37,10 +37,10 @@ else
 fi
 
 # fix less
-# export PAGER='less'
+export PAGER='less'
 # export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
 
-export PAGER='page'
+# export PAGER='page'
 
 export HISTIGNORE=''
 export HISTSIZE=100000
@@ -272,6 +272,11 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
 export PATH
+
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  MANPATH="/opt/local/share/man:$MANPATH"
+fi
+export MANPATH
 
 if [ -f $HOME/.profile.unprintable ]; then
   . $HOME/.profile.unprintable
