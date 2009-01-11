@@ -44,7 +44,7 @@ export PAGER='less'
 
 export HISTIGNORE=''
 export HISTSIZE=100000
-export HISTFILESIZE=409600
+export HISTFILESIZE=$HISTSIZE
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export EDITOR='mate -w'
   export VISUAL='mate -w'
