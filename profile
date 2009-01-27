@@ -175,6 +175,7 @@ alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
 alias giff='g --no-pager diff'
+alias glog='g log --graph --pretty=oneline --abbrev-commit'
 
 ## alternatives, using the 'stage' metaphor
 alias stage='g add'
