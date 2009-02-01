@@ -102,7 +102,7 @@ alias sls='screen -list'
 alias surd='screen -aARD'
 
 # Ruby
-# alias irb='irb --readline -r irb/completion'
+alias ruby='ruby -w'
 alias ri='ri -Tf ansi'
 alias shoes='/Applications/Shoes.app/Contents/MacOS/shoes'
 
