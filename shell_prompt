@@ -15,6 +15,10 @@ case "$COLOURIZE_AS" in
   ;;
 esac
 
+function parse_git_dirty {
+  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
+}
+
 PROMPT_COMMAND='
 OLD_STATUS=$?
 
@@ -30,9 +34,9 @@ if [[ $? == 1 ]]; then
   tag=$(git name-rev --tags --always --no-undefined HEAD | sed -e "s/^HEAD //")
   
   if [[ $branch == "master" ]]; then
-    GIT_BRANCH_PROMPT="$SYSTEM_COLOUR${branch}$CLEAR_COLOUR"
+    GIT_BRANCH_PROMPT="$SYSTEM_COLOUR${branch}$(parse_git_dirty)$CLEAR_COLOUR"
   else
-    GIT_BRANCH_PROMPT="$ALERT_COLOUR${branch}$CLEAR_COLOUR"
+    GIT_BRANCH_PROMPT="$ALERT_COLOUR${branch}$(parse_git_dirty)$CLEAR_COLOUR"
   fi
   
   GIT_PROMPT="〈${GIT_BRANCH_PROMPT}${WHITE_BOLD} - ${SYSTEM_COLOUR}${tag}${WHITE_BOLD}〉"
