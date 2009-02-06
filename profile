@@ -219,6 +219,10 @@ if [ -f /usr/local/bin/rake_completion ]; then
   complete -C /usr/local/bin/rake_completion -o default rake
 fi
 
+if [ -f ~/Code/src/git/contrib/completion/git-completion.bash ]; then
+  . ~/Code/src/git/contrib/completion/git-completion.bash
+fi
+
 if [[ $SYSTEM =~ $SYSTEM_TIGER ]]; then
   alias gem="MACOSX_DEPLOYMENT_TARGET=10.4 gem"
 elif [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
