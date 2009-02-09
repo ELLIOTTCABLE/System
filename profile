@@ -272,11 +272,18 @@ set -o ignoreeof
 set -o nounset
 
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
-PATH="$HOME/.bin:$PATH:$EC2_HOME/bin"
+PATH="$HOME/.bin:$PATH:$EC2_HOME/bin:$HOME/.gem/ruby/1.9.1/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
 export PATH
+
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  GEM_HOME="/Users/elliottcable/.gem/ruby/1.9.1"
+else
+  GEM_HOME="/home/elliottcable/.gem/ruby/1.9.1"
+fi
+export GEM_HOME
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   MANPATH="/opt/local/share/man:$MANPATH"
