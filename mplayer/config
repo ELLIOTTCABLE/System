@@ -18,7 +18,7 @@ vf="expand=0:-250:0:0"
 framedrop=1
 
 # This should reduce the sync-wandering defined above.
-# autosync=30
+autosync=30
 mc=100
 demuxer="lavf"
 # correct-pts=0 # To get rid of the pts value spam
