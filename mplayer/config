@@ -30,10 +30,4 @@ unicode=yes
 subpos=100
 subalign=2
 
-[lavdopts]
-  fast=1
-  skiploopfilter="all"
-
-  # This is only relevant if you've built mplayer against the multithreaded
-  # ffmpeg branch.
-  threads=12
+lavdopts="fast=1:skiploopfilter=noref:threads=8"
