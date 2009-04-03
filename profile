@@ -102,7 +102,7 @@ alias sls='screen -list'
 alias surd='screen -aARD'
 
 # Ruby
-alias ruby='ruby -w'
+alias rubyw='ruby -w' # Fuck you Rails, for belching so many errors all the time
 alias ri='ri -Tf ansi'
 alias shoes='/Applications/Shoes.app/Contents/MacOS/shoes'
 
