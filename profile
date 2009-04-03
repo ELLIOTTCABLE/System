@@ -166,7 +166,7 @@ fi
 alias g='git'
 alias gist='g status'
 alias gull='g pull'
-alias gush='g push --tags'
+alias gush='g push'
 alias gad='g add'
 alias germ='g rm'
 alias glean='g clean'
