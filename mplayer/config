@@ -13,8 +13,6 @@ fs=1
 vo="macosx:device_id=2"
 vf="expand=0:-250:0:0"
 
-delay="-0.3"
-
 # This is to prevent 'wandering' of the audio/video sync; I'd prefer to see
 # skipping than having to get up every 5 minutes to re-sync the audio/video
 framedrop=1
