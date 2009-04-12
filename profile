@@ -175,7 +175,7 @@ alias gin='g ci'
 alias ganch='g branch'
 alias gash='g stash'
 alias giff='g --no-pager diff'
-alias glog='g log --graph --check -B -M -C --find-copies-harder --decorate --source --pretty=oneline --abbrev-commit --date=relative --left-right --all'
+alias glog='g log --graph -B -M -C --find-copies-harder --decorate --source --pretty=oneline --abbrev-commit --date=relative --left-right --all'
 
 ## alternatives, using the 'stage' metaphor
 alias stage='g add'
