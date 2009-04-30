@@ -1,0 +1,95 @@
+[audioscrobbler]
+username = 
+password_md5 = 
+use_audioscrobbler = False
+
+[tags]
+use_mpdpaths = False
+
+[currformat]
+current = %A - %T|%L
+currsong1 = %T
+currsong2 = by %A from %B
+library = %A - %T
+title = [Sonata] %A - %T
+
+[library]
+lib_view = 0
+lib_genre = !NONE!
+lib_path = /
+lib_year = !NONE!
+lib_artist = !NONE!
+lib_album = !NONE!
+
+[player]
+art_location_custom_filename = 
+lyrics = True
+columnwidths = 325,10
+trayicon = True
+covers = True
+sticky = False
+stop_on_exit = True
+info_song_more = False
+search_num = 0
+xfade = 0
+ontop = False
+lyrics_location = 1
+info_art_enlarged = False
+info_lyrics_expanded = True
+notification = False
+withdrawn = False
+playback = True
+statusbar = True
+notif_location = 0
+popup_time = 2
+covers_pref = 0
+info_song_expanded = True
+browser = 
+tabs_expanded = False
+screen = 0
+show_header = True
+covers_type = 1
+use_infofile = True
+existing_playlist = 0
+decorated = True
+info_album_expanded = True
+infofile_path = /tmp/xmms-info
+minimize = False
+h = 1176
+expanded = True
+progressbar = True
+initial_run = False
+w = 958
+update_on_start = True
+y = 22
+x = 0
+art_location = 1
+xfade_enabled = False
+
+[connection]
+auto = False
+profile_num = 0
+
+[notebook]
+info_tab_pos = 4
+current_tab_pos = 0
+current_tab_visible = True
+playlists_tab_pos = 2
+playlists_tab_visible = True
+info_tab_visible = True
+streams_tab_visible = True
+library_tab_visible = True
+library_tab_pos = 1
+streams_tab_pos = 3
+
+[streams]
+num_streams = 0
+
+[profiles]
+names[0] = Default Profile
+num_profiles = 1
+passwords[0] = 
+hosts[0] = /heat/music/.daemon/socket
+ports[0] = 0
+musicdirs[0] = /heat/music/
+
