@@ -215,6 +215,11 @@ if [ ! -r $HOME/.cheats ]; then
 fi
 complete -W "$(cat $HOME/.cheats)" cheat
 
+if [ -z $TODOFILE ]; then export TODOFILE=$HOME/todo.markdown; fi
+if [ -f $TODOFILE ]; then
+	cat $TODOFILE
+fi
+
 if [ -f /usr/local/bin/rake_completion ]; then
   complete -C /usr/local/bin/rake_completion -o default rake
 fi
