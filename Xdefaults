@@ -1,0 +1,29 @@
+##
+# XTerm
+xterm*saveLines: 10000
+xterm*scrollBar: true
+xterm*rightScrollBar: true
+xterm*jumpScroll: true
+xterm*cursorColor: red
+xterm*highlightColor: darkgrey
+#xterm*activeIcon: false
+xterm*awaitInput: true
+xterm*loginShell: true
+#xterm*scrollTtyOutput: false
+xterm*scrollKey: true
+
+xterm*Background: black
+xterm*Foreground: white
+
+# These attempt to adjust XTerm to function similarily to OS X's Terminal.app.
+# http://dotfiles.org/~davidlee/.Xdefaults
+Meta <Key> K: send-signal(int) clear-saved-lines() \n\
+Meta <Key> P: print() \n\
+Meta <Key> minus: smaller-vt-font() \n\
+Meta <Key> KP_Subtract: smaller-vt-font() \n\
+Meta <Key> plus: larger-vt-font() \n\
+Meta <Key> KP_Add: larger-vt-font() \n\
+Meta <Key> C: select-cursor-start() \
+select-cursor-end(PRIMARY, CUT_BUFFER()) \n\
+Meta <Key> V: insert-selection(PRIMARY, CUT_BUFFER()) \n\
+Meta <Key> M: iconify() \n\
