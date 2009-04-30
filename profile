@@ -217,7 +217,11 @@ complete -W "$(cat $HOME/.cheats)" cheat
 
 if [ -z $TODOFILE ]; then export TODOFILE=$HOME/todo.markdown; fi
 if [ -f $TODOFILE ]; then
-	cat $TODOFILE
+	if [[ $(cat $TODOFILE) =~ "- " ]]; then
+		echo -e "${SYSTEM_COLOUR_BOLD}Todo List:${CLEAR_COLOUR}"; tput sgr0
+		echo -e "${SYSTEM_COLOUR}==========${CLEAR_COLOUR}"; tput sgr0
+		cat $TODOFILE
+	fi
 fi
 
 if [ -f /usr/local/bin/rake_completion ]; then
