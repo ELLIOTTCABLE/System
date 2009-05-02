@@ -77,7 +77,8 @@ taglist.buttons = awful.util.table.join(
   awful.button({}, 1, awful.tag.viewonly),
   awful.button({m}, 1, function(tag) tag.selected = not tag.selected end),
   awful.button({}, 3, awful.client.movetotag),
-  awful.button({m}, 3, awful.client.toggletag)
+  awful.button({m}, 3, awful.client.toggletag),
+  awful.button({m, "Shift"}, 1, shifty.del)
 )
 
 each_screen(function(s)
