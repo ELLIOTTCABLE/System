@@ -95,11 +95,10 @@ each_screen(function(s)
   
   taglist[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist.buttons)
   
-  -- Let's add a simple textbox as well.
-  release_box = widget({type = "textbox", align = "right"})
-  release_box.text = "<b>" .. AWESOME_RELEASE .. "</b>"
+  -- Let's add a simple textbox for the current time as well.
+  time_box = widget({type = "textbox", align = "right"})  
   
-  bar.widgets = {main_launcher, taglist[s], release_box}
+  bar.widgets = {main_launcher, taglist[s], time_box}
   
   bar.screen = s
 end)
@@ -145,3 +144,17 @@ end
 root.keys(global_keys)
 shifty.config.globalkeys = global_keys
 shifty.config.clientkeys = awful.util.table.join() -- TODO: Is this necessary?
+
+
+-- -----------------------------
+-- ----< Hooks >----------------
+time_box_alternator = false
+awful.hooks.timer.register(1, function()
+  -- TODO: Can we put this on one line?
+  local sep = "<span weight=\"900\">:</span>"
+  if time_box_alternator then
+    sep = "<span weight=\"100\">:</span>"
+  end
+  time_box.text = os.date("<span face=\"Sans\" weight=\"900\" stretch=\"semiexpanded\">%a %b %d<big> - %H" .. sep .. "%M" .. sep .. "%S</big></span>")
+  time_box_alternator = not time_box_alternator
+end)
