@@ -114,36 +114,35 @@ root.buttons(awful.util.table.join(
 )) -- TODO: Can we remove this?
 
 -- Hotkeys
-global_keys = awful.util.table.join(
+shifty.config.globalkeys = awful.util.table.join(
   awful.key({m           }, "Return", function () awful.util.spawn(terminal) end),
   awful.key({m, "Control"}, "r",      awesome.restart),
   awful.key({m, "Shift"  }, "q",      awesome.quit)
 )
 
 for i=1, (shifty.config.maxtags or 9) do
-  -- TODO: Can we D.R.Y. this up?
-  global_keys = awful.util.table.join(global_keys, awful.key({m                    }, i, function() local t = awful.tag.viewonly(shifty.getpos(i)) end))
-  global_keys = awful.util.table.join(global_keys, awful.key({m, "Control"         }, i, function()
-    local t = shifty.getpos(i)
-    t.selected = not t.selected
-  end))
-  global_keys = awful.util.table.join(global_keys, awful.key({m, "Control", "Shift"}, i, function()
-    if client.focus then
-      awful.client.toggletag(shifty.getpos(i))
-    end
-  end))
-  global_keys = awful.util.table.join(global_keys, awful.key({m, "Shift"           }, i, function()
-    if client.focus then
+  shifty.config.globalkeys = awful.util.table.join(shifty.config.globalkeys,
+    awful.key({m                    }, i, function() local t = awful.tag.viewonly(shifty.getpos(i)) end),
+    awful.key({m, "Control"         }, i, function()
       local t = shifty.getpos(i)
-      awful.client.movetotag(t)
-      awful.tag.viewonly(t)
-    end
-  end))
+      t.selected = not t.selected
+    end),
+    awful.key({m, "Control", "Shift"}, i, function()
+      if client.focus then
+        awful.client.toggletag(shifty.getpos(i))
+      end
+    end),
+    awful.key({m, "Shift"           }, i, function()
+      if client.focus then
+        local t = shifty.getpos(i)
+        awful.client.movetotag(t)
+        awful.tag.viewonly(t)
+      end
+    end)
+  )
 end
 
-root.keys(global_keys)
-shifty.config.globalkeys = global_keys
-shifty.config.clientkeys = awful.util.table.join() -- TODO: Is this necessary?
+root.keys(shifty.config.globalkeys)
 
 
 -- -----------------------------
