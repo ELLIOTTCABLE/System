@@ -1,0 +1,59 @@
+-- Require `awesome`s standard library
+require("awful")
+
+-- -----------------------------
+-- ----< Variables >------------
+-- Now, let's set some ground rules. These variables and functions will be used later throughout this configuration.
+
+-- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
+terminal = "xterm"
+
+-- This is the key to which we delegate most controls. We'll default to a key that pretty much nothing else uses: Mod4.
+-- (That's the "command" or "Apple" key on a Macintosh, or the "Windows" key on a Windows box.)
+m = "Mod4"
+
+-- This is our favourite layout.
+layout = awful.layout.suit.tile
+
+-- -----------------------------
+-- ----< Tags >-----------------
+-- For now, simplicity. Only one tag per screen.
+for s = 1, screen.count() do
+  stuff = tag(1) -- TODO: Can we pass this a string for a *real* name?
+  stuff.screen = s
+  awful.layout.set(layout, stuff)
+  stuff.selected = true
+end
+
+-- -----------------------------
+-- ----< Bars >-----------------
+-- Again, for simplicity, one statusbar: along the top.
+--bar = wibox({position = "top", ontop = true})
+--bar.screen = 2
+
+-- Yet more simplicity: A single menu in our statusbar.
+--menu = awful.menu.new({items = {
+--  {"Browser", "firefox"},
+--  {"Terminal", terminal},
+--  {"Window manager", {
+--    {"Manual", run_in_terminal("man", "awesome")},
+--    {"Configure", edit(awful.util.getdir("config") .. "/rc.lua")},
+--    {"Restart", awesome.restart}
+--  }},
+--  {"Log out", awesome.quit}
+--}})
+
+--bar.widgets = {menu}
+
+-- -----------------------------
+-- ----< Input >----------------
+-- Mouse buttons
+root.buttons(awful.util.table.join()) -- TODO: Can we remove this?
+
+-- Hotkeys
+root.keys(awful.util.table.join(
+  -- Is the {} necessary?
+  awful.key({m}, "Return", function () awful.util.spawn(terminal) end),
+  awful.key({m, "Control"}, "r", awesome.restart),
+  awful.key({m, "Shift"}, "q", awesome.quit)
+))
