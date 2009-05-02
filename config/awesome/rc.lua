@@ -1,1 +1,1 @@
-rc.lua.minimal
+rc.lua.exploratory
