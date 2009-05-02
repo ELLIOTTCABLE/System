@@ -35,6 +35,9 @@ function each_screen(lambda)
   for s = 1, screen.count() do lambda(s) end
 end
 
+-- Some things seem to assume the global variable "modkey" is set.
+modkey = m
+
 
 -- -----------------------------
 -- ----< Initialization >-------
