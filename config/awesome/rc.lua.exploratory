@@ -11,6 +11,9 @@ require("shifty")
 -- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
 terminal = "xterm"
 
+-- We use this whenever we want a browser. You can change it to whatever browser or command you want.
+browser = "firefox"
+
 -- This is the key to which we delegate most controls. We'll default to a key that pretty much nothing else uses: Mod4.
 -- (That's the "command" or "Apple" key on a Macintosh, or the "Windows" key on a Windows box.)
 m = "Mod4"
@@ -40,17 +43,40 @@ beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme")
 
 -- -----------------------------
 -- ----< Tags >-----------------
--- For now, simplicity. Only one tag per screen.
-each_screen(function(s)
-  stuff = tag(1) -- TODO: Can we pass this a string for a *real* name?
-  stuff.screen = s
-  awful.layout.set(layout, stuff)
-  stuff.selected = true
-end)
+shifty.config.tags = {
+  ["web"] = {position = 1, exclusive = true, spawn = browser, layout = awful.layout.suit.max}
+}
 
+shifty.config.apps = {
+  {match = {"Gran Paradiso", "Firefox"}, tag = "web"},
+  {match = {"xterm"}, honorsizehints = false, slave = true, tag = "term"},
+  {match = {""}, buttons = { -- TODO: Is this necessary?
+    button({}, 1, function(c) client.focus = c, c:raise() end),
+    button({m}, 1, function(c) awful.mouse.client.move() end),
+    button({m}, 3, awful.mouse.client.resize)
+  }}
+}
+
+shifty.config.defaults = {
+  layout = awful.layout.suit.tile,
+  ncol = 1,
+  mwfact = 0.60,
+  floatBars = true
+}
+
+shifty.init()
 
 -- -----------------------------
 -- ----< Bars >-----------------
+-- Now, a taglist (supposedly, shifty will handle this for us!)
+taglist = {}
+taglist.buttons = awful.util.table.join(
+  awful.button({}, 1, awful.tag.viewonly),
+  awful.button({m}, 1, awful.client.movetotag),
+  awful.button({}, 3, function(tag) tag.selected = not tag.selected end),
+  awful.button({m}, 3, awful.client.toggletag)
+)
+
 each_screen(function(s)
   -- Again, for simplicity, one statusbar: along the top.
   bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
@@ -67,14 +93,19 @@ each_screen(function(s)
   }})
   main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
   
+  taglist[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist.buttons)
+  
   -- Let's add a simple textbox as well.
   release_box = widget({type = "textbox", align = "right"})
   release_box.text = "<b>" .. AWESOME_RELEASE .. "</b>"
   
-  bar.widgets = {main_launcher, release_box}
+  bar.widgets = {main_launcher, taglist[s], release_box}
   
   bar.screen = s
 end)
+
+shifty.taglist = taglist
+
 
 -- -----------------------------
 -- ----< Input >----------------
@@ -90,4 +121,27 @@ global_keys = awful.util.table.join(
   awful.key({m, "Shift"  }, "q",      awesome.quit)
 )
 
+for i=1, (shifty.config.maxtags or 9) do
+  -- TODO: Can we D.R.Y. this up?
+  global_keys = awful.util.table.join(global_keys, awful.key({m                    }, i, function() local t = awful.tag.viewonly(shifty.getpos(i)) end))
+  global_keys = awful.util.table.join(global_keys, awful.key({m, "Control"         }, i, function()
+    local t = shifty.getpos(i)
+    t.selected = not t.selected
+  end))
+  global_keys = awful.util.table.join(global_keys, awful.key({m, "Control", "Shift"}, i, function()
+    if client.focus then
+      awful.client.toggletag(shifty.getpos(i))
+    end
+  end))
+  global_keys = awful.util.table.join(global_keys, awful.key({m, "Shift"           }, i, function()
+    if client.focus then
+      local t = shifty.getpos(i)
+      awful.client.movetotag(t)
+      awful.tag.viewonly(t)
+    end
+  end))
+end
+
 root.keys(global_keys)
+shifty.config.globalkeys = global_keys
+shifty.config.clientkeys = awful.util.table.join() -- TODO: Is this necessary?
