@@ -1,0 +1,16 @@
+set autoindent
+set boldtext
+set const
+set historylog
+set morespace
+set mouse
+set nohelp
+set nowrap
+set regexp
+set smarthome
+set smooth
+set tabsize 2
+set tabstospaces
+set tempfile
+set whitespace ">."
+set wordbounds
