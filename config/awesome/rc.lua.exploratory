@@ -121,7 +121,13 @@ root.buttons(awful.util.table.join(
 shifty.config.globalkeys = awful.util.table.join(
   awful.key({m           }, "Return", function () awful.util.spawn(terminal) end),
   awful.key({m, "Control"}, "r",      awesome.restart),
-  awful.key({m, "Shift"  }, "q",      awesome.quit)
+  awful.key({m, "Shift"  }, "q",      awesome.quit),
+  
+  -- Moves the currently focused client to a new tag
+  awful.key({m}, "Tab", function()
+    local t = shifty.add()
+    -- TODO: Move this into clientkeys, and move currently focused client to the newly created tag?
+  end)
 )
 
 for i=1, (shifty.config.maxtags or 9) do
