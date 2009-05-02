@@ -79,7 +79,9 @@ end)
 -- -----------------------------
 -- ----< Input >----------------
 -- Mouse buttons
-root.buttons(awful.util.table.join()) -- TODO: Can we remove this?
+root.buttons(awful.util.table.join(
+  awful.button({}, 3, function() main_menu:toggle() end)
+)) -- TODO: Can we remove this?
 
 -- Hotkeys
 root.keys(awful.util.table.join(
