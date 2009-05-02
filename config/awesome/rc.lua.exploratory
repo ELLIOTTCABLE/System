@@ -41,7 +41,7 @@ modkey = m
 
 -- -----------------------------
 -- ----< Initialization >-------
-beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme")
+beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme.lua")
 
 
 -- -----------------------------
