@@ -1,6 +1,7 @@
 -- Require `awesome`s standard library
 require("awful")
 require("beautiful")
+require("shifty")
 
 
 -- -----------------------------
