@@ -50,29 +50,30 @@ end)
 
 -- -----------------------------
 -- ----< Bars >-----------------
--- Again, for simplicity, one statusbar: along the top.
-bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
-
--- Yet more simplicity: A single menu in our statusbar.
-main_menu = awful.menu.new({items = {
-  {"Browser", "firefox"},
-  {"Terminal", terminal},
-  {"Window manager", {
-    {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
-    {"Restart", awesome.restart}
-  }},
-  {"Log out", awesome.quit}
-}})
-main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
-
--- Let's add a simple textbox as well.
-release_box = widget({type = "textbox", align = "right"})
-release_box.text = AWESOME_RELEASE
-
-bar.widgets = {main_launcher}
-
-bar.screen = 2
-
+each_screen(function(s)
+  -- Again, for simplicity, one statusbar: along the top.
+  bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
+  
+  -- Yet more simplicity: A single menu in our statusbar.
+  main_menu = awful.menu.new({items = {
+    {"Browser", "firefox"},
+    {"Terminal", terminal},
+    {"Window manager", {
+      {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
+      {"Restart", awesome.restart}
+    }},
+    {"Log out", awesome.quit}
+  }})
+  main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
+  
+  -- Let's add a simple textbox as well.
+  release_box = widget({type = "textbox", align = "right"})
+  release_box.text = "<b>" .. AWESOME_RELEASE .. "</b>"
+  
+  bar.widgets = {main_launcher, release_box}
+  
+  bar.screen = s
+end)
 
 -- -----------------------------
 -- ----< Input >----------------
