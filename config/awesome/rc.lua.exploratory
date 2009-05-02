@@ -44,7 +44,7 @@ beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme")
 -- -----------------------------
 -- ----< Tags >-----------------
 shifty.config.tags = {
-  ["web"] = {position = 1, exclusive = true, spawn = browser, layout = awful.layout.suit.max}
+  -- ["web"] = {position = 1, exclusive = true, spawn = browser, layout = awful.layout.suit.max}
 }
 
 shifty.config.apps = {
