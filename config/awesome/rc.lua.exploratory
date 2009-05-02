@@ -84,9 +84,10 @@ root.buttons(awful.util.table.join(
 )) -- TODO: Can we remove this?
 
 -- Hotkeys
-root.keys(awful.util.table.join(
-  -- Is the {} necessary?
-  awful.key({m}, "Return", function () awful.util.spawn(terminal) end),
-  awful.key({m, "Control"}, "r", awesome.restart),
-  awful.key({m, "Shift"}, "q", awesome.quit)
-))
+global_keys = awful.util.table.join(
+  awful.key({m           }, "Return", function () awful.util.spawn(terminal) end),
+  awful.key({m, "Control"}, "r",      awesome.restart),
+  awful.key({m, "Shift"  }, "q",      awesome.quit)
+)
+
+root.keys(global_keys)
