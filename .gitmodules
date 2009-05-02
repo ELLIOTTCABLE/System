@@ -1,0 +1,3 @@
+[submodule "./config/awesome/rc.d/bioe007"]
+	path = ./config/awesome/rc.d/bioe007
+	url = git://github.com/bioe007/awesome-configs.git
