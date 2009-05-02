@@ -1,0 +1,8 @@
+-- A list of repositories to search for packages in
+REPOS = {"core", "extra", "community"}
+
+-- The path to the root of the ABS tree
+ABS_ROOT = "/var/abs"
+
+-- The path to the directory where I'll store my packages
+LOCAL_DIR = "/home/elliottcable/.abs"
