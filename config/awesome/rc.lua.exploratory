@@ -38,9 +38,6 @@ end
 -- Some things seem to assume the global variable "modkey" is set.
 modkey = m
 
-
--- -----------------------------
--- ----< Initialization >-------
 beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme.lua")
 
 
