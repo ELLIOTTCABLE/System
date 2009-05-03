@@ -43,8 +43,15 @@ beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme.lua")
 
 -- -----------------------------
 -- ----< Tags >-----------------
-shifty.config.tags = {
-}
+shifty.config.tags = {}
+
+-- We're going to create a lobby for each screen.
+each_screen(function(s)
+  shifty.config.tags = awful.util.table.join(shifty.config.tags, {
+    -- FIXME: Currently, Shifty seems to puke all over multiple init tags of the same name string, so we add the screen's number to each one. A bit ugly, though.
+    [s .. " lobby"] = {init = true, persistent = true, screen = s}
+  })
+end)
 
 shifty.config.apps = {
   -- {match = {"Gran Paradiso", "Firefox"}, tag = "web"},
