@@ -150,7 +150,7 @@ root.keys(shifty.config.globalkeys)
 shifty.config.clientkeys = awful.util.table.join(
   
   -- Copy / Paste
-  awful.key({m}, "c", function()
+  awful.key({m}, "c", function(c)
     -- TODO: I can't really think of a way to force a copy. I could just map this to ctrl-c, I guess, but then it'd be out of sync with mod4-v below.
     -- c.fake_input("button_press", 2)
     -- c.fake_input("button_release", 2)
