@@ -44,12 +44,11 @@ beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme.lua")
 -- -----------------------------
 -- ----< Tags >-----------------
 shifty.config.tags = {
-  -- ["web"] = {position = 1, exclusive = true, spawn = browser, layout = awful.layout.suit.max}
 }
 
 shifty.config.apps = {
-  {match = {"Gran Paradiso", "Firefox"}, tag = "web"},
-  {match = {"xterm"}, honorsizehints = false, slave = true, tag = "term"},
+  -- {match = {"Gran Paradiso", "Firefox"}, tag = "web"},
+  -- {match = {"xterm"}, honorsizehints = false, slave = true, tag = "term"},
   {match = {""}, buttons = { -- TODO: Is this necessary?
     button({}, 1, function(c) client.focus = c, c:raise() end),
     button({m}, 1, function(c) awful.mouse.client.move() end),
