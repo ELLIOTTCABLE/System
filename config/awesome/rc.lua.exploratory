@@ -115,17 +115,11 @@ root.buttons(awful.util.table.join(
   awful.button({}, 3, function() main_menu:toggle() end)
 )) -- TODO: Can we remove this?
 
--- Hotkeys
+-- Global hotkeys
 shifty.config.globalkeys = awful.util.table.join(
   awful.key({m           }, "Return", function () awful.util.spawn(terminal) end),
   awful.key({m, "Control"}, "r",      awesome.restart),
-  awful.key({m, "Shift"  }, "q",      awesome.quit),
-  
-  -- Moves the currently focused client to a new tag
-  awful.key({m}, "Tab", function()
-    local t = shifty.add()
-    -- TODO: Move this into clientkeys, and move currently focused client to the newly created tag?
-  end)
+  awful.key({m, "Shift"  }, "q",      awesome.quit)
 )
 
 for i=1, (shifty.config.maxtags or 9) do
@@ -152,6 +146,28 @@ end
 
 root.keys(shifty.config.globalkeys)
 
+-- Client hotkeys
+shifty.config.clientkeys = awful.util.table.join(
+  
+  -- Copy / Paste
+  awful.key({m}, "c", function()
+    -- TODO: I can't really think of a way to force a copy. I could just map this to ctrl-c, I guess, but then it'd be out of sync with mod4-v below.
+    -- c.fake_input("button_press", 2)
+    -- c.fake_input("button_release", 2)
+  end),
+  awful.key({m}, "v", function(c)
+    -- TODO: This doesn't work, and I don't know why! It *should* simulate a middle click...
+    c.fake_input("button_press", 2)
+    c.fake_input("button_release", 2)
+  end),
+  
+  -- Moves the currently focused client to a new tag all by its lonesome
+  awful.key({m}, "Tab", function(c)
+    local t = shifty.add()
+    awful.client.movetotag(t, c)
+  end)
+  
+)
 
 -- -----------------------------
 -- ----< Hooks >----------------
