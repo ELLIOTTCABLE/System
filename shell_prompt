@@ -46,7 +46,7 @@ else
   GIT_PROMPT=""
 fi
 
-( exit $OLD_STATUS )
+(exit $OLD_STATUS)
 
 
 
