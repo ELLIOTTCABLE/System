@@ -12,8 +12,10 @@ require("shifty")
 -- (That's the "command" or "Apple" key on a Macintosh, or the "Windows" key on a Windows box.)
 m = "Mod4"
 
--- This is our favourite layout.
-layout = awful.layout.suit.tile
+-- These are our favourite layouts.
+layouts = {
+  awful.layout.suit.tile
+}
 
 -- And the theme!
 theme = "default"
@@ -71,7 +73,7 @@ shifty.config.apps = {
 }
 
 shifty.config.defaults = {
-  layout = awful.layout.suit.tile,
+  layout = layouts[1],
   ncol = 1,
   mwfact = 0.60,
   floatBars = true
