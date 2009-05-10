@@ -14,7 +14,12 @@ m = "Mod4"
 
 -- These are our favourite layouts.
 layouts = {
-  awful.layout.suit.tile
+  awful.layout.suit.tile,
+  awful.layout.suit.fair,
+  awful.layout.suit.max,
+  awful.layout.suit.max.fullscreen,
+  awful.layout.suit.magnifier,
+  awful.layout.suit.floating
 }
 
 -- And the theme!
@@ -117,7 +122,7 @@ tasklist_configuration.buttons = awful.util.table.join(
 )
 
 -- Let's add a simple textbox for the current time as well.
-time_box_configuration = {type = "textbox", align = "right"}
+time_box_configuration = {type = "textbox", align = "right", show_date = true}
 time_box_configuration.format = {
   date = "%a, %b, %d, ",
   time = "%l:%M:%S %p (%Z)",
@@ -126,28 +131,27 @@ time_box_configuration.format = {
   close = "</span>"
 }
 time_box_configuration.buttons = {
-  awful.button({}, 1, function() show_date = not show_date end)
+  -- TODO: Why doesn't this work?
+  awful.button({}, 1, function() time_box_configuration.show_date = not time_box_configuration.show_date end)
 }
-time_box = widget(time_box_configuration)
--- We'll initialize it to a blank value
-time_box.text = time_box_configuration.format.open .. " -:--:-- ?? (????)" .. time_box_configuration.format.close
-
-show_date = false
-awful.hooks.timer.register(1, function()
+time_box_configuration.hook = function()
   -- TODO: Can we put this on one line?
   local date_field = ""
-  if show_date then
+  if time_box_configuration.show_date then
     date_field = time_box_configuration.format.date
   end
   time_box.text = os.date(time_box_configuration.format.open .. date_field .. time_box_configuration.format.time .. time_box_configuration.format.close)
-end)
+end
 
+-- The following will be run for all screens
+time_box = widget(time_box_configuration)
+awful.hooks.timer.register(1, time_box_configuration.hook)
+time_box_configuration.hook()
 
+-- The following will be run for each screen
 each_screen(function(s)
-  -- Again, for simplicity, one statusbar: along the top.
   bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
   
-  -- Yet more simplicity: A single menu in our statusbar.
   main_menu = awful.menu.new({items = {
     {"Terminal", terminal},
     {"Browser", "firefox"},
