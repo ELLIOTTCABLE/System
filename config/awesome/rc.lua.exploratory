@@ -163,7 +163,8 @@ main_menu = awful.menu.new({items = {
   }}
 }})
 main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
-  
+
+tray = widget({type = "systray", align = "right"})  
 
 -- The following will be run for each screen
 each_screen(function(s)
@@ -173,7 +174,7 @@ each_screen(function(s)
   
   tasklists[s] = awful.widget.tasklist.new(tasklist_configuration.display_function(s), tasklist_configuration.buttons)
   
-  bar.widgets = {main_launcher, taglists[s], tasklists[s], time_box}
+  bar.widgets = {main_launcher, taglists[s], tasklists[s], tray, time_box}
   bar.screen = s
 end)
 
