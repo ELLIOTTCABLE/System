@@ -92,6 +92,28 @@ taglist_configuration.buttons = awful.util.table.join(
   awful.button({m, "Shift"}, 1, shifty.del)
 )
 
+-- And a tasklist
+tasklists = {}
+tasklist_configuration = {}
+tasklist_configuration.display_function = function(s)
+  return function(c) return awful.widget.tasklist.label.currenttags(c, s) end
+end
+tasklist_configuration.buttons = awful.util.table.join(
+  awful.button({}, 1, function(c)
+    -- First, we have to make a tag containing the client is visible. If not, we add the first of the clients' tags to the currently selected tags
+    if not c:isvisible() then
+      awful.client.toggletag(c:tags()[1])
+    end
+    -- Next, we focus on it and raise it
+    client.focus = c
+    c:raise()
+  end),
+  awful.button({m}, 1, function(tag) tag.selected = not tag.selected end),
+  awful.button({}, 3, awful.client.movetotag),
+  awful.button({m}, 3, awful.client.toggletag),
+  awful.button({m, "Shift"}, 1, shifty.del)
+)
+
 -- Let's add a simple textbox for the current time as well.
 time_box = widget({type = "textbox", align = "right", buttons = {
   awful.button({}, 1, function() show_date = not show_date end)
@@ -120,7 +142,9 @@ each_screen(function(s)
   
   taglists[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist_configuration.buttons)
   
-  bar.widgets = {main_launcher, taglists[s], time_box}
+  tasklists[s] = awful.widget.tasklist.new(tasklist_configuration.display_function(s), tasklist_configuration.buttons)
+  
+  bar.widgets = {main_launcher, taglists[s], tasklists[s], time_box}
   
   bar.screen = s
 end)
