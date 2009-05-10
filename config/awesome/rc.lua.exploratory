@@ -8,12 +8,6 @@ require("shifty")
 -- ----< Variables >------------
 -- Now, let's set some ground rules. These variables and functions will be used later throughout this configuration.
 
--- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
-terminal = "xterm"
-
--- We use this whenever we want a browser. You can change it to whatever browser or command you want.
-browser = "firefox"
-
 -- This is the key to which we delegate most controls. We'll default to a key that pretty much nothing else uses: Mod4.
 -- (That's the "command" or "Apple" key on a Macintosh, or the "Windows" key on a Windows box.)
 m = "Mod4"
@@ -23,6 +17,19 @@ layout = awful.layout.suit.tile
 
 -- And the theme!
 theme = "default"
+
+-- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
+terminal = "xterm"
+
+-- We use this whenever we want a browser. You can change it to whatever browser or command you want.
+browser = "firefox"
+
+-- These commands are responsible for controlling the system. Remember to add entries similar to the following to the sudoers file for each setting below:
+--   %users localhost=/sbin/shutdown -h now
+suspend   = "sudo -n /usr/sbin/s2ram"
+reboot    = "sudo -n /sbin/shutdown -fr now"
+shutdown  = "sudo -n /sbin/shutdown -fhP now"
+
 
 -- ============================ ============================ --
 --  ========================== ! ==========================  --
@@ -101,7 +108,10 @@ each_screen(function(s)
       {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
       {"Restart", awesome.restart}
     }},
-    {"Log out", awesome.quit}
+    {"Log out", awesome.quit},
+    {"Sleep", suspend},
+    {"Reboot", reboot},
+    {"Shut down", shutdown}
   }})
   main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
   
@@ -125,8 +135,11 @@ root.buttons(awful.util.table.join(
 -- Global hotkeys
 shifty.config.globalkeys = awful.util.table.join(
   awful.key({m           }, "Return", function () awful.util.spawn(terminal) end),
+  awful.key({m, "Shift"  }, "q",      function () awful.util.spawn(shutdown) end),
+  awful.key({m, "Shift"  }, "r",      function () awful.util.spawn(reboot) end),
+  awful.key({m, "Shift"  }, "s",      function () awful.util.spawn(suspend) end),
   awful.key({m, "Control"}, "r",      awesome.restart),
-  awful.key({m, "Shift"  }, "q",      awesome.quit)
+  awful.key({m, "Control"}, "q",      awesome.quit)
 )
 
 for i=1, (shifty.config.maxtags or 9) do
