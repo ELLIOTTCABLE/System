@@ -148,32 +148,32 @@ time_box = widget(time_box_configuration)
 awful.hooks.timer.register(1, time_box_configuration.hook)
 time_box_configuration.hook()
 
+main_menu = awful.menu.new({items = {
+  {"Terminal", terminal},
+  {"Browser", "firefox"},
+  {"awesomewm", {
+    {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
+    {"Restart", awesome.restart}
+  }},
+  {"Arch Linux", {
+    {"Log out", awesome.quit},
+    {"Sleep", suspend},
+    {"Reboot", reboot},
+    {"Shut down", shutdown}
+  }}
+}})
+main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
+  
+
 -- The following will be run for each screen
 each_screen(function(s)
   bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
-  
-  main_menu = awful.menu.new({items = {
-    {"Terminal", terminal},
-    {"Browser", "firefox"},
-    {"awesomewm", {
-      {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
-      {"Restart", awesome.restart}
-    }},
-    {"Arch Linux", {
-      {"Log out", awesome.quit},
-      {"Sleep", suspend},
-      {"Reboot", reboot},
-      {"Shut down", shutdown}
-    }}
-  }})
-  main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
   
   taglists[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist_configuration.buttons)
   
   tasklists[s] = awful.widget.tasklist.new(tasklist_configuration.display_function(s), tasklist_configuration.buttons)
   
   bar.widgets = {main_launcher, taglists[s], tasklists[s], time_box}
-  
   bar.screen = s
 end)
 
