@@ -122,7 +122,7 @@ time_box_configuration.format = {
   date = "%a, %b, %d, ",
   time = "%l:%M:%S %p (%Z)",
   -- TODO: Do I need these escapes?
-  open  = "<span face=\"Monospace\" weight=\"900\" stretch=\"semiexpanded\" size=\"x-large\">",
+  open  = "<span face=\"Monospace\" weight=\"700\" size=\"large\">",
   close = "</span>"
 }
 time_box_configuration.buttons = {
