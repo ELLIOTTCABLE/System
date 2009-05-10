@@ -102,16 +102,18 @@ each_screen(function(s)
   
   -- Yet more simplicity: A single menu in our statusbar.
   main_menu = awful.menu.new({items = {
-    {"Browser", "firefox"},
     {"Terminal", terminal},
-    {"Window manager", {
+    {"Browser", "firefox"},
+    {"awesomewm", {
       {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
       {"Restart", awesome.restart}
     }},
-    {"Log out", awesome.quit},
-    {"Sleep", suspend},
-    {"Reboot", reboot},
-    {"Shut down", shutdown}
+    {"Arch Linux", {
+      {"Log out", awesome.quit},
+      {"Sleep", suspend},
+      {"Reboot", reboot},
+      {"Shut down", shutdown}
+    }}
   }})
   main_launcher = awful.widget.launcher({menu = main_menu, image = image(beautiful.awesome_icon)})
   
