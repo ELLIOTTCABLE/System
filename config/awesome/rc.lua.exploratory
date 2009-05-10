@@ -122,10 +122,10 @@ tasklist_configuration.buttons = awful.util.table.join(
 )
 
 -- Let's add a simple textbox for the current time as well.
-time_box_configuration = {type = "textbox", align = "right", show_date = true}
+time_box_configuration = {type = "textbox", align = "right", show_date = false}
 time_box_configuration.format = {
-  date = "%a, %b, %d, ",
-  time = "%l:%M:%S %p (%Z)",
+  date = "%b, %d (%a) ",
+  time = "%l:%M:%S %p",
   -- TODO: Do I need these escapes?
   open  = "<span face=\"Monospace\" weight=\"700\" size=\"large\">",
   close = "</span>"
