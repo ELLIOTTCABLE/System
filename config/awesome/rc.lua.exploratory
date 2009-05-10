@@ -117,9 +117,31 @@ tasklist_configuration.buttons = awful.util.table.join(
 )
 
 -- Let's add a simple textbox for the current time as well.
-time_box = widget({type = "textbox", align = "right", buttons = {
+time_box_configuration = {type = "textbox", align = "right"}
+time_box_configuration.format = {
+  date = "%a, %b, %d, ",
+  time = "%l:%M:%S %p (%Z)",
+  -- TODO: Do I need these escapes?
+  open  = "<span face=\"Monospace\" weight=\"900\" stretch=\"semiexpanded\" size=\"x-large\">",
+  close = "</span>"
+}
+time_box_configuration.buttons = {
   awful.button({}, 1, function() show_date = not show_date end)
-}})
+}
+time_box = widget(time_box_configuration)
+-- We'll initialize it to a blank value
+time_box.text = time_box_configuration.format.open .. " -:--:-- ?? (????)" .. time_box_configuration.format.close
+
+show_date = false
+awful.hooks.timer.register(1, function()
+  -- TODO: Can we put this on one line?
+  local date_field = ""
+  if show_date then
+    date_field = time_box_configuration.format.date
+  end
+  time_box.text = os.date(time_box_configuration.format.open .. date_field .. time_box_configuration.format.time .. time_box_configuration.format.close)
+end)
+
 
 each_screen(function(s)
   -- Again, for simplicity, one statusbar: along the top.
@@ -170,7 +192,7 @@ shifty.config.globalkeys = awful.util.table.join(
   awful.key({m, "Control"}, "r",      awesome.restart),
   awful.key({m, "Control"}, "q",      awesome.quit)
 )
-
+ 
 for i=1, (shifty.config.maxtags or 9) do
   shifty.config.globalkeys = awful.util.table.join(shifty.config.globalkeys,
     awful.key({m                    }, i, function() local t = awful.tag.viewonly(shifty.getpos(i)) end),
@@ -220,14 +242,3 @@ shifty.config.clientkeys = awful.util.table.join(
 
 -- -----------------------------
 -- ----< Hooks >----------------
-show_date = false
-awful.hooks.timer.register(1, function()
-  -- TODO: Can we put this on one line?
-  local time = "%H:%M:%S"
-  local date = ""
-  if show_date then
-    date = "%a, %b %d, "
-  end
-  -- TODO: Do I need these escapes?
-  time_box.text = os.date("<span face=\"Monospace\" weight=\"900\" stretch=\"semiexpanded\" size=\"x-large\">" .. date .. time .. "</span>")
-end)
