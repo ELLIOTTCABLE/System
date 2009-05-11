@@ -88,6 +88,10 @@ shifty.init()
 
 -- -----------------------------
 -- ----< Bars >-----------------
+-- First, a prompt
+prompts = {}
+prompt_configuration = {prompt = "> "}
+
 -- Now, a taglist (supposedly, shifty will handle this for us!)
 taglists = {}
 taglist_configuration = {}
@@ -170,11 +174,11 @@ tray = widget({type = "systray", align = "right"})
 each_screen(function(s)
   bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
   
+  prompts[s] = widget({type = "textbox", align = "left"})
   taglists[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist_configuration.buttons)
-  
   tasklists[s] = awful.widget.tasklist.new(tasklist_configuration.display_function(s), tasklist_configuration.buttons)
   
-  bar.widgets = {main_launcher, taglists[s], tasklists[s], tray, time_box}
+  bar.widgets = {main_launcher, prompts[s], taglists[s], tasklists[s], tray, time_box}
   bar.screen = s
 end)
 
@@ -195,7 +199,11 @@ shifty.config.globalkeys = awful.util.table.join(
   awful.key({m, "Shift"  }, "r",      function () awful.util.spawn(reboot) end),
   awful.key({m, "Shift"  }, "s",      function () awful.util.spawn(suspend) end),
   awful.key({m, "Control"}, "r",      awesome.restart),
-  awful.key({m, "Control"}, "q",      awesome.quit)
+  awful.key({m, "Control"}, "q",      awesome.quit),
+  
+  awful.key({m           }, "r", function()
+    awful.prompt.run(prompt_configuration, prompts[mouse.screen], awful.util.spawn, awful.completion.shell, awful.util.getdir("cache") .. "/history")
+  end)
 )
  
 for i=1, (shifty.config.maxtags or 9) do
