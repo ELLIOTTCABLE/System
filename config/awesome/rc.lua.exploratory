@@ -29,7 +29,7 @@ theme = "default"
 terminal = "xterm"
 
 -- We use this whenever we want a browser. You can change it to whatever browser or command you want.
-browser = "firefox"
+browser = "arora"
 
 -- These commands are responsible for controlling the system. Remember to add entries similar to the following to the sudoers file for each setting below:
 --   %users localhost=NOPASSWD: /sbin/shutdown -h now
@@ -154,7 +154,7 @@ time_box_configuration.hook()
 
 main_menu = awful.menu.new({items = {
   {"Terminal", terminal},
-  {"Browser", "firefox"},
+  {"Browser", browser},
   {"awesomewm", {
     {"Manual", function () awful.util.spawn(terminal .. "-e man awesome") end},
     {"Restart", awesome.restart}
