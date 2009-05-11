@@ -147,6 +147,12 @@ time_box_configuration.hook = function()
   time_box.text = os.date(time_box_configuration.format.open .. date_field .. time_box_configuration.format.time .. time_box_configuration.format.close)
 end
 
+widget_bars = {}
+widget_bar_configuration = {position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16}
+
+task_bars = {}
+task_bar_configuration = {position = "bottom", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16}
+
 -- The following will be run for all screens
 time_box = widget(time_box_configuration)
 awful.hooks.timer.register(1, time_box_configuration.hook)
@@ -172,14 +178,22 @@ tray = widget({type = "systray", align = "right"})
 
 -- The following will be run for each screen
 each_screen(function(s)
-  bar = wibox({position = "top", ontop = true, fg = beautiful.fg_normal, bg = beautiful.bg_normal, height = 16})
+  -- A bar (along the top) for widgets and tags and whatnot
+  widget_bars[s] = wibox(widget_bar_configuration)
   
   prompts[s] = widget({type = "textbox", align = "left"})
   taglists[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, taglist_configuration.buttons)
+  
+  widget_bars[s].widgets = {main_launcher, prompts[s], taglists[s], time_box}
+  widget_bars[s].screen = s
+  
+  -- A bar (along the bottom) for active tasks
+  task_bars[s] = wibox(task_bar_configuration)
+  
   tasklists[s] = awful.widget.tasklist.new(tasklist_configuration.display_function(s), tasklist_configuration.buttons)
   
-  bar.widgets = {main_launcher, prompts[s], taglists[s], tasklists[s], tray, time_box}
-  bar.screen = s
+  task_bars[s].widgets = {tasklists[s], tray}
+  task_bars[s].screen = s
 end)
 
 shifty.taglist = taglists
