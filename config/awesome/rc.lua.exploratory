@@ -14,7 +14,7 @@ m = "Mod4"
 
 -- These are our favourite layouts.
 layouts = {
-  awful.layout.suit.tile,
+  awful.layout.suit.tile.bottom,
   awful.layout.suit.fair,
   awful.layout.suit.max,
   awful.layout.suit.max.fullscreen,
