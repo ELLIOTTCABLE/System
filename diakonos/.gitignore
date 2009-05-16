@@ -1,0 +1,4 @@
+*.log
+*.err
+listing.txt
+shell-result.txt
