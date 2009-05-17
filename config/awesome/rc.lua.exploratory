@@ -69,7 +69,7 @@ end)
 
 shifty.config.apps = {
   -- {match = {"Gran Paradiso", "Firefox"}, tag = "web"},
-  -- {match = {"xterm"}, honorsizehints = false, slave = true, tag = "term"},
+  {match = {"xterm", "urxvt"} , honorsizehints = false, slave = true},
   {match = {""}, buttons = { -- TODO: Is this necessary?
     button({}, 1, function(c) client.focus = c, c:raise() end),
     button({m}, 1, function(c) awful.mouse.client.move() end),
