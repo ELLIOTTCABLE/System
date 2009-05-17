@@ -28,4 +28,6 @@ theme.taglist_squares_unsel  = theme.icons_dir .. "taglist_bullet_white.png"
 
 theme.tasklist_floating_icon = theme.icons_dir .. "floating_clouds.png"
 
+theme.menu_submenu_icon      = theme.icons_dir .. "expand_submenu.png"
+
 return theme
