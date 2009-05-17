@@ -38,4 +38,9 @@ theme.titlebar_ontop_button_normal_inactive = theme.icons_dir .. "not_ontop.png"
 theme.titlebar_ontop_button_focus_active    = theme.titlebar_ontop_button_normal_active
 theme.titlebar_ontop_button_focus_inactive  = theme.titlebar_ontop_button_normal_inactive
 
+theme.titlebar_sticky_button_normal_active   = theme.icons_dir .. "sticky.png"
+theme.titlebar_sticky_button_normal_inactive = theme.icons_dir .. "not_sticky.png"
+theme.titlebar_sticky_button_focus_active    = theme.titlebar_sticky_button_normal_active
+theme.titlebar_sticky_button_focus_inactive  = theme.titlebar_sticky_button_normal_inactive
+
 return theme
