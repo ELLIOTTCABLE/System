@@ -50,6 +50,7 @@ Meta <Key> M: iconify() \n\
 # URxvt
 URxvt*borderLess: false
 URxvt*cursorBlink: false
+URxvt*cursorColor: red
 URxvt*termName: rxvt
 URxvt*loginShell: true
 URxvt*urlLauncher: firefox
