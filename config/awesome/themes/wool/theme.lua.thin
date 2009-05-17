@@ -21,7 +21,11 @@ theme.bg_urgent = "#25B9F9" -- Sky blue
 theme.fg_urgent = theme.fg_normal
 theme.border_urgent = theme.bg_urgent
 
-theme.taglist_squares_sel   = theme.icons_dir .. "taglist_bullet_black.png"
-theme.taglist_squares_unsel = theme.icons_dir .. "taglist_bullet_white.png"
+-- Icons
+-- Most of these are from the "Silk" set. See the README for licensing information.
+theme.taglist_squares_sel    = theme.icons_dir .. "taglist_bullet_black.png"
+theme.taglist_squares_unsel  = theme.icons_dir .. "taglist_bullet_white.png"
+
+theme.tasklist_floating_icon = theme.icons_dir .. "floating_clouds.png"
 
 return theme
