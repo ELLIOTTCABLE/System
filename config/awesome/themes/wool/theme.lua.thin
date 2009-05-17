@@ -23,14 +23,19 @@ theme.border_urgent = theme.bg_urgent
 
 -- Icons
 -- Most of these are from the "Silk" set. See the README for licensing information.
-theme.taglist_squares_sel          = theme.icons_dir .. "taglist_bullet_black.png"
-theme.taglist_squares_unsel        = theme.icons_dir .. "taglist_bullet_white.png"
+theme.taglist_squares_sel                   = theme.icons_dir .. "taglist_bullet_black.png"
+theme.taglist_squares_unsel                 = theme.icons_dir .. "taglist_bullet_white.png"
 
-theme.tasklist_floating_icon       = theme.icons_dir .. "floating_clouds.png"
+theme.tasklist_floating_icon                = theme.icons_dir .. "floating_clouds.png"
 
-theme.menu_submenu_icon            = theme.icons_dir .. "expand_submenu.png"
+theme.menu_submenu_icon                     = theme.icons_dir .. "expand_submenu.png"
 
-theme.titlebar_close_button_normal = theme.icons_dir .. "close.png"
-theme.titlebar_close_button_focus  = theme.titlebar_close_button_normal
+theme.titlebar_close_button_normal          = theme.icons_dir .. "close.png"
+theme.titlebar_close_button_focus           = theme.titlebar_close_button_normal
+
+theme.titlebar_ontop_button_normal_active   = theme.icons_dir .. "ontop.png"
+theme.titlebar_ontop_button_normal_inactive = theme.icons_dir .. "not_ontop.png"
+theme.titlebar_ontop_button_focus_active    = theme.titlebar_ontop_button_normal_active
+theme.titlebar_ontop_button_focus_inactive  = theme.titlebar_ontop_button_normal_inactive
 
 return theme
