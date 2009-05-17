@@ -23,7 +23,7 @@ layouts = {
 }
 
 -- And the theme!
-theme = "default"
+theme = "wool"
 
 -- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
 terminal = "urxvtc"
@@ -52,7 +52,7 @@ end
 -- Some things seem to assume the global variable "modkey" is set.
 modkey = m
 
-beautiful.init("/usr/share/awesome/themes/" .. theme .. "/theme.lua")
+beautiful.init(awful.util.getdir("config") .. "/themes/" .. theme .. "/theme.lua")
 
 
 -- -----------------------------
