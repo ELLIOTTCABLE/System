@@ -1,0 +1,10 @@
+require("winsome")
+
+-- Just about the awesomest theme for awesome.
+theme = winsome.theme("wool")
+
+-- Colours
+theme.bg_normal = "#E9E9E9"
+theme.fg_normal = "#222222"
+
+return theme
