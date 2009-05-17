@@ -2,9 +2,26 @@ require("winsome")
 
 -- Just about the awesomest theme for awesome.
 theme = winsome.theme("wool")
+theme.icons_dir = theme.dir .. "icons/"
+
+-- General settings
+theme.font         = "sans 8"
+theme.border_width = "0"
 
 -- Colours
-theme.bg_normal = "#E9E9E9"
-theme.fg_normal = "#222222"
+theme.bg_normal = "#E5E9E0" -- Off-white
+theme.fg_normal = "#111111" -- Off-black
+theme.border_normal = theme.bg_normal
+
+theme.bg_focus  = "#FFFFFF" -- Bright white
+theme.fg_focus  = "#000000" -- Pitch black
+theme.border_focus = theme.bg_focus
+
+theme.bg_urgent = "#25B9F9" -- Sky blue
+theme.fg_urgent = theme.fg_normal
+theme.border_urgent = theme.bg_urgent
+
+theme.taglist_squares_sel   = theme.icons_dir .. "taglist_bullet_black.png"
+theme.taglist_squares_unsel = theme.icons_dir .. "taglist_bullet_white.png"
 
 return theme
