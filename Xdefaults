@@ -1,4 +1,25 @@
 ##
+# General
+*background:  #000000
+*foreground:  #efefcf
+*color0:      #000000
+*color1:      #9e1828
+*color2:      #aece92
+*color3:      #968a38
+*color4:      #414171
+*color5:      #963c59
+*color6:      #418179
+*color7:      #bebebe
+*color8:      #666666
+*color9:      #cf6171
+*color10:     #c5f779
+*color11:     #fff796
+*color12:     #4186be
+*color13:     #cf9ebe
+*color14:     #71bebe
+*color15:     #ffffff
+
+##
 # XTerm
 xterm*saveLines: 10000
 xterm*scrollBar: true
@@ -12,9 +33,6 @@ xterm*loginShell: true
 #xterm*scrollTtyOutput: false
 xterm*scrollKey: true
 
-xterm*Background: black
-xterm*Foreground: white
-
 # These attempt to adjust XTerm to function similarily to OS X's Terminal.app.
 # http://dotfiles.org/~davidlee/.Xdefaults
 Meta <Key> K: send-signal(int) clear-saved-lines() \n\
@@ -27,3 +45,25 @@ Meta <Key> C: select-cursor-start() \
 select-cursor-end(PRIMARY, CUT_BUFFER()) \n\
 Meta <Key> V: insert-selection(PRIMARY, CUT_BUFFER()) \n\
 Meta <Key> M: iconify() \n\
+
+##
+# URxvt
+URxvt*borderLess: false
+URxvt*cursorBlink: false
+URxvt*termName: rxvt
+URxvt*loginShell: true
+URxvt*urlLauncher: firefox
+
+# Text
+#URxvt*font: xft:monospace:pixelsize=10
+
+# Scrolling
+URxvt*scrollBar:            false
+URxvt*mouseWheelScrollPage: true
+URxvt*scrollTtyOutput:      false
+URxvt*scrollTtyKeypress:    true
+
+# Transparency
+URxvt*inheritPixmap: true
+URxvt*tintColor: white
+URxvt*shading: 40
