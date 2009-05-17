@@ -26,7 +26,7 @@ layouts = {
 theme = "default"
 
 -- We use this variable whenever we want to launch a terminal. You can change it to whatever terminal or command you would like.
-terminal = "xterm"
+terminal = "urxvtc"
 
 -- We use this whenever we want a browser. You can change it to whatever browser or command you want.
 browser = "arora"
