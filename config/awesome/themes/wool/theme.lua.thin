@@ -7,6 +7,8 @@ theme.icons_dir = theme.dir .. "icons/"
 -- General settings
 theme.font         = "sans 8"
 theme.border_width = "0"
+theme.menu_height  = "18"
+theme.menu_width   = "125"
 
 -- Colours
 theme.bg_normal = "#E5E9E0" -- Off-white
