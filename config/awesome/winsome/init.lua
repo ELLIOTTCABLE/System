@@ -1,7 +1,8 @@
 winsome = {}
 
-winsome.shared_dir = "/usr/share/awesome/"
-winsome.default_dir = winsome.shared_dir .. "themes/default/"
+winsome.dir = awful.util.getdir("config") .. "/winsome/"
+winsome.awesome_dir = "/usr/share/awesome/"
+winsome.default_dir = winsome.awesome_dir .. "themes/default/"
 
 winsome.theme = function(name)
   local theme = {}
@@ -79,4 +80,4 @@ winsome.defaults.layout_tileleft = winsome.defaults.layouts_dir .. "tileleftw.pn
 winsome.defaults.layout_tile = winsome.defaults.layouts_dir .. "tilew.png"
 winsome.defaults.layout_tiletop = winsome.defaults.layouts_dir .. "tiletopw.png"
 
-winsome.defaults.awesome_icon = winsome.shared_dir .. "icons/awesome16.png"
+winsome.defaults.awesome_icon = winsome.awesome_dir .. "icons/awesome16.png"
