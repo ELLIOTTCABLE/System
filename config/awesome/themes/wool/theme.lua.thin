@@ -43,6 +43,11 @@ theme.titlebar_sticky_button_normal_inactive = theme.icons_dir .. "not_sticky.pn
 theme.titlebar_sticky_button_focus_active    = theme.titlebar_sticky_button_normal_active
 theme.titlebar_sticky_button_focus_inactive  = theme.titlebar_sticky_button_normal_inactive
 
+theme.titlebar_maximized_button_normal_active   = theme.icons_dir .. "maximized.png"
+theme.titlebar_maximized_button_normal_inactive = theme.icons_dir .. "not_maximized.png"
+theme.titlebar_maximized_button_focus_active    = theme.titlebar_maximized_button_normal_active
+theme.titlebar_maximized_button_focus_inactive  = theme.titlebar_maximized_button_normal_inactive
+
 theme.titlebar_floating_button_normal_active   = theme.icons_dir .. "floating.png"
 theme.titlebar_floating_button_normal_inactive = theme.icons_dir .. "not_floating.png"
 theme.titlebar_floating_button_focus_active    = theme.titlebar_floating_button_normal_active
