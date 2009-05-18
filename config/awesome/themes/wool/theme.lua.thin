@@ -26,7 +26,7 @@ theme.border_urgent = theme.bg_urgent
 theme.taglist_squares_sel                   = theme.icons_dir .. "taglist_bullet_black.png"
 theme.taglist_squares_unsel                 = theme.icons_dir .. "taglist_bullet_white.png"
 
-theme.tasklist_floating_icon                = theme.icons_dir .. "floating_clouds.png"
+theme.tasklist_floating_icon                 = theme.icons_dir .. "floating.png"
 
 theme.menu_submenu_icon                     = theme.icons_dir .. "expand_submenu.png"
 
@@ -42,5 +42,10 @@ theme.titlebar_sticky_button_normal_active   = theme.icons_dir .. "sticky.png"
 theme.titlebar_sticky_button_normal_inactive = theme.icons_dir .. "not_sticky.png"
 theme.titlebar_sticky_button_focus_active    = theme.titlebar_sticky_button_normal_active
 theme.titlebar_sticky_button_focus_inactive  = theme.titlebar_sticky_button_normal_inactive
+
+theme.titlebar_floating_button_normal_active   = theme.icons_dir .. "floating.png"
+theme.titlebar_floating_button_normal_inactive = theme.icons_dir .. "not_floating.png"
+theme.titlebar_floating_button_focus_active    = theme.titlebar_floating_button_normal_active
+theme.titlebar_floating_button_focus_inactive  = theme.titlebar_floating_button_normal_inactive
 
 return theme
