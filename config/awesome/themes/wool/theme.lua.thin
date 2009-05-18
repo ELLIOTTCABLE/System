@@ -2,13 +2,6 @@ require("winsome")
 
 -- Just about the awesomest theme for awesome.
 theme = winsome.theme("wool")
-theme.icons_dir = theme.dir .. "icons/"
-
--- General settings
-theme.font         = "sans 8"
-theme.border_width = "0"
-theme.menu_height  = "18"
-theme.menu_width   = "125"
 
 -- Colours
 theme.bg_normal = "#E5E9E0" -- Off-white
@@ -22,37 +15,5 @@ theme.border_focus = theme.bg_focus
 theme.bg_urgent = "#25B9F9" -- Sky blue
 theme.fg_urgent = theme.fg_normal
 theme.border_urgent = theme.bg_urgent
-
--- Icons
--- Most of these are from the "Silk" set. See the README for licensing information.
-theme.taglist_squares_sel                   = theme.icons_dir .. "taglist_bullet_black.png"
-theme.taglist_squares_unsel                 = theme.icons_dir .. "taglist_bullet_white.png"
-
-theme.tasklist_floating_icon                 = theme.icons_dir .. "floating.png"
-
-theme.menu_submenu_icon                     = theme.icons_dir .. "expand_submenu.png"
-
-theme.titlebar_close_button_normal          = theme.icons_dir .. "close.png"
-theme.titlebar_close_button_focus           = theme.titlebar_close_button_normal
-
-theme.titlebar_ontop_button_normal_active   = theme.icons_dir .. "ontop.png"
-theme.titlebar_ontop_button_normal_inactive = theme.icons_dir .. "not_ontop.png"
-theme.titlebar_ontop_button_focus_active    = theme.titlebar_ontop_button_normal_active
-theme.titlebar_ontop_button_focus_inactive  = theme.titlebar_ontop_button_normal_inactive
-
-theme.titlebar_sticky_button_normal_active   = theme.icons_dir .. "sticky.png"
-theme.titlebar_sticky_button_normal_inactive = theme.icons_dir .. "not_sticky.png"
-theme.titlebar_sticky_button_focus_active    = theme.titlebar_sticky_button_normal_active
-theme.titlebar_sticky_button_focus_inactive  = theme.titlebar_sticky_button_normal_inactive
-
-theme.titlebar_maximized_button_normal_active   = theme.icons_dir .. "maximized.png"
-theme.titlebar_maximized_button_normal_inactive = theme.icons_dir .. "not_maximized.png"
-theme.titlebar_maximized_button_focus_active    = theme.titlebar_maximized_button_normal_active
-theme.titlebar_maximized_button_focus_inactive  = theme.titlebar_maximized_button_normal_inactive
-
-theme.titlebar_floating_button_normal_active   = theme.icons_dir .. "floating.png"
-theme.titlebar_floating_button_normal_inactive = theme.icons_dir .. "not_floating.png"
-theme.titlebar_floating_button_focus_active    = theme.titlebar_floating_button_normal_active
-theme.titlebar_floating_button_focus_inactive  = theme.titlebar_floating_button_normal_inactive
 
 return theme
