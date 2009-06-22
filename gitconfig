@@ -32,3 +32,5 @@
 	autosetupmerge = true
 [pager]
 	status = false
+[core]
+	excludesfile = "/Users/elliottcable/.gitignore"
