@@ -43,7 +43,7 @@ export PAGER='less'
 # export PAGER='page'
 
 export HISTIGNORE=''
-export HISTSIZE=100000
+export HISTSIZE=10000
 export HISTFILESIZE=$HISTSIZE
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export EDITOR='mate -w'
