@@ -7,6 +7,8 @@ function parse_git_dirty {
 PROMPT_COMMAND='
 OLD_STATUS=$?
 
+echo -ne "\033]0;$(basename ${PWD})\007"
+
 if [[ $(id -u) == 0 ]]; then
   PROMPT_USERNAME="${ALERT_COLOUR_BOLD}superuser${CLEAR_COLOUR}"
   USER_PROMPT="#"
