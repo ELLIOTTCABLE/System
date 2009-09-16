@@ -1,20 +1,5 @@
 # PS1='\h:\w \u\$ ' #Default
 
-case "$COLOURIZE_AS" in
-  "purple")
-    ALERT_COLOUR=$GREEN
-    ALERT_COLOUR_E=$GREEN_E
-    ALERT_COLOUR_BOLD=$GREEN_BOLD
-    ALERT_COLOUR_BOLD_E=$GREEN_BOLD_E
-  ;;
-  *)
-    ALERT_COLOUR=$PURPLE
-    ALERT_COLOUR_E=$PURPLE_E
-    ALERT_COLOUR_BOLD=$PURPLE_BOLD
-    ALERT_COLOUR_BOLD_E=$PURPLE_BOLD_E
-  ;;
-esac
-
 function parse_git_dirty {
   [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
 }
