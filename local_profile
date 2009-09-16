@@ -1,6 +1,6 @@
 # Default settings, change these for each type of system:
 # 
-#     rm ~/.system ; cp ~/.files/system ~/.system && nano ~/.system
-#     
+#     rm ~/.local_profile ; cp ~/.files/local_profile ~/.local_profile && nano ~/.local_profile
+# 
 export SYSTEM='Unknown'
 export COLOURIZE_AS='white'

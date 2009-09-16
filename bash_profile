@@ -3,14 +3,14 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-if [ ! -f $HOME/.system ]; then
+if [ ! -f $HOME/.local_profile ]; then
   # No system type! Can't use this bash profile.
-  echo -e "** No ~/.system file! Assuming unknown **"
+  echo -e "** No ~/.local_profile file! Assuming unknown system **"
   sleep 2
   export SYSTEM='unknown'
   export COLOURIZE_AS='white'
 else
-  . $HOME/.system
+  . $HOME/.local_profile
 fi
 
 . $HOME/.shell_colours
