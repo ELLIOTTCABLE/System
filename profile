@@ -13,7 +13,7 @@ else
   . $HOME/.system
 fi
 
-. $HOME/.colours
+. $HOME/.shell_colours
 . $HOME/.shell_prompt
 
 export SYSTEM_OSX='Mac OS X'
