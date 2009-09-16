@@ -1,19 +1,7 @@
-if [[ $- != *i* ]] ; then
-  # Shell is non-interactive.  Be done now!
-  return
+if [ -f $HOME/.profile ]; then
+  . $HOME/.profile
 fi
 
-if [ ! -f $HOME/.local_profile ]; then
-  # No system type! Can't use this bash profile.
-  echo -e "** No ~/.local_profile file! Assuming unknown system **"
-  sleep 2
-  export SYSTEM='unknown'
-  export COLOURIZE_AS='white'
-else
-  . $HOME/.local_profile
-fi
-
-. $HOME/.shell_colours
 . $HOME/.bash_prompt
 
 export SYSTEM_OSX='Mac OS X'
@@ -25,10 +13,6 @@ export SYSTEM_CENTOS5='Centos 5'
 export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
 export SYSTEM_ARCH='Arch'
-
-if [ -f $HOME/.profile.local ]; then
-  . $HOME/.profile.local
-fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   cd $HOME/Code/
@@ -319,8 +303,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 export MANPATH
 
-if [ -f $HOME/.profile.unprintable ]; then
-  . $HOME/.profile.unprintable
+if [ -f $HOME/.bash_profile.unprintable ]; then
+  . $HOME/.bash_profile.unprintable
 fi
 
 export DISPLAY=:0.0
