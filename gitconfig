@@ -23,14 +23,12 @@
 	numbered = auto
 [core]
 	legacyheaders = false
-	excludesfile = ~/.gitignore
 	editor = nano
 	whitespace = -trailing-space
+	excludesfile = /Users/elliottcable/.gitignore
 [repack]
 	usedeltabaseoffset = true
 [branch]
 	autosetupmerge = true
 [pager]
 	status = false
-[core]
-	excludesfile = "/Users/elliottcable/.gitignore"
