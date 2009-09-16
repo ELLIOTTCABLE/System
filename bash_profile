@@ -14,7 +14,7 @@ else
 fi
 
 . $HOME/.shell_colours
-. $HOME/.shell_prompt
+. $HOME/.bash_prompt
 
 export SYSTEM_OSX='Mac OS X'
 export SYSTEM_TIGER='Mac OS X 10.4'
