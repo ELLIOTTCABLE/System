@@ -3,27 +3,29 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-if [ ! -f $HOME/.profile.local ]; then
-  # No system type! Can't use this local profile.
-  echo -e "** No ~/.profile.local file! Assuming unknown system **"
-  sleep 2
-  export SYSTEM='unknown'
-  export COLOURIZE_AS='white'
-else
-  source $HOME/.profile.local
-fi
-
-source $HOME/.shell_colours
-
 export SYSTEM_OSX='Mac OS X'
 export SYSTEM_TIGER='Mac OS X 10.4'
 export SYSTEM_LEOPARD='Mac OS X 10.5'
+export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
 export SYSTEM_NIX='Linux'
 export SYSTEM_CENTOS='Centos'
 export SYSTEM_CENTOS5='Centos 5'
 export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
-export SYSTEM_ARCH='Arch'
+export SYSTEM_ARCH='Arch Linux'
+export SYSTEM_UNKNOWN='Unknown'
+
+source $HOME/.profile.local
+while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
+  echo '$SYSTEM \033[0;91mis not set!\033[m Opening $EDITOR so you can set it…'
+  sleep 2
+  rm $HOME/.profile.local
+  cp $HOME/.files/profile.local $HOME/.profile.local
+  nano $HOME/.profile.local
+  source $HOME/.profile.local
+done
+
+source $HOME/.shell_colours
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   cd $HOME/Code/
