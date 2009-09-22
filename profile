@@ -56,7 +56,7 @@ export LD_LIBRARY_PATH=/usr/local/lib # for pound
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
-  export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.3-41620"
+  export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.3-41620/"
 fi
 
 export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
