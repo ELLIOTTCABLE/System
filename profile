@@ -181,12 +181,7 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 export PATH
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  GEM_HOME="/Users/elliottcable/.gem/ruby/1.9.1"
-else
-  GEM_HOME="/home/elliottcable/.gem/ruby/1.9.1"
-fi
-export GEM_HOME
+export GEM_HOME="$HOME/.gem/ruby/1.9.1"
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   MANPATH="/opt/local/share/man:$MANPATH"
