@@ -31,16 +31,31 @@ source $HOME/.shell_colours
 export PAGER='less'
 export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
 
+# Editor setup
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  alias espresso='open -a Espresso'
+  alias esp='espresso'
+
+  alias xcode='open -a Xcode'
+fi
+
+
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export EDITOR='mate -w'
   export VISUAL='mate -w'
 elif [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
-  export EDITOR='nano'
-  export VISUAL='nano'
-else
-  export EDITOR='vi'
-  export VISUAL='vi'
+  export EDITOR='vim'
+  export VISUAL='vim'
 fi
+
+if [[ $EDITOR =~ 'mate' ]]; then
+  alias et='edit .'
+  alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
+fi
+
+alias edit=$EDITOR
+alias e='edit'
+
 export CLICOLOR='yes'
 
 export EVENT_NOKQUEUE=1               # for memcached
@@ -55,7 +70,6 @@ export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
 export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
 
 alias q='exit'
-alias m='mate'
 # Force interactives, for safety
 alias rm='rm -i'
 alias cp='cp -i'
@@ -109,18 +123,6 @@ alias mat='merb -a thin'
 alias aok='rake aok'
 
 # Server control
-
-# Editor setup - most only works for TextMate
-alias edit=$EDITOR
-alias e='edit'
-if [[ $EDITOR =~ 'mate' ]]; then
-  alias et='edit .'
-  alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
-fi
-
-alias espresso='open -a Espresso'
-alias esp='espresso'
-alias xcode='open -a Xcode'
 
 alias df='df -kTh'
 
