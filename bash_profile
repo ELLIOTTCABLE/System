@@ -25,8 +25,6 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export FIGNORE=DS_Store
 fi
 
-export LANG=en_US.UTF-8
-
 export HISTIGNORE="&:ls:exit"
 
 shopt -s cdspell
