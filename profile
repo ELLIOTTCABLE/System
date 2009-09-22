@@ -177,7 +177,7 @@ umask 022
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
 PATH="$HOME/.bin:$PATH:$EC2_HOME/bin:$HOME/.gem/ruby/1.9.1/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
+  PATH="/usr/local/bin:/opt/local/bin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
 export PATH
 
