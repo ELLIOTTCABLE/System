@@ -27,12 +27,6 @@ done
 
 source $HOME/.shell_colours
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  cd $HOME/Code/
-else
-  cd $HOME/
-fi
-
 # fix less
 export PAGER='less'
 # export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
