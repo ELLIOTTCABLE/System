@@ -67,14 +67,9 @@ export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
 export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
 
 alias q='exit'
-# Force interactives, for safety
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
 
 # Make mkdir recursive
 alias mkdir='mkdir -p'
-
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   # Real trashing for the win!
