@@ -39,7 +39,6 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias xcode='open -a Xcode'
 fi
 
-
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export EDITOR='mate -w'
   export VISUAL='mate -w'
@@ -87,20 +86,15 @@ fi
 alias cdd='cd - '                     # goto last dir cd'ed from
 
 # Screen tools
-alias screen='screen -U'
-alias sus='screen -S'
+alias ss='screen -S'
 alias sls='screen -list'
-alias surd='screen -aARD'
 
 # Ruby
-alias rubyw='ruby -w' # Fuck you Rails, for belching so many errors all the time
 alias ri='ri -Tf ansi'
-alias shoes='/Applications/Shoes.app/Contents/MacOS/shoes'
 
 # Rails
 alias sc='./script/console'
 alias ss='./script/server'
-alias rails="/usr/bin/rails"
 if [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
   export ERAILS="/Library/Open\ Source/Ruby\ on\ Rails/Edge"
 elif [[ $SYSTEM =~ $SYSTEM_TIGER ]]; then
@@ -112,21 +106,19 @@ alias erails="ruby $ERAILS/railties/bin/rails"
 
 # Merb
 alias mat='merb -a thin'
+
+# Rake
 alias aok='rake aok'
 
 # Server control
-
-alias df='df -kTh'
+alias df='df -kH'
 
 alias grep='grep --color=auto'
-# if [[ ! $SYSTEM =~ $SYSTEM_CENTOS ]]; then
-#   alias mysql='/usr/local/mysql/bin/mysql'
-#   alias mysqladmin='/usr/local/mysql/bin/mysqladmin'
-#   alias mysqlstart='sudo /usr/local/mysql/bin/mysqld_safe -d'
-# fi
-if [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
+
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias nzb='hellanzb.py'
 fi
+
 alias tu='top -o cpu'
 alias tm='top -o vsize'
 
@@ -135,13 +127,8 @@ alias sco='svn co'
 alias sup='svn up'
 alias sci='svn ci -m'
 alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
-alias sclr='find . -name .svn -print0 | xargs -0 rm -rf'
-if [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
-  alias supbs='sudo /srv/script/control update backstage'
-  alias supstage='sudo /srv/script/control update stage'
-fi
 
-## git
+# git
 alias g='git'
 alias gist='g status'
 alias gull='g pull'
@@ -156,7 +143,7 @@ alias gash='g stash'
 alias giff='g --no-pager diff'
 alias glog='g log --graph -B -M -C --find-copies-harder --decorate --source --pretty=oneline --abbrev-commit --date=relative --left-right --all'
 
-## alternatives, using the 'stage' metaphor
+# alternatives, using the 'stage' metaphor
 alias stage='g add'
 alias unstage='g reset'
 alias staged='gist'
@@ -165,19 +152,6 @@ alias stiff='giff --cached' # staged diff
 alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
 alias diff='colordiff'
-
-## ditz
-alias d='ditz'
-alias dodo='d todo'
-alias dodo-full='d todo-full'
-alias dart='d start'
-alias dose='d close'
-alias dause='g stop' # pause
-alias digup='d drop' # give up
-alias dad='d add'
-alias dog='d log'
-alias dicom='d comment'
-alias dow='d show'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
@@ -197,15 +171,8 @@ if [ ! -r $HOME/.cheats ]; then
   cheat sheets | egrep '^ ' | awk {'print $1'} > $HOME/.cheats
 fi
 
-if [[ $SYSTEM =~ $SYSTEM_TIGER ]]; then
-  alias gem="MACOSX_DEPLOYMENT_TARGET=10.4 gem"
-elif [[ $SYSTEM =~ $SYSTEM_LEOPARD ]]; then
-  alias gem="MACOSX_DEPLOYMENT_TARGET=10.5 gem"
-fi
-
 # Create files as u=rwx, g=rx, o=rx
 umask 022
-
 
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
 PATH="$HOME/.bin:$PATH:$EC2_HOME/bin:$HOME/.gem/ruby/1.9.1/bin"
@@ -225,6 +192,3 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   MANPATH="/opt/local/share/man:$MANPATH"
 fi
 export MANPATH
-
-export DISPLAY=:0.0
-export LC_CTYPE=en_US.UTF-8
