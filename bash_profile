@@ -21,10 +21,6 @@ if [ -f ~/Code/src/git/contrib/completion/git-completion.bash ]; then
   source ~/Code/src/git/contrib/completion/git-completion.bash
 fi
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export FIGNORE=DS_Store
-fi
-
 export HISTIGNORE="&:ls:exit"
 
 shopt -s cdspell
