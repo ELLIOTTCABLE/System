@@ -182,8 +182,3 @@ fi
 export PATH
 
 # export GEM_HOME="$HOME/.gem/ruby/1.9.1"
-
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  MANPATH="/opt/local/share/man:$MANPATH"
-fi
-export MANPATH
