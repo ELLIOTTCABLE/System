@@ -29,7 +29,7 @@ source $HOME/.shell_colours
 
 # fix less
 export PAGER='less'
-export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
+# export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
 
 # Editor setup
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
