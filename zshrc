@@ -71,6 +71,7 @@ bindkey -A ekey main
 # backward’). Until this is fixed, we’ll disable multi–line editing.
 #bindkey '\e[A' up-line-or-search
 #bindkey '\e[B' down-line-or-search
-setopt SINGLE_LINE_ZLE
+# However, we still need SINGLE_LINE_ZLE to be unset, so RPROMPT and such work
+unsetopt SINGLE_LINE_ZLE
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
