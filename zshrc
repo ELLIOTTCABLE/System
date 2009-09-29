@@ -34,6 +34,14 @@ compinit
 # I like to keep up to speed on my vim
 bindkey -v
 
+# Lines configured by zsh-newuser-install
+setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
+# End of lines configured by zsh-newuser-install
+
+# ===========
+# = History =
+# ===========
+
 # History should, uh, work
 HISTFILE=~/.histfile
 HISTSIZE=100000
@@ -47,7 +55,3 @@ setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
 setopt HIST_NO_STORE # Don’t store the `history` command itself
 
 unsetopt SINGLE_LINE_ZLE # Multiline editing!
-
-# Lines configured by zsh-newuser-install
-setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
-# End of lines configured by zsh-newuser-install
