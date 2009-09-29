@@ -35,6 +35,10 @@ compinit
 setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
 # End of lines configured by zsh-newuser-install
 
+# This is almost certainly a stupid thing to do, but I really like to be able
+# to switch vi modes quickly.
+KEYTIMEOUT=1
+
 # ===========
 # = History =
 # ===========
