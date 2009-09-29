@@ -89,3 +89,12 @@ function zle-line-init zle-keymap-select {
 }
 zle -N zle-line-init
 zle -N zle-keymap-select
+
+# ===========
+# = Widgets =
+# ===========
+
+function are-widgets-working {
+  echo '<yes>'
+}
+zle -N are-widgets-working
