@@ -31,9 +31,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-# I like to keep up to speed on my vim
-bindkey -v
-
 # Lines configured by zsh-newuser-install
 setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
 # End of lines configured by zsh-newuser-install
@@ -54,4 +51,22 @@ setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
 setopt HIST_NO_STORE # Don’t store the `history` command itself
 
-unsetopt SINGLE_LINE_ZLE # Multiline editing!
+# ================
+# = Key bindings =
+# ================
+
+# Creating a new keymap, based on the predefined ‘vi insert’ keymap. I like to
+# keep up to speed on my vim.
+bindkey -N ekey viins
+# Link the ‘ekey’ keymap to the ‘main’ keymap, and activate it
+bindkey -A ekey main
+
+# ‘up/down-line-or-search’ only utilizes the first “word” of the current line;
+# I much prefer it utilizing the entire contents of the line prior to the
+# insertion point (the operation of ‘history-beginning-search-forward/
+# backward’). Until this is fixed, we’ll disable multi–line editing.
+#bindkey '\e[A' up-line-or-search
+#bindkey '\e[B' down-line-or-search
+setopt SINGLE_LINE_ZLE
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
