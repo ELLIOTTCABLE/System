@@ -75,3 +75,17 @@ bindkey -A ekey main
 unsetopt SINGLE_LINE_ZLE
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
+
+# ==========
+# = Prompt =
+# ==========
+
+# RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
+PS1=" %(?|%2F|%1F)%1(V|%1v|%(#|#|>))%(?|%2f|%1f) "
+
+function zle-line-init zle-keymap-select {
+  psvar[1]="${${KEYMAP/vicmd/:}/(main|viins)/}"
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
