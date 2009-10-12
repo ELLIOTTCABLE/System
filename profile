@@ -172,6 +172,14 @@ if [ ! -r $HOME/.cheats ]; then
   cheat sheets | egrep '^ ' | awk {'print $1'} > $HOME/.cheats
 fi
 
+# Red STDERR
+# rse <command string>
+rse () {
+  # We need to wrap each phrase of the command in quotes to preserve arguments that contain whitespace
+  # Execute the command, swap STDOUT and STDERR, colour STDOUT, swap back
+  ((eval $(for phrase in "$@"; do echo -n "'$phrase' "; done)) 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
+}
+
 # Create files as u=rwx, g=rx, o=rx
 umask 022
 
