@@ -80,7 +80,13 @@ channels = (
   { name = "#MPlayer"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#GNU"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Ruby-Pro"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Fauna"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#Fauna"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Speck"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#MacHomebrew"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#zsh"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#vim"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Espresso"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -973,3 +979,4 @@ mainwindows = {
   2 = { first_line = "1"; lines = "7"; };
 };
 ignores = ( { mask = "jibot"; level = "ALL"; } );
+logs = { };
