@@ -32,3 +32,5 @@
 	autosetupmerge = true
 [pager]
 	status = false
+[push]
+	default = matching
