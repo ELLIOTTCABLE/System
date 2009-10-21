@@ -141,7 +141,7 @@ alias gin='g ci'
 alias ganch='g branch'
 alias clanch='git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git clean -fdx'
 alias gash='g stash'
-alias giff='g diff'
+alias giff='g diff --patch-with-stat'
 alias glog='g log --graph -B -M -C --find-copies-harder --decorate --source --pretty=oneline --abbrev-commit --date=relative --left-right --all'
 
 # alternatives, using the 'stage' metaphor
