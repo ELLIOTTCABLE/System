@@ -24,7 +24,6 @@ chatnets = {
 
 channels = (
   { name = "#git-blog"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#XTT"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MacOSX"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Adium"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##TextMate"; chatnet = "Freenode"; autojoin = "yes"; },
@@ -86,7 +85,8 @@ channels = (
   { name = "#zsh"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#vim"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Espresso"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RabbitMQ"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
