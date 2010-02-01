@@ -155,7 +155,7 @@ alias stiff-last='giff HEAD^ HEAD' # last commit diff
 alias diff='colordiff'
 
 # C
-C() { eval local last="\$$#"; clang -o "${last%.c}" "$@"; } # C -std=c89 -O0 -Wall -save-temps Paws.c
+C() { eval local last="\$$#"; last=${last##*/}; clang -o "${last%.*}.o" "$@" }
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
