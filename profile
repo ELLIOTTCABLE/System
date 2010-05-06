@@ -130,7 +130,7 @@ alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
 
 # git
 alias g='git'
-alias gist='g diff -M -C --find-copies-harder -l64 --stat HEAD'
+alias gist='g diff -M -C --find-copies-harder -l64 --stat --cached && g diff -M -C --find-copies-harder -l64 --stat'
 alias gull='g pull'
 alias gush='g push'
 alias gad='g add'
