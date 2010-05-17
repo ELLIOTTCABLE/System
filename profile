@@ -59,7 +59,8 @@ export CLICOLOR='yes'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
-  export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.3-51254/"
+  export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.3-51254"
+  export AWS_HOME="$HOME/.ec2"
 fi
 
 export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
