@@ -37,6 +37,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias esp='espresso'
 
   alias xcode='open -a Xcode'
+  
+  alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-experimental-extension-apis'
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
