@@ -65,8 +65,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export AWS_HOME="$HOME/.ec2"
 fi
 
-export EC2_PRIVATE_KEY="$($HOME/.ec2/pk-*.pem(N))"
-export EC2_CERT="$($HOME/.ec2/cert-*.pem(N))"
+export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
+export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
 
 alias q='exit'
 
