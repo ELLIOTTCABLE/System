@@ -81,14 +81,25 @@ bindkey '\e[B' history-beginning-search-forward
 # ==========
 
 # RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
-PS1=" %(?|%2F|%1F)%1(V|%1v|%(#|#|>))%(?|%2f|%1f) "
+PS1=" %(?|%2F|%1F)%1(V|%1v|%(#|#|:))%(?|%2f|%1f) "
 
-function zle-line-init zle-keymap-select {
-  psvar[1]="${${KEYMAP/vicmd/:}/(main|viins)/}"
-  zle reset-prompt
+
+function zle-line-init {
+  local STATUS=$?
+  zle -K vicmd
+  return $STATUS
 }
-zle -N zle-line-init
-zle -N zle-keymap-select
+zle -N   zle-line-init
+
+function zle-keymap-select {
+  local STATUS=$?
+  psvar[1]="${${KEYMAP/(main|viins)/>}/vicmd/}"
+  ( exit $STATUS ) # This may not seem to make sense, but it’s the only way to preserve the exit status
+                   # (http://www.zsh.org/cgi-bin/mla/redirect?USERNUMBER=15796)
+  zle reset-prompt
+  psvar[1]=""
+}
+zle -N   zle-keymap-select
 
 # ===========
 # = Widgets =
