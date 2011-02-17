@@ -9,6 +9,14 @@ servers = (
     ssl_verify = "no";
     family = "inet";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.mozilla.org";
+    chatnet = "Mozilla";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
@@ -19,6 +27,7 @@ chatnets = {
     username = "ec";
     realname = "elliottcable";
   };
+  Mozilla = { type = "IRC"; };
   SILC = { type = "IRC"; };
 };
 
@@ -86,7 +95,24 @@ channels = (
   { name = "#vim"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Espresso"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#RabbitMQ"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#RabbitMQ"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Paws"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#inimino"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Haiku"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#jQuery-OT"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Redis"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Haskell"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##CompSci"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Snow"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#schmorp"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Skywriter"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "#Beam.js"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#OFTN"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#DuckDuckGo"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#WoWHead"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#hollow"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Temple"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -295,6 +321,20 @@ statusbar = {
         barend = { priority = "100"; alignment = "right"; };
       };
     };
+    awl_7 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_7 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_8 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_8 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
   };
 };
 settings = {
@@ -303,10 +343,14 @@ settings = {
     user_name = "elliottcable";
     nick = "elliottcable";
     timestamp_format = "%H:%M:%S";
+    log_create_mode = "644";
   };
-  "fe-text" = { actlist_sort = "refnum"; };
+  "fe-text" = { 
+    actlist_sort = "refnum";
+    autostick_split_windows = "yes";
+  };
   "fe-common/core" = {
-    theme = "fear2";
+    theme = "fear2-pink";
     autocreate_own_query = "yes";
     autocreate_query_level = "MSGS DCCMSGS";
     use_status_window = "yes";
@@ -314,11 +358,14 @@ settings = {
     autoclose_windows = "no";
     autolog = "yes";
     autolog_path = "~/.irssi/logs/$tag/$0.log";
+    hilight_act_color = "%R";
+    completion_char = " \0033↼\017";
   };
   "perl/core/scripts" = {
     awl_display_key = "$Q%K|%n$H$C$S";
     awl_block = "-14";
     awl_display_nokey = "$H$C$S";
+    awl_maxlines = "0";
   };
   "irc/core" = { part_message = "〆"; };
 };
