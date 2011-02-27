@@ -368,6 +368,11 @@ settings = {
     awl_block = "-14";
     awl_display_nokey = "$H$C$S";
     awl_maxlines = "0";
+    screen_away_message = "gnuscreen detached";
+    screen_away_window = "";
+    screen_away_nick = "ec|detached";
+    neat_right_mode = "no";
+    neat_ignorechars = "([_`]|\\|.*)";
   };
   "irc/core" = { part_message = "〆"; };
 };
