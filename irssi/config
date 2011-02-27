@@ -112,7 +112,8 @@ channels = (
   { name = "#WoWHead"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#hollow"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Temple"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
