@@ -345,6 +345,7 @@ settings = {
     nick = "elliottcable";
     timestamp_format = "%H:%M:%S";
     log_create_mode = "644";
+    awaylog_level = "";
   };
   "fe-text" = { 
     actlist_sort = "refnum";
