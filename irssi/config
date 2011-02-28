@@ -377,6 +377,7 @@ settings = {
     hilight_act_color = "%R";
     completion_char = ":";
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
+    autolog_ignore_targets = "chanserv nickserv";
   };
   "perl/core/scripts" = {
     awl_display_key = "$Q%K|%n$H$C$S";
