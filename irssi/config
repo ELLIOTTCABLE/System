@@ -375,7 +375,7 @@ settings = {
     autolog = "yes";
     autolog_path = "~/.irssi/logs/$tag/$0.log";
     hilight_act_color = "%R";
-    completion_char = " \0033↼\017";
+    completion_char = ":";
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
   };
   "perl/core/scripts" = {
