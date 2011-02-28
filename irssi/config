@@ -17,6 +17,14 @@ servers = (
     use_ssl = "no";
     ssl_verify = "no";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.oftc.net";
+    chatnet = "OFTC";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
@@ -29,6 +37,12 @@ chatnets = {
   };
   Mozilla = { type = "IRC"; };
   SILC = { type = "IRC"; };
+  OFTC = {
+    type = "IRC";
+    nick = "elliottcable";
+    username = "ec";
+    realname = "elliottcable";
+  };
 };
 
 channels = (
@@ -68,7 +82,6 @@ channels = (
   { name = "##Typophiles"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Regex"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Lighttpd"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#NginX"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Startups"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Freenode"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#irssi"; chatnet = "Freenode"; autojoin = "yes"; },
@@ -113,7 +126,8 @@ channels = (
   { name = "#hollow"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Temple"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#LLVM"; chatnet = "OFTC"; autojoin = "yes"; }
 );
 
 aliases = {
