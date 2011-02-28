@@ -378,6 +378,7 @@ settings = {
     completion_char = ":";
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
     autolog_ignore_targets = "chanserv nickserv";
+    hilight_nick_matches = "no";
   };
   "perl/core/scripts" = {
     awl_display_key = "$Q%K|%n$H$C$S";
@@ -389,6 +390,9 @@ settings = {
     screen_away_nick = "ec|detached";
     neat_right_mode = "no";
     neat_ignorechars = "([_`]|\\|.*)";
+    neat_left_actions = "yes";
+    neat_left_messages = "yes";
+    neat_melength = "0";
   };
   "irc/core" = { part_message = "〆"; };
 };
@@ -1050,3 +1054,12 @@ mainwindows = {
 };
 ignores = ( { mask = "jibot"; level = "ALL"; } );
 logs = { };
+hilights = (
+  {
+    text = "\\b(e(lliott?)?c(able)?|elliott?)\\b";
+    priority = "100";
+    nick = "no";
+    word = "yes";
+    regexp = "yes";
+  }
+);
