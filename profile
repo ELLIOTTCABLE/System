@@ -158,7 +158,7 @@ alias stiff-last='giff HEAD^ HEAD' # last commit diff
 alias diff='colordiff'
 
 # C
-C() { eval local last="\$$#"; last=${last##*/}; clang -o "${last%.*}.o" "$@" }
+C99() { eval local last="\$$#"; last=${last##*/}; clang -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" }
 C++() { eval local last="\$$#"; last=${last##*/}; g++ -o "${last%.*}.o" "$@" }
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
