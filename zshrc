@@ -81,7 +81,7 @@ bindkey '\e[B' history-beginning-search-forward
 # ==========
 
 # RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
-PS1=" %(?|%2F|%1F)%1(V|%1v|%(#|#|:))%(?|%2f|%1f) "
+PS1="%(?|%2F|%1F)%1(V|%1v|%(#|#|:))%(?|%2f|%1f) "
 
 
 function zle-line-init {
