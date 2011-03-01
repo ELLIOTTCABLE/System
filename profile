@@ -133,7 +133,7 @@ alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
 
 # git
 alias g='git'           # vvv This is so complex, it should really be a script… lol. vvv
-alias gist='g diff -M -C --find-copies-harder -l64 --stat --cached --color | sed -E "s/^(.*)\|/`echo -en '\''\e[32m'\''`\1`echo -en '\''\e[00m'\''`|/" && g diff -M -C --find-copies-harder -l64 --stat --color | sed -E "s/^(.*)\|/`echo -en '\''\e[31m'\''`\1`echo -en '\''\e[00m'\''`|/"'
+alias gist='g diff -M -C --find-copies-harder -l64 --stat --cached --color | sed -E "s/^(.*)\|/`echo -en '\''\e[32m'\''`\1`echo -en '\''\e[00m'\''`|/" && g diff -M -C --find-copies-harder -l64 --stat --color | sed -E "s/^(.*)\|/`echo -en '\''\e[31m'\''`\1`echo -en '\''\e[00m'\''`|/" && g ls-files --others --directory --no-empty-directory --exclude-standard | sed -E "s/^(.*)$/ `echo -en '\''\e[33m'\''`\1`echo -en '\''\e[00m'\''`/"'
 alias gull='g pull'
 alias gush='g push'
 alias gad='g add'
