@@ -158,8 +158,12 @@ alias stiff-last='giff HEAD^ HEAD' # last commit diff
 alias diff='colordiff'
 
 # C
-C99() { eval local last="\$$#"; last=${last##*/}; clang -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" }
-C++() { eval local last="\$$#"; last=${last##*/}; g++ -o "${last%.*}.o" "$@" }
+export CC="clang"
+C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" }
+
+# C++
+export CXX="g++"
+C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" }
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
