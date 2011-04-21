@@ -412,6 +412,7 @@ settings = {
     neat_left_actions = "yes";
     neat_left_messages = "yes";
     neat_melength = "0";
+    neat_colors = "rRgGybBmMcCwWK";
   };
   "irc/core" = { part_message = "〆"; };
 };
