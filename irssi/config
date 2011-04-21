@@ -1072,7 +1072,7 @@ mainwindows = {
   50 = { first_line = "8"; lines = "24"; };
   2 = { first_line = "1"; lines = "7"; };
 };
-ignores = ( { mask = "jibot"; level = "ALL"; } );
+ignores = ( );
 logs = { };
 hilights = (
   {
