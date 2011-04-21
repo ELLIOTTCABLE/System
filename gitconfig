@@ -15,6 +15,7 @@
 	both = diff HEAD
 	oneline = log --pretty=oneline
 	amend = commit --amend
+	ff = pull --ff-only
 [diff]
   mnemonicprefix = true
 [format]
