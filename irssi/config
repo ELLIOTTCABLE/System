@@ -25,6 +25,14 @@ servers = (
     use_ssl = "no";
     ssl_verify = "no";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.synirc.net";
+    chatnet = "synIRC";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
@@ -43,6 +51,7 @@ chatnets = {
     username = "ec";
     realname = "elliottcable";
   };
+  synIRC = { type = "IRC"; };
 };
 
 channels = (
@@ -127,7 +136,17 @@ channels = (
   { name = "#Temple"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#LLVM"; chatnet = "OFTC"; autojoin = "yes"; }
+  { name = "#LLVM"; chatnet = "OFTC"; autojoin = "yes"; },
+  { name = "#Lisp"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Physics"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Cloud9IDE"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#werenot"; chatnet = "Freenode"; autojoin = "yes"; },
+  {
+    name = "#bitcoin-discussion";
+    chatnet = "Freenode";
+    autojoin = "yes";
+  },
+  { name = "#SABnzbd"; chatnet = "synIRC"; autojoin = "yes"; }
 );
 
 aliases = {
