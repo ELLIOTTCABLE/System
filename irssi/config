@@ -414,7 +414,7 @@ settings = {
     neat_melength = "0";
     neat_colors = "rRgGybBmMcCwWK";
   };
-  "irc/core" = { part_message = "AIO_ALLDONE"; };
+  "irc/core" = { part_message = "AIO_ALLDONE"; alternate_nick = "ec"; };
 };
 windows = {
   1 = {
