@@ -414,7 +414,7 @@ settings = {
     neat_melength = "0";
     neat_colors = "rRgGybBmMcCwWK";
   };
-  "irc/core" = { part_message = "〆"; };
+  "irc/core" = { part_message = "AIO_ALLDONE"; };
 };
 windows = {
   1 = {
