@@ -22,7 +22,6 @@
 	numbered = auto
 [core]
 	legacyheaders = false
-	editor = nano
 	whitespace = -trailing-space
 	excludesfile = /Users/elliottcable/.gitignore
 [repack]
