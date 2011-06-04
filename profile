@@ -49,10 +49,8 @@ elif [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
   export VISUAL='vim'
 fi
 
-if [[ $EDITOR =~ 'mate' ]]; then
-  alias et='edit .'
-  alias etr='mate app config lib db public spec test vendor/plugins Rakefile'
-fi
+alias et='edit .'
+alias etr='edit app config lib db public spec test vendor/plugins Rakefile'
 
 alias edit=$EDITOR
 alias e='edit'
