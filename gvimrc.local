@@ -1,0 +1,13 @@
+" MacVIM / GUI settings
+set lines=110 columns=152 " 113 + 1+31 (NERDTree width) + 2 (>> whatever they are) + 4 (numberwidth) + 1 (margin)
+set guifont=Menlo:h10
+
+colorscheme molokai
+set t_Co=256
+set transparency=20
+
+" agimrLtT → acem
+set guioptions+=c go+=e go-=g go-=i go-=r go-=L go-=t go-=T
+
+let g:NERDTreeWinSize=31
+
