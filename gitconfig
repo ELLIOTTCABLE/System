@@ -24,6 +24,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = /Users/elliottcable/.gitignore
+	editor = mvim -fg
 [repack]
 	usedeltabaseoffset = true
 [branch]
