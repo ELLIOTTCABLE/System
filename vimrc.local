@@ -10,6 +10,11 @@ set listchars-=trail:· lcs-=tab:\ \ lcs+=tab:\ ·
 
 set spell
 
+" Disable the terrible delete-whitespace-after-indenting functionality.
+set cpoptions+=I
+inoremap <CR> X<BS><CR>
+
+
 " I don’t know how else to solve this. There’s got to be a better way.
 autocmd BufRead * :SyntasticDisable c
 
