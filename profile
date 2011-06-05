@@ -42,8 +42,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export EDITOR='mvim'
-  export VISUAL='mvim'
+  export EDITOR='mvim -O'
+  export VISUAL='mvim -O'
 elif [[ $SYSTEM =~ $SYSTEM_NIX ]]; then
   export EDITOR='vim'
   export VISUAL='vim'
