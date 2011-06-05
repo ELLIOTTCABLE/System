@@ -4,7 +4,7 @@ set guifont=Menlo:h10
 
 colorscheme molokai
 set t_Co=256
-set transparency=20
+set transparency=6
 
 " agimrLtT → acem
 set guioptions+=c go+=e go-=g go-=i go-=r go-=L go-=t go-=T
