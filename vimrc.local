@@ -13,6 +13,8 @@ set spell
 " I don’t know how else to solve this. There’s got to be a better way.
 autocmd BufRead * :SyntasticDisable c
 
+autocmd BufLeave,FocusLost silent! wall
+
 let g:gist_clip_command = 'pbcopy'
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
