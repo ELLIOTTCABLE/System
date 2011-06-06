@@ -10,12 +10,6 @@ set listchars-=trail:· lcs-=tab:\ \ lcs+=tab:\ ·
 
 set spell
 
-" Disable the terrible delete-whitespace-after-indenting functionality.
-set cpoptions+=I
-iunmap <CR>
-inoremap <special> <CR> x<BS><CR>
-inoremap <special> <C-[> x<BS><C-[>
-
 
 " I don’t know how else to solve this. There’s got to be a better way.
 autocmd BufRead * :SyntasticDisable c
@@ -31,3 +25,4 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 set shortmess-=f shm+=m shm-=n shm+=s shm+=I
 set showcmd
 
+set runtimepath+=~/.vim.local/after
