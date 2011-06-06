@@ -12,7 +12,9 @@ set spell
 
 " Disable the terrible delete-whitespace-after-indenting functionality.
 set cpoptions+=I
-inoremap <CR> X<BS><CR>
+iunmap <CR>
+inoremap <special> <CR> x<BS><CR>
+inoremap <special> <C-[> x<BS><C-[>
 
 
 " I don’t know how else to solve this. There’s got to be a better way.
