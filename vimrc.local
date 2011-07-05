@@ -10,6 +10,9 @@ set listchars-=trail:· lcs-=tab:\ \ lcs+=tab:\ ·
 
 set spell
 
+" These make movement commands “work” with `o`, such as `3o` to insert inject lines and switch to insert mode.
+nnoremap o o<Esc>S
+nnoremap O O<Esc>'[S
 
 " I don’t know how else to solve this. There’s got to be a better way.
 autocmd BufRead * :SyntasticDisable c
