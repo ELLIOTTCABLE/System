@@ -14,8 +14,6 @@ set spell
 nnoremap o o<Esc>S
 nnoremap O O<Esc>'[S
 
-" I don’t know how else to solve this. There’s got to be a better way.
-autocmd BufRead * :SyntasticDisable c
 
 autocmd BufLeave,FocusLost silent! wall
 
