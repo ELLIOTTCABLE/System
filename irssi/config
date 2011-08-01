@@ -171,6 +171,7 @@ aliases = {
   "MANUAL-WINDOWS" = "set use_status_window off;set autocreate_windows off;set autocreate_query_level none;set autoclose_windows off;set reuse_unused_windows on;save";
   EXEMPTLIST = "mode $C +e";
   ATAG = "WINDOW SERVER";
+  note = "say ♫ ";
 };
 
 statusbar = {
@@ -355,6 +356,7 @@ settings = {
     timestamp_format = "%H:%M:%S";
     log_create_mode = "644";
     awaylog_level = "";
+    quit_message = "rage";
   };
   "fe-text" = { 
     actlist_sort = "refnum";
@@ -366,7 +368,7 @@ settings = {
     autocreate_query_level = "MSGS DCCMSGS";
     use_status_window = "yes";
     use_msgs_window = "no";
-    autoclose_windows = "no";
+    autoclose_windows = "yes";
     autolog = "yes";
     autolog_path = "~/.irssi/logs/$tag/$0.log";
     hilight_act_color = "%R";
@@ -374,21 +376,16 @@ settings = {
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
     autolog_ignore_targets = "chanserv nickserv";
     hilight_nick_matches = "no";
+    log_theme = "= default";
+    show_names_on_join = "no";
+    emphasis = "no";
   };
   "perl/core/scripts" = {
-    awl_display_key = "$Q%K|%n$H$C$S";
-    awl_block = "-14";
-    awl_display_nokey = "$H$C$S";
-    awl_maxlines = "0";
-    screen_away_message = "gnuscreen detached";
-    screen_away_window = "";
-    screen_away_nick = "ec|detached";
-    neat_right_mode = "no";
-    neat_ignorechars = "([_`]|\\|.*)";
-    neat_left_actions = "yes";
-    neat_left_messages = "yes";
-    neat_melength = "0";
-    neat_colors = "rRgGybBmMcCwWK";
+    tmux_away_nick = "";
+    usercount_show_halfops = "no";
+    tmux_away_message = "Screened out.";
+    prowl_general_hilight = "yes";
+    tmux_away_window = "";
   };
   "irc/core" = { part_message = "AIO_ALLDONE"; alternate_nick = "ec"; };
 };
