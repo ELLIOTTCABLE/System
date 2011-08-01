@@ -1,10 +1,9 @@
 servers = (
   {
-    address = "irc.freenode.net";
+    address = "chat.freenode.net";
     chatnet = "Freenode";
-    port = "6667";
-    password = "";
-    use_ssl = "no";
+    port = "7070";
+    use_ssl = "yes";
     ssl_verify = "no";
     family = "inet";
     autoconnect = "yes";
@@ -15,8 +14,8 @@ chatnets = {
   Freenode = {
     type = "IRC";
     nick = "elliottcable";
-    username = "ec";
-    realname = "elliottcable";
+    username = "me";
+    realname = "Elliott Cable";
   };
 };
 
