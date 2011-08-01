@@ -300,7 +300,7 @@ settings = {
     autostick_split_windows = "yes";
   };
   "fe-common/core" = {
-    theme = "generane-pbrisbin.theme";
+    theme = "default";
     autocreate_own_query = "yes";
     autocreate_query_level = "MSGS DCCMSGS";
     use_status_window = "yes";
