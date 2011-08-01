@@ -1,5 +1,4 @@
 servers = (
-  { address = "silc.silcnet.org"; chatnet = "SILC"; port = "706"; },
   {
     address = "irc.freenode.net";
     chatnet = "Freenode";
@@ -8,30 +7,6 @@ servers = (
     use_ssl = "no";
     ssl_verify = "no";
     family = "inet";
-    autoconnect = "yes";
-  },
-  {
-    address = "irc.mozilla.org";
-    chatnet = "Mozilla";
-    port = "6667";
-    use_ssl = "no";
-    ssl_verify = "no";
-    autoconnect = "yes";
-  },
-  {
-    address = "irc.oftc.net";
-    chatnet = "OFTC";
-    port = "6667";
-    use_ssl = "no";
-    ssl_verify = "no";
-    autoconnect = "yes";
-  },
-  {
-    address = "irc.synirc.net";
-    chatnet = "synIRC";
-    port = "6667";
-    use_ssl = "no";
-    ssl_verify = "no";
     autoconnect = "yes";
   }
 );
@@ -43,30 +18,55 @@ chatnets = {
     username = "ec";
     realname = "elliottcable";
   };
-  Mozilla = { type = "IRC"; };
-  SILC = { type = "IRC"; };
-  OFTC = {
-    type = "IRC";
-    nick = "elliottcable";
-    username = "ec";
-    realname = "elliottcable";
-  };
-  synIRC = { type = "IRC"; };
 };
 
 channels = (
-  { name = "#git-blog"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#elliottcable"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Paws.Nucleus"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MacOSX"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##JavaScript"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Programming"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#OffRails"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#vim"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Haskell"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Scheme"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Lua"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##C"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#io"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Git"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#zsh"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Fauna"; chatnet = "Freenode"; autojoin = "yes"; },
+  
+  { name = "#Lisp"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Photogeeks"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#ArchLinux"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby-Lang"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#inimino"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Paws"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RubyNoob"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RubyForce"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#WebKit"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#git-blog"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#D"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#GitHub"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Freenode"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#irssi"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Startups"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Ruby-Pro"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#MacHomebrew"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Espresso"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Redis"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Conlang"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Perl"; chatnet = "Freenode"; autojoin = "yes"; },
+  
   { name = "#Adium"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##TextMate"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MacPorts"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MacDev"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#WebKit"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##iPhone"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Ruby"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#RubyNoob"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#RubyForce"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#OffRails"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Ruby-OSX"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Rspec"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Merb"; chatnet = "Freenode"; autojoin = "yes"; },
@@ -74,28 +74,16 @@ channels = (
   { name = "#HAML"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#YARD"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#StrokeDB"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#io"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "##C"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#D"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Git"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#GitHub"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#ArchLinux"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#SVG"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#XML"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#HTML"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Web"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "##JavaScript"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#AJAX"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#CSS"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##SexyCSS"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Typophiles"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Regex"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Lighttpd"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Startups"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Freenode"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#irssi"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Math"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Photogeeks"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Electronics"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Arduino"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Robotics"; chatnet = "Freenode"; autojoin = "yes"; },
@@ -106,47 +94,36 @@ channels = (
   { name = "#Alaska"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Cappuccino"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Integrity"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Ruby-Lang"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MPlayer"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#GNU"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Ruby-Pro"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Fauna"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Speck"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#MacHomebrew"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#zsh"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#vim"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "##Espresso"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#RabbitMQ"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "##Paws"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#inimino"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Haiku"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#jQuery-OT"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Redis"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Haskell"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##CompSci"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Snow"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#schmorp"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Skywriter"; chatnet = "Mozilla"; autojoin = "yes"; },
   { name = "#Beam.js"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#OFTN"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#DuckDuckGo"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#WoWHead"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#hollow"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Temple"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Tempus"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#uzbl"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#LLVM"; chatnet = "OFTC"; autojoin = "yes"; },
-  { name = "#Lisp"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Physics"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Cloud9IDE"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#werenot"; chatnet = "Freenode"; autojoin = "yes"; },
-  {
-    name = "#bitcoin-discussion";
-    chatnet = "Freenode";
-    autojoin = "yes";
-  },
-  { name = "#SABnzbd"; chatnet = "synIRC"; autojoin = "yes"; }
+  { name = "#RMU"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#altJS"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#bitcoin"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Racket"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Chocolatapp"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Spotify"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#nodejitsu"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Cascade"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RVM"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Paws.Core"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Paws.Fullness"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#RubyOnRails"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
