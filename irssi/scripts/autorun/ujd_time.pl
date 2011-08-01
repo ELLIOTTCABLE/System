@@ -37,7 +37,7 @@ sub update_ujd {
   my $integral = reverse(join(' ', reverse($integral) =~ /\d{1,3}/g));
   
   
-  Irssi::command("^set timestamp_format $integral ſ $fractional");
+  Irssi::command("^set timestamp_format $integral S $fractional");
   Irssi::statusbar_items_redraw('time');
 }
 

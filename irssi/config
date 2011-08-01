@@ -189,8 +189,8 @@ statusbar = {
     topicbarend = "{topicsbend}";
 
     # treated "normally", you could change the time/user name to whatever
-    time = "{sb $Z}";
-    user = "{sb {sbnickmode $cumode}$N{sbmode $usermode}{sbaway $A}}";
+    time = "$Z ";
+    user = "{msgnick $cumode $N}";
 
     # treated specially .. window is printed with non-empty windows,
     # window_empty is printed with empty windows
@@ -214,7 +214,7 @@ statusbar = {
     # the "default statusbar" to be displayed at the bottom of the window.
     # contains all the normal items.
     window = {
-      disabled = "no";
+      disabled = "yes";
 
       # window, root
       type = "window";
@@ -257,14 +257,14 @@ statusbar = {
     # we treat input line as yet another statusbar :) It's possible to
     # add other items before or after the input line item.
     prompt = {
-      type = "root";
+      type = "window";
       placement = "bottom";
       # we want to be at the bottom always
-      position = "100";
-      visible = "always";
+      position = "0";
+      visible = "active";
       items = {
-        prompt = { priority = "-1"; };
-        prompt_empty = { priority = "-1"; };
+        time = { priority = "0"; };
+        user = { priority = "0"; };
         # treated specially, this is the real input line.
         input = { priority = "10"; };
       };
