@@ -155,6 +155,9 @@ alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
 alias diff='colordiff'
 
+# make `dig` less insanely verbose.
+alias dig='dig +nocmd +nocomments +noadditional +nostats'
+
 # C
 export CC="clang"
 C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" }
