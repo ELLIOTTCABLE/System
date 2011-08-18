@@ -16,6 +16,7 @@
 	oneline = log --pretty=oneline
 	amend = commit --amend
 	ff = pull --ff-only
+	clone = clone --recursive
 [diff]
   mnemonicprefix = true
 [format]
