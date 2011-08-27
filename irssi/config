@@ -21,6 +21,7 @@ chatnets = {
 
 channels = (
   { name = "#elliottcable"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##Oases"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Paws.Nucleus"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#MacOSX"; chatnet = "Freenode"; autojoin = "yes"; },
