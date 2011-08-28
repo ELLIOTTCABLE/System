@@ -252,6 +252,7 @@ statusbar = {
         more = { priority = "-1"; alignment = "right"; };
         barend = { priority = "100"; alignment = "right"; };
       };
+      disabled = "yes";
     };
 
     # we treat input line as yet another statusbar :) It's possible to
@@ -272,14 +273,15 @@ statusbar = {
 
     # topicbar
     topic = {
-      type = "root";
+      type = "window";
       placement = "top";
       position = "1";
       visible = "always";
       items = {
         topicbarstart = { priority = "100"; };
+        window = { priority = "10"; };
+        window_empty = { priority = "5"; };
         topic = { };
-        topic_empty = { };
         topicbarend = { priority = "100"; alignment = "right"; };
       };
     };
