@@ -15,7 +15,8 @@
 	both = diff HEAD
 	oneline = log --pretty=oneline
 	amend = commit --amend
-	ff = pull --ff-only
+	ff = merge --ff-only
+	pull = pull --ff-only
 	clone = clone --recursive
 [diff]
   mnemonicprefix = true
