@@ -1,7 +1,8 @@
 set nomodeline
 
-set smarttab shiftround expandtab softtabstop=2 shiftwidth=2 tabstop=8
-set autoindent
+set textwidth=100
+set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
+set nosmarttab noautoindent
 set smartcase ignorecase
 
 set cursorline

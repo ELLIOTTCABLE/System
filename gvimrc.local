@@ -1,5 +1,5 @@
 " MacVIM / GUI settings
-set lines=110 columns=152 " 113 + 1+31 (NERDTree width) + 2 (>> whatever they are) + 4 (numberwidth) + 1 (margin)
+set lines=126 columns=137 " 1+31 (NERDTree width) + 100 + 4 (numberwidth) + 1 (margin)
 set guifont=Menlo:h10
 
 colorscheme molokai
