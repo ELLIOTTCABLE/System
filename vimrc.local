@@ -15,6 +15,9 @@ set spell
 nnoremap o o<Esc>S
 nnoremap O O<Esc>'[S
 
+" See `:help Y`
+map Y y$
+
 
 autocmd BufLeave,FocusLost silent! wall
 
