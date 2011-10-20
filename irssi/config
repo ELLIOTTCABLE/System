@@ -393,7 +393,6 @@ completions = {
   "-^" = { value = "↑"; auto = "yes"; };
   "->" = { value = "→"; auto = "yes"; };
   "-v" = { value = "↓"; auto = "yes"; };
-  "—" = { value = " — "; auto = "yes"; };
   mu = { value = "μ"; auto = "yes"; };
   ksol = { value = "kſ"; auto = "yes"; };
   hsol = { value = "hſ"; auto = "yes"; };
