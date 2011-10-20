@@ -312,7 +312,7 @@ settings = {
     timestamp_format = "%H:%M:%S";
     log_create_mode = "644";
     awaylog_level = "";
-    quit_message = "rage";
+    quit_message = " best short-url ever. <http://ell.io/tt> ";
   };
   "fe-text" = { 
     actlist_sort = "refnum";
@@ -324,7 +324,7 @@ settings = {
     autocreate_query_level = "MSGS DCCMSGS";
     use_status_window = "yes";
     use_msgs_window = "no";
-    autoclose_windows = "yes";
+    autoclose_windows = "no";
     autolog = "yes";
     autolog_path = "~/.irssi/logs/$tag/$0.log";
     hilight_act_color = "%R";
@@ -335,6 +335,7 @@ settings = {
     log_theme = "= default";
     show_names_on_join = "no";
     emphasis = "no";
+    print_active_channel = "yes";
   };
   "perl/core/scripts" = {
     tmux_away_nick = "";
@@ -342,8 +343,16 @@ settings = {
     tmux_away_message = "Screened out.";
     prowl_general_hilight = "yes";
     tmux_away_window = "";
+    ujd_integral_digits = "2";
+    ujd_fractional_digits = "5";
+    prowl_priority_channel = "-2";
   };
-  "irc/core" = { part_message = "AIO_ALLDONE"; alternate_nick = "ec"; };
+  "irc/core" = {
+    part_message = "AIO_ALLDONE";
+    alternate_nick = "ec";
+    cmd_queue_speed = "2050msec";
+    cmds_max_at_once = "8";
+  };
 };
 windows = {
   1 = {
@@ -380,7 +389,6 @@ completions = {
   "3/8" = { value = "⅜"; auto = "yes"; };
   "5/8" = { value = "⅝"; auto = "yes"; };
   "7/8" = { value = "⅞"; auto = "yes"; };
-  "-" = { value = "‐"; auto = "yes"; };
   "<-" = { value = "←"; auto = "yes"; };
   "-^" = { value = "↑"; auto = "yes"; };
   "->" = { value = "→"; auto = "yes"; };
@@ -412,4 +420,7 @@ completions = {
   P3 = { value = "P₃"; auto = "yes"; };
   "^_^" = { value = "^‿^"; auto = "yes"; };
   nnote = { value = "♪"; auto = "yes"; };
+  ddisapprove = { value = "ಠ_ಠ"; auto = "yes"; };
+  llamda = { value = "λ"; auto = "yes"; };
+  detete = { value = "delete"; };
 };
