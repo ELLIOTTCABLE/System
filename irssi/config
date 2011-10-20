@@ -7,11 +7,25 @@ servers = (
     ssl_verify = "no";
     family = "inet";
     autoconnect = "yes";
+  },
+  {
+    address = "irc.mozilla.org";
+    chatnet = "Mozilla";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
 chatnets = {
   Freenode = {
+    type = "IRC";
+    nick = "elliottcable";
+    username = "me";
+    realname = "Elliott Cable";
+  };
+  Mozilla = {
     type = "IRC";
     nick = "elliottcable";
     username = "me";
@@ -123,7 +137,10 @@ channels = (
   { name = "#RVM"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Paws.Core"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Paws.Fullness"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#RubyOnRails"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#PyPy"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#CoffeeScript"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#JSAPI"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "#JSlang"; chatnet = "Mozilla"; autojoin = "yes"; }
 );
 
 aliases = {
