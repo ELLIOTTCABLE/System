@@ -140,7 +140,8 @@ channels = (
   { name = "#PyPy"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#CoffeeScript"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#JSAPI"; chatnet = "Mozilla"; autojoin = "yes"; },
-  { name = "#JSlang"; chatnet = "Mozilla"; autojoin = "yes"; }
+  { name = "#JSlang"; chatnet = "Mozilla"; autojoin = "yes"; },
+  { name = "##English"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
