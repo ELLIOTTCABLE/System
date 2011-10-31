@@ -1,0 +1,17 @@
+BIN_PATH = ENV['HOME'] + "/.files/bin"
+
+begin
+   require 'launchdr'
+   
+   desc 'Install LaunchD agents for various relevant scripts.'
+   task :launchdr do
+      LaunchDr "name.elliottcable.sh.alarm" do |plist|
+         plist[:Program] = BIN_PATH + '/alarm.sh'
+         plist[:RunAtLoad] = true
+         plist[:StartCalendarInterval] = { Minute: 0, Hour: 6 }
+      end
+   end
+rescue LoadError
+   desc 'You need the `launchdr` gem to launch-ify these scripts.'
+   task :launchdr
+end
