@@ -1,5 +1,10 @@
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+call pathogen#infect()
+
 set nomodeline
 set nocompatible
+
+colorscheme solarized
 
 set textwidth=100
 set number ruler nowrap
@@ -59,6 +64,14 @@ set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+" === Plugins ===
+if has('gui_running')
+   set background=light
+else
+   set background=dark
+endif
+
 
 " filnxtToO → ilmxstToOI
 " (Last `shm+=I` disables the :intro message.)
