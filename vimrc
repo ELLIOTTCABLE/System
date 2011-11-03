@@ -66,6 +66,7 @@ set directory=~/.vim/backup
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " === Plugins ===
+let g:solarized_termtrans = 1
 if has('gui_running')
    set background=light
 else
