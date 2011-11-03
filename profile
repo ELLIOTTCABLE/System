@@ -192,6 +192,9 @@ rse () {
   ((eval $(for phrase in "$@"; do echo -n "'$phrase' "; done)) 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
 }
 
+# Node.js stuff
+alias node='env NODE_NO_READLINE=1 rlwrap -p Magenta -S "> " node' # No more fucking terrible readline.js
+
 # Create files as u=rwx, g=rx, o=rx
 umask 022
 
