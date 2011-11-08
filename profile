@@ -201,7 +201,7 @@ umask 022
 # Make sure to update ~/.MacOSX/environment.plist as well if you edit these
 PATH="$HOME/.bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/opt/local/bin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
+  PATH="/usr/local/share/python:/opt/local/bin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
 PATH="/usr/local/bin:$PATH"
 export PATH
