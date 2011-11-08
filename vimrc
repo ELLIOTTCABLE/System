@@ -95,5 +95,3 @@ let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 " (Last `shm+=I` disables the :intro message.)
 set shortmess-=f shm+=m shm-=n shm+=s shm+=I
 set showcmd
-
-set runtimepath+=~/.vim.local/after
