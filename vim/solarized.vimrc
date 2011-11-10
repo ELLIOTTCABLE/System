@@ -325,12 +325,9 @@ endif
 " -- END Copied from solarized.vim -- "
 """""""""""""""""""""""""""""""""""""""
 
-" echoerr "Changing indent guides:"
-" echoerr "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
-    exe "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
-" echoerr "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
-    exe "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
+" Hilighting indent-guides
+exe "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
+exe "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
 
 endfunction
-
 autocmd! VimEnter,ColorScheme * if g:colors_name == "solarized" | call s:RebuildSolarization() | endif
