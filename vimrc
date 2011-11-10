@@ -1,8 +1,6 @@
+set nomodeline nocompatible
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
-
-set nomodeline
-set nocompatible
 
 runtime solarized.vimrc
 
