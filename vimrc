@@ -4,7 +4,7 @@ call pathogen#infect()
 set nomodeline
 set nocompatible
 
-colorscheme solarized
+runtime solarized.vimrc
 
 set textwidth=100
 set number ruler nowrap
@@ -20,10 +20,6 @@ set hlsearch incsearch ignorecase smartcase
 set scrolloff=3
 set history=1000
 set title
-
-" Line wrapping
-set cpoptions+=n  " Uses line-numbering columns for line-wrapping indicator
-let &showbreak = '  ➤ '  " FIXME: Currently not hilighted the same as line numbers
 
 syntax on
 filetype on
@@ -66,13 +62,6 @@ set directory=~/.vim/backup
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " === Plugins ===
-let g:solarized_termtrans = 1
-if has('gui_running')
-   set background=light
-else
-   set background=dark
-endif
-
 let NERDChristmasTree = 1
 let NERDTreeBookmarksFile = '~/.vim/.NERDTreeBookmarks'
 let NERDTreeMouseMode = 2
