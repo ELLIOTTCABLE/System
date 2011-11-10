@@ -329,5 +329,9 @@ endif
 exe "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
 exe "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
 
+" Re-hilighting text-wrapping indicators and line numbers
+     hi! link NonText LineNr
+exe "hi! LineNr"          .s:fmt_none   .s:fg_base01 .s:bg_base03
+
 endfunction
 autocmd! VimEnter,ColorScheme * if g:colors_name == "solarized" | call s:RebuildSolarization() | endif
