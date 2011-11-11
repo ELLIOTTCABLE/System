@@ -13,7 +13,7 @@ set smartcase ignorecase
 set cursorline
 set listchars+=tab:\ ·
 
-set hlsearch incsearch ignorecase smartcase
+set hlsearch incsearch ignorecase smartcase gdefault
 
 set scrolloff=3
 set history=1000
