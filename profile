@@ -57,6 +57,7 @@ alias edit=$EDITOR
 alias e='edit'
 
 export CLICOLOR='yes'
+van() { vim "+help $1" "+only" }
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
