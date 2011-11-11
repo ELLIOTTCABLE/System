@@ -78,6 +78,8 @@ let g:CommandTMaxHeight = 10
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
+call togglebg#map("<F5>")
+
 " filnxtToO → ilmxstToOI
 " (Last `shm+=I` disables the :intro message.)
 set shortmess-=f shm+=m shm-=n shm+=s shm+=I
