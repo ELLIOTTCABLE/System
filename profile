@@ -75,7 +75,7 @@ alias mkdir='mkdir -p'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   # Real trashing for the win!
-  alias trash="mv $1 ~/.Trash"
+  trash() { mv $1 ~/.Trash }
   
   alias eject='drutil eject 0'
 fi
