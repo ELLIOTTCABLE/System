@@ -42,7 +42,7 @@ nnoremap ` '
 map Y y$
 
 
-autocmd BufLeave,FocusLost silent! wall
+autocmd BufLeave,FocusLost * silent! wall
 
 " gist-vim defaults
 if has("mac")
