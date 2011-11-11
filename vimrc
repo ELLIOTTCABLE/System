@@ -5,7 +5,7 @@ call pathogen#infect()
 runtime solarized.vimrc
 
 set textwidth=100
-set number ruler nowrap
+set number relativenumber ruler nowrap
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
 set nosmarttab noautoindent
 set smartcase ignorecase
