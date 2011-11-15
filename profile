@@ -195,7 +195,7 @@ rse () {
 }
 
 # Node.js stuff
-alias node='env NODE_NO_READLINE=1 rlwrap -p Magenta -S "> " node' # No more fucking terrible readline.js
+alias node='env NODE_NO_READLINE=1 rlwrap -pMagenta -S "> " node' # No more fucking terrible readline.js
 
 # Create files as u=rwx, g=rx, o=rx
 umask 022
