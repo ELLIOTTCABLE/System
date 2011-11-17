@@ -2,8 +2,18 @@ require 'fileutils'
 
 task :default => :setup
 
+desc '(DEFAULT) Set up a new machine'
+task :setup => [:submodules, :symlink] do
+end
+
+desc 'Checks out the dotfiles submodules'
+task :submodules do
+   system "git submodule update --init --recursive"
+   FileUtils.mkdir_p(Dir.pwd + '/vim/backup')
+end
+
 desc 'Installs dotfiles from this distribution for the first time'
-task :setup do
+task :symlink do
     
   files = Dir['*'] # Get all the files
   files = files.reject {|f| f =~ /^(Rakefile|README)/i}
