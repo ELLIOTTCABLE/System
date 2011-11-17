@@ -26,7 +26,7 @@ let g:indent_guides_auto_colors = 0
 "  and then wrap their colour-changing function such that I can add my own code to it.
 "     (see: http://github.com/altercation/solarized/issues/158)
 function! s:RebuildSolarization()
-echoerr "Entering RebuildSolarization"
+" echoerr "Entering RebuildSolarization"
 """""""""""""""""""""""""""""""""""""""""
 " -- BEGIN Copied from solarized.vim -- "
 """""""""""""""""""""""""""""""""""""""""
@@ -325,10 +325,10 @@ endif
 " -- END Copied from solarized.vim -- "
 """""""""""""""""""""""""""""""""""""""
 
-echoerr "Changing indent guides:"
-echoerr "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
+" echoerr "Changing indent guides:"
+" echoerr "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
     exe "hi! IndentGuidesOdd" .s:fmt_none   .s:fg_none   .s:bg_base02
-echoerr "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
+" echoerr "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
     exe "hi! IndentGuidesEven".s:fmt_none   .s:fg_none   .s:bg_base01
 
 endfunction
