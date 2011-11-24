@@ -24,6 +24,7 @@ $VERSION="1";
 );
 
 my $old_timestamp_format = Irssi::settings_get_str('timestamp_format');
+my $timeout = undef;
 
 sub update_ujd {
   my $integral_digits = Irssi::settings_get_int('ujd_integral_digits');
@@ -36,9 +37,12 @@ sub update_ujd {
   my $fractional = join(' ', $fractional =~ /\d{1,3}/g);
   my $integral = reverse(join(' ', reverse($integral) =~ /\d{1,3}/g));
   
-  
-  Irssi::command("^set timestamp_format $integral S $fractional");
+  Irssi::command("^set timestamp_format $integral ſ $fractional");
   Irssi::statusbar_items_redraw('time');
+
+  my $timeout = int(86400000 * 10**(-$fractional_digits) / 3);
+     $timeout = 10 if $timeout < 10;
+  Irssi::timeout_add_once($timeout, update_ujd, undef);
 }
 
 sub script_unload {
@@ -49,5 +53,5 @@ sub script_unload {
 Irssi::settings_add_int('misc', 'ujd_integral_digits', 1);
 Irssi::settings_add_int('misc', 'ujd_fractional_digits', 6);
 
-Irssi::timeout_add(23, 'update_ujd', undef);
 Irssi::signal_add_first('command script unload', 'script_unload');
+&update_ujd;

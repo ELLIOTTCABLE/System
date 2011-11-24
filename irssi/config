@@ -345,7 +345,7 @@ settings = {
     prowl_general_hilight = "yes";
     tmux_away_window = "";
     ujd_integral_digits = "2";
-    ujd_fractional_digits = "5";
+    ujd_fractional_digits = "4";
     prowl_priority_channel = "-2";
   };
   "irc/core" = {
