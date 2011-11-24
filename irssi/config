@@ -320,7 +320,7 @@ settings = {
     autostick_split_windows = "yes";
   };
   "fe-common/core" = {
-    theme = "default";
+    theme = "solarized-universal";
     autocreate_own_query = "yes";
     autocreate_query_level = "MSGS DCCMSGS";
     use_status_window = "yes";
