@@ -333,7 +333,7 @@ settings = {
     completion_char = ":";
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
     autolog_ignore_targets = "chanserv nickserv";
-    hilight_nick_matches = "no";
+    hilight_nick_matches = "yes";
     log_theme = "= default";
     show_names_on_join = "no";
     emphasis = "no";
@@ -374,11 +374,55 @@ ignores = ( );
 logs = { };
 hilights = (
   {
-    text = "\\b(e(lliott?)?c(able)?|elliott?)\\b";
-    priority = "100";
+    text = "elliottcable";
+    color = "%M";
     nick = "no";
     word = "yes";
-    regexp = "yes";
+    fullword = "yes";
+  },
+  {
+    text = "ecable";
+    color = "%M";
+    nick = "no";
+    word = "yes";
+    fullword = "yes";
+  },
+  {
+    text = "elliottc";
+    color = "%M";
+    nick = "no";
+    word = "yes";
+    fullword = "yes";
+  },
+  {
+    text = "ec";
+    color = "%M";
+    nick = "no";
+    word = "yes";
+    fullword = "yes";
+    channels = (
+      "#elliottcable",
+      "##Oases",
+      "##Paws",
+      "#Paws.Nucleus",
+      "#Paws.Core",
+      "#Paws.Fullness"
+    );
+  },
+  {
+    text = "elliott";
+    color = "%M";
+    nick = "no";
+    word = "yes";
+    fullword = "yes";
+    channels = (
+      "#elliottcable",
+      "##Oases",
+      "##Paws",
+      "#Paws.Nucleus",
+      "#Paws.Core",
+      "#Paws.Fullness"
+    );
   }
 );
 completions = {
