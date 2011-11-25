@@ -204,7 +204,7 @@
 	<key>ShowWindowSettingsNameInTitle</key>
 	<true/>
 	<key>TerminalType</key>
-	<string>xterm-256color</string>
+	<string>xterm-color</string>
 	<key>TextBoldColor</key>
 	<data>
 	YnBsaXN0MDDUAQIDBAUGFRZYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
@@ -223,8 +223,10 @@
 	ZXLRFxhUcm9vdIABCBEaIy0yNztBSE9cYmRmj5SfqLCzvM7R1gAAAAAAAAEBAAAAAAAA
 	ABkAAAAAAAAAAAAAAAAAAADY
 	</data>
+	<key>UseBoldFonts</key>
+	<false/>
 	<key>UseBrightBold</key>
-	<integer>1</integer>
+	<true/>
 	<key>WindowTitle</key>
 	<string></string>
 	<key>columnCount</key>
