@@ -1,1 +1,13 @@
-IdentityFile /Volumes/Key/.identity
+IdentityFile ~/.identity.insecure
+HashKnownHosts yes
+VisualHostKey yes
+
+Compression yes
+CompressionLevel 8
+
+EscapeChar none
+
+Host ell.io
+   ForwardAgent yes
+   IdentityFile /Volumes/Key/.identity
+   Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
