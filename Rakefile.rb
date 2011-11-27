@@ -3,20 +3,18 @@ require 'fileutils'
 task :default => :setup
 
 desc '(DEFAULT) Set up a new machine'
-task :setup => [:submodules, :symlink] do
+task :setup => [:submodules, :dotfiles] do
 end
 
 desc 'Checks out the dotfiles submodules'
 task :submodules do
    system "git submodule update --init --recursive"
-   FileUtils.mkdir_p(Dir.pwd + '/vim/backup')
+   FileUtils.mkdir_p(Dir.pwd + '/Dotfiles/vim/backup')
 end
 
 desc 'Installs dotfiles from this distribution for the first time'
-task :symlink do
-    
-  files = Dir['*'] # Get all the files
-  files = files.reject {|f| f =~ /^(Rakefile|README)/i}
+task :dotfiles do
+  files = Dir['Dotfiles/*'] # Get all the files
   files = files.map { |file| File.join( File.dirname(File.expand_path(__FILE__)), file ) } # Finally, create an absolute path from our working directory
   
   puts "Linking in $HOME/"
@@ -25,9 +23,8 @@ task :symlink do
     
     to = File.join(File.expand_path('~/'), '.' + File.basename(from))
     
-    puts " - " + [from, to].join(' -> ')
     if File.exists?(to)
-      print "   ! Target exists... "
+      print "   ! #{to} exists... "
       if File.symlink? to
         FileUtils.rm to
         puts "as a symlink, removed"
