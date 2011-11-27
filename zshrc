@@ -59,11 +59,8 @@ setopt HIST_NO_STORE # Don’t store the `history` command itself
 # = Key bindings =
 # ================
 
-# Creating a new keymap, based on the predefined ‘vi insert’ keymap. I like to
-# keep up to speed on my vim.
-bindkey -N ekey viins
-# Link the ‘ekey’ keymap to the ‘main’ keymap, and activate it
-bindkey -A ekey main
+# Link the ‘viins’ keymap to the ‘main’ keymap, and activate it
+bindkey -A viins main
 
 # ‘up/down-line-or-search’ only utilizes the first “word” of the current line;
 # I much prefer it utilizing the entire contents of the line prior to the
@@ -80,32 +77,30 @@ bindkey '\e[B' history-beginning-search-forward
 # = Prompt =
 # ==========
 
-# RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
-PS1="%(?|%2F|%1F)%1(V|%1v|%(#|#|:))%(?|%2f|%1f) "
+#RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
 
+#      +-----------------------------+- Check return status, and (un-)set color
+#      |            +----------------)- See if psvar[1] is empty (see below)
+#      |            |                |
+#      v            v       v        v
+PS1="%(?|%2F|%1F)%1(V|%1v|%(#|#|>))%(?|%2f|%1f) "
 
-function zle-line-init {
-  local STATUS=$?
-  zle -K vicmd
-  return $STATUS
-}
-zle -N   zle-line-init
+# Forces *all* new line editors to start in vicmd mode instead of viins mode.
+#function zle-line-init {
+#  local STATUS=$?
+#  zle -K vicmd
+#  return $STATUS
+#}
+#zle -N   zle-line-init
 
 function zle-keymap-select {
   local STATUS=$?
-  psvar[1]="${${KEYMAP/(main|viins)/>}/vicmd/}"
+  # See the PS1 above; we set psvar[1] to be empty if the $KEYMAP is insert-mode,
+  # and to : if it's been put into command-mode.
+  psvar[1]="${${KEYMAP/vicmd/:}/(main|viins)/}"
   ( exit $STATUS ) # This may not seem to make sense, but it’s the only way to preserve the exit status
                    # (http://www.zsh.org/cgi-bin/mla/redirect?USERNUMBER=15796)
   zle reset-prompt
   psvar[1]=""
 }
 zle -N   zle-keymap-select
-
-# ===========
-# = Widgets =
-# ===========
-
-function are-widgets-working {
-  echo '<yes>'
-}
-zle -N are-widgets-working
