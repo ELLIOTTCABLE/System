@@ -461,11 +461,10 @@ completions = {
   ohm = { value = "Ω"; auto = "yes"; };
   "‹-" = { value = "↼"; auto = "yes"; };
   pi = { value = "π"; auto = "yes"; };
-  mult = { value = "×"; auto = "yes"; };
+  mmult = { value = "×"; auto = "yes"; };
   P3 = { value = "P₃"; auto = "yes"; };
   "^_^" = { value = "^‿^"; auto = "yes"; };
   nnote = { value = "♪"; auto = "yes"; };
   ddisapprove = { value = "ಠ_ಠ"; auto = "yes"; };
   llamda = { value = "λ"; auto = "yes"; };
-  detete = { value = "delete"; };
 };
