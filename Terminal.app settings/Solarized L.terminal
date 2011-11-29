@@ -224,7 +224,7 @@
 	ABkAAAAAAAAAAAAAAAAAAADY
 	</data>
 	<key>UseBrightBold</key>
-	<integer>1</integer>
+	<false/>
 	<key>WindowTitle</key>
 	<string></string>
 	<key>columnCount</key>
