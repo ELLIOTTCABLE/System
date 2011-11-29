@@ -155,7 +155,7 @@
 	AAAAAAAAABkAAAAAAAAAAAAAAAAAAADe
 	</data>
 	<key>CommandString</key>
-	<string>iexec ssh -t ell.io "bash -l -c 'exec tmux attach-session -t irc'"</string>
+	<string>exec ssh -t ell.io "bash -l -c 'exec tmux attach-session -t irc'"</string>
 	<key>CursorBlink</key>
 	<integer>1</integer>
 	<key>CursorColor</key>
