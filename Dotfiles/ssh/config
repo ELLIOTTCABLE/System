@@ -1,10 +1,12 @@
 IdentityFile ~/.identity.insecure
 HashKnownHosts yes
 VisualHostKey yes
+VerifyHostKeyDNS ask
 
 Compression yes
 CompressionLevel 8
 
+# Binary transparency
 EscapeChar none
 
 ControlMaster auto
@@ -12,6 +14,10 @@ ControlPath ~/.ssh/sockets/%r@%h:%p.sock
 ControlPersist 30
 
 Host ell.io
-   ForwardAgent yes
+   IdentitiesOnly yes
    IdentityFile /Volumes/Key/.identity
+   ForwardAgent yes
+   # This is currently broken; I get “Bad configuration option: KeychainIntegration”
+ # KeychainIntegration no # implies...
+ ##AskPassGUI no
    Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
