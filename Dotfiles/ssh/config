@@ -7,6 +7,10 @@ CompressionLevel 8
 
 EscapeChar none
 
+ControlMaster auto
+ControlPath ~/.ssh/sockets/%r@%h:%p.sock
+ControlPersist 30
+
 Host ell.io
    ForwardAgent yes
    IdentityFile /Volumes/Key/.identity
