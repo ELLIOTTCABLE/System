@@ -334,7 +334,7 @@ settings = {
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
     autolog_ignore_targets = "chanserv nickserv";
     hilight_nick_matches = "yes";
-    log_theme = "= default";
+    log_theme = "default";
     show_names_on_join = "no";
     emphasis = "no";
     print_active_channel = "yes";
