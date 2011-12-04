@@ -30,7 +30,8 @@
 [repack]
 	usedeltabaseoffset = true
 [branch]
-	autosetupmerge = true
+	autosetupmerge = always
+	autosetuprebase = always
 [pager]
 	status = false
 [push]
