@@ -25,7 +25,7 @@
 [core]
 	legacyheaders = false
 	whitespace = -trailing-space
-	excludesfile = /Users/elliottcable/.gitignore
+	excludesfile = ~/.gitignore
 	editor = vim
 [repack]
 	usedeltabaseoffset = true
