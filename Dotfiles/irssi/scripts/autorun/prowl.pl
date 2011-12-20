@@ -14,10 +14,12 @@ use warnings;
 #
 # Commands:
 # /set prowl_api_key API_KEY
-# /set prowl_general_hilight on/off
+# /set prowl_general on/off
+# /set prowl_channel on/off
+# /set prowl_pm on/off
+# /set prowl_priority_general -2 up to 2
 # /set prowl_priority_channel -2 up to 2
 # /set prowl_priority_pm -2 up to 2
-# /set prowl_priority_general -2 up to 2
 #
 # "General hilight" basically referrs to ALL the hilights you have
 # added manually in irssi, if many, it can get really bloated if
@@ -56,10 +58,12 @@ $VERSION = "0.4";
 
 # Configuration settings and default values.
 Irssi::settings_add_str("prowl", "prowl_api_key", "");
-Irssi::settings_add_bool("prowl", "prowl_general_hilight", 0);
+Irssi::settings_add_bool("prowl", "prowl_general", 0);
+Irssi::settings_add_bool("prowl", "prowl_channel", 1);
+Irssi::settings_add_bool("prowl", "prowl_pm", 1);
+Irssi::settings_add_str("prowl", "prowl_priority_general", -1);
 Irssi::settings_add_str("prowl", "prowl_priority_channel", 0);
 Irssi::settings_add_str("prowl", "prowl_priority_pm", 0);
-Irssi::settings_add_str("prowl", "prowl_priority_general", 0);
 
 # The whole "send_noti" function is pretty much taken from the prowl example script.
 sub send_noti {
@@ -113,14 +117,18 @@ sub pubmsg {
     my ($server, $data, $nick) = @_;
 
     if($server->{usermode_away} == 1 && $data =~ /$server->{nick}/i){
-        send_noti("Hilighted", $nick . ': ' . $data, Irssi::settings_get_str("prowl_priority_channel"));
+        if(Irssi::settings_get_bool("prowl_channel")){
+            send_noti("", $nick . ': ' . $data, Irssi::settings_get_str("prowl_priority_channel"));
+        }
     }
 }
 
 sub privmsg {
     my ($server, $data, $nick) = @_;
     if($server->{usermode_away} == 1){
-        send_noti("PM", $nick . ': ' . $data, Irssi::settings_get_str("prowl_priority_pm"));
+        if(Irssi::settings_get_bool("prowl_pm")){
+            send_noti("", $nick . ': ' . $data, Irssi::settings_get_str("prowl_priority_pm"));
+        }
     }
 }
 
@@ -130,8 +138,8 @@ sub genhilight {
 
     if($dest->{level} & MSGLEVEL_HILIGHT) {
         if($server->{usermode_away} == 1){
-            if(Irssi::settings_get_bool("prowl_general_hilight")){
-                send_noti("General Hilight", $stripped, Irssi::settings_get_str("prowl_priority_general"));
+            if(Irssi::settings_get_bool("prowl_general")){
+                send_noti("", $stripped, Irssi::settings_get_str("prowl_priority_general"));
             }
         }
     }
