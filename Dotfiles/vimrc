@@ -41,9 +41,12 @@ nnoremap ` '
 " See `:help Y`
 map Y y$
 
-noremap <F2> :NERDTreeToggle<Return>
+noremap  <F2>      :NERDTreeToggle<Return>
 inoremap <F2> <C-o>:NERDTreeToggle<Return>
 vnoremap <F2> <Esc>:NERDTreeToggle<Return>
+noremap  <F3>      :GundoToggle<Return>
+inoremap <F3> <C-o>:GundoToggle<Return>
+vnoremap <F3> <Esc>:GundoToggle<Return>
 
 
 autocmd BufLeave,FocusLost * silent! wall
@@ -84,6 +87,10 @@ let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
 let g:clang_use_library = 1
 let g:clang_library_path = '/usr/lib/llvm/libclang.so'
+
+let g:gundo_preview_bottom = 1
+let g:gundo_help = 0
+let g:gundo_close_on_revert = 1
 
 call togglebg#map("<F5>")
 

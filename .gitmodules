@@ -37,3 +37,6 @@
 [submodule "Dotfiles/vim/bundle/clang_complete"]
 	path = Dotfiles/vim/bundle/clang_complete
 	url = git://github.com/Rip-Rip/clang_complete.git
+[submodule "Dotfiles/vim/bundle/gundo"]
+	path = Dotfiles/vim/bundle/gundo
+	url = git://github.com/sjl/gundo.vim.git
