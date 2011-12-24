@@ -41,6 +41,10 @@ nnoremap ` '
 " See `:help Y`
 map Y y$
 
+noremap <F2> :NERDTreeToggle<Return>
+inoremap <F2> <C-o>:NERDTreeToggle<Return>
+vnoremap <F2> <Esc>:NERDTreeToggle<Return>
+
 
 autocmd BufLeave,FocusLost * silent! wall
 
