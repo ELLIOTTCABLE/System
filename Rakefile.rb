@@ -14,7 +14,10 @@ task :submodules do
 end
 
 desc 'Installs dotfiles from this distribution for the first time'
-task :dotfiles do
+task :dotfiles => :symlink
+
+desc 'Symlink dotfiles/dotdirs into home directory'
+task :symlink do
   files = Dir['Dotfiles/*'] # Get all the files
   files = files.map { |file| File.join( File.dirname(File.expand_path(__FILE__)), file ) } # Finally, create an absolute path from our working directory
   

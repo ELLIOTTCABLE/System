@@ -34,3 +34,6 @@
 [submodule "Dotfiles/irssi/irssi-colors-solarized"]
 	path = Dotfiles/irssi/irssi-colors-solarized
 	url = git://github.com/lkraav/irssi-colors-solarized.git
+[submodule "Dotfiles/vim/bundle/clang_complete"]
+	path = Dotfiles/vim/bundle/clang_complete
+	url = git://github.com/Rip-Rip/clang_complete.git

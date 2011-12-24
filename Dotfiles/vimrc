@@ -78,6 +78,9 @@ let g:CommandTMaxHeight = 10
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
+let g:clang_use_library = 1
+let g:clang_library_path = '/usr/lib/llvm/libclang.so'
+
 call togglebg#map("<F5>")
 
 " filnxtToO → ilmxstToOI
