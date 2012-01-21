@@ -30,6 +30,8 @@ set encoding=utf-8
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.class,.svn
 
+call arpeggio#load()
+
 " These make movement commands “work” with `o`, such as `3o` to insert inject lines and switch to insert mode.
 nnoremap o o<Esc>S
 nnoremap O O<Esc>'[S

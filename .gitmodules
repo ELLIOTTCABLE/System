@@ -43,3 +43,6 @@
 [submodule "Dotfiles/vim/bundle/autoclose.vim"]
 	path = Dotfiles/vim/bundle/autoclose.vim
 	url = git://github.com/korpz/Autoclose-vim.git
+[submodule "Dotfiles/vim/bundle/vim-arpeggio"]
+	path = Dotfiles/vim/bundle/vim-arpeggio
+	url = git://github.com/kana/vim-arpeggio.git
