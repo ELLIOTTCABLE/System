@@ -88,7 +88,7 @@ let g:CommandTMatchWindowReverse = 1
 let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
 let g:clang_use_library = 1
-let g:clang_library_path = '/usr/lib/llvm/libclang.so'
+let g:clang_library_path = '/usr/lib/llvm'
 
 let g:gundo_preview_bottom = 1
 let g:gundo_help = 0
