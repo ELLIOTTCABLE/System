@@ -351,7 +351,11 @@ settings = {
     tmux_away_window = "";
     ujd_integral_digits = "2";
     ujd_fractional_digits = "4";
-    prowl_priority_channel = "-2";
+    prowl_priority_channel = "0";
+    prowl_general = "yes";
+    prowl_priority_general = "0";
+    prowl_priority_pm = "1";
+    prowl_channel = "no";
   };
   "irc/core" = {
     part_message = "AIO_ALLDONE";
