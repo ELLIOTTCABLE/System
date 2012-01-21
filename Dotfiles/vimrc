@@ -76,6 +76,7 @@ let NERDTreeSortOrder = ['\/$', '\.h$', '*']
 let NERDTreeWinPos = 'right'
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeWinSize = 25
 
 let NERDBlockComIgnoreEmpty = 0
 let NERDSpaceDelims = 1
@@ -90,6 +91,7 @@ let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 let g:clang_use_library = 1
 let g:clang_library_path = '/usr/lib/llvm'
 
+let g:gundo_width = 25
 let g:gundo_preview_bottom = 1
 let g:gundo_help = 0
 let g:gundo_close_on_revert = 1
