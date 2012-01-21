@@ -40,3 +40,6 @@
 [submodule "Dotfiles/vim/bundle/gundo"]
 	path = Dotfiles/vim/bundle/gundo
 	url = git://github.com/sjl/gundo.vim.git
+[submodule "Dotfiles/vim/bundle/autoclose.vim"]
+	path = Dotfiles/vim/bundle/autoclose.vim
+	url = git://github.com/korpz/Autoclose-vim.git
