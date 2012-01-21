@@ -18,6 +18,7 @@
 	ff = merge --ff-only
 	pull = pull --ff-only
 	clone = clone --recursive
+	rain = "!f(){ git commit --allow-empty-message -m \"${*:- }\"; };f"
 [diff]
   mnemonicprefix = true
 [format]
