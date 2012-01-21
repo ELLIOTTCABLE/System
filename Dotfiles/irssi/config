@@ -142,7 +142,11 @@ channels = (
   { name = "#CoffeeScript"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#JSAPI"; chatnet = "Mozilla"; autojoin = "yes"; },
   { name = "#JSlang"; chatnet = "Mozilla"; autojoin = "yes"; },
-  { name = "##English"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "##English"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#V8"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#YAJL"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##C++"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Elixir-lang"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -401,6 +405,7 @@ hilights = (
     word = "yes";
     fullword = "yes";
     channels = (
+      "##Hat",
       "#elliottcable",
       "##Oases",
       "##Paws",
@@ -416,6 +421,7 @@ hilights = (
     word = "yes";
     fullword = "yes";
     channels = (
+      "##Hat",
       "#elliottcable",
       "##Oases",
       "##Paws",
