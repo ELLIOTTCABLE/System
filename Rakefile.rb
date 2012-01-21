@@ -9,12 +9,14 @@ end
 desc 'Checks out the dotfiles submodules'
 task :submodules do
    system "git submodule update --init --recursive"
-   FileUtils.mkdir_p(Dir.pwd + '/Dotfiles/vim/backup')
-   FileUtils.mkdir_p(Dir.pwd + '/Dotfiles/ssh/sockets')
+   FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/backup')
+   FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/ssh/sockets')
 end
 
 desc 'Installs dotfiles from this distribution for the first time'
-task :dotfiles => :symlink
+task :dotfiles => :symlink do
+   system "chmod 700 " + Dir.pwd+'/Dotfiles/ssh'
+end
 
 desc 'Symlink dotfiles/dotdirs into home directory'
 task :symlink do
