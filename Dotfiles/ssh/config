@@ -21,3 +21,8 @@ Host ell.io
  # KeychainIntegration no # implies...
  ##AskPassGUI no
    Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
+
+#~# --Begin HandyLight--
+#~Host *
+#~   ProxyCommand /usr/bin/nc -x 13.37.13.37:1337 %h %p
+#~# --End HandyLight--
