@@ -1,4 +1,3 @@
-IdentityFile ~/.identity.insecure
 HashKnownHosts yes
 VisualHostKey yes
 VerifyHostKeyDNS ask
@@ -21,6 +20,9 @@ Host ell.io
  # KeychainIntegration no # implies...
  ##AskPassGUI no
    Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
+
+Host *
+   IdentityFile ~/.identity.insecure
 
 #~# --Begin HandyLight--
 #~Host *
