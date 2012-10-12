@@ -146,7 +146,9 @@ channels = (
   { name = "#V8"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#YAJL"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##C++"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#Elixir-lang"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#Elixir-lang"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##nexxy"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#pinboard"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -433,6 +435,13 @@ hilights = (
       "#Paws.Core",
       "#Paws.Fullness"
     );
+  },
+  {
+    text = "%everyone";
+    color = "%g";
+    nick = "no";
+    word = "yes";
+    fullword = "yes";
   }
 );
 completions = {
@@ -477,4 +486,11 @@ completions = {
   nnote = { value = "♪"; auto = "yes"; };
   ddisapprove = { value = "ಠ_ಠ"; auto = "yes"; };
   llamda = { value = "λ"; auto = "yes"; };
+  pplane = { value = "✈"; auto = "yes"; };
+  sshrug = { value = "¯\\_(ツ)_/¯"; auto = "yes"; };
+  sstare = { value = "◉_◉"; auto = "yes"; };
+  dderp = { value = "◴_◶"; auto = "yes"; };
+  gglare = { value = "¬_¬"; auto = "yes"; };
+  ggasp = { value = "⊙▃⊙"; auto = "yes"; };
+  bblush = { value = "(▰˘◡˘▰)"; auto = "yes"; };
 };
