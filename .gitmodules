@@ -46,3 +46,6 @@
 [submodule "Dotfiles/vim/bundle/vim-arpeggio"]
 	path = Dotfiles/vim/bundle/vim-arpeggio
 	url = git://github.com/kana/vim-arpeggio.git
+[submodule "Dotfiles/vim/bundle/vim-coffee-script"]
+	path = Dotfiles/vim/bundle/vim-coffee-script
+	url = https://github.com/kchmck/vim-coffee-script.git
