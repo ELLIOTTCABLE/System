@@ -148,7 +148,8 @@ channels = (
   { name = "##C++"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Elixir-lang"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##nexxy"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#pinboard"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#pinboard"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#grunt"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
