@@ -118,6 +118,9 @@ alias aok='rake aok'
 # Server control
 alias df='df -kH'
 
+### JavaScript
+# ... nothing here, yet
+
 alias grep='grep --color=auto'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
@@ -148,7 +151,7 @@ alias clanch='git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git
 alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
-alias gerget ='g mergetool'
+alias gerget='g mergetool'
 alias glog='g log --graph --decorate --pretty=oneline --abbrev-commit --abbrev=5 --date-order --cherry-mark --left-right'
 
 # alternatives, using the 'stage' metaphor
@@ -209,6 +212,7 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/usr/local/share/npm/bin:/usr/local/share/python:/opt/local/bin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
 PATH="/usr/local/bin:$PATH"
+PATH="$HOME/.rvm/bin:$PATH"
 export PATH
 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
