@@ -66,3 +66,4 @@
 	prompt = false
 [merge]
 	tool = Kaleidoscope
+	defaultToUpstream = true
