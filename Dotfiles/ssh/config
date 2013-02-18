@@ -1,5 +1,4 @@
 HashKnownHosts yes
-VisualHostKey yes
 VerifyHostKeyDNS ask
 
 Compression yes
