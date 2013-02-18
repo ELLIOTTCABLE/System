@@ -50,6 +50,11 @@ noremap  <F3>      :GundoToggle<Return>
 inoremap <F3> <C-o>:GundoToggle<Return>
 vnoremap <F3> <Esc>:GundoToggle<Return>
 
+" F12 to toggle hilight, Shift-F12 to clear search register
+nmap <silent> <F12> :silent set invhls<CR>
+imap <silent> <F12> <C-O><F12>
+map  <silent> <S-F12> :let @/ = @_<CR>
+imap <silent> <S-F12> <C-O><S-F12>
 
 autocmd BufLeave,FocusLost * silent! wall
 
