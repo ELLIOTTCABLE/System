@@ -70,7 +70,18 @@ export EC2_PRIVATE_KEY="$(print $HOME/.ec2/pk-*.pem(N))"
 export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 
 alias q='exit'
-alias bye='ssh -O exit ell.io 2>/dev/null; hdiutil eject /Volumes/Key && exit'
+bye() {
+   ssh -O exit ell.io 2>/dev/null;
+   hdiutil eject /Volumes/Key 2>/dev/null
+   st=$?
+   if [ $st -ne 0 -a -d '/Volumes/Key' ]; then
+      echo "Killing ALL OF THE THINGS D:"
+      kill -HUP `lsof -t '/Volumes/Key'`
+      hdiutil eject /Volumes/Key && exit
+   else
+      exit
+   fi
+}
 
 # Make mkdir recursive
 alias mkdir='mkdir -p'
