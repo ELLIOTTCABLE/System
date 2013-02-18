@@ -211,8 +211,9 @@ PATH="$HOME/.bin:$PATH:$EC2_HOME/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/usr/local/share/npm/bin:/usr/local/share/python:/opt/local/bin:$PATH:/usr/X11/bin:/usr/local/cuda/bin"
 fi
-PATH="/usr/local/bin:$PATH"
-PATH="$HOME/.rvm/bin:$PATH"
+PATH="/usr/local/bin:$PATH"      # Homebrew
+PATH="$HOME/.rvm/bin:$PATH"      # RVM
+PATH="./node_modules/.bin:$PATH" # npm
 export PATH
 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
