@@ -40,6 +40,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias xcode='open -a Xcode'
   
   alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-experimental-extension-apis'
+  
+  function woman(){ man -t $1 | open -fa Preview }
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
