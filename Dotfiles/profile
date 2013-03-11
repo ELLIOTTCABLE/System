@@ -175,6 +175,35 @@ alias unstiff='giff' # unstaged diff
 alias stiff='giff --cached' # staged diff
 alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
+# ‘alternate_git’:
+#     > GIT_ALTERNATE_OBJECT_DIRECTORIES=../other_repo/.git/objects \ 
+#        git cherry-pick $(git --git-dir=../other_repo/.git rev-parse --verify e9721)
+# ... becomes ...
+#     > agit ~[../other_repo] cherry-pick ~[e9721]
+# 
+# This is some seriously evil, hacky shit; but it works, unlike my original attempt with subshells.
+# (Damn you, subshells.)
+function agit() {
+   env GIT_ALTERNATE_OBJECT_DIRECTORIES="$1/.git/objects" \
+      =git ${${*:2}[@]} }
+
+zsh_directory_name_functions=(${zsh_directory_name_functions[@]} uncommitish set_uncommitish_repo)
+function uncommitish() { if [[ $1 == 'n' ]]; then
+   if [[ -z "$UNCOMMITISH_REPO" ]]; then return 1; fi
+   
+   rev=$(git --git-dir="$UNCOMMITISH_REPO/.git" rev-parse --verify $2 2>/dev/null); st=$?
+   if (( $st != 0 )); then return $st; fi
+   
+   reply=("$rev")
+else return 1; fi }
+
+function set_uncommitish_repo() { if [[ $1 == 'n' ]]; then
+   export UNCOMMITISH_REPO="$2"
+   reply=("$2")
+else return 1; fi }
+
+export zsh_directory_name_functions
+
 alias diff='colordiff'
 
 # make `dig` less insanely verbose.
