@@ -77,8 +77,14 @@ bye() {
    hdiutil eject /Volumes/Key 2>/dev/null
    st=$?
    if [ $st -ne 0 -a -d '/Volumes/Key' ]; then
-      echo "Killing ALL OF THE THINGS D:"
-      kill -HUP `lsof -t '/Volumes/Key'`
+      echo "Ejection failed. Need to kill some things first ..."
+      for PID in `lsof -t '/Volumes/Key'`; do
+         read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
+         case $consent in
+            [Nn]*) break 2;;
+            [Yy]*) kill -HUP $PID;
+         esac
+      done
       hdiutil eject /Volumes/Key && exit
    else
       exit
