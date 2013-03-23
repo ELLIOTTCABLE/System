@@ -67,9 +67,13 @@ endif
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 
+set undofile
+set undolevels=10000
+
 " Directories for swp files
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
+set undodir=~/.vim/undo,\ ./
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
