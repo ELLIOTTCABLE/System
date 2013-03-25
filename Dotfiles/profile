@@ -74,18 +74,19 @@ export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 alias q='exit'
 bye() {
    ssh -O exit ell.io 2>/dev/null;
-   hdiutil eject /Volumes/Key 2>/dev/null
+   hdiutil eject /Volumes/Snuggly-butt 2>/dev/null
    st=$?
-   if [ $st -ne 0 -a -d '/Volumes/Key' ]; then
+   if [ $st -ne 0 -a -d '/Volumes/Snuggly-butt' ]; then
       echo "Ejection failed. Need to kill some things first ..."
-      for PID in `lsof -t '/Volumes/Key'`; do
+      for PID in `lsof -t '/Volumes/Snuggly-butt'`; do
          read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
+         echo
          case $consent in
             [Nn]*) break 2;;
             [Yy]*) kill -HUP $PID;
          esac
       done
-      hdiutil eject /Volumes/Key && exit
+      hdiutil eject /Volumes/Snuggly-butt && exit
    else
       exit
    fi
