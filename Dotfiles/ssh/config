@@ -11,7 +11,7 @@ ControlMaster auto
 ControlPath ~/.ssh/sockets/%r@%h:%p.sock
 ControlPersist 30
 
-Host ell.io
+Host ell.io *.ell.io Kim.local
    IdentitiesOnly yes
    IdentityFile /Volumes/Snuggly-butt/.identity
    ForwardAgent yes
