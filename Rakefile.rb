@@ -10,6 +10,7 @@ desc 'Checks out the dotfiles submodules'
 task :submodules do
    system "git submodule update --init --recursive"
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/backup')
+   FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/undo')
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/ssh/sockets')
 end
 
