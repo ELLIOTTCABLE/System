@@ -139,6 +139,8 @@ alias aok='rake aok'
 alias df='df -kH'
 
 ### JavaScript
+alias svisor="supervisor --no-restart-on exit"
+alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
 # ... nothing here, yet
 
 alias grep='grep --color=auto'
