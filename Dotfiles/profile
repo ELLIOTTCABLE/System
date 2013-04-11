@@ -73,12 +73,15 @@ export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 
 alias q='exit'
 bye() {
+   if [[ -z "$1" ]]; then echo "ERROR: The first argument must be the name of a volume."; return 1; fi
+   if [[ ! -d "/Volumes/$1" ]]; then echo 'ERROR: `/Volumes/'"$1"'` does not exist!';     return 1; fi
+   
    ssh -O exit ell.io 2>/dev/null;
-   hdiutil eject /Volumes/Snuggly-butt 2>/dev/null
+   hdiutil eject "/Volumes/$1" 2>/dev/null
    st=$?
-   if [ $st -ne 0 -a -d '/Volumes/Snuggly-butt' ]; then
+   if [ $st -ne 0 -a -d "/Volumes/$1" ]; then
       echo "Ejection failed. Need to kill some things first ..."
-      for PID in `lsof -t '/Volumes/Snuggly-butt'`; do
+      for PID in `lsof -t "/Volumes/$1"`; do
          read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
          echo
          case $consent in
@@ -86,7 +89,7 @@ bye() {
             [Yy]*) kill -HUP $PID;
          esac
       done
-      hdiutil eject /Volumes/Snuggly-butt && exit
+      hdiutil eject "/Volumes/$1" && exit
    else
       exit
    fi
