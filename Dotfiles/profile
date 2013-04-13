@@ -178,6 +178,8 @@ alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
 alias glog='g log --graph --decorate --pretty=oneline --abbrev-commit --abbrev=5 --date-order --cherry-mark --left-right'
+function omglog() {
+   glog --all $* $(git log -g --pretty=format:%h) }
 
 # alternatives, using the 'stage' metaphor
 alias stage='g add'
