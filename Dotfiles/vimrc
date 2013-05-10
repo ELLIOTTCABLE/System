@@ -105,6 +105,8 @@ let g:gundo_preview_bottom = 1
 let g:gundo_help = 0
 let g:gundo_close_on_revert = 1
 
+let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
+
 call togglebg#map("<F5>")
 
 " filnxtToO → ilmxstToOI
