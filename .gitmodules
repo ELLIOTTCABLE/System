@@ -52,3 +52,6 @@
 [submodule "Dotfiles/vim/bundle/vim-sparkup"]
 	path = Dotfiles/vim/bundle/vim-sparkup
 	url = http://github.com/bingaman/vim-sparkup.git
+[submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
+	path = Dotfiles/vim/bundle/vim-literate-coffeescript
+	url = http://github.com/mintplant/vim-literate-coffeescript.git
