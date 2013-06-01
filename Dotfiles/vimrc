@@ -97,8 +97,24 @@ let g:CommandTMaxHeight = 10
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
-let g:clang_use_library = 1
-let g:clang_library_path = '/usr/lib/llvm'
+let g:clang_use_library = 1      " Use the (faster, but more fragile) libclang instead of executable
+let g:clang_library_path = '/usr/local/lib'
+
+let g:clang_auto_select = 1      " Automatically *select* first result, but don't insert
+let g:clang_complete_auto = 1    " Automatically complete after ->, ., ::
+
+let g:clang_clmplete_copen = 1   " Open quickfix on error
+let g:clang_hl_errors = 1        " Hilights errors the same way clang does
+let g:clang_periodic_quickfix = 1      " Periodically update the quickfix window automatically
+
+let g:clang_snippets = 1         " Enable snippets (i.e. parentheses after completing function)
+let g:clang_snippets_engine = 'clang_complete'                                 
+let g:clang_trailing_placeholder = 1   " Trailing completion *after* functions
+
+"let g:clang_close_preview = 0    " Close the preview window after a completion is selected
+"let g:clang_complete_macros = 0  " Complete preprocessor macros and constants
+"let g:clang_complete_patterns = 0 " Complete code-patterns, loop structures, etc
+
 
 let g:gundo_width = 25
 let g:gundo_preview_bottom = 1
