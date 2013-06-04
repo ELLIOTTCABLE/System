@@ -21,20 +21,20 @@ servers = (
 chatnets = {
   Freenode = {
     type = "IRC";
-    nick = "elliottcable";
+    nick = "ELLIOTTCABLE";
     username = "me";
-    realname = "Elliott Cable";
+    realname = "elliottcable";
   };
   Mozilla = {
     type = "IRC";
-    nick = "elliottcable";
+    nick = "ELLIOTTCABLE";
     username = "me";
-    realname = "Elliott Cable";
+    realname = "elliottcable";
   };
 };
 
 channels = (
-  { name = "#elliottcable"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#ELLIOTTCABLE"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##Oases"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Paws.Nucleus"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#Node.js"; chatnet = "Freenode"; autojoin = "yes"; },
@@ -320,7 +320,7 @@ settings = {
   core = {
     real_name = "elliottcable";
     user_name = "elliottcable";
-    nick = "elliottcable";
+    nick = "ELLIOTTCABLE";
     timestamp_format = "%H:%M:%S";
     log_create_mode = "644";
     awaylog_level = "";
