@@ -149,7 +149,13 @@ channels = (
   { name = "#Elixir-lang"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "##nexxy"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#pinboard"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#grunt"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "##ventures"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#purr"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "##linux"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#ChaiJS"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Browserling"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#lincolnloop"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#Travis"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -340,7 +346,7 @@ settings = {
     autolog = "yes";
     autolog_path = "~/.irssi/logs/$tag/$0.log";
     hilight_act_color = "%R";
-    completion_char = ":";
+    completion_char = " \0034⑊\017";
     autolog_level = "all -crap -clientcrap -ctcps -msg +pub -joins -parts";
     autolog_ignore_targets = "chanserv nickserv";
     hilight_nick_matches = "yes";
@@ -356,7 +362,7 @@ settings = {
     prowl_general_hilight = "yes";
     tmux_away_window = "";
     ujd_integral_digits = "2";
-    ujd_fractional_digits = "4";
+    ujd_fractional_digits = "5";
     prowl_priority_channel = "0";
     prowl_general = "yes";
     prowl_priority_general = "0";
@@ -497,4 +503,5 @@ completions = {
   gglare = { value = "¬_¬"; auto = "yes"; };
   ggasp = { value = "⊙▃⊙"; auto = "yes"; };
   bblush = { value = "(▰˘◡˘▰)"; auto = "yes"; };
+  ddis = { value = "ಠ_ಠ"; auto = "yes"; };
 };
