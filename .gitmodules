@@ -55,3 +55,6 @@
 [submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
 	path = Dotfiles/vim/bundle/vim-literate-coffeescript
 	url = http://github.com/mintplant/vim-literate-coffeescript.git
+[submodule "Dotfiles/vim/bundle/vim-gitgutter"]
+	path = Dotfiles/vim/bundle/vim-gitgutter
+	url = git://github.com/airblade/vim-gitgutter.git

@@ -157,7 +157,7 @@ alias tm='top -o vsize'
 
 # SVN
 alias sco='svn co'
-alias sup='svn up'
+#alias sup='svn up'
 alias sci='svn ci -m'
 alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
 
@@ -177,16 +177,30 @@ alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
-function glog() {
+function ellio_log() {
    # FIXME: --no-minor doesn't work yet, because git-log's being weird.
    # FIXME: Remove --no-granules and --no-minor from the $*
    g log --graph --date-order --cherry-mark --left-right \
       --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
       --color --abbrev=5 --pretty=solarized-parseable $* \
-   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' \
-   | less -SRXF }
+   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' }
+function glog() {
+   ellio_log $* | less -SRXF }
 function omglog() {
    glog --all $* $(git log -g --pretty=format:%h) }
+function sup() {
+   branch=$1
+   if [[ -z "$branch" ]]; then
+      branch=$(git rev-parse --abbrev-ref HEAD) ;fi         # vvv  Might be a bit of an assumption.
+   # This should probably be more robust. Currently, it'll only support three-deep branches.
+   master='Master'
+   remote=$(git rev-parse --short "$master@{upstream}~5")
+   upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
+   
+   gist
+   echo "-- Recent history: --------"
+   ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
+}
 
 # alternatives, using the 'stage' metaphor
 alias stage='g add'
