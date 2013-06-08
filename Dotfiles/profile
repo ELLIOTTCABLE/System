@@ -198,7 +198,7 @@ function sup() {
    upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
    
    gist
-   echo "-- Recent history: --------"
+   echo -e "\033[1m-- Recent history: --------"
    ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
 }
 
