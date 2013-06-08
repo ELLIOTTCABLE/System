@@ -72,4 +72,5 @@
 	defaultToUpstream = true
 [pretty]
 	solarized = "format:%x1b[30m%h%x1b[31;1m%G?%Creset %s %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
+	solarized-reflog = "format:%x1b[33m%gd%x1b[31;1m%G?%Creset %gs %x1b[93;2m— %ar%x1b[0m"
 	solarized-parseable = "format:%x1b[30m%h%x1b[31;1m%G?%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"

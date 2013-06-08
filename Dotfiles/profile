@@ -198,8 +198,11 @@ function sup() {
    upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
    
    gist
-   echo -e "\033[1m-- Recent history: --------"
+   echo -e "\033[1m-- Recent history: --------\033[0m"
    ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
+   echo -e "\033[1m-- Stored stashes: --------\033[0m"
+   git stash list --pretty=solarized-reflog
+
 }
 
 # alternatives, using the 'stage' metaphor
