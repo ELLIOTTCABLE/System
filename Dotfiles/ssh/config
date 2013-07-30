@@ -21,7 +21,7 @@ Host ell.io *.ell.io Kim.local
    Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
 
 Host *
-   IdentityFile ~/.identity.insecure
+   IdentityFile ~/.identity-insecure
 
 #~# --Begin HandyLight--
 #~Host *
