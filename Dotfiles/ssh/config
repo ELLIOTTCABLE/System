@@ -13,7 +13,7 @@ ControlPersist 30
 
 Host ell.io *.ell.io Kim.local
    IdentitiesOnly yes
-   IdentityFile /Volumes/Snuggly-butt/.identity
+   IdentityFile /Volumes/Identity/.identity
    ForwardAgent yes
    # This is currently broken; I get “Bad configuration option: KeychainIntegration”
  # KeychainIntegration no # implies...
