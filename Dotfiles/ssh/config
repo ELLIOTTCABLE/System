@@ -12,6 +12,7 @@ ControlPath ~/.ssh/sockets/%r@%h:%p.sock
 ControlPersist 30
 
 Host ell.io *.ell.io Kim.local
+   User elliottcable
    IdentitiesOnly yes
    IdentityFile /Volumes/Identity/identity
    ForwardAgent yes
