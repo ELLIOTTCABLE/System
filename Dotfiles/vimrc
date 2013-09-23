@@ -80,13 +80,14 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " === Plugins ===
 let NERDChristmasTree = 1
+let NERDTreeShowBookmarks = 1
 let NERDTreeBookmarksFile = '~/.vim/.NERDTreeBookmarks'
 let NERDTreeMouseMode = 2
 let NERDTreeSortOrder = ['\/$', '\.h$', '*']
 let NERDTreeWinPos = 'right'
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeWinSize = 25
+let NERDTreeWinSize = 21
 
 let NERDBlockComIgnoreEmpty = 0
 let NERDSpaceDelims = 1
