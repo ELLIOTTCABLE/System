@@ -6,7 +6,7 @@ runtime solarized.vimrc
 autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
 set textwidth=100 cc=+1
-set nonumber ruler nowrap
+set number ruler nowrap
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
 set nosmarttab noautoindent
 set smartcase ignorecase
