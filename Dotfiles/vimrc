@@ -87,7 +87,7 @@ let NERDTreeSortOrder = ['\/$', '\.h$', '*']
 let NERDTreeWinPos = 'right'
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeWinSize = 21
+let NERDTreeWinSize = 25
 
 let NERDBlockComIgnoreEmpty = 0
 let NERDSpaceDelims = 1

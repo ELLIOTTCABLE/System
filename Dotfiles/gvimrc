@@ -1,5 +1,5 @@
 " MacVIM / GUI settings
-set lines=126 columns=131 " 1+25 (NERDTree width) + 100 + 4 (numberwidth) + 1 (margin)
+set lines=126 columns=132 " 2 (signs) + 4 (numberwidth) +1+ 100 + 25 (NERDTree)
 set guifont=Menlo:h10
 
 " colorscheme solarized
