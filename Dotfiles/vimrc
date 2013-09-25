@@ -117,9 +117,7 @@ let g:clang_trailing_placeholder = 1   " Trailing completion *after* functions
 "let g:clang_complete_macros = 0  " Complete preprocessor macros and constants
 "let g:clang_complete_patterns = 0 " Complete code-patterns, loop structures, etc
 
-" This is currently broken; for whatever reason, NERDtree *still* gets a gutter.
-sign define dummy
-autocmd BufEnter * if &ft != 'nerdtree' | execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('') | endif
+let g:gitgutter_sign_column_always = 1
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 
