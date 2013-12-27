@@ -8,6 +8,8 @@ export SYSTEM_TIGER='Mac OS X 10.4'
 export SYSTEM_LEOPARD='Mac OS X 10.5'
 export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
 export SYSTEM_LION='Mac OS X 10.7'
+export SYSTEM_MOUNTAIN_LION='Mac OS X 10.8'
+export SYSTEM_MAVERICKS='Mac OS X 10.9'
 export SYSTEM_NIX='Linux'
 export SYSTEM_CENTOS='Centos'
 export SYSTEM_CENTOS5='Centos 5'
@@ -21,8 +23,8 @@ while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
   echo '$SYSTEM \033[0;91mis not set!\033[m Opening $EDITOR so you can set it…'
   sleep 2
   rm $HOME/.profile.local
-  cp $HOME/.files/profile.local $HOME/.profile.local
-  nano $HOME/.profile.local
+  cp $HOME/.files/profile.local $HOME/.profile.local # FIXME: `.files` shouldn't be hardcoded
+  edit $HOME/.profile.local
   source $HOME/.profile.local
 done
 
