@@ -1,1 +1,1 @@
-{ PATH = "/System/Software/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"; LC_CTYPE = "en_US.UTF-8"; }
+{ PATH = "./node_modules/.bin:/Users/ELLIOTTCABLE/.bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/cuda/bin:/usr/local/opt/ec2-api-tools/bin"; LC_CTYPE = "en_US.UTF-8"; }
