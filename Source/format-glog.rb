@@ -12,7 +12,7 @@ def format_glog(f)
       subject << ' ' << "\e[37;40;4m" << tags.join("\e[24m \e[4m") << "\e[39;49;24m"
    end
    
-   subject.sub! /^(\+|!)/, "\e[95m\\1\e[39m" if subject
+   subject.sub! /^(\+|!)/, "\e[95m\\1\e[2m" if subject
    
    subject << "\e[22m" if minor
    
