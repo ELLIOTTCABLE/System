@@ -42,6 +42,12 @@
 	default = tracking
 [rebase]
 	autosquash = true
+[imap]
+	folder = "[Gmail]/Drafts"
+	host = imaps://imap.gmail.com
+	user = me@ell.io
+	port = 993
+	sslverify = false
 [url "git@github.com:"]
 	insteadOf = "gh:"
 	pushInsteadOf = "github:"
