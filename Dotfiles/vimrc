@@ -59,6 +59,10 @@ imap <silent> <S-F12> <C-O><S-F12>
 
 autocmd BufLeave,FocusLost * silent! wall
 
+" I don't understand why this is necessary. I clearly don't understand vim's filetype recognition
+" very well.
+au BufRead,BufNewFile *.pegjs setfiletype pegjs
+
 " gist-vim defaults
 if has("mac")
   let g:gist_clip_command = 'pbcopy'
