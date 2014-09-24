@@ -64,3 +64,9 @@
 [submodule "Dotfiles/vim/bundle/pegjs-vim"]
 	path = Dotfiles/vim/bundle/pegjs-vim
 	url = https://github.com/alunny/pegjs-vim
+[submodule "Dotfiles/vim/bundle/ag.vim"]
+	path = Dotfiles/vim/bundle/ag.vim
+	url = https://github.com/rking/ag.vim
+[submodule "Dotfiles/vim/bundle/vim-unimpaired"]
+	path = Dotfiles/vim/bundle/vim-unimpaired
+	url = git://github.com/tpope/vim-unimpaired.git
