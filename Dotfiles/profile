@@ -193,6 +193,9 @@ function glog() {
 function omglog() {
    glog --all $* $(git log -g --pretty=format:%h) }
 function sup() {
+   git -c color.status=true status |
+      awk '/(Changes to be committed|Changes not staged for commit|nothing to commit, working directory clean)/ {exit} {print}'
+   
    branch=$1
    if [[ -z "$branch" ]]; then
       branch=$(git rev-parse --abbrev-ref HEAD) ;fi         # vvv  Might be a bit of an assumption.
@@ -202,9 +205,9 @@ function sup() {
    upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
    
    gist
-   echo -e "\033[1m-- Recent history: --------\033[0m"
+   echo -e "\n\033[1m-- Recent history: --------\033[0m"
    ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
-   echo -e "\033[1m-- Stored stashes: --------\033[0m"
+   echo -e "\n\033[1m-- Stored stashes: --------\033[0m"
    git stash list --pretty=solarized-reflog
 
 }
