@@ -19,6 +19,7 @@
 	pull = pull --ff-only
 	clone = clone --recursive
 	rain = "!f(){ git commit --allow-empty-message -m \"${*:- }\"; };f"
+	fix = "!f() { ${EDITOR} `git diff --name-only`; }; f"
 	ignore = update-index --assume-unchanged --
 	unignore = update-index --no-assume-unchanged --
 	ignored = "!git ls-files -v | grep --colour '^[a-z]'"
