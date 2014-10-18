@@ -73,3 +73,6 @@
 [submodule "Dotfiles/vim/bundle/mustache"]
 	path = Dotfiles/vim/bundle/mustache
 	url = git://github.com/mustache/vim-mustache-handlebars.git
+[submodule "Dotfiles/vim/bundle/vim-openscad"]
+	path = Dotfiles/vim/bundle/vim-openscad
+	url = https://github.com/sirtaj/vim-openscad.git
