@@ -23,6 +23,7 @@
 	ignore = update-index --assume-unchanged --
 	unignore = update-index --no-assume-unchanged --
 	ignored = "!git ls-files -v | grep --colour '^[a-z]'"
+	labels = "!git show Master:.gitlabels | less -RS"
 [diff]
   mnemonicprefix = true
 [format]
