@@ -1,4 +1,6 @@
 def format_glog(f)
+   Signal.trap("PIPE", "EXIT")
+   
    subject = f[1]
    
    # TODO: I need to abstract this into a .gitlabels library.
