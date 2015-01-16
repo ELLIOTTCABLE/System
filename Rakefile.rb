@@ -3,7 +3,12 @@ require 'fileutils'
 task :default => :setup
 
 desc '(DEFAULT) Set up a new machine'
-task :setup => [:submodules, :dotfiles] do
+task :setup => [:hooks, :submodules, :dotfiles] do
+end
+
+desc 'Install the git hooks'
+task :hooks do
+   system "./Scripts/install-git-hooks.sh"
 end
 
 desc 'Checks out the dotfiles submodules'
