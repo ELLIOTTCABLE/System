@@ -58,9 +58,6 @@
 [submodule "Dotfiles/vim/bundle/vim-gitgutter"]
 	path = Dotfiles/vim/bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter.git
-[submodule "Dotfiles/vim/bundle/Floobits"]
-	path = Dotfiles/vim/bundle/Floobits
-	url = https://github.com/Floobits/floobits-vim
 [submodule "Dotfiles/vim/bundle/pegjs-vim"]
 	path = Dotfiles/vim/bundle/pegjs-vim
 	url = https://github.com/alunny/pegjs-vim
