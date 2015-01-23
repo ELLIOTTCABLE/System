@@ -290,6 +290,15 @@ rse () {
   ((eval $(for phrase in "$@"; do echo -n "'$phrase' "; done)) 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
 }
 
+# Bash-only. Whatever.
+# {{{
+# Node Completion - Auto-generated, do not touch. (Fuck you, I touched it anyway. ~ ELLIOTTCABLE)
+for f in $(command ls ~/.node-completion); do
+  f="$HOME/.node-completion/$f"
+  test -f "$f" && . "$f"
+done
+# }}}
+
 # Create files as u=rwx, g=rx, o=rx
 umask 022
 
@@ -315,5 +324,7 @@ PATH="$PATH:/usr/local/cuda/bin"          # -2. > CUDA
 PATH="$PATH:$EC2_HOME/bin"                # -1. > EC2
 export PATH
 
-[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
-[[ -s $HOME/.nvm/nvm.sh ]]      && source $HOME/.nvm/nvm.sh
+export NVM_DIR="/Users/ec/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
+[[ -s "$HOME/.rvm/scripts/rvm" ]]  && source "$HOME/.rvm/scripts/rvm"
+[[ -s "$HOME/.travis/travis.sh" ]]  && source "$HOME/.travis/travis.sh"
