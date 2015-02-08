@@ -82,3 +82,6 @@
 [submodule "Dotfiles/zsh/modules/zsh-autosuggestions"]
 	path = Dotfiles/zsh/modules/zsh-autosuggestions
 	url = git@github.com:tarruda/zsh-autosuggestions.git
+[submodule "Dotfiles/vim/bundle/vim-nerdtree-tabs"]
+	path = Dotfiles/vim/bundle/vim-nerdtree-tabs
+	url = https://github.com/jistr/vim-nerdtree-tabs.git

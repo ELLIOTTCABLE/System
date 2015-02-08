@@ -44,9 +44,9 @@ nnoremap ` '
 " See `:help Y`
 map Y y$
 
-noremap  <F2>      :NERDTreeToggle<Return>
-inoremap <F2> <C-o>:NERDTreeToggle<Return>
-vnoremap <F2> <Esc>:NERDTreeToggle<Return>
+noremap  <F2>      :NERDTreeTabsToggle<Return>
+inoremap <F2> <C-o>:NERDTreeTabsToggle<Return>
+vnoremap <F2> <Esc>:NERDTreeTabsToggle<Return>
 noremap  <F3>      :GundoToggle<Return>
 inoremap <F3> <C-o>:GundoToggle<Return>
 vnoremap <F3> <Esc>:GundoToggle<Return>
