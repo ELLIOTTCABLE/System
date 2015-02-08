@@ -1,5 +1,5 @@
-if [ -f $HOME/.profile ]; then
-  source $HOME/.profile
+if [ -f "$HOME/.profile" ]; then
+  source "$HOME/.profile"
 fi
 
 # The following lines were added by compinstall
@@ -104,3 +104,36 @@ function zle-keymap-select {
   psvar[1]=""
 }
 zle -N   zle-keymap-select
+
+# ===========
+# = Modules =
+# ===========
+
+source "$HOME/.zsh/modules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets root)
+ZSH_HIGHLIGHT_STYLES[root]='bg=9'                  # Orange
+ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=15,bold' # Base 3
+ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=14,bold' # Base 2
+ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=8,bold'  # Base 03
+
+
+source "$HOME/.zsh/modules/zsh-history-substring-search/zsh-history-substring-search.zsh"
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=15,bold'
+zmodload zsh/terminfo
+#bindkey "$terminfo[kcuu1]" history-substring-search-up
+#bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey '^[[A' history-substring-search-up # 'cuz OS X. >,>
+bindkey '^[[B' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
+
+#source "$HOME/.zsh/modules/zsh-autosuggestions/autosuggestions.zsh"
+#
+#zle-line-init() {
+#    zle autosuggest-start
+#}
+#zle -N zle-line-init
+#
+#bindkey '^T' autosuggest-toggle
+#bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
