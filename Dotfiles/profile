@@ -145,7 +145,7 @@ alias aok='rake aok'
 alias df='df -kH'
 
 ### JavaScript
-alias nrs='npm run-script'
+alias nrs='npm --loglevel=silent run-script'
 
 alias svisor="supervisor --no-restart-on exit"
 alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
