@@ -1,4 +1,8 @@
 Dotfiles/ssh/known_hosts
 Dotfiles/ssh/.identity*
+Dotfiles/config/keybase/*
 Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/vim/undo
+
+Dotfiles/config/inkscape/
+Dotfiles/config/UDP Software/Dwarf Therapist.ini
