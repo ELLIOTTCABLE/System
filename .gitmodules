@@ -85,3 +85,6 @@
 [submodule "Dotfiles/vim/bundle/vim-nerdtree-tabs"]
 	path = Dotfiles/vim/bundle/vim-nerdtree-tabs
 	url = https://github.com/jistr/vim-nerdtree-tabs.git
+[submodule "Dotfiles/source-highlight/source-highlight-solarized"]
+	path = Dotfiles/source-highlight/source-highlight-solarized
+	url = git@github.com:jrunning/source-highlight-solarized.git

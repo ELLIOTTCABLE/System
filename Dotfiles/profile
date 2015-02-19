@@ -33,9 +33,12 @@ source $HOME/.shell_colours
 stty -ixon
 
 
-# fix less
+# less
 export PAGER='less'
-# export LESS='-fXemPm?f%f .?lbLine %lb?L of %L..:$' # Set options for less command
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+   export LESSOPEN="| source-highlight --failsafe --infer-lang -f esc \
+      --style-file='$HOME/.source-highlight/source-highlight-solarized/esc-solarized.style' -i %s"
+fi
 
 # Editor setup
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
