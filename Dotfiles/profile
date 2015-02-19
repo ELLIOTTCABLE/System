@@ -76,26 +76,32 @@ export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 
 alias q='exit'
 bye() {
-   if [[ -z "$1" ]]; then echo "ERROR: The first argument must be the name of a volume."; return 1; fi
-   if [[ ! -d "/Volumes/$1" ]]; then echo 'ERROR: `/Volumes/'"$1"'` does not exist!';     return 1; fi
+   for volume in "$@"; do
+      if [[ -z "$volume" ]]; then echo "ERROR: This function expects volume-names as arguments.";  return 1; fi
+      if [[ ! -d "/Volumes/$volume" ]]; then echo 'ERROR: `/Volumes/'"$volume"'` does not exist!'; return 1; fi
+   done
    
    ssh -O exit ell.io 2>/dev/null;
-   hdiutil eject "/Volumes/$1" 2>/dev/null
-   st=$?
-   if [ $st -ne 0 -a -d "/Volumes/$1" ]; then
-      echo "Ejection failed. Need to kill some things first ..."
-      for PID in `lsof -t "/Volumes/$1"`; do
-         read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
-         echo
-         case $consent in
-            [Nn]*) break 2;;
-            [Yy]*) kill -HUP $PID;
-         esac
-      done
-      hdiutil eject "/Volumes/$1" && exit
-   else
-      exit
-   fi
+   
+   for volume in "$@"; do
+      hdiutil eject "/Volumes/$volume" 2>/dev/null
+      st=$?
+      if [ $st -ne 0 -a -d "/Volumes/$volume" ]; then
+         echo "Ejection failed. Need to kill some things first ..."
+         for PID in `lsof -t "/Volumes/$volume"`; do
+            read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
+            echo
+            case $consent in
+               [Nn]*) break 2;;
+               [Yy]*) kill -HUP $PID;
+            esac
+         done
+         hdiutil eject "/Volumes/$volume" && exit
+      else
+         exit
+      fi
+      sleep 2.5
+   done
 }
 
 # Make mkdir recursive
@@ -175,6 +181,7 @@ alias germ='g rm'
 alias glean='g clean'
 alias go='g co'
 alias gin='g ci'
+alias grain='g rain'
 alias ganch='g branch'
 alias clanch='git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git clean -fdx'
 alias gash='g stash'
@@ -211,6 +218,10 @@ function sup() {
    git stash list --pretty=solarized-reflog
 
 }
+
+alias ol='omglog'
+
+alias gitlel='git show Master:.gitlabels | less -RS'
 
 # alternatives, using the 'stage' metaphor
 alias stage='g add'
@@ -263,6 +274,11 @@ C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors 
 # C++
 export CXX="g++"
 C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" }
+
+# Homebrew
+if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+  export HOMEBREW_CASK_OPTS='--appdir=/Applications'
+fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
@@ -328,3 +344,5 @@ export NVM_DIR="/Users/ec/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
 [[ -s "$HOME/.rvm/scripts/rvm" ]]  && source "$HOME/.rvm/scripts/rvm"
 [[ -s "$HOME/.travis/travis.sh" ]]  && source "$HOME/.travis/travis.sh"
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
