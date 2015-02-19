@@ -5,8 +5,8 @@ call pathogen#infect()
 runtime solarized.vimrc
 autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
-set textwidth=100 cc=+1
-set number ruler nowrap
+set textwidth=100 cc=+3 
+set number ruler nowrap wrapmargin=3 
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
 set nosmarttab noautoindent
 set smartcase ignorecase
@@ -84,6 +84,8 @@ autocmd BufLeave,FocusLost * silent! wall
 " I don't understand why this is necessary. I clearly don't understand vim's filetype recognition
 " very well.
 au BufRead,BufNewFile *.pegjs setfiletype pegjs
+
+au FileType gitcommit set wrap tw=0
 
 " gist-vim defaults
 if has("mac")
