@@ -33,6 +33,12 @@ set wildignore+=*.o,*.obj,.git,*.class,.svn
 
 if has("mouse")
    set mouse=a
+   
+   if &term =~ '^screen'
+      " tmux knows the extended mouse mode
+      set ttymouse=xterm2
+   endif
+   
    map <ScrollWheelUp> <C-Y>
    map <ScrollWheelDown> <C-E>
 endif
