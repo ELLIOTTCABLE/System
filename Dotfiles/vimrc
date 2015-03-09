@@ -50,7 +50,7 @@ call arpeggio#load()
 "nnoremap O O<Esc>'[S
 
 " === Mappings ===
-let mapleader = ","
+let mapleader = " "
 
 " Thanks, Damian. http://ell.io/i6io1
 nnoremap ; :
@@ -62,12 +62,15 @@ nnoremap ` '
 " See `:help Y`
 map Y y$
 
+nnoremap  <Leader>w <C-W>
+
 noremap  <silent> <C-S>         :update<CR>
 vnoremap <silent> <C-S>    <C-C>:update<CR>
 inoremap <silent> <C-S>    <C-O>:update<CR>
 noremap           <C-W>         :confirm quit<CR>
 vnoremap          <C-W>    <C-C>:confirm quit<CR>
 inoremap          <C-W>    <C-O>:confirm quit<CR>
+
 noremap  <silent> <C-K>         :nohlsearch<CR>
 vnoremap <silent> <C-K>    <C-C>:nohlsearch<CR>
 inoremap <silent> <C-K>    <C-O>:nohlsearch<CR>
