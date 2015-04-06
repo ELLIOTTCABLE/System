@@ -126,6 +126,7 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=14,bold' # Base 2
 ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=8,bold'  # Base 03
 
 
+setopt HIST_FIND_NO_DUPS
 source "$HOME/.zsh/modules/zsh-history-substring-search/zsh-history-substring-search.zsh"
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=15,bold'
 zmodload zsh/terminfo
