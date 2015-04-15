@@ -4,7 +4,7 @@ call pathogen#infect()
 
 runtime solarized.vimrc
 
-set textwidth=100 cc=+3 
+set textwidth=100 cc=+1,+2,+3
 set number ruler nowrap wrapmargin=3 
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
 set nosmarttab noautoindent
@@ -26,6 +26,8 @@ filetype indent off
 
 set encoding=utf-8
 
+set backspace=indent,eol,start
+
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.class,.svn
@@ -45,6 +47,11 @@ endif
 " === Styles ===
 autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
+highlight ExtraWhitespace ctermbg=red guibg=red
+au ColorScheme * highlight ExtraWhitespace guibg=red
+au BufEnter * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhiteSpace /\s\+$/
 
 " === Mappings ===
 let mapleader = " "
