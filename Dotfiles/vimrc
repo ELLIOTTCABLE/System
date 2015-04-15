@@ -3,7 +3,6 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
 runtime solarized.vimrc
-autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
 set textwidth=100 cc=+3 
 set number ruler nowrap wrapmargin=3 
@@ -43,11 +42,9 @@ if has("mouse")
    map <ScrollWheelDown> <C-E>
 endif
 
-call arpeggio#load()
+" === Styles ===
+autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
-" These make movement commands “work” with `o`, such as `3o` to insert inject lines and switch to insert mode.
-"nnoremap o o<Esc>S        " ... unfortunately, they break yanking.
-"nnoremap O O<Esc>'[S
 
 " === Mappings ===
 let mapleader = " "
@@ -58,6 +55,10 @@ nnoremap ; :
 " Fuck '.
 nnoremap ' `
 nnoremap ` '
+
+" These make movement commands “work” with `o`, such as `3o` to insert inject lines and switch to insert mode.
+"nnoremap o o<Esc>S        " ... unfortunately, they break yanking.
+"nnoremap O O<Esc>'[S
 
 " See `:help Y`
 map Y y$
@@ -116,6 +117,8 @@ set undodir=~/.vim/undo,\ .
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " === Plugins ===
+call arpeggio#load()
+
 let NERDChristmasTree = 1
 let NERDTreeShowBookmarks = 1
 let NERDTreeBookmarksFile = '.NERDTreeBookmarks'
