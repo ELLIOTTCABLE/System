@@ -88,12 +88,17 @@ noremap  <silent> <C-K>         :nohlsearch<CR>
 vnoremap <silent> <C-K>    <C-C>:nohlsearch<CR>
 inoremap <silent> <C-K>    <C-O>:nohlsearch<CR>
 
-noremap  <F2>      :NERDTreeTabsToggle<Return>
-inoremap <F2> <C-o>:NERDTreeTabsToggle<Return>
-vnoremap <F2> <Esc>:NERDTreeTabsToggle<Return>
-noremap  <F3>      :GundoToggle<Return>
-inoremap <F3> <C-o>:GundoToggle<Return>
-vnoremap <F3> <Esc>:GundoToggle<Return>
+
+noremap  <silent> <F1>          :NERDTreeTabsToggle<Return>
+inoremap <silent> <F1>     <C-O>:NERDTreeTabsToggle<Return>
+vnoremap <silent> <F1>     <Esc>:NERDTreeTabsToggle<Return>
+noremap  <silent> <F2>          :GundoToggle<Return>
+inoremap <silent> <F2>     <C-O>:GundoToggle<Return>
+vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
+
+noremap  <silent> <F8>          :set spell!<Return>
+inoremap <silent> <F8>     <C-O>:set spell!<Return>
+vnoremap <silent> <F8>     <Esc>:set spell!<Return>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
 nmap <silent> <F12> :silent set invhls<CR>
