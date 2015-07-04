@@ -49,6 +49,22 @@ if has("mouse")
    map <ScrollWheelDown> <C-E>
 endif
 
+" toggles show marks plugin
+fun! ToggleShowMarks()
+   if exists('b:sm') && b:sm == 1
+      let b:sm=0
+      NoShowMarks!
+      setl updatetime=4000
+   else
+      let b:sm=1
+      setl updatetime=200
+      DoShowMarks!
+   endif
+endfun
+
+au VimEnter * call ToggleShowMarks()
+
+
 " === Styles ===
 autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
 
@@ -99,6 +115,10 @@ vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
 noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:set spell!<Return>
+
+" F11 to toggle showing marks
+nmap <silent> <F11> :call ToggleShowMarks()<cr>
+imap <silent> <F11> <C-O><F11>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
 nmap <silent> <F12> :silent set invhls<CR>
