@@ -66,7 +66,14 @@ au VimEnter * call ToggleShowMarks()
 
 
 " === Styles ===
-autocmd ColorScheme * highlight clear SignColumn | highlight link SignColumn CursorColumn " ... until https://github.com/altercation/vim-colors-solarized/pull/62
+" ... until https://github.com/altercation/vim-colors-solarized/pull/62
+fun! FixSignColumn()
+   highlight clear SignColumn
+   highlight link SignColumn LineNr
+endfun
+
+call FixSignColumn()
+au ColorScheme * call FixSignColumn()
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 au ColorScheme * highlight ExtraWhitespace guibg=red
