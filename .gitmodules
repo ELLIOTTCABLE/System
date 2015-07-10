@@ -91,3 +91,6 @@
 [submodule "Dotfiles/vim/bundle/vim-showmarks"]
 	path = Dotfiles/vim/bundle/vim-showmarks
 	url = https://github.com/jacquesbh/vim-showmarks.git
+[submodule "Dotfiles/vim/bundle/ctrlp.vim"]
+	path = Dotfiles/vim/bundle/ctrlp.vim
+	url = https://github.com/kien/ctrlp.vim.git

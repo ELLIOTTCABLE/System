@@ -49,6 +49,12 @@ if has("mouse")
    map <ScrollWheelDown> <C-E>
 endif
 
+if executable("ag")
+  "set grepprg=ag\ --nogroup\ --nocolor
+   set grepprg=ag\ --vimgrep\ --nocolor
+   let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+endif
+
 " toggles show marks plugin
 fun! ToggleShowMarks()
    if exists('b:sm') && b:sm == 1
