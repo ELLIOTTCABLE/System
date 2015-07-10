@@ -162,6 +162,8 @@ alias svisor="supervisor --no-restart-on exit"
 alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
 
 alias grep='grep --color=auto'
+alias ag="ag --group --pager='less -XFRS' \
+   --color --color-path=91 --color-line-number='`printf "m   \033[96"`' --color-match=34"
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias nzb='hellanzb.py'
