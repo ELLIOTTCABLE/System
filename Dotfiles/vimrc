@@ -5,7 +5,7 @@ call pathogen#infect()
 runtime solarized.vimrc
 
 set textwidth=100 cc=+1,+2,+3
-set number ruler nowrap wrapmargin=3 
+set number ruler nowrap wrapmargin=3
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
 set nosmarttab noautoindent
 set smartcase ignorecase
@@ -28,7 +28,7 @@ set encoding=utf-8
 
 set backspace=indent,eol,start
 
-" Tab completion
+" Command-line tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.class,.svn
 
@@ -126,6 +126,9 @@ vnoremap <silent> <F1>     <Esc>:NERDTreeTabsToggle<Return>
 noremap  <silent> <F2>          :GundoToggle<Return>
 inoremap <silent> <F2>     <C-O>:GundoToggle<Return>
 vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
+noremap  <silent> <F3>          :TagbarToggle<Return>
+inoremap <silent> <F3>     <C-O>:TagbarToggle<Return>
+vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
 
 noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
@@ -142,6 +145,9 @@ map  <silent> <S-F12> :let @/ = @_<CR>
 imap <silent> <S-F12> <C-O><S-F12>
 
 autocmd BufLeave,FocusLost * silent! wall
+
+" To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
+autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 
 " I don't understand why this is necessary. I clearly don't understand vim's filetype recognition
 " very well.
@@ -202,12 +208,18 @@ let g:clang_hl_errors = 1        " Hilights errors the same way clang does
 let g:clang_periodic_quickfix = 1      " Periodically update the quickfix window automatically
 
 let g:clang_snippets = 1         " Enable snippets (i.e. parentheses after completing function)
-let g:clang_snippets_engine = 'clang_complete'                                 
+let g:clang_snippets_engine = 'clang_complete'
 let g:clang_trailing_placeholder = 1   " Trailing completion *after* functions
 
 "let g:clang_close_preview = 0    " Close the preview window after a completion is selected
 "let g:clang_complete_macros = 0  " Complete preprocessor macros and constants
 "let g:clang_complete_patterns = 0 " Complete code-patterns, loop structures, etc
+
+"let g:CoffeeAutoTagIncludeVars=1
+
+set omnifunc=syntaxcomplete#Complete
+let g:tern_map_keys=1
+let g:tern_show_argument_hints="on_hold"
 
 let g:gitgutter_sign_column_always = 1
 let g:gitgutter_realtime = 0

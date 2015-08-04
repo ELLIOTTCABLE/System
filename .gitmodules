@@ -94,3 +94,12 @@
 [submodule "Dotfiles/vim/bundle/ctrlp.vim"]
 	path = Dotfiles/vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
+[submodule "Dotfiles/vim/bundle/tern_for_vim"]
+	path = Dotfiles/vim/bundle/tern_for_vim
+	url = https://github.com/marijnh/tern_for_vim.git
+[submodule "Dotfiles/vim/bundle/CoffeeTags"]
+	path = Dotfiles/vim/bundle/CoffeeTags
+	url = https://github.com/lukaszkorecki/CoffeeTags
+[submodule "Dotfiles/vim/bundle/tagbar"]
+	path = Dotfiles/vim/bundle/tagbar
+	url = https://github.com/majutsushi/tagbar.git
