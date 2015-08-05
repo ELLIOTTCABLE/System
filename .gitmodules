@@ -103,3 +103,6 @@
 [submodule "Dotfiles/vim/bundle/tagbar"]
 	path = Dotfiles/vim/bundle/tagbar
 	url = https://github.com/majutsushi/tagbar.git
+[submodule "Dotfiles/vim/bundle/bats.vim"]
+	path = Dotfiles/vim/bundle/bats.vim
+	url = https://github.com/vim-scripts/bats.vim
