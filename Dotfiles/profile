@@ -223,7 +223,9 @@ function sup() {
    ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
    echo -e "\n\033[1m-- Stored stashes: --------\033[0m"
    git stash list --pretty=solarized-reflog
-
+   echo -e "\n\033[1m-- Build-status: ----------\033[0m"
+   command -v travis >/dev/null 2>&1 && travis whoami >/dev/null 2>&1 &&
+      travis branches
 }
 
 alias ol='omglog'
