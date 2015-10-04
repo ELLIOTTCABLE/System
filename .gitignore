@@ -1,5 +1,6 @@
 Dotfiles/ssh/known_hosts
 Dotfiles/ssh/.identity*
+Dotfiles/ssh/sockets/*
 Dotfiles/config/keybase/*
 Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/vim/undo
