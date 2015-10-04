@@ -52,9 +52,6 @@
 [submodule "Dotfiles/vim/bundle/vim-sparkup"]
 	path = Dotfiles/vim/bundle/vim-sparkup
 	url = http://github.com/bingaman/vim-sparkup.git
-[submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
-	path = Dotfiles/vim/bundle/vim-literate-coffeescript
-	url = http://github.com/mintplant/vim-literate-coffeescript.git
 [submodule "Dotfiles/vim/bundle/vim-gitgutter"]
 	path = Dotfiles/vim/bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter.git
@@ -106,3 +103,6 @@
 [submodule "Dotfiles/vim/bundle/bats.vim"]
 	path = Dotfiles/vim/bundle/bats.vim
 	url = https://github.com/vim-scripts/bats.vim
+[submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
+	path = Dotfiles/vim/bundle/vim-literate-coffeescript
+	url = https://github.com/chakrit/vim-literate-coffeescript.git
