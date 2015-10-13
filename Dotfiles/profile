@@ -355,7 +355,9 @@ if [[ -s "$nvm_dir/nvm.sh" ]]; then
    source "$nvm_dir/nvm.sh"
 fi
 
-if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+if [[ -s  "/usr/local/opt/chruby/share/chruby/chruby.sh" ]]; then
+   source "/usr/local/opt/chruby/share/chruby/chruby.sh"
+elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
    source "$HOME/.rvm/scripts/rvm"
    export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 fi
