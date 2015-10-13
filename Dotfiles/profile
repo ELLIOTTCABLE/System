@@ -349,9 +349,15 @@ PATH="$PATH:/usr/local/cuda/bin"          # -2. > CUDA
 PATH="$PATH:$EC2_HOME/bin"                # -1. > EC2
 export PATH
 
-export NVM_DIR="/Users/ec/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
-[[ -s "$HOME/.rvm/scripts/rvm" ]]  && source "$HOME/.rvm/scripts/rvm"
-[[ -s "$HOME/.travis/travis.sh" ]]  && source "$HOME/.travis/travis.sh"
+local nvm_dir="/Users/ec/.nvm"
+if [[ -s "$nvm_dir/nvm.sh" ]]; then
+   export NVM_DIR="$nvm_dir"
+   source "$nvm_dir/nvm.sh"
+fi
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+   source "$HOME/.rvm/scripts/rvm"
+   export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+fi
+
+[[ -s "$HOME/.travis/travis.sh" ]] && source "$HOME/.travis/travis.sh"
