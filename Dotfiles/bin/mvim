@@ -44,7 +44,7 @@ then
 	exit 1
 fi
 binary="$VIM_APP_DIR/MacVim.app/Contents/MacOS/Vim"
-printf %s\\n "Vim binary: '$binary'"
+#printf %s\\n "Vim binary: '$binary'"
 
 # Next, peek at the name used to invoke this script, and set options
 # accordingly.
@@ -71,6 +71,7 @@ case "$name" in
 		opts="$opts -e"
 		;;
 esac
+#printf %s\\n "Vim options: '$opts'"
 
 # Last step:  fire up vim.
 # The program should fork by default when started in GUI mode, but it does
