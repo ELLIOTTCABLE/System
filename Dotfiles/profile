@@ -318,10 +318,10 @@ rse () {
 # Bash-only. Whatever.
 # {{{
 # Node Completion - Auto-generated, do not touch. (Fuck you, I touched it anyway. ~ ELLIOTTCABLE)
-for f in $(command ls ~/.node-completion); do
-  f="$HOME/.node-completion/$f"
-  test -f "$f" && . "$f"
-done
+#for f in $(command ls ~/.node-completion); do
+#  f="$HOME/.node-completion/$f"
+#  test -f "$f" && . "$f"
+#done
 # }}}
 
 # Create files as u=rwx, g=rx, o=rx
