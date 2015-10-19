@@ -83,11 +83,52 @@ endfun
 call FixSignColumn()
 au ColorScheme * call FixSignColumn()
 
-highlight ExtraWhitespace ctermbg=red guibg=red
-au ColorScheme * highlight ExtraWhitespace guibg=red
-au BufEnter * match ExtraWhitespace /\s\+$/
-au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-au InsertLeave * match ExtraWhiteSpace /\s\+$/
+
+" This toggles the hilighting of trailing-whitespace.
+fun! ToggleExtraWhitespace()
+
+   if exists('b:ews') && b:ews == 1
+     "echom "Disabling trailing-whitespace hilighting in" bufnr('%') "..."
+      let b:ews=0
+      call HighlightExtraWhitespace()
+
+     "echom "-- Removing ExtraWhitespace augroup"
+      au!      ExtraWhitespace
+      augroup! ExtraWhitespace
+
+   else
+     "echom "Enabling trailing-whitespace hilighting in" bufnr('%') "..."
+      let b:ews=1
+      call HighlightExtraWhitespace()
+
+     "echom "-- Adding ExtraWhitespace augroup"
+      augroup  ExtraWhitespace
+         au!
+         au BufEnter    * match ExtraWhitespace /\s\+$/
+         au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+         au InsertLeave * match ExtraWhiteSpace /\s\+$/
+      augroup END
+
+      if mode() == "i" | do ExtraWhitespace InsertEnter | else | do ExtraWhitespace BufEnter | endif
+
+   endif
+endfun
+
+" This adds (or removes) the actual hilighting to your ColourScheme. (It's must be re-called every
+" time you toggle hilighting, or change your scheme.)
+fun! HighlightExtraWhitespace()
+   if exists('b:ews') && b:ews == 1
+     "echom "-- Adding ExtraWhitespace hilighting"
+      highlight ExtraWhitespace ctermbg=red guibg=red
+   else
+     "echom "-- Removing ExtraWhitespace hilighting"
+      highlight clear ExtraWhitespace
+   endif
+endfun
+au ColorScheme * call HighlightExtraWhitespace()
+
+" (Uncomment the following line if you want trailing-whitespace hilighted by default!)
+bufdo call ToggleExtraWhitespace() | au BufAdd * call ToggleExtraWhitespace()
 
 " === Mappings ===
 let mapleader = " "
@@ -133,6 +174,10 @@ vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
 noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:set spell!<Return>
+
+" F11 to toggle hilighting extra whitespace
+nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
+imap <silent> <F10> <C-O><F10>
 
 " F11 to toggle showing marks
 nmap <silent> <F11> :call ToggleShowMarks()<cr>
