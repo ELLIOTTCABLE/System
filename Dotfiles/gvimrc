@@ -1,5 +1,5 @@
 " MacVIM / GUI settings
-set guifont=Menlo:h10
+set guifont=Knack:h10
 
 " Sizes:
 " per window, 110 (gutter: 2, numberwidth: 3+1, body: 100, padding: 3, separator: 1)
