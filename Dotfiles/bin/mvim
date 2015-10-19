@@ -30,7 +30,7 @@ then
 		/Applications/Utilities/vim
 	)
 	for i in ${suspects[@]}; do
-		printf %s\\n "-- Checking: '$i'"
+		#printf %s\\n "-- Checking: '$i'"
 
 		if [ -x "$i/MacVim.app" ]; then
 			VIM_APP_DIR="$i"
