@@ -46,10 +46,10 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias esp='espresso'
 
   alias xcode='open -a Xcode'
-  
+
   alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-experimental-extension-apis'
-  
-  function woman(){ man -t $1 | open -fa Preview }
+
+  woman() { man -t $1 | open -fa Preview ;}
 
   alias ping='prettyping --nolegend'
 fi
@@ -64,8 +64,8 @@ alias edit=$EDITOR
 alias e='edit'
 
 export CLICOLOR='yes'
-van()  {  vim "+help $1" "+only" }
-mvan() { mvim "+help $1" "+only" }
+van()  {  vim "+help $1" "+only" ;}
+mvan() { mvim "+help $1" "+only" ;}
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
@@ -74,8 +74,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 
 #FIXME: bash-incompatible
-export EC2_PRIVATE_KEY="$(print $HOME/.ec2/pk-*.pem(N))"
-export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
+#export EC2_PRIVATE_KEY="$(print $HOME/.ec2/pk-*.pem(N))"
+#export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 
 alias q='exit'
 bye() {
@@ -83,9 +83,9 @@ bye() {
       if [[ -z "$volume" ]]; then echo "ERROR: This function expects volume-names as arguments.";  return 1; fi
       if [[ ! -d "/Volumes/$volume" ]]; then echo 'ERROR: `/Volumes/'"$volume"'` does not exist!'; return 1; fi
    done
-   
+
    ssh -O exit ell.io 2>/dev/null;
-   
+
    for volume in "$@"; do
       hdiutil eject "/Volumes/$volume" 2>/dev/null
       st=$?
@@ -112,8 +112,8 @@ alias mkdir='mkdir -p'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   # Real trashing for the win!
-  trash() { mv $1 ~/.Trash }
-  
+  trash() { mv $1 ~/.Trash ;}
+
   alias eject='drutil eject 0'
 fi
 
@@ -195,21 +195,21 @@ alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
-function ellio_log() {
+ellio_log() {
    # FIXME: --no-minor doesn't work yet, because git-log's being weird.
    # FIXME: Remove --no-granules and --no-minor from the $*
    g log --graph --date-order --cherry-mark --left-right \
       --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
       --color --abbrev=5 --pretty=solarized-parseable $* \
-   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' }
-function glog() {
-   ellio_log $* | less -SRXF }
-function omglog() {
-   glog --all $* $(git log -g --pretty=format:%h) }
-function sup() {
+   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' ;}
+glog() {
+   ellio_log $* | less -SRXF ;}
+omglog() {
+   glog --all $* $(git log -g --pretty=format:%h) ;}
+sup() {
    git -c color.status=true status |
       awk '/(Changes to be committed|Changes not staged for commit|nothing to commit, working directory clean)/ {exit} {print}'
-   
+
    branch=$1
    if [[ -z "$branch" ]]; then
       branch=$(git rev-parse --abbrev-ref HEAD) ;fi         # vvv  Might be a bit of an assumption.
@@ -217,7 +217,7 @@ function sup() {
    master='Master'
    remote=$(git rev-parse --short "$master@{upstream}~5")
    upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
-   
+
    gist
    echo -e "\n\033[1m-- Recent history: --------\033[0m"
    ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
@@ -241,31 +241,31 @@ alias stiff='giff --cached' # staged diff
 alias stiff-last='giff HEAD^ HEAD' # last commit diff
 
 # ‘alternate_git’:
-#     > GIT_ALTERNATE_OBJECT_DIRECTORIES=../other_repo/.git/objects \ 
+#     > GIT_ALTERNATE_OBJECT_DIRECTORIES=../other_repo/.git/objects \
 #        git cherry-pick $(git --git-dir=../other_repo/.git rev-parse --verify e9721)
 # ... becomes ...
 #     > agit ~[../other_repo] cherry-pick ~[e9721]
-# 
+#
 # This is some seriously evil, hacky shit; but it works, unlike my original attempt with subshells.
 # (Damn you, subshells.)
-function agit() {
+agit() {
    env GIT_ALTERNATE_OBJECT_DIRECTORIES="$1/.git/objects" \
-      =git ${${*:2}[@]} }
+      =git ${${*:2}[@]} ;}
 
 zsh_directory_name_functions=(${zsh_directory_name_functions[@]} uncommitish set_uncommitish_repo)
-function uncommitish() { if [[ $1 == 'n' ]]; then
+uncommitish() { if [[ $1 == 'n' ]]; then
    if [[ -z "$UNCOMMITISH_REPO" ]]; then return 1; fi
-   
+
    rev=$(git --git-dir="$UNCOMMITISH_REPO/.git" rev-parse --verify $2 2>/dev/null); st=$?
    if (( $st != 0 )); then return $st; fi
-   
-   reply=("$rev")
-else return 1; fi }
 
-function set_uncommitish_repo() { if [[ $1 == 'n' ]]; then
+   reply=("$rev")
+else return 1; fi ;}
+
+set_uncommitish_repo() { if [[ $1 == 'n' ]]; then
    export UNCOMMITISH_REPO="$2"
    reply=("$2")
-else return 1; fi }
+else return 1; fi ;}
 
 export zsh_directory_name_functions
 
@@ -278,11 +278,11 @@ alias toggle='ruby -pi'\'\'' -e '\''if ($_=~/--Begin/)..($_=~/--End/); $_=~/^#~/
 
 # C
 export CC="clang"
-C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" }
+C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors -Wall -O0 -o "${last%.*}.o" "$@" ;}
 
 # C++
 export CXX="g++"
-C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" }
+C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
 
 # Homebrew
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
@@ -309,7 +309,7 @@ fi
 
 # Red STDERR
 # rse <command string>
-rse () {
+rse() {
   # We need to wrap each phrase of the command in quotes to preserve arguments that contain whitespace
   # Execute the command, swap STDOUT and STDERR, colour STDOUT, swap back
   ((eval $(for phrase in "$@"; do echo -n "'$phrase' "; done)) 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
@@ -338,7 +338,7 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/usr/local/bin:$PATH"             #  4. < Homebrew
   PATH="/usr/local/share/npm/bin:$PATH"   #  3. < npm (global)
-  
+
   PATH="$PATH:/usr/X11/bin"               # -3. > X11
 fi
 # FIXME: Add npm-gobal path for Linux-installed nvm.
@@ -363,4 +363,3 @@ elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
    export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 fi
 
-[[ -s "$HOME/.travis/travis.sh" ]] && source "$HOME/.travis/travis.sh"
