@@ -69,7 +69,7 @@ mvan() { mvim "+help $1" "+only" ;}
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
-  export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"
+ #export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"        # Slow.
   export AWS_HOME="$HOME/.ec2"
 fi
 
@@ -349,17 +349,38 @@ PATH="$PATH:/usr/local/cuda/bin"          # -2. > CUDA
 PATH="$PATH:$EC2_HOME/bin"                # -1. > EC2
 export PATH
 
-local nvm_dir="/Users/ec/.nvm"
-if [[ -s "$nvm_dir/nvm.sh" ]]; then
-   export NVM_DIR="$nvm_dir"
-   source "$nvm_dir/nvm.sh"
-fi
+# Lazy-load `nvm` on invocation.
+_load_nvm() {
+   local nvm_dir="$HOME/.nvm"
+   if [[ -s "$nvm_dir/nvm.sh" ]]; then
+      export NVM_DIR="$nvm_dir"
+      type compgen >&- && [[ -r $NVM_DIR/bash_completion ]] && \
+         source $NVM_DIR/bash_completion
 
-if [[ -s  "/usr/local/opt/chruby/share/chruby/chruby.sh" ]]; then
-   source "/usr/local/opt/chruby/share/chruby/chruby.sh"
-   source "/usr/local/opt/chruby/share/chruby/auto.sh"
-elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
-   source "$HOME/.rvm/scripts/rvm"
-   export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-fi
+      unset -f node nvm 2>/dev/null
+      source "$NVM_DIR/nvm.sh"
+   fi
+}
+node() { _load_nvm && node "$@" }
+nvm()  { _load_nvm && nvm "$@" }
 
+# This lazy-loads whichever of `chruby` or `rvm` may be installed.
+#source "/usr/local/opt/chruby/share/chruby/chruby.sh"
+_load_chruby() {
+   type brew >&- && local pfx=`brew --prefix`
+
+   local chruby_script="$pfx/opt/chruby/share/chruby/chruby.sh"
+   if [[ -s  "$chruby_script" ]]; then
+      unset -f chruby rvm ruby
+      source "$chruby_script"
+
+   elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+      unset -f chruby rvm ruby
+
+      export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+      source "$HOME/.rvm/scripts/rvm"
+   fi
+}
+ruby()   { _load_chruby "$@" && ruby "$@"   ;}
+chruby() { _load_chruby "$@" && chruby "$@" ;}
+rvm()    { _load_chruby "$@" && rvm "$@"    ;}
