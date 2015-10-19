@@ -51,6 +51,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 
   woman() { man -t $1 | open -fa Preview ;}
 
+  alias droid='say -v cellos droid'
+
   alias ping='prettyping --nolegend'
 fi
 
