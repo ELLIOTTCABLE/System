@@ -1,8 +1,14 @@
-if [ -f "$HOME/.profile" ]; then
-  source "$HOME/.profile"
+PROFILE_STARTUP=false
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+    PS4=$'%D{%M%S%.} %N:%i> '
+    exec 3>&2 2>"$HOME/Desktop/startlog.$$"
+    setopt xtrace prompt_subst
 fi
 
-# The following lines were added by compinstall
+if [ -f "$HOME/.profile.local" ]; then source "$HOME/.profile.local"; fi
+
+source "$HOME/.profile"
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
@@ -39,6 +45,7 @@ setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
 # to switch vi modes quickly.
 KEYTIMEOUT=1
 
+
 # ===========
 # = History =
 # ===========
@@ -54,6 +61,7 @@ setopt SHARE_HISTORY # Sexier history, srsly, why wouldn’t anybody want this?
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
 setopt HIST_NO_STORE # Don’t store the `history` command itself
+
 
 # ================
 # = Key bindings =
@@ -147,3 +155,9 @@ bindkey -M vicmd 'j' history-substring-search-down
 #
 #bindkey '^T' autosuggest-toggle
 #bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
+
+
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    unsetopt xtrace
+    exec 2>&3 3>&-
+fi
