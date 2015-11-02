@@ -306,11 +306,6 @@ if [ -f $TODOFILE ]; then
   fi
 fi
 
-if [ ! -r $HOME/.cheats ]; then
-  echo "Rebuilding Cheat cache... "
-  cheat sheets | egrep '^ ' | awk {'print $1'} > $HOME/.cheats
-fi
-
 # Red STDERR
 # rse <command string>
 rse() {
