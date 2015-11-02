@@ -45,8 +45,9 @@ if has("mouse")
       set ttymouse=sgr
    endif
 
-   map <ScrollWheelUp> <C-Y>
-   map <ScrollWheelDown> <C-E>
+   " These break the Markdown plugin o_O
+  "map <ScrollWheelUp> <C-Y>
+  "map <ScrollWheelDown> <C-E>
 endif
 
 if executable("ag")
