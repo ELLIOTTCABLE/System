@@ -71,8 +71,6 @@ endfun
 
 au VimEnter * call ToggleShowMarks()
 
-au VimEnter * NERDTreeTabsToggle
-
 
 " === Styles ===
 " ... until https://github.com/altercation/vim-colors-solarized/pull/62
@@ -288,8 +286,6 @@ let g:gundo_close_on_revert = 1
 
 let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
 
-let g:nerdtree_tabs_open_on_gui_startup=0
-let g:nerdtree_tabs_smart_startup_focus=2
 "let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
 
 let g:SuperTabDefaultCompletionType = "context"
