@@ -49,9 +49,6 @@
 [submodule "Dotfiles/vim/bundle/vim-coffee-script"]
 	path = Dotfiles/vim/bundle/vim-coffee-script
 	url = https://github.com/kchmck/vim-coffee-script.git
-[submodule "Dotfiles/vim/bundle/vim-sparkup"]
-	path = Dotfiles/vim/bundle/vim-sparkup
-	url = http://github.com/bingaman/vim-sparkup.git
 [submodule "Dotfiles/vim/bundle/vim-gitgutter"]
 	path = Dotfiles/vim/bundle/vim-gitgutter
 	url = git://github.com/airblade/vim-gitgutter.git
@@ -109,3 +106,6 @@
 [submodule "Dotfiles/vim/bundle/conflict-marker.vim"]
 	path = Dotfiles/vim/bundle/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git
+[submodule "Dotfiles/vim/bundle/sparkup"]
+	path = Dotfiles/vim/bundle/sparkup
+	url = https://github.com/rstacruz/sparkup.git
