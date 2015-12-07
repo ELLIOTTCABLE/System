@@ -1,3 +1,49 @@
+Notes
+-----
 Run before using home/.gitignore:
 
     $ git config --global core.excludesfile ~/.gitignore
+
+----
+
+Some Vim plugins require extra setup:
+
+ - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
+
+        brew gem install coffeetags
+
+ - Tern requires installation, as well:
+
+        cd ~/.vim/bundle/tern_for_vim
+        npm install
+
+ - Command-T requires compilation; and this must be done against the same version of Ruby that the
+   current Vim is compiled against: (Check both MacVim and command-line `vim`!)
+   `:ruby puts "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"`. Re-build both Vims with the same Ruby; and
+   then `rvm` (or similar) to that Ruby to build Command-T. (More information is available [in the
+   docs.][command-t]
+
+        cd ~/.vim/bundle/command-t/ruby/command-t
+        ruby extconf.rb
+        make
+
+ - `sparkup` [has to have its vim docs re-generated][sparkup]:
+
+        cd ~/.vim/bundle/sparkup
+        make vim-pathogen
+
+   [command-t]: <https://github.com/wincent/Command-T>
+   [sparkup]: <https://github.com/rstacruz/sparkup/blob/master/vim/README.txt>
+
+----
+
+The Terminal preferences (hotkeys etc) require Karabiner and Seil be installed, and that the fonts
+from the `Extras/` directory also be installed. *After* all of those are installed, the
+configurations can be symlinked from my Dropbox:
+
+    ln -s '~/Documents/Dropbox/Library/karabiner.private.xml' '/Users/ec/Library/Application Support/Karabiner/'
+    ln -s '~/Documents/Dropbox/Library/com.apple.Terminal.plist' '~/Library/Preferences/'
+    ln -s '~/Documents/Dropbox/Library/GlobalPreferences.plist' \
+       '~/Library/Preferences/.GlobalPreferences.plist'
+
+(May require existing files be removed, or directories be created, first.)
