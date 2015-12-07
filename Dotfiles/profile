@@ -199,12 +199,31 @@ alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
+
+# FIXME: zsh-specific parameter-expansion magix
 ellio_log() {
+   local -a flags
+   flags=( --no-granules --no-minor )
+
+   if [ -z "$*" ]; then
+      local current branch
+
+      branch="$(git describe --abbrev=0 --candidates=100 --all 2>/dev/null)"
+      branch="${${branch##*/}%%+}"
+
+      if git describe --all 'Current' >/dev/null 2>&1 ; then
+         current='Current'
+      fi
+
+      set -- "HEAD" "${current:-Master}" "${current:-Master}+" "${branch}" "${branch}+"
+   fi
+
    # FIXME: --no-minor doesn't work yet, because git-log's being weird.
    # FIXME: Remove --no-granules and --no-minor from the $*
    g log --graph --date-order --cherry-mark --left-right \
       --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
-      --color --abbrev=5 --pretty=solarized-parseable $* \
+      --color --abbrev=5 --pretty=solarized-parseable \
+      ${*:|flags} \
    | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' ;}
 glog() {
    ellio_log $* | less -SRXF ;}
