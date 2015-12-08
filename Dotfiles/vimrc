@@ -7,7 +7,7 @@ runtime solarized.vimrc
 set textwidth=100 cc=+1,+2,+3
 set number ruler nowrap wrapmargin=3
 set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
-set nosmarttab noautoindent
+set nosmarttab autoindent
 set smartcase ignorecase
 
 set cursorline
@@ -22,7 +22,7 @@ set title
 syntax on
 filetype on
 filetype plugin on
-filetype indent off
+filetype indent on
 
 set encoding=utf-8
 
