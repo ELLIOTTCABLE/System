@@ -76,7 +76,7 @@
 [mergetool]
 	prompt = false
 [merge]
-	tool = Kaleidoscope
+	tool = fugitive
 	defaultToUpstream = true
 	conflictstyle = diff3
 [pretty]
@@ -85,3 +85,5 @@
 	solarized-parseable = "format:%x1b[30m%h%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
 [gpg]
 	program = gpg2
+[mergetool "fugitive"]
+	cmd = mvim -f -c \"Gdiff\" \"$MERGED\"
