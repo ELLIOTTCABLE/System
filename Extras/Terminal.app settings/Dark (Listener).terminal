@@ -162,7 +162,7 @@
 	<key>BookmarkRestorations</key>
 	<false/>
 	<key>CommandString</key>
-	<string>clear; echo '(Append ` 2&gt;'$(tty)'` to a command in another window to view output here.)'; cat; exit</string>
+	<string>export BACKGROUND=dark; clear; echo '(Append ` 2&gt;'$(tty)'` to a command in another window to view output here.)'; cat; exit</string>
 	<key>CursorBlink</key>
 	<true/>
 	<key>CursorColor</key>

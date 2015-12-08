@@ -160,7 +160,7 @@
 	<key>BlinkText</key>
 	<true/>
 	<key>CommandString</key>
-	<string></string>
+	<string>env BACKGROUND=light zsh</string>
 	<key>CursorBlink</key>
 	<true/>
 	<key>CursorColor</key>
