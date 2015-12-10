@@ -37,7 +37,9 @@ stty -ixon
 export PAGER='less'
 source "$HOME/.config/less.temp.sh"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-   export LESSOPEN="| source-highlight --failsafe --infer-lang -f esc \
+   # This sends the content *both* on standard-input *and* by substituting the filename. This is to
+   # aid filetype recognition, while not requiring me to spit the output out anywhere in particular.
+   export LESSOPEN="||-source-highlight --failsafe --infer-lang -f esc \
       --style-file='$HOME/.source-highlight/source-highlight-solarized/esc-solarized.style' -i %s"
 fi
 
