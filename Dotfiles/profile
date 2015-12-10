@@ -35,6 +35,7 @@ stty -ixon
 
 # less
 export PAGER='less'
+source "$HOME/.config/less.temp.sh"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
    export LESSOPEN="| source-highlight --failsafe --infer-lang -f esc \
       --style-file='$HOME/.source-highlight/source-highlight-solarized/esc-solarized.style' -i %s"
