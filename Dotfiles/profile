@@ -203,31 +203,63 @@ alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
 
-# FIXME: zsh-specific parameter-expansion magix
 ellio_log() {
-   local -a flags
-   flags=( --no-granules --no-minor )
+   local watch branch mainline reset argv
+   for ARG; do
+      # FIXME: y dis no workin' do
+      [ -z "$reset" ] && { set --; reset=yes ;}
+      case $ARG in
+         --no-granules)
+            set -- "$@" "--grep=^[^\\+]"                                      ;;
+         --no-minor)
+            set -- "$@" "--grep=^([^\\(]|\\([^-])"                            ;;
+         --watch)
+            watch=yes                                                         ;;
+         -*)
+            set -- "$@" "$ARG"                                                ;;
+         *)
+            argv="${argv}${argv:+ }${ARG}"
+            set -- "$@" "$ARG"                                                ;;
+      esac
+   done
 
-   if [ -z "$*" ]; then
-      local current branch
-
+   if [ -z "$argv" ]; then
       branch="$(git describe --abbrev=0 --candidates=100 --all 2>/dev/null)"
-      branch="${${branch##*/}%%+}"
+      branch="${branch##*/}"
+      branch="${branch%%+}"
 
-      if git describe --all 'Current' >/dev/null 2>&1 ; then
-         current='Current'
-      fi
+      set -- "$@" HEAD
 
-      set -- "HEAD" "${current:-Master}" "${current:-Master}+" "${branch}" "${branch}+"
+      if git describe --all 'Current' >/dev/null 2>&1; then mainline='Current'
+                                                       else mainline='Master' ;fi
+      set -- "$@" "$mainline"
+      git describe --all "${mainline}+" >/dev/null 2>&1 &&                    \
+         set -- "$@" "${mainline}+"
+
+      set -- "$@" "$branch"
+      git describe --all "${branch}+" >/dev/null 2>&1 &&                      \
+         set -- "$@" "${branch}+"
    fi
 
-   # FIXME: --no-minor doesn't work yet, because git-log's being weird.
-   # FIXME: Remove --no-granules and --no-minor from the $*
-   g log --graph --date-order --cherry-mark --left-right \
-      --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
-      --color --abbrev=5 --pretty=solarized-parseable \
-      ${*:|flags} \
-   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' ;}
+   set -- --graph --date-order --cherry-mark --left-right --color --abbrev=5  \
+       --all-match --extended-regexp --pretty=solarized-parseable "$@"
+
+   # FIXME: currently bork
+   if [ -n "$watch" ]; then
+      if [ -e "$(which chokidar)" ]; then                                     \
+         printf %s\\n 'You need to `npm install chokidar` to use `--watch`'
+         return 1                                                             ;fi
+
+      # FIXME: Oh lord, zsh-specific insanity.
+      chokidar --initial '.git/HEAD' '.git/refs/' -c                          \
+         "git log ${(j: :)${(q)@}} | ruby -an -F\"\\u001F\"                   \
+            -r '~/.source/format-glog' -e 'puts format_glog(\$F).join'"
+   else
+      git log "$@" | ruby -an -F"\u001F" -r '~/.source/format-glog'           \
+         -e 'puts format_glog($F).join'
+   fi
+}
+
 glog() {
    ellio_log $* | less -SRXF ;}
 omglog() {
