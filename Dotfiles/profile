@@ -57,6 +57,8 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias droid='say -v cellos droid'
 
   alias ping='prettyping --nolegend'
+
+  +() { qlmanage -p "$@" 2>/dev/null ;}
 fi
 
 alias wget='wget -q --show-progress'
