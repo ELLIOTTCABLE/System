@@ -203,9 +203,9 @@ if whence -v fzf-completion >/dev/null; then
    export FZF_DEFAULT_COMMAND='ag --nocolor -l -g ""'
    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-  #export FZF_COMPLETION_TRIGGER=''
-  #bindkey '^T' fzf-completion
-  #bindkey '^I' $fzf_default_completion
+   export FZF_COMPLETION_TRIGGER=';'
+   bindkey    '^I' fzf-completion
+   bindkey -a ';'  fzf-completion # Currently broken: <https://github.com/junegunn/fzf/issues/478>
 fi
 
 # ### zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
