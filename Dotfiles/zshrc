@@ -82,6 +82,11 @@ if ! source "$HOME/.zgen/init.zsh"; then
    zgen load zsh-users/zsh-completions src
    zgen load /usr/local/share/zsh/site-functions
 
+   # Steal omz's termsupport for Apple Terminal. (Hacky as fuck; will have to watch to see if this
+   # changes.)
+   zgen load robbyrussell/oh-my-zsh lib/functions
+   zgen load robbyrussell/oh-my-zsh lib/termsupport
+
    zgen oh-my-zsh plugins/sudo
    zgen oh-my-zsh plugins/brew
    zgen oh-my-zsh plugins/vagrant
@@ -179,6 +184,12 @@ function zle-keymap-select {
   psvar[1]=""
 }
 zle -N   zle-keymap-select
+
+# ### Titlebar and tab titles
+# (Requires the `termsupport` from OMZ.)
+#export ZSH_THEME_TERM_TITLE_IDLE='' \
+#       ZSH_THEME_TERM_TAB_TITLE_IDLE=''
+export DISABLE_AUTO_TITLE='true'
 
 
 # ==============================
