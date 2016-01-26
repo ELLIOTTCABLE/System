@@ -362,6 +362,7 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="/usr/local/bin:$PATH"             #  4. < Homebrew
   PATH="/usr/local/share/npm/bin:$PATH"   #  3. < npm (global)
 
+  PATH="$PATH:/Library/TeX/texbin"        # -4. > MacTeX
   PATH="$PATH:/usr/X11/bin"               # -3. > X11
 fi
 # FIXME: Add npm-gobal path for Linux-installed nvm.

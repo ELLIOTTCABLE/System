@@ -103,3 +103,6 @@
 [submodule "Dotfiles/vim/bundle/sparkup"]
 	path = Dotfiles/vim/bundle/sparkup
 	url = https://github.com/rstacruz/sparkup.git
+[submodule "Dotfiles/vim/bundle/vimtex"]
+	path = Dotfiles/vim/bundle/vimtex
+	url = https://github.com/lervag/vimtex.git
