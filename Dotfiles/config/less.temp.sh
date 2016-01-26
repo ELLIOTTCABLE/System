@@ -3,7 +3,9 @@
 #env
 export LESSCHARSET='utf-8'
 export LESSEDIT='vim ?lt+%lt. -- %f'
-export LESS=' -b50000 -RFXEiq -mPm?f%f .?n?m(file %i of %m) ..?ltlines %lt-%lb?L/%L. : byte %bB?s/%s. .?e(END) ?x- Next\: %x.:?pB%pB\%..%t$ --follow-name'
+export LESS=' -b50000 -Riq -mPm?f%f .?n?m(file %i of %m) ..?ltlines %lt-%lb?L/%L. : byte %bB?s/%s. .?e(END) ?x- Next\: %x.:?pB%pB\%..%t$ --follow-name'
+
+# DISABLED -X BECAUSE IT PREVENTS SCROLLING (and thus, also, -EF)
 
 # -bn or --buffers=n
 #        Specifies the amount of buffer space less will use for each file,  in  units  of
