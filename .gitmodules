@@ -67,15 +67,6 @@
 [submodule "Dotfiles/vim/bundle/vim-openscad"]
 	path = Dotfiles/vim/bundle/vim-openscad
 	url = https://github.com/sirtaj/vim-openscad.git
-[submodule "Dotfiles/zsh/modules/zsh-syntax-highlighting"]
-	path = Dotfiles/zsh/modules/zsh-syntax-highlighting
-	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "Dotfiles/zsh/modules/zsh-history-substring-search"]
-	path = Dotfiles/zsh/modules/zsh-history-substring-search
-	url = git@github.com:zsh-users/zsh-history-substring-search.git
-[submodule "Dotfiles/zsh/modules/zsh-autosuggestions"]
-	path = Dotfiles/zsh/modules/zsh-autosuggestions
-	url = git@github.com:tarruda/zsh-autosuggestions.git
 [submodule "Dotfiles/vim/bundle/vim-nerdtree-tabs"]
 	path = Dotfiles/vim/bundle/vim-nerdtree-tabs
 	url = https://github.com/jistr/vim-nerdtree-tabs.git
@@ -103,6 +94,9 @@
 [submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
 	path = Dotfiles/vim/bundle/vim-literate-coffeescript
 	url = https://github.com/chakrit/vim-literate-coffeescript.git
+[submodule "zgen"]
+	path = Vendor/zgen
+	url = https://github.com/ELLIOTTCABLE/zgen.git
 [submodule "Dotfiles/vim/bundle/conflict-marker.vim"]
 	path = Dotfiles/vim/bundle/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git

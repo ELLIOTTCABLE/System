@@ -33,10 +33,6 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' verbose true
 zstyle :compinstall filename '/Users/elliottcable/.zshrc'
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
 # Lines configured by zsh-newuser-install
 setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
 # End of lines configured by zsh-newuser-install
@@ -61,6 +57,33 @@ setopt SHARE_HISTORY # Sexier history, srsly, why wouldn’t anybody want this?
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
 setopt HIST_NO_STORE # Don’t store the `history` command itself
+
+
+# ===========
+# = Modules =
+# ===========
+# I shim `zgen` to be lazy-loadable.
+zgen() {
+   unset -f zgen
+   local zgen_dir="$SYSTEM_REPO/Vendor/zgen"
+
+   if [[ -r "$zgen_dir/zgen.zsh" ]]; then
+
+      source "$zgen_dir/zgen.zsh" >/dev/null                                                     ;fi
+
+   zgen "$@" }
+
+ZGEN_RESET_ON_CHANGE=("${HOME}/.zshrc" "${HOME}/.profile" "${HOME}/.profile.local")
+
+if ! source "$HOME/.zgen/init.zsh"; then
+   printf %s\\n '-- `init.zsh` missing, re-generating with `Zgen`'
+
+   # zsh-syntax-highlighting must be loaded last!
+   zgen load zsh-users/zsh-syntax-highlighting
+   zgen load zsh-users/zsh-history-substring-search
+
+   zgen save >/dev/null
+fi
 
 
 # ================
@@ -128,15 +151,16 @@ function zle-keymap-select {
 }
 zle -N   zle-keymap-select
 
-# ===========
-# = Modules =
-# ===========
 
-source "$HOME/.zsh/modules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# ==============================
+# = Other module configuration =
+# ==============================
+
+# ### zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main cursor brackets root)
 
-setopt HIST_FIND_NO_DUPS
-source "$HOME/.zsh/modules/zsh-history-substring-search/zsh-history-substring-search.zsh"
+# ### zsh-history-substring-search/zsh-history-substring-search.zsh
+setopt HIST_FIND_NO_DUPS # ???
 zmodload zsh/terminfo
 #bindkey "$terminfo[kcuu1]" history-substring-search-up
 #bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -171,8 +195,7 @@ else
 fi
 
 
-#source "$HOME/.zsh/modules/zsh-autosuggestions/autosuggestions.zsh"
-#
+# ### tarruda/zsh-autosuggestions
 #zle-line-init() {
 #    zle autosuggest-start
 #}
