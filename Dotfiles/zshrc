@@ -51,9 +51,9 @@ HISTFILE=~/.histfile
 HISTSIZE=100000
 SAVEHIST=25000
 setopt SHARE_HISTORY # Sexier history, srsly, why wouldn’t anybody want this?
-#setopt APPEND_HISTORY     # 
+#setopt APPEND_HISTORY     #
 #setopt INC_APPEND_HISTORY # These are handled by SHARE_HISTORY
-#setopt EXTENDED_HISTORY   # 
+#setopt EXTENDED_HISTORY   #
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
 setopt HIST_NO_STORE # Don’t store the `history` command itself
@@ -77,6 +77,34 @@ ZGEN_RESET_ON_CHANGE=("${HOME}/.zshrc" "${HOME}/.profile" "${HOME}/.profile.loca
 
 if ! source "$HOME/.zgen/init.zsh"; then
    printf %s\\n '-- `init.zsh` missing, re-generating with `Zgen`'
+
+   # completions (from zsh-users and Homebrew)
+   zgen load zsh-users/zsh-completions src
+   zgen load /usr/local/share/zsh/site-functions
+
+   zgen oh-my-zsh plugins/sudo
+   zgen oh-my-zsh plugins/brew
+   zgen oh-my-zsh plugins/vagrant
+  #zgen oh-my-zsh plugins/chruby
+  #zgen oh-my-zsh plugins/coffee          # Broken.
+   zgen oh-my-zsh plugins/terminalapp
+   zgen load mkwmms/zsh-osx
+   zgen load felixr/docker-zsh-completion
+  #zgen load akoenig/npm-run.plugin.zsh   # Needs `compdef`, idk right now. FIXME!
+   zgen load tomsquest/nvm-completion.zsh
+
+   zgen load Vifon/deer deer
+  #zgen load b4b4r07/enhancd              # Looks incompatible with `k`:   <http://git.io/vCpUU>
+   zgen load rimraf/k
+  #zgen load tarruda/zsh-autosuggestions  # Also broken:                   <http://git.io/vCpUk>
+
+   whence terminal-notifier >/dev/null && zgen load marzocchi/zsh-notify
+
+   # `fzf`'s “**blah”-completion behaviour, ⌘T, etc.
+   if whence fzf >/dev/null; then
+      zgen load junegunn/fzf shell/completion.zsh
+      zgen load junegunn/fzf shell/key-bindings.zsh
+   fi
 
    # zsh-syntax-highlighting must be loaded last!
    zgen load zsh-users/zsh-syntax-highlighting
@@ -113,6 +141,7 @@ unsetopt SINGLE_LINE_ZLE
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
 
+# Allow `!` in command-mode to open the current command-line in a full vim:
 autoload edit-command-line && {
    zle -N edit-command-line
    bindkey -M vicmd ! edit-command-line
@@ -155,6 +184,18 @@ zle -N   zle-keymap-select
 # ==============================
 # = Other module configuration =
 # ==============================
+
+# ### junegunn/fzf
+# note, these apply to `fzf` in general, not just the zsh functionality; I'm not sure whether to
+# re-locate some of this into the general `.profile`?
+if whence -v fzf-completion >/dev/null; then
+   export FZF_DEFAULT_COMMAND='ag --nocolor -l -g ""'
+   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+  #export FZF_COMPLETION_TRIGGER=''
+  #bindkey '^T' fzf-completion
+  #bindkey '^I' $fzf_default_completion
+fi
 
 # ### zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main cursor brackets root)
@@ -203,6 +244,17 @@ fi
 #
 #bindkey '^T' autosuggest-toggle
 #bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
+
+# ### b4b4r07/enhancd
+#export ENHANCD_FILTER='fzf:peco'
+#export ENHANCD_DIR="$HOME/.cache/enhancd"
+
+# ### Vifon/deer
+zle -N deer
+bindkey -M vicmd 'K' deer
+zstyle ':deer:' height 35
+
+alias ls='k'
 
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
