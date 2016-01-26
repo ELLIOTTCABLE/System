@@ -212,7 +212,7 @@
 	<key>ShowActiveProcessInTitle</key>
 	<false/>
 	<key>ShowCommandKeyInTitle</key>
-	<true/>
+	<false/>
 	<key>ShowComponentsWhenTabHasCustomTitle</key>
 	<true/>
 	<key>ShowDimensionsInTitle</key>
