@@ -163,7 +163,7 @@ alias aok='rake aok'
 alias df='df -kH'
 
 ### JavaScript
-alias nrs='npm --loglevel=silent run-script'
+nrs(){ local script="$1"; shift; npm --loglevel=silent run-script "$script" -- "$@" ;}
 
 alias inspector-11="nvm run v0.11.13 `which node-inspector`"
 
