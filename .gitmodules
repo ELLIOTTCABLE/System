@@ -106,3 +106,6 @@
 [submodule "Dotfiles/vim/bundle/vimtex"]
 	path = Dotfiles/vim/bundle/vimtex
 	url = https://github.com/lervag/vimtex.git
+[submodule "Dotfiles/vim/bundle/mediawiki.vim"]
+	path = Dotfiles/vim/bundle/mediawiki.vim
+	url = git://github.com/chikamichi/mediawiki.vim.git
