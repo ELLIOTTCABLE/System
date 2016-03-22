@@ -56,20 +56,24 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-" toggles show marks plugin
-fun! ToggleShowMarks()
-   if !exists('b:sm')
-      let b:sm = 1
+" toggles showmarks and gitgutter
+let g:gitgutter_enabled = 0
+fun! ToggleGutter()
+   if !exists('b:gp')
+      let b:gp = 1
       setl updatetime=200
       DoShowMarks!
+      GitGutterEnable
    else
-      setl updatetime=4000
+      GitGutterDisable
       NoShowMarks!
-      unlet b:sm
+      sign unplace *
+      setl updatetime=4000
+      unlet b:gp
    endif
 endfun
 
-au VimEnter * call ToggleShowMarks()
+au VimEnter * call ToggleGutter()
 
 " FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
 fun! ToggleFocusMode()
@@ -77,11 +81,11 @@ fun! ToggleFocusMode()
       let t:fm = 1
       set nonumber
       hi NonText guifg=bg
-      let b:sm = 1 | call ToggleShowMarks()
+      let b:gp = 1 | call ToggleGutter()
       execute "normal \<Plug>FocusModeToggle"
    else
       execute "normal \<Plug>FocusModeToggle"
-      call ToggleShowMarks()
+      call ToggleGutter()
       set number
       unlet t:fm
    endif
@@ -199,8 +203,8 @@ imap <silent> <F9>  <C-O><F10>
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
 imap <silent> <F10> <C-O><F10>
 
-" F11 to toggle showing marks
-nmap <silent> <F11> :call ToggleShowMarks()<cr>
+" F11 to toggle the gutter
+nmap <silent> <F11> :call ToggleGutter()<cr>
 imap <silent> <F11> <C-O><F11>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
