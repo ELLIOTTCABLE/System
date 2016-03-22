@@ -58,18 +58,34 @@ endif
 
 " toggles show marks plugin
 fun! ToggleShowMarks()
-   if exists('b:sm') && b:sm == 1
-      let b:sm=0
-      NoShowMarks!
-      setl updatetime=4000
-   else
-      let b:sm=1
+   if !exists('b:sm')
+      let b:sm = 1
       setl updatetime=200
       DoShowMarks!
+   else
+      setl updatetime=4000
+      NoShowMarks!
+      unlet b:sm
    endif
 endfun
 
 au VimEnter * call ToggleShowMarks()
+
+" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
+fun! ToggleFocusMode()
+   if !exists("t:fm")
+      let t:fm = 1
+      set nonumber
+      hi NonText guifg=bg
+      let b:sm = 1 | call ToggleShowMarks()
+      execute "normal \<Plug>FocusModeToggle"
+   else
+      execute "normal \<Plug>FocusModeToggle"
+      call ToggleShowMarks()
+      set number
+      unlet t:fm
+   endif
+endfunc
 
 
 " === Styles ===
@@ -174,7 +190,12 @@ noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:set spell!<Return>
 
-" F11 to toggle hilighting extra whitespace
+" F9 to toggle focus-mode
+let g:focus_use_default_mapping = 0
+nmap <silent> <F9>  :call ToggleFocusMode()<cr>
+imap <silent> <F9>  <C-O><F10>
+
+" F10 to toggle hilighting extra whitespace
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
 imap <silent> <F10> <C-O><F10>
 
