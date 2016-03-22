@@ -109,3 +109,6 @@
 [submodule "Dotfiles/vim/bundle/mediawiki.vim"]
 	path = Dotfiles/vim/bundle/mediawiki.vim
 	url = git://github.com/chikamichi/mediawiki.vim.git
+[submodule "Dotfiles/vim/bundle/focus.vim"]
+	path = Dotfiles/vim/bundle/focus.vim
+	url = https://github.com/merlinrebrovic/focus.vim
