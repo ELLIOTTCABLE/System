@@ -115,3 +115,6 @@
 [submodule "Dotfiles/jupyter/IPython-notebook-extensions"]
 	path = Dotfiles/jupyter/IPython-notebook-extensions
 	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
+[submodule "Vendor/sh-realpath"]
+	path = Vendor/sh-realpath
+	url = https://github.com/mkropat/sh-realpath.git

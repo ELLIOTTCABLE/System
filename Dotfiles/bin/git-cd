@@ -1,0 +1,61 @@
+#!/bin/sh
+source "$SYSTEM_REPO/Vendor/sh-realpath/realpath.sh"
+
+puts() { printf %s\\n "$@" ;}
+pute() { printf %s\\n "~~ $*" >&2 ;}
+
+git-cd(){
+   local dir
+   dir="$(_git-cd "$@" && pwd)" || return $?
+   cd "$dir" && pwd
+}
+
+# FIXME: Does *not* handle non-existent directories.
+_git-cd(){
+   [ -n "$1" ] && local arg="$1" && shift
+
+   # Absolute paths require no git-related handling whatsoever. (on the off-chance somebody types
+   # this instead of their normal `cd`.)
+   if [ "${arg#/}" != "$arg" ]; then
+      cd "$arg"
+      return
+   fi
+
+   local root_cd="$(git rev-parse --show-cdup)"
+   root_cd="${root_cd:-.}"
+
+   # If the argument starts with `..`, then we need to work in the *parent* of the
+   # working-directory, wherever that is. (We *navigate* to that directory using `--show-cdup`, so
+   # that we reach the parent of the *current symlinked directory*, not wherever the repository
+   # actually exists.)
+   if [ "${arg#..}" != "$arg" ]; then
+      cd "${root_cd%/}/.."
+
+      # If, after the `..`, there are other path parameters, then we recursively call ourselves to
+      # handle those,
+      if [ -n "${arg#../}" ] && [ "${arg#../}" != "$arg" ]; then
+         _git-cd "${arg#../}" "$@"
+         return $?
+
+      # Else, we just want to find the git-root of that parent directory, which we also handle with
+      # a final recursive call.
+      else
+         _git-cd "" "$@"
+         return $?
+      fi
+
+   # If we're not prefixed by a `..`, then we simply switch to the root-dir,
+   else
+      if [ -n "$root_cd" ]; then
+         cd "$root_cd" || (pute "Failed to change to root"; return 11)
+      fi
+
+      # ... and, if necessary, switch to the relative directory described. (Using the $PWD for more
+      # sensible error messages.)
+      if [ -n "$arg" ]; then
+         cd "$PWD/$arg" || return 12
+      fi
+   fi
+
+   return 0
+}
