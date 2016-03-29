@@ -112,3 +112,6 @@
 [submodule "Dotfiles/vim/bundle/focus.vim"]
 	path = Dotfiles/vim/bundle/focus.vim
 	url = https://github.com/merlinrebrovic/focus.vim
+[submodule "Dotfiles/jupyter/IPython-notebook-extensions"]
+	path = Dotfiles/jupyter/IPython-notebook-extensions
+	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
