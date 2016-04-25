@@ -1,0 +1,1 @@
+/Users/ec/Library/Jupyter/IPython-notebook-extensions/templates/hide_input_output.tpl

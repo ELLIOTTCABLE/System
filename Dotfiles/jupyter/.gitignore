@@ -1,2 +1,6 @@
+nbsignatures.db
 notebook_secret
 runtime/
+
+jupyter_nbconvert_config.*
+jupyter_notebook_config.*

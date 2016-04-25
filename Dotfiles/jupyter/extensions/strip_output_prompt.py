@@ -1,0 +1,1 @@
+/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/strip_output_prompt.py

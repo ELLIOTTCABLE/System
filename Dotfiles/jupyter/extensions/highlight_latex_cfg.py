@@ -1,0 +1,1 @@
+/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/highlight_latex_cfg.py

@@ -1,0 +1,1 @@
+/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/ipy-aspell-server.py
