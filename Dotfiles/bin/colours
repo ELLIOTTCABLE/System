@@ -1,0 +1,22 @@
+#!/usr/bin/env coffee
+_ = require 'lodash'
+
+# Ripped out of Paws
+csi = (text)-> '\x1b[' + text
+sgr = (flags...)-> csi flags.join(';') + 'm'
+xbg = (colour, text)->
+   sgr(48,5,colour) + text + sgr(49)
+
+# ---- ---- ----
+
+console.log (_.range 0, 16)       .map((i)-> return (" "+i).slice -2).join ' '
+console.log (_.range 0, 16)       .map((i)-> return xbg i, ' ▉ ').join ''
+
+_.range(0, 6).map (ii)->
+   ii = 16 + (36 * ii)
+
+   console.log (_.range ii, ii+36).map((i)-> return ("  "+i).slice -3).join ' '
+   console.log (_.range ii, ii+36).map((i)-> return xbg i, ' ▐▌ ').join ''
+
+console.log (_.range 232, 256)    .map((i)-> return ("  "+i).slice -3).join ' '
+console.log (_.range 232, 256)    .map((i)-> return xbg i, ' ▐▌ ').join ''
