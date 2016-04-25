@@ -35,6 +35,15 @@ Some Vim plugins require extra setup:
    [command-t]: <https://github.com/wincent/Command-T>
    [sparkup]: <https://github.com/rstacruz/sparkup/blob/master/vim/README.txt>
 
+ - IPython-notebook-extensions needs some config to be configured, and I haven't figured out how to
+   abstract it out, so I just `.gitignore`'d it:
+
+        cd ~/.jupyter/IPython-notebook-extensions
+        ./install.py install
+
+   (This may need to be ‘fixed’ afterwards, restoring the symlinks in `~/.jupyter`. This should be
+   enough: `git checkout extensions nbextensions templates`, or similar.)
+
 ----
 
 The Terminal preferences (hotkeys etc) require Karabiner and Seil be installed, and that the fonts

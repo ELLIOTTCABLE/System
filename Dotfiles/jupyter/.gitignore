@@ -4,3 +4,4 @@ runtime/
 
 jupyter_nbconvert_config.*
 jupyter_notebook_config.*
+**/*.pyc
