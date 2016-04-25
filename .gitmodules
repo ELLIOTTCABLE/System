@@ -118,3 +118,6 @@
 [submodule "Vendor/sh-realpath"]
 	path = Vendor/sh-realpath
 	url = https://github.com/mkropat/sh-realpath.git
+[submodule "Dotfiles/jupyter/nbextensions/vim_binding"]
+	path = Dotfiles/jupyter/nbextensions/vim_binding
+	url = https://github.com/lambdalisue/jupyter-vim-binding
