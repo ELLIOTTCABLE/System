@@ -72,7 +72,7 @@
 	url = https://github.com/jistr/vim-nerdtree-tabs.git
 [submodule "Dotfiles/source-highlight/source-highlight-solarized"]
 	path = Dotfiles/source-highlight/source-highlight-solarized
-	url = git@github.com:jrunning/source-highlight-solarized.git
+	url = https://github.com/jrunning/source-highlight-solarized.git
 [submodule "Dotfiles/vim/bundle/vim-showmarks"]
 	path = Dotfiles/vim/bundle/vim-showmarks
 	url = https://github.com/jacquesbh/vim-showmarks.git
