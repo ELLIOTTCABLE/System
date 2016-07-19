@@ -13,7 +13,12 @@ end
 
 desc 'Checks out the dotfiles submodules'
 task :submodules do
-   system "git submodule update --init --recursive --jobs 4"
+   # What a hack! :D
+   if Gem::Version.new(`git --version`[12..16]) >= Gem::Version.new('2.9.0')
+      system "git submodule update --init --recursive --jobs 4"
+   else
+      system "git submodule update --init --recursive"
+   end
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/backup')
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/undo')
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/ssh/sockets')
