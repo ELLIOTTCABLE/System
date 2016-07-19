@@ -21,6 +21,12 @@ Host ell.io *.ell.io Kim.local
  ##AskPassGUI no
    Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
 
+Host Redshirt.local
+   User elliottcable
+   IdentitiesOnly yes
+   IdentityFile ~/.identity.insecure
+   Ciphers arcfour256,arcfour128,blowfish-cbc,aes256-ctr
+
 Host *
    IdentityFile ~/.identity.insecure
 
