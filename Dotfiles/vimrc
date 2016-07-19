@@ -12,6 +12,7 @@ set smartcase ignorecase
 
 set cursorline
 set listchars+=tab:\ ·
+set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
 set hlsearch incsearch ignorecase smartcase gdefault
 
