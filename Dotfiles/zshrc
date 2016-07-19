@@ -101,6 +101,7 @@ if ! source "$HOME/.zgen/init.zsh"; then
   #zgen load b4b4r07/enhancd              # Looks incompatible with `k`:   <http://git.io/vCpUU>
    zgen load rimraf/k
   #zgen load tarruda/zsh-autosuggestions  # Also broken:                   <http://git.io/vCpUk>
+   zgen load tarruda/zsh-autosuggestions
 
    whence terminal-notifier >/dev/null && zgen load marzocchi/zsh-notify
 
