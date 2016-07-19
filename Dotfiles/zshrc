@@ -96,7 +96,6 @@ if ! source "$HOME/.zgen/init.zsh"; then
    zgen load mkwmms/zsh-osx
    zgen load felixr/docker-zsh-completion
   #zgen load akoenig/npm-run.plugin.zsh   # Needs `compdef`, idk right now. FIXME!
-   zgen load tomsquest/nvm-completion.zsh
 
    zgen load Vifon/deer deer
   #zgen load b4b4r07/enhancd              # Looks incompatible with `k`:   <http://git.io/vCpUU>
