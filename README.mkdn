@@ -12,10 +12,11 @@ Some Vim plugins require extra setup:
 
         brew gem install coffeetags
 
- - Tern requires installation, as well:
-
-        cd ~/.vim/bundle/tern_for_vim
-        npm install
+ - YouCompleteMe requires  installation of the various pieces of supporting software (Node, npm,
+   Rust), followed by:
+ 
+        cd ~/.vim/bundle/YouCompleteMe
+        ./install.py --clang-completer --tern-completer --racer-completer
 
  - Command-T requires compilation; and this must be done against the same version of Ruby that the
    current Vim is compiled against: (Check both MacVim and command-line `vim`!)

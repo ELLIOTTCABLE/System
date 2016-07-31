@@ -76,6 +76,9 @@ endfun
 
 au VimEnter * call ToggleGutter()
 
+"autocmd VimEnter * nested :call tagbar#autoopen(1)
+autocmd FileType * nested :call tagbar#autoopen(0)
+
 " FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
 fun! ToggleFocusMode()
    if !exists("t:fm")
@@ -150,6 +153,10 @@ au ColorScheme * call HighlightExtraWhitespace()
 " (Uncomment the following line if you want trailing-whitespace hilighted by default!)
 bufdo call ToggleExtraWhitespace() | au BufAdd * call ToggleExtraWhitespace()
 
+if &diff
+   let g:color_coded_enabled = 0
+endif
+
 " === Mappings ===
 let mapleader = " "
 
@@ -194,6 +201,8 @@ vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
 noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:set spell!<Return>
+
+call togglebg#map("<F5>")
 
 " F9 to toggle focus-mode
 let g:focus_use_default_mapping = 0
@@ -277,29 +286,73 @@ let g:CommandTMaxHeight = 10
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 
-let g:clang_use_library = 1      " Use the (faster, but more fragile) libclang instead of executable
-let g:clang_library_path = '/usr/local/lib'
-
-let g:clang_auto_select = 1      " Automatically *select* first result, but don't insert
-let g:clang_complete_auto = 1    " Automatically complete after ->, ., ::
-
-let g:clang_clmplete_copen = 1   " Open quickfix on error
-let g:clang_hl_errors = 1        " Hilights errors the same way clang does
-let g:clang_periodic_quickfix = 1      " Periodically update the quickfix window automatically
-
-let g:clang_snippets = 1         " Enable snippets (i.e. parentheses after completing function)
-let g:clang_snippets_engine = 'clang_complete'
-let g:clang_trailing_placeholder = 1   " Trailing completion *after* functions
-
-"let g:clang_close_preview = 0    " Close the preview window after a completion is selected
-"let g:clang_complete_macros = 0  " Complete preprocessor macros and constants
-"let g:clang_complete_patterns = 0 " Complete code-patterns, loop structures, etc
-
 "let g:CoffeeAutoTagIncludeVars=1
 
 set omnifunc=syntaxcomplete#Complete
 let g:tern_map_keys=1
 let g:tern_show_argument_hints="on_hold"
+
+" #### Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" #### vim-easytags
+set tags=./tags;
+let g:easytags_dynamic_files = 2
+let g:easytags_resolve_links = 1
+let g:easytags_async = 1
+
+let g:easytags_include_members = 1
+let g:easytags_auto_highlight = 0
+
+" for YouCompleteMe (and parse .h files as C, not C++)
+let g:easytags_opts = [
+\     '--fields=+l'
+\   , '--langmap=c:.c.h'
+\  ]
+
+" #### Tagbar
+let g:tagbar_left = 1
+let g:tagbar_width = 50
+let g:tagbar_zoomwidth = 105
+let g:tagbar_expand = 1
+let g:tagbar_iconchars = ['▸', '▾']
+
+" #### YouCompleteMe
+let g:ycm_collect_identifiers_from_tags_files = 1
+
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" This is a duplication of the default values, since they don't exist until runtime, and thus can't
+" be appended to without an `after` file.
+" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
+
+"let g:ycm_filetype_blacklist['nerdtree'] = 1
+let g:ycm_filetype_blacklist = {
+\     'tagbar': 1
+\   , 'qf': 1
+\   , 'notes': 1
+\   , 'markdown': 1
+\   , 'unite': 1
+\   , 'text': 1
+\   , 'vimwiki': 1
+\   , 'pandoc': 1
+\   , 'infolog': 1
+\   , 'mail' : 1
+\
+\   , 'nerdtree' : 1
+\  }
 
 let g:gitgutter_sign_column_always = 1
 let g:gitgutter_realtime = 0
@@ -313,10 +366,6 @@ let g:gundo_close_on_revert = 1
 let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
 
 "let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
-
-let g:SuperTabDefaultCompletionType = "context"
-
-call togglebg#map("<F5>")
 
 let g:tex_flavor = 'latex'
 

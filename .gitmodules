@@ -25,18 +25,12 @@
 [submodule "Dotfiles/vim/bundle/vim-vividchalk"]
 	path = Dotfiles/vim/bundle/vim-vividchalk
 	url = git://github.com/tpope/vim-vividchalk.git
-[submodule "Dotfiles/vim/bundle/supertab"]
-	path = Dotfiles/vim/bundle/supertab
-	url = git://github.com/ervandew/supertab.git
 [submodule "Dotfiles/vim/bundle/gist-vim"]
 	path = Dotfiles/vim/bundle/gist-vim
 	url = git://github.com/mattn/gist-vim.git
 [submodule "Dotfiles/irssi/irssi-colors-solarized"]
 	path = Dotfiles/irssi/irssi-colors-solarized
 	url = git://github.com/lkraav/irssi-colors-solarized.git
-[submodule "Dotfiles/vim/bundle/clang_complete"]
-	path = Dotfiles/vim/bundle/clang_complete
-	url = git://github.com/Rip-Rip/clang_complete.git
 [submodule "Dotfiles/vim/bundle/gundo"]
 	path = Dotfiles/vim/bundle/gundo
 	url = git://github.com/sjl/gundo.vim.git
@@ -121,3 +115,24 @@
 [submodule "Dotfiles/jupyter/nbextensions/vim_binding"]
 	path = Dotfiles/jupyter/nbextensions/vim_binding
 	url = https://github.com/lambdalisue/jupyter-vim-binding
+[submodule "Dotfiles/vim/bundle/syntastic"]
+	path = Dotfiles/vim/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
+[submodule "Dotfiles/Dotfiles/vim/bundle/YouCompleteMe"]
+	path = Dotfiles/Dotfiles/vim/bundle/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe.git
+[submodule "Dotfiles/vim/bundle/YouCompleteMe"]
+	path = Dotfiles/vim/bundle/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe.git
+[submodule "Dotfiles/vim/bundle/color_coded"]
+	path = Dotfiles/vim/bundle/color_coded
+	url = https://github.com/jeaye/color_coded.git
+[submodule "Dotfiles/vim/bundle/YCM-Generator"]
+	path = Dotfiles/vim/bundle/YCM-Generator
+	url = https://github.com/rdnetto/YCM-Generator.git
+[submodule "Dotfiles/vim/bundle/vim-misc"]
+	path = Dotfiles/vim/bundle/vim-misc
+	url = https://github.com/xolox/vim-misc.git
+[submodule "Dotfiles/vim/bundle/vim-easytags"]
+	path = Dotfiles/vim/bundle/vim-easytags
+	url = https://github.com/xolox/vim-easytags.git
