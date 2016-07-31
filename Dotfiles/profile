@@ -359,7 +359,8 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # TODO: I'm pretty sure there's a command to manage these.
 # XXX: Make sure to update ~/.MacOSX/environment.plist as well if you edit these!
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/usr/local/bin:$PATH"             #  4. < Homebrew
+  PATH="/usr/local/bin:$PATH"             #  5. < Homebrew
+  PATH="/usr/local/opt/llvm/bin:$PATH"    #  4. < Homebrew's llvm / clang
   PATH="/usr/local/share/npm/bin:$PATH"   #  3. < npm (global)
 
   PATH="$PATH:/Library/TeX/texbin"        # -4. > MacTeX

@@ -265,8 +265,6 @@ zle -N deer
 bindkey -M vicmd 'K' deer
 zstyle ':deer:' height 35
 
-alias ls='k'
-
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
