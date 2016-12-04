@@ -14,9 +14,17 @@ Some Vim plugins require extra setup:
 
  - YouCompleteMe requires  installation of the various pieces of supporting software (Node, npm,
    Rust), followed by:
- 
+
         cd ~/.vim/bundle/YouCompleteMe
         ./install.py --clang-completer --tern-completer --racer-completer
+
+ - color_coded requires compilation:
+
+        cd ~/.vim/bundle/color_coded
+        (mkdir build; \
+           cd build && cmake .. && \
+           make && make install; \
+           make clean && make clean_clang)
 
  - Command-T requires compilation; and this must be done against the same version of Ruby that the
    current Vim is compiled against: (Check both MacVim and command-line `vim`!)
