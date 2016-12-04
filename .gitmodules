@@ -136,3 +136,6 @@
 [submodule "Dotfiles/vim/bundle/vim-easytags"]
 	path = Dotfiles/vim/bundle/vim-easytags
 	url = https://github.com/xolox/vim-easytags.git
+[submodule "Dotfiles/vim/bundle/ListToggle"]
+	path = Dotfiles/vim/bundle/ListToggle
+	url = https://github.com/Valloric/ListToggle.git
