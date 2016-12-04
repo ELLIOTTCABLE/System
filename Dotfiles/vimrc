@@ -76,9 +76,6 @@ endfun
 
 au VimEnter * call ToggleGutter()
 
-"autocmd VimEnter * nested :call tagbar#autoopen(1)
-autocmd FileType * nested :call tagbar#autoopen(0)
-
 " FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
 fun! ToggleFocusMode()
    if !exists("t:fm")
@@ -94,6 +91,8 @@ fun! ToggleFocusMode()
       unlet t:fm
    endif
 endfunc
+
+autocmd FileType c,cpp nested :TagbarOpen
 
 
 " === Styles ===
