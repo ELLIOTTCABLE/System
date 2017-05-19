@@ -254,7 +254,7 @@ set undodir=~/.vim/undo,\ .
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
-let g:markdown_fenced_languages = [ 'c', 'objc', 'swift', 'rust', 'make', 'sh'
+let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
                                  \, 'html', 'css', 'xml'
                                  \, 'js=javascript', 'coffee', 'json'
                                  \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
