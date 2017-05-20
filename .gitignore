@@ -3,6 +3,8 @@ Dotfiles/ssh/.identity*
 Dotfiles/ssh/*_rsa*
 Dotfiles/ssh/sockets/*
 
+Dotfiles/zsh/modules
+
 Dotfiles/vim/undo
 Dotfiles/vim/.netrwhist
 Dotfiles/vim/spell/
