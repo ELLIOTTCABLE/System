@@ -6,6 +6,11 @@ Run before using home/.gitignore:
 
 ----
 
+The Z Shell configuration uses `zplug`, which needs to be installed separately (it thereafter
+updates itself). The `.zshrc` will automate this the first time you run the terminal.
+
+----
+
 Some Vim plugins require extra setup:
 
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
