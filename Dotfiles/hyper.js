@@ -1,10 +1,12 @@
 module.exports = {
    config: {
       // default font size in pixels for all tabs
-      fontSize: 11,
+      fontSize: 12,
+
+      windowSize: [960, 540], // aiming for 135 columns wide, 16:9 ratio
 
       // font family with optional fallbacks
-      fontFamily: 'Knack, Menlo, "DejaVu Sans Mono", '
+      fontFamily: '"Input Nerd Font", Knack, Menlo, "DejaVu Sans Mono", '
        + 'Consolas, "Lucida Console", monospace',
 
       // terminal cursor background color and opacity (hex, rgb, hsl, hsv, hwb or cmyk)
