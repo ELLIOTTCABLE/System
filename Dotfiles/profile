@@ -74,6 +74,9 @@ alias etr='edit app config lib db public spec test vendor/plugins Rakefile'
 alias edit=$EDITOR
 alias e='edit'
 
+move-n-link()( [ $# -ne 2 ] && print "Usage: move-n-link FROM TO" && exit 1;
+   mv "$1" "$2" && { ln -s "$2" "$1" || mv "$2" "$1" } )
+
 export CLICOLOR='yes'
 van()  {  vim "+help $1" "+only" ;}
 mvan() { mvim "+help $1" "+only" ;}
