@@ -1,5 +1,7 @@
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
 
+zplug bhilburn/powerlevel9k, use:"powerlevel9k.zsh-theme", as:theme
+
 # Steal omz's termsupport for Apple Terminal. (Hacky as fuck; will have to watch to see if this
 # changes.)
 zplug lib/functions,          from:oh-my-zsh
