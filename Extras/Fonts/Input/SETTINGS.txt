@@ -7,13 +7,12 @@ by re-downloading the fonts at <http://input.fontbureau.com/download>.
 
 
 	Four Style Family
-		Regular: InputSans-Regular.ttf
-		Italic: InputSans-Italic.ttf
-		Bold: InputSans-Black.ttf
-		Bold Italic: InputSans-BlackItalic.ttf
+		Regular: InputMonoCondensed-Light.ttf
+		Italic: InputMonoCondensed-LightItalic.ttf
+		Bold: InputMonoCondensed-Medium.ttf
+		Bold Italic: InputMonoCondensed-MediumItalic.ttf
 
 	Alternates
-		--a=ss
 		--asterisk=height
 		--braces=straight
 		--g=ss
@@ -21,4 +20,4 @@ by re-downloading the fonts at <http://input.fontbureau.com/download>.
 		--l=serifs_round
 		--zero=slash
 
-	Line Height: 1.1×
+	Line Height: 1.2×
