@@ -117,7 +117,7 @@ module.exports = {
    plugins: [
       'hypercwd'
     , 'hyperterm-alternatescroll'
-    , 'hyperterm-focus-reporting'
+  //, 'hyperterm-focus-reporting'      // Pending brianc/hyperterm-focus-reporting#1
 
     , 'hyper-tabs-enhanced'
     , 'hyper-statusline'
