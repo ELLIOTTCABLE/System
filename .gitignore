@@ -1,5 +1,6 @@
 Dotfiles/ssh/known_hosts
 Dotfiles/ssh/.identity*
+Dotfiles/ssh/*_rsa*
 Dotfiles/ssh/sockets/*
 
 Dotfiles/vim/undo
