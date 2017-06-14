@@ -60,41 +60,41 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-"" toggles showmarks and gitgutter
-"let g:gitgutter_enabled = 0
-"fun! ToggleGutter()
-"   if !exists('b:gp')
-"      let b:gp = 1
-"      setl updatetime=200
-"      DoShowMarks!
-"      GitGutterEnable
-"   else
-"      GitGutterDisable
-"      NoShowMarks!
-"      sign unplace *
-"      setl updatetime=4000
-"      unlet b:gp
-"   endif
-"endfun
-"
-"au VimEnter * call ToggleGutter()
-"
-"" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
-"fun! ToggleFocusMode()
-"   if !exists("t:fm")
-"      let t:fm = 1
-"      set nonumber
-"      hi NonText guifg=bg
-"      let b:gp = 1 | call ToggleGutter()
-"      execute "normal \<Plug>FocusModeToggle"
-"   else
-"      execute "normal \<Plug>FocusModeToggle"
-"      call ToggleGutter()
-"      set number
-"      unlet t:fm
-"   endif
-"endfunc
-"
+" toggles showmarks and gitgutter
+let g:gitgutter_enabled = 0
+fun! ToggleGutter()
+   if !exists('b:gp')
+      let b:gp = 1
+      setl updatetime=200
+      DoShowMarks!
+      GitGutterEnable
+   else
+      GitGutterDisable
+      NoShowMarks!
+      sign unplace *
+      setl updatetime=4000
+      unlet b:gp
+   endif
+endfun
+
+au VimEnter * call ToggleGutter()
+
+" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
+fun! ToggleFocusMode()
+   if !exists("t:fm")
+      let t:fm = 1
+      set nonumber
+      hi NonText guifg=bg
+      let b:gp = 1 | call ToggleGutter()
+      execute "normal \<Plug>FocusModeToggle"
+   else
+      execute "normal \<Plug>FocusModeToggle"
+      call ToggleGutter()
+      set number
+      unlet t:fm
+   endif
+endfunc
+
 "autocmd FileType c,cpp nested :TagbarOpen
 "
 "
@@ -198,18 +198,18 @@ vnoremap <silent> <F8>     <Esc>:set spell!<Return>
 "
 "call togglebg#map("<F5>")
 "
-"" F9 to toggle focus-mode
-"let g:focus_use_default_mapping = 0
-"nmap <silent> <F9>  :call ToggleFocusMode()<cr>
-"imap <silent> <F9>  <C-O><F10>
+" F9 to toggle focus-mode
+let g:focus_use_default_mapping = 0
+nmap <silent> <F9>  :call ToggleFocusMode()<cr>
+imap <silent> <F9>  <C-O><F10>
 
 " F10 to toggle hilighting extra whitespace
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
 imap <silent> <F10> <C-O><F10>
 
-"" F11 to toggle the gutter
-"nmap <silent> <F11> :call ToggleGutter()<cr>
-"imap <silent> <F11> <C-O><F11>
+" F11 to toggle the gutter
+nmap <silent> <F11> :call ToggleGutter()<cr>
+imap <silent> <F11> <C-O><F11>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
 nmap <silent> <F12> :silent set invhls<CR>
@@ -349,11 +349,11 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "\
 "\   , 'nerdtree' : 1
 "\  }
-"
-"let g:gitgutter_sign_column_always = 1
-"let g:gitgutter_realtime = 0
-"let g:gitgutter_eager = 0
-"
+
+let g:gitgutter_sign_column_always = 1
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = 1
 "let g:gundo_help = 0
