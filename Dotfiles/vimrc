@@ -1,33 +1,38 @@
-set nomodeline nocompatible
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
+if !has('nvim')
+   " Duplicate NeoVim's changes to Vim defaults, incase I start classic Vim for some reason
+   " (See :help nvim-defaults)
+   filetype plugin indent on
 
-runtime solarized.vimrc
+   set autoread autoindent backspace=indent,eol,start belloff=all complete-=i display=lastline \
+       history=10000 hlsearch incsearch nolangremap nocompatible nrformats=bin,hex ruler \
+       sessionoptions-=options showcmd tabpagemax=50 ttyfast viminfo+=",!" wildmenu
 
-set textwidth=100 cc=+1,+2,+3
-set number ruler nowrap wrapmargin=3
-set shiftround expandtab tabstop=8 softtabstop=3 shiftwidth=3
-set nosmarttab autoindent
+   set encoding=utf-8
+endif
+
+"runtime bundle/vim-pathogen/autoload/pathogen.vim
+"call pathogen#infect()
+"
+"runtime solarized.vimrc
+
+set textwidth=100 wrapmargin=3
+set cursorline colorcolumn=+1,+2,+3
+set number
+set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
 set smartcase ignorecase
+set laststatus=1
 
-set cursorline
+set nowrap
 set listchars+=tab:\ ·
 set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
-set hlsearch incsearch ignorecase smartcase gdefault
+set ignorecase smartcase gdefault
 
 set scrolloff=3
-set history=1000
 set title
 
 syntax on
-filetype on
-filetype plugin on
-filetype indent on
 
-set encoding=utf-8
-
-set backspace=indent,eol,start
 
 " Command-line tab completion
 set wildmode=list:longest,list:full
@@ -36,12 +41,12 @@ set wildignore+=*.o,*.obj,.git,*.class,.svn
 if has("mouse")
    set mouse=a
 
-   if &term == 'screen'
+   if !has('nvim') && &term == 'screen'
       " tmux knows the extended mouse mode
       set ttymouse=xterm2
    endif
 
-   if v:version >= 704 && &term =~ '^screen'
+   if !has('nvim') && v:version >= 704 && &term =~ '^screen'
       " Odds are good that this is a modern tmux, so let's pick the best mouse-handling mode.
       set ttymouse=sgr
    endif
@@ -57,55 +62,45 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-" toggles showmarks and gitgutter
-let g:gitgutter_enabled = 0
-fun! ToggleGutter()
-   if !exists('b:gp')
-      let b:gp = 1
-      setl updatetime=200
-      DoShowMarks!
-      GitGutterEnable
-   else
-      GitGutterDisable
-      NoShowMarks!
-      sign unplace *
-      setl updatetime=4000
-      unlet b:gp
-   endif
-endfun
-
-au VimEnter * call ToggleGutter()
-
-" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
-fun! ToggleFocusMode()
-   if !exists("t:fm")
-      let t:fm = 1
-      set nonumber
-      hi NonText guifg=bg
-      let b:gp = 1 | call ToggleGutter()
-      execute "normal \<Plug>FocusModeToggle"
-   else
-      execute "normal \<Plug>FocusModeToggle"
-      call ToggleGutter()
-      set number
-      unlet t:fm
-   endif
-endfunc
-
-autocmd FileType c,cpp nested :TagbarOpen
-
-
+"" toggles showmarks and gitgutter
+"let g:gitgutter_enabled = 0
+"fun! ToggleGutter()
+"   if !exists('b:gp')
+"      let b:gp = 1
+"      setl updatetime=200
+"      DoShowMarks!
+"      GitGutterEnable
+"   else
+"      GitGutterDisable
+"      NoShowMarks!
+"      sign unplace *
+"      setl updatetime=4000
+"      unlet b:gp
+"   endif
+"endfun
+"
+"au VimEnter * call ToggleGutter()
+"
+"" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
+"fun! ToggleFocusMode()
+"   if !exists("t:fm")
+"      let t:fm = 1
+"      set nonumber
+"      hi NonText guifg=bg
+"      let b:gp = 1 | call ToggleGutter()
+"      execute "normal \<Plug>FocusModeToggle"
+"   else
+"      execute "normal \<Plug>FocusModeToggle"
+"      call ToggleGutter()
+"      set number
+"      unlet t:fm
+"   endif
+"endfunc
+"
+"autocmd FileType c,cpp nested :TagbarOpen
+"
+"
 " === Styles ===
-" ... until https://github.com/altercation/vim-colors-solarized/pull/62
-fun! FixSignColumn()
-   highlight clear SignColumn
-   highlight link SignColumn LineNr
-endfun
-
-call FixSignColumn()
-au ColorScheme * call FixSignColumn()
-
-
 " This toggles the hilighting of trailing-whitespace.
 fun! ToggleExtraWhitespace()
 
@@ -152,9 +147,9 @@ au ColorScheme * call HighlightExtraWhitespace()
 " (Uncomment the following line if you want trailing-whitespace hilighted by default!)
 bufdo call ToggleExtraWhitespace() | au BufAdd * call ToggleExtraWhitespace()
 
-if &diff
-   let g:color_coded_enabled = 0
-endif
+"if &diff
+"   let g:color_coded_enabled = 0
+"endif
 
 " === Mappings ===
 let mapleader = " "
@@ -174,7 +169,8 @@ nnoremap ` '
 map Y y$
 
 nnoremap  <Leader>w <C-W>
-noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+
+"noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
 noremap  <silent> <C-S>         :update<CR>
 vnoremap <silent> <C-S>    <C-C>:update<CR>
@@ -188,34 +184,34 @@ vnoremap <silent> <C-K>    <C-C>:nohlsearch<CR>
 inoremap <silent> <C-K>    <C-O>:nohlsearch<CR>
 
 
-noremap  <silent> <F1>          :NERDTreeTabsToggle<Return>
-inoremap <silent> <F1>     <C-O>:NERDTreeTabsToggle<Return>
-vnoremap <silent> <F1>     <Esc>:NERDTreeTabsToggle<Return>
-noremap  <silent> <F2>          :GundoToggle<Return>
-inoremap <silent> <F2>     <C-O>:GundoToggle<Return>
-vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
-noremap  <silent> <F3>          :TagbarToggle<Return>
-inoremap <silent> <F3>     <C-O>:TagbarToggle<Return>
-vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
+"noremap  <silent> <F1>          :NERDTreeTabsToggle<Return>
+"inoremap <silent> <F1>     <C-O>:NERDTreeTabsToggle<Return>
+"vnoremap <silent> <F1>     <Esc>:NERDTreeTabsToggle<Return>
+"noremap  <silent> <F2>          :GundoToggle<Return>
+"inoremap <silent> <F2>     <C-O>:GundoToggle<Return>
+"vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
+"noremap  <silent> <F3>          :TagbarToggle<Return>
+"inoremap <silent> <F3>     <C-O>:TagbarToggle<Return>
+"vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
 
 noremap  <silent> <F8>          :set spell!<Return>
 inoremap <silent> <F8>     <C-O>:set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:set spell!<Return>
-
-call togglebg#map("<F5>")
-
-" F9 to toggle focus-mode
-let g:focus_use_default_mapping = 0
-nmap <silent> <F9>  :call ToggleFocusMode()<cr>
-imap <silent> <F9>  <C-O><F10>
+"
+"call togglebg#map("<F5>")
+"
+"" F9 to toggle focus-mode
+"let g:focus_use_default_mapping = 0
+"nmap <silent> <F9>  :call ToggleFocusMode()<cr>
+"imap <silent> <F9>  <C-O><F10>
 
 " F10 to toggle hilighting extra whitespace
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
 imap <silent> <F10> <C-O><F10>
 
-" F11 to toggle the gutter
-nmap <silent> <F11> :call ToggleGutter()<cr>
-imap <silent> <F11> <C-O><F11>
+"" F11 to toggle the gutter
+"nmap <silent> <F11> :call ToggleGutter()<cr>
+"imap <silent> <F11> <C-O><F11>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
 nmap <silent> <F12> :silent set invhls<CR>
@@ -234,14 +230,14 @@ au BufRead,BufNewFile *.pegjs setfiletype pegjs
 
 au FileType gitcommit set wrap tw=0
 
-" gist-vim defaults
-if has("mac")
-  let g:gist_clip_command = 'pbcopy'
-elseif has("unix")
-  let g:gist_clip_command = 'xclip -selection clipboard'
-endif
-let g:gist_detect_filetype = 1
-let g:gist_open_browser_after_post = 1
+"" gist-vim defaults
+"if has("mac")
+"  let g:gist_clip_command = 'pbcopy'
+"elseif has("unix")
+"  let g:gist_clip_command = 'xclip -selection clipboard'
+"endif
+"let g:gist_detect_filetype = 1
+"let g:gist_open_browser_after_post = 1
 
 set undofile
 set undolevels=10000
@@ -253,125 +249,124 @@ set undodir=~/.vim/undo,\ .
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
-" The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
-let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
-                                 \, 'html', 'css', 'xml'
-                                 \, 'js=javascript', 'coffee', 'json'
-                                 \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
+"" The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
+"let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
+"                                 \, 'html', 'css', 'xml'
+"                                 \, 'js=javascript', 'coffee', 'json'
+"                                 \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
 
 autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}
    \set filetype=ruby
 
-" === Plugins ===
-call arpeggio#load()
+"" === Plugins ===
+"call arpeggio#load()
+"
+"let NERDChristmasTree = 1
+"let NERDTreeShowBookmarks = 1
+"let NERDTreeBookmarksFile = '.NERDTreeBookmarks'
+"let NERDTreeMouseMode = 2
+"let NERDTreeSortOrder = ['\/$', '\.h$', '*']
+"let NERDTreeWinPos = 'right'
+"let NERDTreeMinimalUI = 1
+"let NERDTreeDirArrows = 1
+"let NERDTreeWinSize = 25
+"
+"let NERDBlockComIgnoreEmpty = 0
+"let NERDSpaceDelims = 1
+"let NERDCompactSexyComs = 1
+"let NERDDefaultNesting = 0
+"
+"let g:CommandTMaxCachedDirectories = 0
+"let g:CommandTMaxHeight = 10
+"let g:CommandTMatchWindowReverse = 1
+"let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
+"
+""let g:CoffeeAutoTagIncludeVars=1
+"
+"set omnifunc=syntaxcomplete#Complete
+"let g:tern_map_keys=1
+"let g:tern_show_argument_hints="on_hold"
+"
+"" #### Syntastic
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"
+"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+"
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"
+"" #### vim-easytags
+"set tags=./tags;
+"let g:easytags_dynamic_files = 2
+"let g:easytags_resolve_links = 1
+"let g:easytags_async = 1
+"
+"let g:easytags_include_members = 1
+"let g:easytags_auto_highlight = 0
+"
+"" for YouCompleteMe (and parse .h files as C, not C++)
+"let g:easytags_opts = [
+"\     '--fields=+l'
+"\   , '--langmap=c:.c.h'
+"\  ]
+"
+"" #### Tagbar
+"let g:tagbar_left = 1
+"let g:tagbar_width = 50
+"let g:tagbar_zoomwidth = 105
+"let g:tagbar_expand = 1
+"let g:tagbar_iconchars = ['▸', '▾']
+"
+"" #### YouCompleteMe
+"let g:ycm_collect_identifiers_from_tags_files = 1
+"
+"let g:ycm_complete_in_comments = 1
+"let g:ycm_complete_in_strings = 1
+"
+"let g:ycm_add_preview_to_completeopt = 1
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_autoclose_preview_window_after_insertion = 1
+"
+"" This is a duplication of the default values, since they don't exist until runtime, and thus can't
+"" be appended to without an `after` file.
+"" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
+"
+""let g:ycm_filetype_blacklist['nerdtree'] = 1
+"let g:ycm_filetype_blacklist = {
+"\     'tagbar': 1
+"\   , 'qf': 1
+"\   , 'notes': 1
+"\   , 'markdown': 1
+"\   , 'unite': 1
+"\   , 'text': 1
+"\   , 'vimwiki': 1
+"\   , 'pandoc': 1
+"\   , 'infolog': 1
+"\   , 'mail' : 1
+"\
+"\   , 'nerdtree' : 1
+"\  }
+"
+"let g:gitgutter_sign_column_always = 1
+"let g:gitgutter_realtime = 0
+"let g:gitgutter_eager = 0
+"
+"let g:gundo_width = 25
+"let g:gundo_preview_bottom = 1
+"let g:gundo_help = 0
+"let g:gundo_close_on_revert = 1
+"
+"let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
+"
+""let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
+"
+"let g:tex_flavor = 'latex'
 
-let NERDChristmasTree = 1
-let NERDTreeShowBookmarks = 1
-let NERDTreeBookmarksFile = '.NERDTreeBookmarks'
-let NERDTreeMouseMode = 2
-let NERDTreeSortOrder = ['\/$', '\.h$', '*']
-let NERDTreeWinPos = 'right'
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let NERDTreeWinSize = 25
-
-let NERDBlockComIgnoreEmpty = 0
-let NERDSpaceDelims = 1
-let NERDCompactSexyComs = 1
-let NERDDefaultNesting = 0
-
-let g:CommandTMaxCachedDirectories = 0
-let g:CommandTMaxHeight = 10
-let g:CommandTMatchWindowReverse = 1
-let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
-
-"let g:CoffeeAutoTagIncludeVars=1
-
-set omnifunc=syntaxcomplete#Complete
-let g:tern_map_keys=1
-let g:tern_show_argument_hints="on_hold"
-
-" #### Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-" #### vim-easytags
-set tags=./tags;
-let g:easytags_dynamic_files = 2
-let g:easytags_resolve_links = 1
-let g:easytags_async = 1
-
-let g:easytags_include_members = 1
-let g:easytags_auto_highlight = 0
-
-" for YouCompleteMe (and parse .h files as C, not C++)
-let g:easytags_opts = [
-\     '--fields=+l'
-\   , '--langmap=c:.c.h'
-\  ]
-
-" #### Tagbar
-let g:tagbar_left = 1
-let g:tagbar_width = 50
-let g:tagbar_zoomwidth = 105
-let g:tagbar_expand = 1
-let g:tagbar_iconchars = ['▸', '▾']
-
-" #### YouCompleteMe
-let g:ycm_collect_identifiers_from_tags_files = 1
-
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-
-" This is a duplication of the default values, since they don't exist until runtime, and thus can't
-" be appended to without an `after` file.
-" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
-
-"let g:ycm_filetype_blacklist['nerdtree'] = 1
-let g:ycm_filetype_blacklist = {
-\     'tagbar': 1
-\   , 'qf': 1
-\   , 'notes': 1
-\   , 'markdown': 1
-\   , 'unite': 1
-\   , 'text': 1
-\   , 'vimwiki': 1
-\   , 'pandoc': 1
-\   , 'infolog': 1
-\   , 'mail' : 1
-\
-\   , 'nerdtree' : 1
-\  }
-
-let g:gitgutter_sign_column_always = 1
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
-
-let g:gundo_width = 25
-let g:gundo_preview_bottom = 1
-let g:gundo_help = 0
-let g:gundo_close_on_revert = 1
-
-let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
-
-"let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
-
-let g:tex_flavor = 'latex'
-
-" filnxtToO → ilmxstToOI
+" filnxtToO → ilxstToOIF
 " (Last `shm+=I` disables the :intro message.)
-set shortmess-=f shm+=m shm-=n shm+=s shm+=I
-set showcmd
+set shortmess-=f shm-=n shm+=s shm +=F shm+=I
