@@ -139,10 +139,10 @@ autoload edit-command-line && {
 # = Prompt =
 # ==========
 
-PURE_PROMPT_SYMBOL_COLOR='193'   # purer-prompt addition
+PURE_PROMPT_SYMBOL_COLOR='157'   # purer-prompt addition
 PURE_CMD_MAX_EXEC_TIME='3'
-PURE_GIT_DOWN_ARROW='⟱'
-PURE_GIT_UP_ARROW='⟰'
+PURE_GIT_DOWN_ARROW='⟱ '
+PURE_GIT_UP_ARROW='⟰ '
 
 # Forces *all* new line editors to start in vicmd mode instead of viins mode.
 #function zle-line-init {
