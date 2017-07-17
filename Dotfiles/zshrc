@@ -69,7 +69,7 @@ export ZPLUG_REPOS="$HOME/.zsh/modules"
 
 while [ ! -f "$ZPLUG_HOME/init.zsh" ]; do
    printf "\e[31m%s\e[m — may I install it to <\e[38;5;39m%s\e[m>? " \
-      "!! zplug missing" "$ZPLUG_HOME"
+      "[zplug] zplug is missing" "$ZPLUG_HOME"
    read -rq may_i\?
    if [ $may_i = n ]; then
       exit 1                                                                  ; fi

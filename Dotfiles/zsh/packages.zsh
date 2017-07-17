@@ -10,13 +10,16 @@ zplug lib/termsupport,        from:oh-my-zsh, on:lib/functions
 
 # N.B.: the original `zsh-syntax-highlighting` had to be loaded *last*; I don't know if this is
 # still true for `fast-syntax-highlighting`
-zplug zdharma/fast-syntax-highlighting, defer:2
-#zplug zsh-users/zsh-history-substring-search
+zplug zdharma/fast-syntax-highlighting, defer:3
+
+zplug zsh-users/zsh-autosuggestions
+
+zplug hlissner/zsh-autopair,  defer:2
+
+zplug zuxfoucault/colored-man-pages_mod
 
 # `fzf`'s built-in zsh support (uses star-star-tab, by default.)
 zplug junegunn/fzf, use:"shell/*.zsh"
-
-zplug zsh-users/zsh-autosuggestions
 
 # A zsh-contrib tool for navigating *recent* directories — included in anyframe.
 #zplug willghatch/zsh-cdr
@@ -33,6 +36,8 @@ zplug supercrabtree/k
 zplug plugins/rbenv,          from:oh-my-zsh
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"
+
+zplug oz/safe-paste
 
 # “This plugin toggles "sudo" before the current/previous command by pressing [ESC][ESC] in emacs
 #  -mode or vi-command mode.”
