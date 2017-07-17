@@ -23,6 +23,11 @@ module.exports = {
       hyperBorder: {
          borderWidth: '2px'
        , borderAngle: '120deg',
+      },
+
+      hyperTabs: {
+         trafficButtons: true
+       , tabIconsColored: true
       }
    },
 
