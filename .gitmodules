@@ -87,7 +87,7 @@
 	url = https://github.com/vim-scripts/bats.vim
 [submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
 	path = Dotfiles/vim/bundle/vim-literate-coffeescript
-	url = https://github.com/chakrit/vim-literate-coffeescript.git
+	url = https://github.com/drampelt/vim-literate-coffeescript.git
 [submodule "zgen"]
 	path = Vendor/zgen
 	url = https://github.com/ELLIOTTCABLE/zgen.git
