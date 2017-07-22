@@ -58,7 +58,9 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 
   alias droid='say -v cellos droid'
 
-  alias ping='prettyping --nolegend'
+  alias pping='prettyping --nolegend'
+
+  alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
   +() { qlmanage -p "$@" 2>/dev/null ;}
 fi
