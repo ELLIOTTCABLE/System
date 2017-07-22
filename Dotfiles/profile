@@ -172,8 +172,6 @@ alias df='df -kH'
 ### JavaScript
 nrs(){ local script="$1"; shift; npm --loglevel=silent run-script "$script" -- "$@" ;}
 
-alias inspector-11="nvm run v0.11.13 `which node-inspector`"
-
 alias svisor="supervisor --no-restart-on exit"
 alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
 
@@ -366,35 +364,47 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # TODO: I'm pretty sure there's a command to manage these.
 # XXX: Make sure to update ~/.MacOSX/environment.plist as well if you edit these!
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/usr/local/bin:$PATH"             #  5. < Homebrew
-  PATH="/usr/local/opt/llvm/bin:$PATH"    #  4. < Homebrew's llvm / clang
-  PATH="/usr/local/share/npm/bin:$PATH"   #  3. < npm (global)
+  PATH="/usr/local/bin:$PATH"             #  6. < Homebrew
+  PATH="/usr/local/opt/llvm/bin:$PATH"    #  5. < Homebrew's llvm / clang
+  PATH="/usr/local/share/npm/bin:$PATH"   #  4. < npm (global)
 
   PATH="$PATH:/Library/TeX/texbin"        # -4. > MacTeX
   PATH="$PATH:/usr/X11/bin"               # -3. > X11
 fi
-# FIXME: Add npm-gobal path for Linux-installed nvm.
-PATH="$HOME/.bin:$PATH"                   #  2. < local binaries
+PATH="$HOME/.bin:$PATH"                   #  3. < local binaries
+PATH="$HOME/.nodenv/shims:$PATH"          #  2. < nodenv shims
 PATH="./node_modules/.bin:$PATH"          #  1. < npm (local)
 
 PATH="$PATH:/usr/local/cuda/bin"          # -2. > CUDA
 PATH="$PATH:$EC2_HOME/bin"                # -1. > EC2
 export PATH
 
-# Lazy-load `nvm` on invocation.
-_load_nvm() {
-   local nvm_dir="$HOME/.nvm"
-   if [[ -s "$nvm_dir/nvm.sh" ]]; then
-      export NVM_DIR="$nvm_dir"
-      type compgen >&- && [[ -r $NVM_DIR/bash_completion ]] && \
-         source $NVM_DIR/bash_completion
+# FIXME: This is totally bash-incompatible.
+if [ ! -f "$HOME/.nodenv/shims/node" ]; then
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew." \
+      "[nodenv] nodenv is missing"
+else
+   export NODENV_SHELL=zsh
+   source '/usr/local/Cellar/nodenv/1.1.1/libexec/../completions/nodenv.zsh'
 
-      unset -f node nvm 2>/dev/null
-      source "$NVM_DIR/nvm.sh"
-   fi
-}
-node() { _load_nvm && node "$@" }
-nvm()  { _load_nvm && nvm "$@" }
+   # XXX: I think this isn't necessary with the nodenv-package-rehash plugin?
+   #         <https://github.com/nodenv/nodenv-package-rehash/issues/11>
+   #command nodenv rehash 2>/dev/null
+   nodenv() {
+      local command
+      command="$1"
+      if [ "$#" -gt 0 ]; then
+         shift
+      fi
+
+      case "$command" in
+      rehash|shell)
+         eval "$(nodenv "sh-$command" "$@")";;
+      *)
+         command nodenv "$command" "$@";;
+      esac
+   }
+fi
 
 # This lazy-loads whichever of `chruby` or `rvm` may be installed.
 #source "/usr/local/opt/chruby/share/chruby/chruby.sh"
