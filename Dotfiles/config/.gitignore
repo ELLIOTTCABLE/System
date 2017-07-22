@@ -1,0 +1,18 @@
+.mono/certs
+
+asciinema/config
+inkscape/
+karabiner/
+keybase/
+
+configstore/pin-cushion.json
+configstore/update-notifier-*
+configstore/insight-bower.yml
+
+# Why do so many games store their info in .config!?
+AtomZombieData/
+Colossal Order/Cities_Skylines/
+Full Control/SpaceHulkAscension/
+Master of Orion/
+PixelPiracy/
+UDP Software/Dwarf Therapist.ini

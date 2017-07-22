@@ -10,17 +10,4 @@ Dotfiles/vim/spell/
 Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/jupyter/nbconfig/
 
-Dotfiles/config/keybase/
-Dotfiles/config/inkscape/
-Dotfiles/config/UDP Software/Dwarf Therapist.ini
-Dotfiles/config/AtomZombieData/
-Dotfiles/config/Full Control/
-Dotfiles/config/PixelPiracy/
-Dotfiles/config/.mono/
-Dotfiles/config/asciinema/config
-Dotfiles/config/asciinema/config
-
-Dotfiles/config/configstore/pin-cushion.json
-Dotfiles/config/configstore/update-notifier-alex.json
-Dotfiles/config/configstore/update-notifier-bower.yml
-Dotfiles/config/configstore/insight-bower.yml
+# See also: Dotfiles/config/.gitignore
