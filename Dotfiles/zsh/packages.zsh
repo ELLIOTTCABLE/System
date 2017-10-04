@@ -34,6 +34,7 @@ zplug supercrabtree/k
 
 # These offer useful prompt/status-functions
 zplug plugins/rbenv,          from:oh-my-zsh
+zplug ~/.opam/opam-init,      from:local, use:init.zsh
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"
 
