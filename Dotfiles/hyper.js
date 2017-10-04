@@ -23,12 +23,17 @@ module.exports = {
       },
 
       hyperStatusLine: {
-        fontSize: 13,
+         fontSize: 10
+
+       , dirtyColor: '#cc99cc' // eighties-0E
+       , aheadColor: '##99cc99' // eighties-0B
       },
 
       hyperBorder: {
-         borderWidth: '2px'
-       , borderAngle: '120deg',
+         borderColors: ['#99cc99', '#66cccc']
+       , borderWidth: '3px'
+       , borderAngle: '120deg'
+       , animate: true
       },
 
       hyperTabs: {
