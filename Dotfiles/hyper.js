@@ -12,6 +12,12 @@ module.exports = {
       // set to true for blinking cursor
       cursorBlink: true,
 
+      // custom css to embed in the main window
+      css: '',
+
+      // custom css to embed in the terminal window
+      termCSS: '',
+
       base16: {
          scheme: 'eighties'
       },
@@ -31,22 +37,17 @@ module.exports = {
       }
    },
 
-   // a list of plugins to fetch and install from npm
-   // format: [@org/]project[#version]
-   // examples:
-   //   `hyperpower`
-   //   `@company/project`
-   //   `project#1.0.1`
    plugins: [
       'hypercwd'
-    , 'hyperterm-alternatescroll'
+
+    , 'hypersixteen'
+    , 'hyperterm-bold-tab'
+    , 'hyperborder'
+
+  //, 'hyperterm-alternatescroll'      // Pending lkzhao/hyperterm-alternatescroll#11
   //, 'hyperterm-focus-reporting'      // Pending brianc/hyperterm-focus-reporting#1
 
     , 'hyper-tabs-enhanced'
     , 'hyper-statusline'
-
-    , 'hypersixteen'
-    , 'hyperborder'
-    , 'hyperterm-bold-tab'
    ]
 }
