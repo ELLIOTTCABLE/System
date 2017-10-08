@@ -50,73 +50,55 @@ KEYTIMEOUT=1
 HISTFILE=~/.histfile
 HISTSIZE=100000
 SAVEHIST=25000
-setopt SHARE_HISTORY # Sexier history, srsly, why wouldn’t anybody want this?
+setopt SHARE_HISTORY       # Sexier history, srsly, why wouldn’t anybody want this?
 #setopt APPEND_HISTORY     #
 #setopt INC_APPEND_HISTORY # These are handled by SHARE_HISTORY
 #setopt EXTENDED_HISTORY   #
 setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_SPACE # Start a line with a space to prevent saving it
-setopt HIST_NO_STORE # Don’t store the `history` command itself
+setopt HIST_IGNORE_SPACE   # Start a line with a space to prevent saving it
+setopt HIST_NO_STORE       # Don’t store the `history` command itself
 
 
 # ===========
 # = Modules =
 # ===========
-# I shim `zgen` to be lazy-loadable.
-zgen() {
-   unset -f zgen
-   local zgen_dir="$SYSTEM_REPO/Vendor/zgen"
+export ZPLUG_HOME="$HOME/.zsh/modules/zplug/zplug"
 
-   if [[ -r "$zgen_dir/zgen.zsh" ]]; then
+export ZPLUG_LOADFILE="$HOME/.zsh/packages.zsh"
+export ZPLUG_REPOS="$HOME/.zsh/modules"
 
-      source "$zgen_dir/zgen.zsh" >/dev/null                                                     ;fi
+while [ ! -f "$ZPLUG_HOME/init.zsh" ]; do
+   printf "\e[31m%s\e[m — may I install it to <\e[38;5;39m%s\e[m>? " \
+      "[zplug] zplug is missing" "$ZPLUG_HOME"
+   read -rq may_i\?
+   if [ $may_i = n ]; then
+      exit 1                                                                  ; fi
 
-   zgen "$@" }
+   printf \\n
+   git clone https://github.com/zplug/zplug "$ZPLUG_HOME"
+done
 
-ZGEN_RESET_ON_CHANGE=("${HOME}/.zshrc" "${HOME}/.profile" "${HOME}/.profile.local")
+source "$ZPLUG_HOME/init.zsh"
 
-if ! source "$HOME/.zgen/init.zsh"; then
-   printf %s\\n '-- `init.zsh` missing, re-generating with `Zgen`'
+if ! zplug check; then
+   printf "\e[31m%s\e[m:\n" \
+      "[zplug] zsh modules missing"
+   zplug check --verbose
+   printf "\e[31m%s\e[m ... may I install them to <\e[38;5;39m%s\e[m>? " \
+      "[zplug]" "$ZPLUG_REPOS"
+   read -rq may_i\?
+   printf \\n
 
-   # completions (from zsh-users and Homebrew)
-   zgen load zsh-users/zsh-completions src
-   zgen load /usr/local/share/zsh/site-functions
-
-   # Steal omz's termsupport for Apple Terminal. (Hacky as fuck; will have to watch to see if this
-   # changes.)
-   zgen load robbyrussell/oh-my-zsh lib/functions
-   zgen load robbyrussell/oh-my-zsh lib/termsupport
-
-   zgen oh-my-zsh plugins/sudo
-   zgen oh-my-zsh plugins/brew
-   zgen oh-my-zsh plugins/vagrant
-  #zgen oh-my-zsh plugins/chruby
-  #zgen oh-my-zsh plugins/coffee          # Broken.
-   zgen oh-my-zsh plugins/terminalapp
-   zgen load mkwmms/zsh-osx
-   zgen load felixr/docker-zsh-completion
-  #zgen load akoenig/npm-run.plugin.zsh   # Needs `compdef`, idk right now. FIXME!
-
-   zgen load Vifon/deer deer
-  #zgen load b4b4r07/enhancd              # Looks incompatible with `k`:   <http://git.io/vCpUU>
-   zgen load rimraf/k
-  #zgen load tarruda/zsh-autosuggestions  # Also broken:                   <http://git.io/vCpUk>
-   zgen load tarruda/zsh-autosuggestions
-
-   whence terminal-notifier >/dev/null && zgen load marzocchi/zsh-notify
-
-   # `fzf`'s “**blah”-completion behaviour, ⌘T, etc.
-   if whence fzf >/dev/null; then
-      zgen load junegunn/fzf shell/completion.zsh
-      zgen load junegunn/fzf shell/key-bindings.zsh
+   if [ $may_i = y ]; then
+      zplug install
    fi
-
-   # zsh-syntax-highlighting must be loaded last!
-   zgen load zsh-users/zsh-syntax-highlighting
-   zgen load zsh-users/zsh-history-substring-search
-
-   zgen save >/dev/null
 fi
+
+# completions (from zsh-users and Homebrew)
+#zgen load zsh-users/zsh-completions
+#zgen load /usr/local/share/zsh/site-functions
+
+zplug load
 
 
 # ================
@@ -152,18 +134,42 @@ autoload edit-command-line && {
    bindkey -M vicmd ! edit-command-line
 }
 
+# zsh-surround
+autoload -Uz surround
+zle -N delete-surround  surround
+zle -N add-surround     surround
+zle -N change-surround  surround
+bindkey -a cs change-surround
+bindkey -a ds delete-surround
+bindkey -a ys add-surround
+bindkey -M visual S add-surround
+
+# select-quoted
+autoload -U select-quoted
+zle      -N select-quoted
+for m in visual viopp; do
+   for c in {a,i}{\',\",\`}; do
+      bindkey -M $m $c select-quoted
+   done
+done
+
+# select-bracketed
+autoload -U select-bracketed
+zle -N select-bracketed
+for m in visual viopp; do
+   for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+      bindkey -M $m $c select-bracketed
+   done
+done
 
 # ==========
 # = Prompt =
 # ==========
 
-#RPS1="['%1v', '%2v', '%3v', '%4v', '%5v', '%6v', '%7v', '%8v', '%9v']" # debug
-
-#      +-----------------------------+- Check return status, and (un-)set color
-#      |            +----------------)- See if psvar[1] is empty (see below)
-#      |            |                |
-#      v            v       v        v
-PS1="%(?|%2F|%1F)%1(V|%1v|%(#|#|>))%(?|%2f|%1f) "
+PURE_PROMPT_SYMBOL_COLOR='157'   # purer-prompt addition
+PURE_CMD_MAX_EXEC_TIME='3'
+PURE_GIT_DOWN_ARROW='⟱ '
+PURE_GIT_UP_ARROW='⟰ '
 
 # Forces *all* new line editors to start in vicmd mode instead of viins mode.
 #function zle-line-init {
@@ -172,18 +178,6 @@ PS1="%(?|%2F|%1F)%1(V|%1v|%(#|#|>))%(?|%2f|%1f) "
 #  return $STATUS
 #}
 #zle -N   zle-line-init
-
-function zle-keymap-select {
-  local STATUS=$?
-  # See the PS1 above; we set psvar[1] to be empty if the $KEYMAP is insert-mode,
-  # and to : if it's been put into command-mode.
-  psvar[1]="${${KEYMAP/vicmd/:}/(main|viins)/}"
-  ( exit $STATUS ) # This may not seem to make sense, but it’s the only way to preserve the exit status
-                   # (http://www.zsh.org/cgi-bin/mla/redirect?USERNUMBER=15796)
-  zle reset-prompt
-  psvar[1]=""
-}
-zle -N   zle-keymap-select
 
 # ### Titlebar and tab titles
 # (Requires the `termsupport` from OMZ.)
@@ -200,70 +194,115 @@ export DISABLE_AUTO_TITLE='true'
 # note, these apply to `fzf` in general, not just the zsh functionality; I'm not sure whether to
 # re-locate some of this into the general `.profile`?
 if whence -v fzf-completion >/dev/null; then
-   export FZF_DEFAULT_COMMAND='ag --nocolor -l -g ""'
+   export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --nocolor -l -g ""'
    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+   export FZF_CTRL_T_OPTS="--select-1 --exit-0"
+   export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind '?:toggle-preview'"
+   export FZF_TMUX=1
+
+   fzf-direct-completion() {
+     FZF_COMPLETION_TRIGGER= fzf-completion
+  }; zle -N fzf-direct-completion
+
+   fzf-history-widget-accept() {
+      fzf-history-widget
+      zle accept-line
+   }; zle -N fzf-history-widget-accept
 
    export FZF_COMPLETION_TRIGGER=';'
-   bindkey    '^I' fzf-completion
-   bindkey -a ';'  fzf-completion # Currently broken: <https://github.com/junegunn/fzf/issues/478>
+   bindkey    '^I'   fzf-completion
+   bindkey    '^T'  $fzf_default_completion
+   bindkey -a ';'    fzf-direct-completion
+   bindkey    '^X'   fzf-history-widget-accept
 fi
 
-# ### zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main cursor brackets root)
 
 # ### zsh-history-substring-search/zsh-history-substring-search.zsh
-setopt HIST_FIND_NO_DUPS # ???
-zmodload zsh/terminfo
-#bindkey "$terminfo[kcuu1]" history-substring-search-up
-#bindkey "$terminfo[kcud1]" history-substring-search-down
-bindkey '^[[A' history-substring-search-up # 'cuz OS X. >,>
-bindkey '^[[B' history-substring-search-down
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
+#setopt HIST_FIND_NO_DUPS # ???
+#zmodload zsh/terminfo
+##bindkey "$terminfo[kcuu1]" history-substring-search-up
+##bindkey "$terminfo[kcud1]" history-substring-search-down
+#bindkey '^[[A' history-substring-search-up # 'cuz OS X. >,>
+#bindkey '^[[B' history-substring-search-down
+#bindkey -M vicmd 'k' history-substring-search-up
+#bindkey -M vicmd 'j' history-substring-search-down
 
-ZSH_HIGHLIGHT_STYLES[root]='bg=9'                  # Orange
-if [ "$BACKGROUND" = dark ]; then
-   ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=15,bold' # Base 3
-   ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=14,bold' # Base 1
-   ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=12,bold' # Base 0
-                                                      # Base 00, normal text
-   ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=10,bold' # Base 01
-   ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=8,bold'  # Base 03
-   ZSH_HIGHLIGHT_STYLES[cursor]='fg=15'
-
-   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=15,bg=0,bold'
-   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=13,bg=0,bold'
-else
-   ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=8,bold'  # Base 03
-   ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=10,bold' # Base 01
-   ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=11,bold' # Base 00
-                                                      # Base 0, normal text
-   ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=14,bold' # Base 1
-   ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=15,bold' # Base 3
-   ZSH_HIGHLIGHT_STYLES[cursor]='fg=15'
-
-   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=8,bg=7,bold'
-   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=13,bg=7,bold'
-fi
+#ZSH_HIGHLIGHT_STYLES[root]='bg=9'                  # Orange
+#if [ "$BACKGROUND" = dark ]; then
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=15,bold' # Base 3
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=14,bold' # Base 1
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=12,bold' # Base 0
+#                                                      # Base 00, normal text
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=10,bold' # Base 01
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=8,bold'  # Base 03
+#   ZSH_HIGHLIGHT_STYLES[cursor]='fg=15'
+#
+#   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=15,bg=0,bold'
+#   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=13,bg=0,bold'
+#else
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=8,bold'  # Base 03
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=10,bold' # Base 01
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=11,bold' # Base 00
+#                                                      # Base 0, normal text
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=14,bold' # Base 1
+#   ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=15,bold' # Base 3
+#   ZSH_HIGHLIGHT_STYLES[cursor]='fg=15'
+#
+#   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=8,bg=7,bold'
+#   HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=13,bg=7,bold'
+#fi
 
 
 # ### tarruda/zsh-autosuggestions
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+
 #zle-line-init() {
 #    zle autosuggest-start
 #}
 #zle -N zle-line-init
-#
+
 #bindkey '^T' autosuggest-toggle
-#bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
+bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
 
 # ### b4b4r07/enhancd
 #export ENHANCD_FILTER='fzf:peco'
 #export ENHANCD_DIR="$HOME/.cache/enhancd"
 
 # ### Vifon/deer
+autoload -U deer
 zle -N deer
 bindkey -M vicmd 'K' deer
-zstyle ':deer:' height 35
+zstyle ':deer:' height 22
+
+
+# FIXME: These leave Bash out in the cold.
+if [ -z "$NODENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[nodenv] nodenv is missing"
+else
+   # XXX: I think this isn't necessary with the nodenv-package-rehash plugin?
+   #         <https://github.com/nodenv/nodenv-package-rehash/issues/11>
+   #      If that's not the case, we'll have to uncomment this invocation; `nodenv.plugin.zsh`
+   #      explicitly states `--no-rehash`.
+   #command nodenv rehash 2>/dev/null
+
+   # NOTE: This is configured by nodenv.plugin.zsh, now.
+   #nodenv() {
+   #   ...
+   #}
+fi
+
+if [ -z "$RBENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[rbenv] rbenv is missing"
+else
+   # NOTE: This is configured by rbenv.plugin.zsh, now.
+   #rbenv() {
+   #   ...
+   #}
+fi
 
 
 if [[ "$PROFILE_STARTUP" == true ]]; then

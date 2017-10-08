@@ -6,6 +6,29 @@ Run before using home/.gitignore:
 
 ----
 
+The Z Shell configuration uses `zplug`, which needs to be installed separately (it thereafter
+updates itself). The `.zshrc` will automate this the first time you run the terminal.
+
+----
+
+rbenv, nodenv, etc must be installed via Homebrew, along with their plugins:
+
+    brew install rbenv rbenv-use ruby-build
+
+    rbenv install 2.4                                    # Or whatever,
+    rbenv use 2.4 --global                               # etc.
+
+    brew tap nodenv/nodenv
+    brew install                                                                  \
+       nodenv node-build                                                          \
+       nodenv-package-rehash node-build-update-defs nodenv-aliases                \
+       nodenv-package-json-engine nodenv-npm-migrate
+
+    nodenv install 8.1.4                                 # blah blah
+    nodenv global 8                                      # yadda yadda
+
+----
+
 Some Vim plugins require extra setup:
 
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
@@ -18,7 +41,8 @@ Some Vim plugins require extra setup:
         cd ~/.vim/bundle/YouCompleteMe
         ./install.py --clang-completer --tern-completer --racer-completer
 
- - color_coded requires compilation:
+ - color_coded requires compilation (and note that it will *fail* if the installed `vim` included
+   luajit. I keep forgetting this fact somehow.):
 
         cd ~/.vim/bundle/color_coded
         (mkdir build; \
