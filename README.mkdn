@@ -34,7 +34,8 @@ Some Vim plugins require extra setup:
         cd ~/.vim/bundle/YouCompleteMe
         ./install.py --clang-completer --tern-completer --racer-completer
 
- - color_coded requires compilation:
+ - color_coded requires compilation (and note that it will *fail* if the installed `vim` included
+   luajit. I keep forgetting this fact somehow.):
 
         cd ~/.vim/bundle/color_coded
         (mkdir build; \
