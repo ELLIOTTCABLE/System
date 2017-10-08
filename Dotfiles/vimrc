@@ -12,7 +12,7 @@ endif
 
 set textwidth=100 wrapmargin=3
 set cursorline colorcolumn=+1,+2,+3
-set number
+set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
 set smartcase ignorecase
 set laststatus=1
@@ -29,6 +29,16 @@ set title
 set conceallevel=1
 
 syntax on
+
+
+" `vim-plug` installation & package-loading
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+source ~/.vim/packages.vim
 
 
 " Command-line tab completion
@@ -59,36 +69,17 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-" toggles showmarks and gitgutter
-let g:gitgutter_enabled = 0
-fun! ToggleGutter()
-   if !exists('b:gp')
-      let b:gp = 1
-      setl updatetime=200
-      DoShowMarks!
-      GitGutterEnable
-   else
-      GitGutterDisable
-      NoShowMarks!
-      sign unplace *
-      setl updatetime=4000
-      unlet b:gp
-   endif
-endfun
-
-au VimEnter * call ToggleGutter()
-
 " FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
 fun! ToggleFocusMode()
    if !exists("t:fm")
       let t:fm = 1
       set nonumber
       hi NonText guifg=bg
-      let b:gp = 1 | call ToggleGutter()
+      set signcolumn=no
       execute "normal \<Plug>FocusModeToggle"
    else
       execute "normal \<Plug>FocusModeToggle"
-      call ToggleGutter()
+      set signcolumn=auto
       set number
       unlet t:fm
    endif
@@ -206,8 +197,8 @@ imap <silent> <F9>  <C-O><F10>
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
 imap <silent> <F10> <C-O><F10>
 
-" F11 to toggle the gutter
-nmap <silent> <F11> :call ToggleGutter()<cr>
+" F11 to toggle the signcolumn (‘gutter’)
+nmap <silent> <F11> :exec &signcolumn == "no" ? "set signcolumn=yes" : "set signcolumn=no"<cr>
 imap <silent> <F11> <C-O><F11>
 
 " F12 to toggle hilight, Shift-F12 to clear search register
@@ -247,7 +238,7 @@ set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 set undodir=~/.vim/undo,\ .
 
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+"set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 "" The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
 "let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
@@ -340,7 +331,17 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "let g:ycm_add_preview_to_completeopt = 1
 "let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_autoclose_preview_window_after_insertion = 1
-"
+
+" #### vim-focus-autocmd
+let g:focau = {}
+
+" Need to figure out the Hyper.app codes for cursor-changing
+"let g:focau.cursors = ['', '', '']
+
+" 'clipboard' appears to be broken (see amerlyq/vim-focus-autocmd#4)
+"let g:focau.widgets = ['clipboard', 'buffers', 'number']
+let g:focau.widgets = ['buffers', 'number']
+
 "" This is a duplication of the default values, since they don't exist until runtime, and thus can't
 "" be appended to without an `after` file.
 "" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
@@ -361,7 +362,6 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "\   , 'nerdtree' : 1
 "\  }
 
-let g:gitgutter_sign_column_always = 1
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 

@@ -40,9 +40,6 @@
 [submodule "Dotfiles/vim/bundle/vim-coffee-script"]
 	path = Dotfiles/vim/bundle/vim-coffee-script
 	url = https://github.com/kchmck/vim-coffee-script.git
-[submodule "Dotfiles/vim/bundle/vim-gitgutter"]
-	path = Dotfiles/vim/bundle/vim-gitgutter
-	url = git://github.com/airblade/vim-gitgutter.git
 [submodule "Dotfiles/vim/bundle/pegjs-vim"]
 	path = Dotfiles/vim/bundle/pegjs-vim
 	url = https://github.com/alunny/pegjs-vim
@@ -64,9 +61,6 @@
 [submodule "Dotfiles/source-highlight/source-highlight-solarized"]
 	path = Dotfiles/source-highlight/source-highlight-solarized
 	url = https://github.com/jrunning/source-highlight-solarized.git
-[submodule "Dotfiles/vim/bundle/vim-showmarks"]
-	path = Dotfiles/vim/bundle/vim-showmarks
-	url = https://github.com/jacquesbh/vim-showmarks.git
 [submodule "Dotfiles/vim/bundle/ctrlp.vim"]
 	path = Dotfiles/vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
