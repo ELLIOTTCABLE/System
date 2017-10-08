@@ -67,8 +67,8 @@ fi
 
 alias wget='wget -q --show-progress'
 
-export EDITOR='vim'
-export VISUAL='vim'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 alias et='edit .'
 alias etr='edit app config lib db public spec test vendor/plugins Rakefile'
