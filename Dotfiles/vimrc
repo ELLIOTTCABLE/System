@@ -20,6 +20,8 @@ set scrolloff=3
 set history=1000
 set title
 
+set conceallevel=1
+
 syntax on
 filetype on
 filetype plugin on
@@ -223,6 +225,9 @@ imap <silent> <F12> <C-O><F12>
 map  <silent> <S-F12> :let @/ = @_<CR>
 imap <silent> <S-F12> <C-O><S-F12>
 
+" Toggle conealing with space-c
+map <leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
 autocmd BufLeave,FocusLost * silent! wall
 
 " To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
@@ -291,6 +296,14 @@ let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
 set omnifunc=syntaxcomplete#Complete
 let g:tern_map_keys=1
 let g:tern_show_argument_hints="on_hold"
+
+" #### vim-javascript
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_flow  = 1
+
+let g:javascript_conceal_function         = "ƒ"
+let g:javascript_conceal_this             = "@"
+let g:javascript_conceal_arrow_function   = "⇒"
 
 " #### Syntastic
 set statusline+=%#warningmsg#

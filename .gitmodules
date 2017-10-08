@@ -136,3 +136,6 @@
 [submodule "Dotfiles/vim/bundle/ListToggle"]
 	path = Dotfiles/vim/bundle/ListToggle
 	url = https://github.com/Valloric/ListToggle.git
+[submodule "Dotfiles/vim/bundle/vim-javascript"]
+	path = Dotfiles/vim/bundle/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git
