@@ -174,8 +174,6 @@ alias df='df -kH'
 ### JavaScript
 nrs(){ local script="$1"; shift; npm --loglevel=silent run-script "$script" -- "$@" ;}
 
-alias inspector-11="nvm run v0.11.13 `which node-inspector`"
-
 alias svisor="supervisor --no-restart-on exit"
 alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
 
@@ -323,7 +321,10 @@ C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
 
 # Homebrew
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export HOMEBREW_CASK_OPTS='--appdir=/Applications'
+   # Hardcoding this; saves the startup cost of re-running this for every shell.
+  #export HOMEBREW_PREFIX="$(brew --prefix)"
+   export HOMEBREW_PREFIX="/usr/local"
+   export HOMEBREW_CASK_OPTS='--appdir=/Applications'
 fi
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
@@ -368,53 +369,17 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # TODO: I'm pretty sure there's a command to manage these.
 # XXX: Make sure to update ~/.MacOSX/environment.plist as well if you edit these!
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="/usr/local/bin:$PATH"             #  5. < Homebrew
-  PATH="/usr/local/opt/llvm/bin:$PATH"    #  4. < Homebrew's llvm / clang
-  PATH="/usr/local/share/npm/bin:$PATH"   #  3. < npm (global)
+  PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  6. < Homebrew
+  PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  5. < Homebrew's llvm / clang
+  PATH="$HOMEBREW_PREFIX/share/npm/bin:$PATH"   #  4. < npm (global)
 
-  PATH="$PATH:/Library/TeX/texbin"        # -4. > MacTeX
-  PATH="$PATH:/usr/X11/bin"               # -3. > X11
+  PATH="$PATH:/Library/TeX/texbin"     # -4. > MacTeX
+  PATH="$PATH:/usr/X11/bin"            # -3. > X11
 fi
-# FIXME: Add npm-gobal path for Linux-installed nvm.
-PATH="$HOME/.bin:$PATH"                   #  2. < local binaries
-PATH="./node_modules/.bin:$PATH"          #  1. < npm (local)
+PATH="$HOME/.bin:$PATH"                #  3. < local binaries
+PATH="$HOME/.nodenv/shims:$PATH"       #  2. < nodenv shims
+PATH="./node_modules/.bin:$PATH"       #  1. < npm (local)
 
-PATH="$PATH:/usr/local/cuda/bin"          # -2. > CUDA
-PATH="$PATH:$EC2_HOME/bin"                # -1. > EC2
+PATH="$PATH:/usr/local/cuda/bin"       # -2. > CUDA
+PATH="$PATH:$EC2_HOME/bin"             # -1. > EC2
 export PATH
-
-# Lazy-load `nvm` on invocation.
-_load_nvm() {
-   local nvm_dir="$HOME/.nvm"
-   if [[ -s "$nvm_dir/nvm.sh" ]]; then
-      export NVM_DIR="$nvm_dir"
-      type compgen >&- && [[ -r $NVM_DIR/bash_completion ]] && \
-         source $NVM_DIR/bash_completion
-
-      unset -f node nvm 2>/dev/null
-      source "$NVM_DIR/nvm.sh"
-   fi
-}
-node() { _load_nvm && node "$@" }
-nvm()  { _load_nvm && nvm "$@" }
-
-# This lazy-loads whichever of `chruby` or `rvm` may be installed.
-#source "/usr/local/opt/chruby/share/chruby/chruby.sh"
-_load_chruby() {
-   type brew >&- && local pfx=`brew --prefix`
-
-   local chruby_script="$pfx/opt/chruby/share/chruby/chruby.sh"
-   if [[ -s  "$chruby_script" ]]; then
-      unset -f chruby rvm ruby
-      source "$chruby_script"
-
-   elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
-      unset -f chruby rvm ruby
-
-      export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-      source "$HOME/.rvm/scripts/rvm"
-   fi
-}
-ruby()   { _load_chruby "$@" && ruby "$@"   ;}
-chruby() { _load_chruby "$@" && chruby "$@" ;}
-rvm()    { _load_chruby "$@" && rvm "$@"    ;}

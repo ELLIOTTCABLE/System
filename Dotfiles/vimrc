@@ -29,6 +29,8 @@ set ignorecase smartcase gdefault
 set scrolloff=3
 set title
 
+set conceallevel=1
+
 syntax on
 
 
@@ -217,6 +219,9 @@ imap <silent> <F12> <C-O><F12>
 map  <silent> <S-F12> :let @/ = @_<CR>
 imap <silent> <S-F12> <C-O><S-F12>
 
+" Toggle conealing with space-c
+map <leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
 autocmd BufLeave,FocusLost * silent! wall
 
 " To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
@@ -285,6 +290,15 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "set omnifunc=syntaxcomplete#Complete
 "let g:tern_map_keys=1
 "let g:tern_show_argument_hints="on_hold"
+"
+"" #### vim-javascript
+"let g:javascript_plugin_jsdoc = 1
+"let g:javascript_plugin_flow  = 1
+"
+"let g:javascript_conceal_function         = "ƒ"
+"let g:javascript_conceal_this             = "@"
+"let g:javascript_conceal_arrow_function   = "⇒"
+"
 "
 "" #### Syntastic
 "set statusline+=%#warningmsg#
@@ -368,3 +382,36 @@ let g:gitgutter_eager = 0
 " filnxtToO → ilxstToOIF
 " (Last `shm+=I` disables the :intro message.)
 set shortmess-=f shm-=n shm+=s shm +=F shm+=I
+
+"" ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
+"let s:opam_share_dir = system("opam config var share")
+"let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
+"
+"let s:opam_configuration = {}
+"
+"function! OpamConfOcpIndent()
+"  execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
+"endfunction
+"let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
+"
+"function! OpamConfOcpIndex()
+"  execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
+"endfunction
+"let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
+"
+"function! OpamConfMerlin()
+"  let l:dir = s:opam_share_dir . "/merlin/vim"
+"  execute "set rtp+=" . l:dir
+"endfunction
+"let s:opam_configuration['merlin'] = function('OpamConfMerlin')
+"
+"let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+"let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
+"let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
+"for tool in s:opam_packages
+"  " Respect package order (merlin should be after ocp-index)
+"  if count(s:opam_available_tools, tool) > 0
+"    call s:opam_configuration[tool]()
+"  endif
+"endfor
+"" ## end of OPAM user-setup addition for vim / base ## keep this line

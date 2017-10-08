@@ -87,10 +87,7 @@
 	url = https://github.com/vim-scripts/bats.vim
 [submodule "Dotfiles/vim/bundle/vim-literate-coffeescript"]
 	path = Dotfiles/vim/bundle/vim-literate-coffeescript
-	url = https://github.com/chakrit/vim-literate-coffeescript.git
-[submodule "zgen"]
-	path = Vendor/zgen
-	url = https://github.com/ELLIOTTCABLE/zgen.git
+	url = https://github.com/drampelt/vim-literate-coffeescript.git
 [submodule "Dotfiles/vim/bundle/conflict-marker.vim"]
 	path = Dotfiles/vim/bundle/conflict-marker.vim
 	url = https://github.com/rhysd/conflict-marker.vim.git
@@ -139,3 +136,6 @@
 [submodule "Dotfiles/vim/bundle/ListToggle"]
 	path = Dotfiles/vim/bundle/ListToggle
 	url = https://github.com/Valloric/ListToggle.git
+[submodule "Dotfiles/vim/bundle/vim-javascript"]
+	path = Dotfiles/vim/bundle/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git
