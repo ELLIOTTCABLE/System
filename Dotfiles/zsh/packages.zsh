@@ -33,7 +33,8 @@ zplug Vifon/deer, use:"deer"
 zplug supercrabtree/k
 
 # These offer useful prompt/status-functions
-zplug plugins/rbenv,          from:oh-my-zsh
+zplug jsahlen/nodenv.plugin.zsh
+zplug ELLIOTTCABLE/rbenv.plugin.zsh
 zplug ~/.opam/opam-init,      from:local, use:init.zsh
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"
@@ -53,4 +54,3 @@ zplug plugins/vagrant,        from:oh-my-zsh
 # Available, but I haven't installed them yet:
 #  - Docker
 #  - Spotify-support
-#  - nodenv

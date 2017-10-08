@@ -11,14 +11,21 @@ updates itself). The `.zshrc` will automate this the first time you run the term
 
 ----
 
-nodenv must be installed via Homebrew, along with its plugins:
+rbenv, nodenv, etc must be installed via Homebrew, along with their plugins:
+
+    brew install rbenv rbenv-use ruby-build
+
+    rbenv install 2.4                                    # Or whatever,
+    rbenv use 2.4 --global                               # etc.
 
     brew tap nodenv/nodenv
     brew install                                                                  \
        nodenv node-build                                                          \
        nodenv-package-rehash node-build-update-defs nodenv-aliases                \
        nodenv-package-json-engine nodenv-npm-migrate
-    nodenv install 8.1.4                                 # Or whatever.
+
+    nodenv install 8.1.4                                 # blah blah
+    nodenv global 8                                      # yadda yadda
 
 ----
 

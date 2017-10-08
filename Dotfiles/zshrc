@@ -275,6 +275,36 @@ bindkey -M vicmd 'K' deer
 zstyle ':deer:' height 22
 
 
+# FIXME: These leave Bash out in the cold.
+if [ -z "$NODENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[nodenv] nodenv is missing"
+else
+   # XXX: I think this isn't necessary with the nodenv-package-rehash plugin?
+   #         <https://github.com/nodenv/nodenv-package-rehash/issues/11>
+   #      If that's not the case, we'll have to uncomment this invocation; `nodenv.plugin.zsh`
+   #      explicitly states `--no-rehash`.
+   #command nodenv rehash 2>/dev/null
+
+   # NOTE: This is configured by nodenv.plugin.zsh, now.
+   #nodenv() {
+   #   ...
+   #}
+fi
+
+if [ -z "$RBENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[rbenv] rbenv is missing"
+else
+   # NOTE: This is configured by rbenv.plugin.zsh, now.
+   #rbenv() {
+   #   ...
+   #}
+fi
+
+
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
     exec 2>&3 3>&-
