@@ -10,9 +10,6 @@ if !has('nvim')
    set encoding=utf-8
 endif
 
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
-
 set textwidth=100 wrapmargin=3
 set cursorline colorcolumn=+1,+2,+3
 set number
