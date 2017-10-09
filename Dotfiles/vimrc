@@ -27,6 +27,8 @@ set ignorecase smartcase gdefault
 set scrolloff=3
 set title
 
+set completeopt=longest,menuone,preview
+
 set conceallevel=1
 
 if (has("termguicolors"))
@@ -165,7 +167,7 @@ map Y y$
 
 nnoremap  <Leader>w <C-W>
 
-"noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
 noremap  <silent> <C-S>         :update<CR>
 vnoremap <silent> <C-S>    <C-C>:update<CR>
@@ -282,10 +284,6 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "
 ""let g:CoffeeAutoTagIncludeVars=1
 "
-"set omnifunc=syntaxcomplete#Complete
-"let g:tern_map_keys=1
-"let g:tern_show_argument_hints="on_hold"
-"
 "" #### vim-javascript
 "let g:javascript_plugin_jsdoc = 1
 "let g:javascript_plugin_flow  = 1
@@ -293,20 +291,21 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "let g:javascript_conceal_function         = "ƒ"
 "let g:javascript_conceal_this             = "@"
 "let g:javascript_conceal_arrow_function   = "⇒"
-"
-"
-"" #### Syntastic
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-"
-"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
-"
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"
+
+
+" #### Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+let g:syntastic_ocaml_checkers = ['merlin']
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 "" #### vim-easytags
 "set tags=./tags;
 "let g:easytags_dynamic_files = 2
@@ -368,6 +367,37 @@ let g:focau = {}
 " 'clipboard' appears to be broken (see amerlyq/vim-focus-autocmd#4)
 "let g:focau.widgets = ['clipboard', 'buffers', 'number']
 let g:focau.widgets = []
+
+" #### Deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#ternjs#docs = 1
+let g:deoplete#sources#ternjs#types = 1
+let g:deoplete#sources#ternjs#depths = 1
+let g:deoplete#sources#ternjs#case_insensitive = 1
+let g:deoplete#sources#ternjs#include_keywords = 1
+
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = ['tern#Complete']
+
+let g:deoplete#sources = {}
+let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
+
+
+" #### SuperTab
+" FIXME: .... more
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-p>"
+autocmd FileType javascript let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+
+let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
+let g:SuperTabLongestEnhanced = 1
+let g:SuperTabLongestHighlight = 1
+let g:SuperTabClosePreviewOnPopupClose = 1
+
+" #### UltiSnips
+" FIXME: .... more
+let g:UltiSnipsExpandTrigger="<C-j>"
+
 
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0

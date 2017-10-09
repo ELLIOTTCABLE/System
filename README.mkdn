@@ -35,11 +35,10 @@ Some Vim plugins require extra setup:
 
         brew gem install coffeetags
 
- - YouCompleteMe requires  installation of the various pieces of supporting software (Node, npm,
-   Rust), followed by:
+ - `tern_for_vim`, supporting JavaScript in SuperTab/Deoplete, requires some setup:
 
-        cd ~/.vim/bundle/YouCompleteMe
-        ./install.py --clang-completer --tern-completer --racer-completer
+        cd ~/.local/share/nvim/plugged/tern_for_vim
+        npm i
 
  - color_coded requires compilation (and note that it will *fail* if the installed `vim` included
    luajit. I keep forgetting this fact somehow.):
