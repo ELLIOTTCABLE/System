@@ -78,21 +78,16 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-" FIXME: I'd like to hook into the mksession! that focus.vim is calling, instead of dup'ing settings
-fun! ToggleFocusMode()
-   if !exists("t:fm")
-      let t:fm = 1
-      set nonumber
-      hi NonText guifg=bg
-      set signcolumn=no
-      execute "normal \<Plug>FocusModeToggle"
-   else
-      execute "normal \<Plug>FocusModeToggle"
-      set signcolumn=auto
-      set number
-      unlet t:fm
-   endif
-endfunc
+function! s:goyo_enter()
+   " ...
+endfunction
+
+function! s:goyo_leave()
+   " ...
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 "autocmd FileType c,cpp nested :TagbarOpen
 "
@@ -198,9 +193,8 @@ vnoremap <silent> <F8>     <Esc>:set spell!<Return>
 "call togglebg#map("<F5>")
 "
 " F9 to toggle focus-mode
-let g:focus_use_default_mapping = 0
-nmap <silent> <F9>  :call ToggleFocusMode()<cr>
-imap <silent> <F9>  <C-O><F10>
+nmap <silent> <F9>  :Goyo<cr>
+imap <silent> <F9>  <C-O><F9>
 
 " F10 to toggle hilighting extra whitespace
 nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
@@ -247,6 +241,9 @@ set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 set undodir=~/.vim/undo,\ .
 
+" suggested by vim-gitgutter
+set updatetime=250
+
 "set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 "" The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
@@ -261,7 +258,10 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 
 "" === Plugins ===
 "call arpeggio#load()
-"
+
+" #### Goyo
+let g:goyo_width = 100
+
 "let NERDChristmasTree = 1
 "let NERDTreeShowBookmarks = 1
 "let NERDTreeBookmarksFile = '.NERDTreeBookmarks'
@@ -399,8 +399,9 @@ let g:SuperTabClosePreviewOnPopupClose = 1
 let g:UltiSnipsExpandTrigger="<C-j>"
 
 
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
+" #### vim-gitgutter
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 1
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = 1

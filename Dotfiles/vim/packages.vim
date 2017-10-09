@@ -10,6 +10,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
+Plug 'junegunn/goyo.vim'                     " “Focused” mode
 Plug 'vim-syntastic/syntastic'
 
 Plug 'amerlyq/vim-focus-autocmd'
