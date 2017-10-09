@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "doc_comment": {},
+    "es_modules": {},
+    "node": {}
+  },
+  "libs": [
+    "ecmascript",
+    "browser",
+    "jquery"
+  ],
+  "ecmaVersion": 6
+}
