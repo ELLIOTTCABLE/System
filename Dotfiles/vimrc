@@ -10,6 +10,7 @@ if !has('nvim')
    set encoding=utf-8
 endif
 
+set hidden
 set textwidth=100 wrapmargin=3
 set cursorline colorcolumn=+1,+2,+3
 set number signcolumn=auto
@@ -18,7 +19,7 @@ set smartcase ignorecase
 set laststatus=1
 
 set nowrap
-set listchars+=tab:\ ·
+set listchars+=tab:\ ─
 set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
 set ignorecase smartcase gdefault
@@ -27,6 +28,10 @@ set scrolloff=3
 set title
 
 set conceallevel=1
+
+if (has("termguicolors"))
+   set termguicolors
+endif
 
 syntax on
 
@@ -39,6 +44,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 source ~/.vim/packages.vim
+
+colorscheme OceanicNext
 
 
 " Command-line tab completion
@@ -331,17 +338,7 @@ autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,con
 "let g:ycm_add_preview_to_completeopt = 1
 "let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_autoclose_preview_window_after_insertion = 1
-
-" #### vim-focus-autocmd
-let g:focau = {}
-
-" Need to figure out the Hyper.app codes for cursor-changing
-"let g:focau.cursors = ['', '', '']
-
-" 'clipboard' appears to be broken (see amerlyq/vim-focus-autocmd#4)
-"let g:focau.widgets = ['clipboard', 'buffers', 'number']
-let g:focau.widgets = ['buffers', 'number']
-
+"
 "" This is a duplication of the default values, since they don't exist until runtime, and thus can't
 "" be appended to without an `after` file.
 "" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
@@ -362,6 +359,16 @@ let g:focau.widgets = ['buffers', 'number']
 "\   , 'nerdtree' : 1
 "\  }
 
+" #### vim-focus-autocmd
+let g:focau = {}
+
+" Need to figure out the Hyper.app codes for cursor-changing
+"let g:focau.cursors = ['', '', '']
+
+" 'clipboard' appears to be broken (see amerlyq/vim-focus-autocmd#4)
+"let g:focau.widgets = ['clipboard', 'buffers', 'number']
+let g:focau.widgets = []
+
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 
@@ -380,35 +387,35 @@ let g:gitgutter_eager = 0
 " (Last `shm+=I` disables the :intro message.)
 set shortmess-=f shm-=n shm+=s shm +=F shm+=I
 
-"" ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
-"let s:opam_share_dir = system("opam config var share")
-"let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
-"
-"let s:opam_configuration = {}
-"
-"function! OpamConfOcpIndent()
-"  execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
-"endfunction
-"let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
-"
-"function! OpamConfOcpIndex()
-"  execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
-"endfunction
-"let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
-"
-"function! OpamConfMerlin()
-"  let l:dir = s:opam_share_dir . "/merlin/vim"
-"  execute "set rtp+=" . l:dir
-"endfunction
-"let s:opam_configuration['merlin'] = function('OpamConfMerlin')
-"
-"let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
-"let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
-"let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
-"for tool in s:opam_packages
-"  " Respect package order (merlin should be after ocp-index)
-"  if count(s:opam_available_tools, tool) > 0
-"    call s:opam_configuration[tool]()
-"  endif
-"endfor
-"" ## end of OPAM user-setup addition for vim / base ## keep this line
+" ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
+let s:opam_share_dir = system("opam config var share")
+let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
+
+let s:opam_configuration = {}
+
+function! OpamConfOcpIndent()
+  execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
+endfunction
+let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
+
+function! OpamConfOcpIndex()
+  execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
+endfunction
+let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
+
+function! OpamConfMerlin()
+  let l:dir = s:opam_share_dir . "/merlin/vim"
+  execute "set rtp+=" . l:dir
+endfunction
+let s:opam_configuration['merlin'] = function('OpamConfMerlin')
+
+let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
+let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
+for tool in s:opam_packages
+  " Respect package order (merlin should be after ocp-index)
+  if count(s:opam_available_tools, tool) > 0
+    call s:opam_configuration[tool]()
+  endif
+endfor
+" ## end of OPAM user-setup addition for vim / base ## keep this line
