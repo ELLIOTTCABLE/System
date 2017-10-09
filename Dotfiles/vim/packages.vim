@@ -29,7 +29,7 @@ Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mhartington/oceanic-next'
 
 " VimR already has a GUI buffer-explorer built-in
-Plug 'ap/vim-buftabline', PlugIf(!has('gui_running'))
+Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
 
 " Initialize plugin system
 call plug#end()
