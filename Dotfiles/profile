@@ -371,12 +371,12 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  6. < Homebrew
   PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  5. < Homebrew's llvm / clang
-  PATH="$HOMEBREW_PREFIX/share/npm/bin:$PATH"   #  4. < npm (global)
 
   PATH="$PATH:/Library/TeX/texbin"     # -4. > MacTeX
   PATH="$PATH:/usr/X11/bin"            # -3. > X11
 fi
-PATH="$HOME/.bin:$PATH"                #  3. < local binaries
+PATH="$HOME/.bin:$PATH"                #  4. < local binaries
+PATH="$HOME/.cargo/bin:$PATH"          #  3. < Cargo (Rust) binaries
 PATH="$HOME/.nodenv/shims:$PATH"       #  2. < nodenv shims
 PATH="./node_modules/.bin:$PATH"       #  1. < npm (local)
 
