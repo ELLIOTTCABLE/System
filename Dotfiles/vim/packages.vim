@@ -14,6 +14,7 @@ Plug 'junegunn/goyo.vim'                     " “Focused” mode
 Plug 'vim-syntastic/syntastic'
 
 Plug 'amerlyq/vim-focus-autocmd'
+Plug 'cskeeters/vim-smooth-scroll'
 
 "Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --tern-completer --racer-completer' }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
