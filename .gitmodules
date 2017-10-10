@@ -4,9 +4,6 @@
 [submodule "Dotfiles/vim/bundle/vim-colors-solarized"]
 	path = Dotfiles/vim/bundle/vim-colors-solarized
 	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule "Dotfiles/vim/bundle/nerdtree"]
-	path = Dotfiles/vim/bundle/nerdtree
-	url = git://github.com/scrooloose/nerdtree.git
 [submodule "Dotfiles/vim/bundle/nerdcommenter"]
 	path = Dotfiles/vim/bundle/nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
@@ -43,9 +40,6 @@
 [submodule "Dotfiles/vim/bundle/pegjs-vim"]
 	path = Dotfiles/vim/bundle/pegjs-vim
 	url = https://github.com/alunny/pegjs-vim
-[submodule "Dotfiles/vim/bundle/ag.vim"]
-	path = Dotfiles/vim/bundle/ag.vim
-	url = https://github.com/rking/ag.vim
 [submodule "Dotfiles/vim/bundle/vim-unimpaired"]
 	path = Dotfiles/vim/bundle/vim-unimpaired
 	url = git://github.com/tpope/vim-unimpaired.git
@@ -55,18 +49,9 @@
 [submodule "Dotfiles/vim/bundle/vim-openscad"]
 	path = Dotfiles/vim/bundle/vim-openscad
 	url = https://github.com/sirtaj/vim-openscad.git
-[submodule "Dotfiles/vim/bundle/vim-nerdtree-tabs"]
-	path = Dotfiles/vim/bundle/vim-nerdtree-tabs
-	url = https://github.com/jistr/vim-nerdtree-tabs.git
 [submodule "Dotfiles/source-highlight/source-highlight-solarized"]
 	path = Dotfiles/source-highlight/source-highlight-solarized
 	url = https://github.com/jrunning/source-highlight-solarized.git
-[submodule "Dotfiles/vim/bundle/ctrlp.vim"]
-	path = Dotfiles/vim/bundle/ctrlp.vim
-	url = https://github.com/kien/ctrlp.vim.git
-[submodule "Dotfiles/vim/bundle/tern_for_vim"]
-	path = Dotfiles/vim/bundle/tern_for_vim
-	url = https://github.com/marijnh/tern_for_vim.git
 [submodule "Dotfiles/vim/bundle/CoffeeTags"]
 	path = Dotfiles/vim/bundle/CoffeeTags
 	url = https://github.com/lukaszkorecki/CoffeeTags
@@ -91,9 +76,6 @@
 [submodule "Dotfiles/vim/bundle/mediawiki.vim"]
 	path = Dotfiles/vim/bundle/mediawiki.vim
 	url = git://github.com/chikamichi/mediawiki.vim.git
-[submodule "Dotfiles/vim/bundle/focus.vim"]
-	path = Dotfiles/vim/bundle/focus.vim
-	url = https://github.com/merlinrebrovic/focus.vim
 [submodule "Dotfiles/jupyter/IPython-notebook-extensions"]
 	path = Dotfiles/jupyter/IPython-notebook-extensions
 	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
@@ -103,14 +85,8 @@
 [submodule "Dotfiles/jupyter/nbextensions/vim_binding"]
 	path = Dotfiles/jupyter/nbextensions/vim_binding
 	url = https://github.com/lambdalisue/jupyter-vim-binding
-[submodule "Dotfiles/vim/bundle/syntastic"]
-	path = Dotfiles/vim/bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
 [submodule "Dotfiles/Dotfiles/vim/bundle/YouCompleteMe"]
 	path = Dotfiles/Dotfiles/vim/bundle/YouCompleteMe
-	url = https://github.com/Valloric/YouCompleteMe.git
-[submodule "Dotfiles/vim/bundle/YouCompleteMe"]
-	path = Dotfiles/vim/bundle/YouCompleteMe
 	url = https://github.com/Valloric/YouCompleteMe.git
 [submodule "Dotfiles/vim/bundle/color_coded"]
 	path = Dotfiles/vim/bundle/color_coded
@@ -127,6 +103,3 @@
 [submodule "Dotfiles/vim/bundle/ListToggle"]
 	path = Dotfiles/vim/bundle/ListToggle
 	url = https://github.com/Valloric/ListToggle.git
-[submodule "Dotfiles/vim/bundle/vim-javascript"]
-	path = Dotfiles/vim/bundle/vim-javascript
-	url = https://github.com/pangloss/vim-javascript.git
