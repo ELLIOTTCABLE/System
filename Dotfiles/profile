@@ -183,6 +183,12 @@ alias grep='grep --color=auto'
 alias ag="ag --group --pager='less -XFRS' \
    --color --color-path=91 --color-line-number='`printf "m   \033[96"`' --color-match=34"
 
+rg() { command rg "$@" --pretty \
+   --colors 'path:fg:red' --colors 'path:style:intense' --colors 'match:fg:blue' \
+   | less -XFRS ;}
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case --glob "!.git/*"'
+
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias nzb='hellanzb.py'
 fi

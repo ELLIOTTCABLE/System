@@ -13,6 +13,9 @@ Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 Plug 'vim-syntastic/syntastic'
 
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+
 Plug 'amerlyq/vim-focus-autocmd'
 Plug 'cskeeters/vim-smooth-scroll'
 

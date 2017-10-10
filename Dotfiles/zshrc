@@ -191,10 +191,9 @@ export DISABLE_AUTO_TITLE='true'
 # ==============================
 
 # ### junegunn/fzf
-# note, these apply to `fzf` in general, not just the zsh functionality; I'm not sure whether to
-# re-locate some of this into the general `.profile`?
+# NOTE: these apply to `fzf` in general, not just the zsh functionality; I'm not sure whether to
+#       re-locate more of these into the general `.profile`
 if whence -v fzf-completion >/dev/null; then
-   export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --nocolor -l -g ""'
    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
    export FZF_CTRL_T_OPTS="--select-1 --exit-0"
    export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind '?:toggle-preview'"

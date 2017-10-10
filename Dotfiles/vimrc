@@ -164,6 +164,9 @@ nnoremap  <Leader>w <C-W>
 
 noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
+" fzf open-file
+nnoremap <Leader>o :Files<cr>
+
 noremap  <silent> <C-S>         :update<CR>
 vnoremap <silent> <C-S>    <C-C>:update<CR>
 inoremap <silent> <C-S>    <C-O>:update<CR>
@@ -211,7 +214,7 @@ map  <silent> <S-F12> :let @/ = @_<CR>
 imap <silent> <S-F12> <C-O><S-F12>
 
 " Toggle conealing with space-c
-map <leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
 autocmd BufLeave,FocusLost * silent! wall
 
