@@ -35,6 +35,7 @@ Plug 'mhartington/oceanic-next'
 
 " VimR already has a GUI buffer-explorer built-in
 Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
+Plug 'Shougo/echodoc.vim'
 
 " Initialize plugin system
 call plug#end()
