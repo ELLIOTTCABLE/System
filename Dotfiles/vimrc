@@ -16,13 +16,15 @@ set cursorline colorcolumn=+1,+2,+3
 set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
 set smartcase ignorecase
-set laststatus=1
+set laststatus=1 cmdheight=2 " higher cmdheight for deoplete / echodoc.vim
 
 set nowrap
 set listchars+=tab:\ ─
 set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
 set ignorecase smartcase gdefault
+let mapleader = " "
+let maplocalleader = ","
 
 set scrolloff=3
 set title
@@ -78,6 +80,7 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
+" Fill these functions to tie other plugins into focus-mode
 function! s:goyo_enter()
    " ...
 endfunction
@@ -144,8 +147,6 @@ bufdo call ToggleExtraWhitespace() | au BufAdd * call ToggleExtraWhitespace()
 "endif
 
 " === Mappings ===
-let mapleader = " "
-
 " Thanks, Damian. http://ell.io/i6io1
 nnoremap ; :
 
@@ -218,15 +219,6 @@ map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<
 
 autocmd BufLeave,FocusLost * silent! wall
 
-" To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
-autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-
-" I don't understand why this is necessary. I clearly don't understand vim's filetype recognition
-" very well.
-au BufRead,BufNewFile *.pegjs setfiletype pegjs
-
-au FileType gitcommit set wrap tw=0
-
 "" gist-vim defaults
 "if has("mac")
 "  let g:gist_clip_command = 'pbcopy'
@@ -255,9 +247,44 @@ set updatetime=250
 "                                 \, 'js=javascript', 'coffee', 'json'
 "                                 \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
 
-autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
-autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}
-   \set filetype=ruby
+
+" === Filetype extension ===
+augroup filetypes
+   au!
+   autocmd BufNewFile,BufFilePre,BufRead *.md
+    \ set filetype=markdown
+
+   autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}
+    \ set filetype=ruby
+
+   autocmd BufNewFile,BufFilePre,BufRead *.pegjs
+    \ set filetype=pegjs
+
+   autocmd BufNewFile,BufFilePre,BufRead {.profile,.zprofile,.zlogin,.zlogout,.zshrc,.zshenv}
+    \ set filetype=zsh
+augroup END
+
+au FileType gitcommit set wrap tw=0
+
+" To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
+autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+
+augroup ocamlmaps
+   au!
+   au FileType ocaml nmap <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
+   au FileType ocaml nmap <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
+   au FileType ocaml nmap <LocalLeader>r   <Plug>(MerlinRename)
+   au FileType ocaml nmap <LocalLeader>R   <Plug>(MerlinRenameAppend)
+
+   " I don't know why Merlin doesn't ship with a mapping for these.
+   au FileType ocaml nmap <LocalLeader>y  :MerlinYankLatestType<cr>
+   au FileType ocaml nmap <LocalLeader>l  :MerlinLocate<cr>
+
+augroup END
+
+" FIXME: idk how to make these non-global, though. They should really be au-filetype'd.
+let g:merlin_textobject_grow   = 'm'
+let g:merlin_textobject_shrink = 'M'
 
 "" === Plugins ===
 "call arpeggio#load()
@@ -381,25 +408,32 @@ let g:focau = {}
 let g:focau.widgets = []
 
 " #### Deoplete
+let g:deoplete#complete_method = "omnifunc"
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_refresh_always = 1
+
+let g:deoplete#sources = {}
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#input_patterns = {}
+
+let g:deoplete#omni#functions.javascript = ['tern#Complete']
+let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
 let g:deoplete#sources#ternjs#docs = 1
 let g:deoplete#sources#ternjs#types = 1
 let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#case_insensitive = 1
 let g:deoplete#sources#ternjs#include_keywords = 1
 
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = ['tern#Complete']
-
-let g:deoplete#sources = {}
-let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
+let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
 
 
 " #### SuperTab
 " FIXME: .... more
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-p>"
-autocmd FileType javascript let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+
 
 let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
 let g:SuperTabLongestEnhanced = 1
@@ -415,20 +449,9 @@ let g:UltiSnipsExpandTrigger="<C-j>"
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 1
 
-"let g:gundo_width = 25
-"let g:gundo_preview_bottom = 1
-"let g:gundo_help = 0
-"let g:gundo_close_on_revert = 1
-"
-"let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
-"
-""let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
-"
-"let g:tex_flavor = 'latex'
-
-" filnxtToO → ilxstToOIF
-" (Last `shm+=I` disables the :intro message.)
-set shortmess-=f shm-=n shm+=s shm +=F shm+=I
+" #### merlin
+let g:merlin_completion_arg_type = "always"
+let g:merlin_type_history_auto_open = 2
 
 " ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
 let s:opam_share_dir = system("opam config var share")
@@ -462,3 +485,18 @@ for tool in s:opam_packages
   endif
 endfor
 " ## end of OPAM user-setup addition for vim / base ## keep this line
+
+"let g:gundo_width = 25
+"let g:gundo_preview_bottom = 1
+"let g:gundo_help = 0
+"let g:gundo_close_on_revert = 1
+"
+"let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
+"
+""let g:nerdtree_tabs_autofind=1 " This seems to fail. Some error about ‘dictionary: reveal.‘
+"
+"let g:tex_flavor = 'latex'
+
+" filnxtToO → ilxstToOIF
+" (Last `shm+=I` disables the :intro message.)
+set shortmess-=f shm-=n shm+=s shm +=F shm+=I

@@ -16,6 +16,8 @@ Plug 'vim-syntastic/syntastic'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
+Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
+
 Plug 'amerlyq/vim-focus-autocmd'
 Plug 'cskeeters/vim-smooth-scroll'
 
