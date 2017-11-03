@@ -1,33 +1,44 @@
-; "Windows" key? What's that shit?
-RCtrl::RWin
-RWin::RCtrl
-LCtrl::LWin
-LWin::LCtrl
+﻿; "Windows" key? What's that shit?
+; I've decided to use SharpKeys for this, instead:
+;     <https://github.com/randyrants/sharpkeys>
+; (See <https://www.autohotkey.com/docs/misc/Remap.htm#registry> for more raitonale.)
+;RCtrl::RWin
+;RWin::RCtrl
+;LCtrl::LWin
+;LWin::LCtrl
+; ... except command-tab
+;*Tab::Send {Blind}{Tab}
+
 
 ; vim-lover
-Capslock::Esc
+; This particular implementation by "Oracle":
+;     <https://autohotkey.com/board/topic/104173-capslock-to-control-and-escape/>
+SetCapsLockState, AlwaysOff
 
-; completions
-::ddis::
-   PutUni("ಠ_ಠ")
-   Return
+CapsLock::
+	key=
+	Input, key, B C L1 T1, {Esc}
+	if (ErrorLevel = "Max")
+		Send {Ctrl Down}%key%
+	KeyWait, CapsLock
+	Return
+CapsLock up::
+	If key
+		Send {Ctrl Up}
+	else
+		if (A_TimeSincePriorHotkey < 1000)
+			Send, {Esc 2}
+	Return
 
-;Paste UTF8 string (Hex encoded or not) as unicode.
-;If you don't use Hex encoding, you must save your script as UTF8
-PutUni(DataIn)
-{
-   SavedClip := ClipBoardAll
-   ClipBoard =
-   If RegExMatch(DataIn, "^[0-9a-fA-F]+$")
-   {
-      Loop % StrLen(DataIn) / 2
-         UTF8Code .= Chr("0x" . SubStr(DataIn, A_Index * 2 - 1, 2))
-   }
-   Else
-      UTF8Code := DataIn
-   Transform, ClipBoard, Unicode, %UTF8Code%
-   Send ^v
-   Sleep 100 ;Generous, less wait or none will often work.
-   ClipBoard := SavedClip
-   return
-}
+
+; Media-key replacements for my weird-ass keyboard
+SetNumLockState, AlwaysOff
+SC04C::Volume_Up        ; up-arrow to the right of F6
+SC04D::return           ; ... shifted
+SC047::Volume_Down      ; down-arrow to the right of 6
+SC048::Volume_Mute      ; ... shifted
+
+SC04F::Media_Prev       ; left-arrow to the right of F12
+SC050::Media_Play_Pause ; ... shifted
+SC051::Media_Next       ; right-arrow to the right of F12
+SC04B::return           ; ... shifted
