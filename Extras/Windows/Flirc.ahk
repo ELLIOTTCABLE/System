@@ -1,6 +1,9 @@
 NirCmd = %A_ProgramFiles%\nircmd-x64\nircmdc.exe
 MMT = %A_ProgramFiles%\multimonitortool-x64\MultiMonitorTool.exe
 
+PrimaryMonitorID := "MONITOR\HWP317B\{4d36e96e-e325-11ce-bfc1-08002be10318}\0003"
+TelevisionID := "MONITOR\GSM0001\{4d36e96e-e325-11ce-bfc1-08002be10318}\0001"
+
 ^!0::
    ; Suspend on Ctrl-Alt-0
    suspendScript =
@@ -29,19 +32,19 @@ Return
 
 
 SetKVMVideo:
-   RunWait, %MMT% /enable 1 /SetPrimary 1 /MoveWindow 1 All
+   RunWait, %MMT% /enable %PrimaryMonitorID% /SetPrimary %PrimaryMonitorID% /MoveWindow %PrimaryMonitorID% All
    SetTimer, SetKVMVideoFixWindows, 2500
 Return
 SetKVMVideoFixWindows:
-   Run, %MMT%  /MoveWindow 1 All ; Yes, these are duplicated intentionally
+   Run, %MMT%  /MoveWindow %PrimaryMonitorID% All ; Yes, these are duplicated intentionally
 Return
 
 SetTVVideo:
-   RunWait, %MMT% /enable 2 /SetPrimary 2 /MoveWindow 2 All
+   RunWait, %MMT% /enable %TelevisionID% /SetPrimary %TelevisionID% /MoveWindow %TelevisionID% All
    SetTimer, SetTVVideoFixWindows, 2500
 Return
 SetTVVideoFixWindows:
-   Run, %MMT% /MoveWindow 2 All ; Yes, these are duplicated intentionally
+   Run, %MMT% /MoveWindow %TelevisionID% All ; Yes, these are duplicated intentionally
 Return
 
 SetKVMAudio:
@@ -57,23 +60,27 @@ SetViveAudio:
 Return
 
 OpenVR:
-   Progress, 0
+   Progress, 0,, Starting VR ..., Starting VR ...
    IfWinNotExist, ahk_exe vrmonitor.exe
-      Run, "steam://rungameid/250820"
-   Progress, 10
+   {
+      RunWait, "steam://rungameid/250820"
 
-   WinWait, ahk_exe vrmonitor.exe
-   WinMove, 25, 25
-   Progress, 25
+      Progress, 10,, Waiting for SteamVR to launch
+      WinWait, ahk_exe vrmonitor.exe
+      WinMove, 25, 25
+
+      Progress, 50,, Pausing for SteamVR to initialize
+      Sleep, 1000
+   }
 
    Gosub, OpenVRMirror
-   Progress, 90
 
+   Progress, 90,, Waiting for HTC Authenticator
    ; Dirty fuckin' hack.
    WinWait, ahk_exe Htc.Identity.Authenticator.exe,, 5
    WinClose
-   Progress, 100
 
+   Progress, 100,, SteamVR launch complete!
    Sleep, 500
    Progress, OFF
 Return
@@ -81,43 +88,42 @@ Return
 OpenVRMirror:
    IfWinNotExist, ahk_exe vrcompositor.exe
    {
-      WinWait, ahk_exe vrmonitor.exe
-      Progress, 50
-      Sleep, 1000
-      Progress, 65
+      Progress, 65,, Opening VR mirror
       ControlClick, X25 Y25,,, LEFT,, NA X25 Y25 ; "SteamVR" window header
       Loop, 3
          ControlSend, ahk_parent, {Down}
       ControlSend, ahk_parent, {Enter}
-      Progress, 75
    }
+
+   Progress, 75,, VR mirror open!
    WinWait, ahk_exe vrcompositor.exe
    WinMaximize
 Return
 
 
 ExitVR:
-   Progress, 0
-   Sleep, 50 ; WHYYYYYYY
+   Progress, 0,, <STUPID UNNECESSARY WAIT>, Stopping VR ...
+   Sleep, 1000 ; WHYYYYYYY IS THIS NECESSARY i thought i was a good programmer ;_; #humbled
 
+   Progress, 10,, Sending exit instruction
    ControlClick, X25 Y25, ahk_exe vrmonitor.exe,, LEFT,, NA X25 Y25
    ControlSend, ahk_parent, {Up}, ahk_exe vrmonitor.exe
    ControlSend, ahk_parent, {Enter}, ahk_exe vrmonitor.exe
-   Progress, 25
 
+   Progress, 25,, Waiting on exit-query
    ; Handle "... will also shut down 'blah'." notification
    WinWait, SteamVR Shutdown,, 1
-   Progress, 50
 
    IfWinExist, SteamVR Shutdown
    {
+      Progress, 50,, Answering exit-query
       ControlClick, X275 Y275,,, LEFT,, NA X275 Y275 ; "OK"
    }
-   Progress, 75
 
-   WinWaitClose, ahk_exe vrmonitor.exe,, 10
-   Progress, 100
+   Progress, 75,, Waiting for SteamVR to exit
+   WinWaitClose, ahk_exe vrmonitor.exe,, 30
 
+   Progress, 100,, SteamVR exit complete!
    Sleep, 500
    Progress, OFF
 Return
@@ -138,8 +144,6 @@ Return
    Gosub, OpenVR
 Return
 
-^!9:: ; Flirc: "Game", to exit VR
-  ;Gosub, SetKVMVideo ; hmm.
-   Gosub, SetKVMAudio
+^!9:: ; Flirc: "Game", to exit VR. Assumes "HDMI1" has already been excuted.
    Gosub, ExitVR
 Return
