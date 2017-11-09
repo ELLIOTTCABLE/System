@@ -32,7 +32,7 @@ Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do'
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
-Plug 'mhartington/oceanic-next'
+Plug 'arcticicestudio/nord-vim'
 
 " VimR already has a GUI buffer-explorer built-in
 Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))

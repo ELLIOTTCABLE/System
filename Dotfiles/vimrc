@@ -49,7 +49,11 @@ endif
 
 source ~/.vim/packages.vim
 
-colorscheme OceanicNext
+if has("gui_vimr")
+   colorscheme nord
+else
+   colorscheme slate
+endif
 
 
 " Command-line tab completion
