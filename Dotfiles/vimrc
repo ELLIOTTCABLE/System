@@ -78,6 +78,8 @@ if has("mouse")
   "map <ScrollWheelDown> <C-E>
 endif
 
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 if executable("ag")
   "set grepprg=ag\ --nogroup\ --nocolor
    set grepprg=ag\ --vimgrep\ --nocolor

@@ -16,7 +16,6 @@ rbenv, nodenv, etc must be installed via Homebrew, along with their plugins:
     brew install rbenv rbenv-use ruby-build
 
     rbenv install 2.4                                    # Or whatever,
-    rbenv use 2.4 --global                               # etc.
 
     brew tap nodenv/nodenv
     brew install                                                                  \
@@ -24,12 +23,20 @@ rbenv, nodenv, etc must be installed via Homebrew, along with their plugins:
        nodenv-package-rehash node-build-update-defs nodenv-aliases                \
        nodenv-package-json-engine nodenv-npm-migrate
 
-    nodenv install 8.1.4                                 # blah blah
+    nodenv update-version-defs                           # update available versions
+    nodenv install 8.1.4                                 # install latest one blah blah,
     nodenv global 8                                      # yadda yadda
 
 ----
 
 Some Vim plugins require extra setup:
+
+ - Deoplete requires Python3 be installed and set up, that the appropriate Python package be
+   installed, and that its update command be executed:
+
+        brew install python3
+        pip3 install --upgrade neovim
+        nvim +UpdateRemotePlugins +q
 
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
 
