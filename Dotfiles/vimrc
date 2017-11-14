@@ -33,10 +33,6 @@ set completeopt=longest,menuone,preview
 
 set conceallevel=1
 
-if (has("termguicolors"))
-   set termguicolors
-endif
-
 syntax on
 
 
@@ -52,7 +48,9 @@ source ~/.vim/packages.vim
 if has("gui_vimr")
    colorscheme nord
 else
-   colorscheme slate
+   set background=light
+   let g:solarized_use16 = 1
+   colorscheme solarized8
 endif
 
 

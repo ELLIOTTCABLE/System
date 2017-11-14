@@ -13,9 +13,13 @@ Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 Plug 'vim-syntastic/syntastic'
 
+" As instructed by:
+"    <https://github.com/junegunn/fzf.vim#readme>
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
+" Pending:
+"    <https://github.com/ocaml/merlin/issues/729>
 Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'amerlyq/vim-focus-autocmd'
@@ -33,6 +37,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
 Plug 'arcticicestudio/nord-vim'
+Plug 'lifepillar/vim-solarized8'
 
 " VimR already has a GUI buffer-explorer built-in
 Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
