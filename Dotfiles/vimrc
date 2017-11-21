@@ -49,6 +49,7 @@ if has("gui_vimr")
    colorscheme nord
 else
    set background=light
+   let g:seiya_auto_enable = 1
    let g:solarized_use16 = 1
    colorscheme solarized8
 endif
@@ -100,6 +101,11 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "
 "
 " === Styles ===
+
+" Obscure the iconic vim 'empty-line tildes'
+hi EndOfBuffer ctermbg=fg
+hi! link EndOfBuffer SignColumn
+
 " This toggles the hilighting of trailing-whitespace.
 fun! ToggleExtraWhitespace()
 

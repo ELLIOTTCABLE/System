@@ -36,8 +36,10 @@ Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do'
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
+" I'm using different colourschemes in GUI and TUI vims.
 Plug 'arcticicestudio/nord-vim'
 Plug 'lifepillar/vim-solarized8'
+Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
 
 " VimR already has a GUI buffer-explorer built-in
 Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
