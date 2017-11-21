@@ -187,7 +187,7 @@ rg() { command rg "$@" --pretty \
    --colors 'path:fg:red' --colors 'path:style:intense' --colors 'match:fg:blue' \
    | less -XFRS ;}
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --hidden --follow --smart-case --glob "!.git/*"'
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias nzb='hellanzb.py'
@@ -242,7 +242,7 @@ ellio_log() {
    # FIXME: Remove --no-granules and --no-minor from the $*
    g log --graph --date-order --cherry-mark --left-right \
       --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
-      --color --abbrev=5 --pretty=solarized-parseable \
+      --color --abbrev=5 --pretty=ellio \
       ${*:|flags} \
    | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' ;}
 glog() {
