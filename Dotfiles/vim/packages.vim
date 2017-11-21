@@ -13,10 +13,7 @@ Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 Plug 'vim-syntastic/syntastic'
 
-" As instructed by:
-"    <https://github.com/junegunn/fzf.vim#readme>
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'Shougo/denite.nvim'
 
 " Pending:
 "    <https://github.com/ocaml/merlin/issues/729>

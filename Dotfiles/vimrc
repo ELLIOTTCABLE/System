@@ -175,9 +175,6 @@ nnoremap  <Leader>w <C-W>
 
 noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
-" fzf open-file
-nnoremap <Leader>o :Files<cr>
-
 noremap  <silent> <C-S>         :update<CR>
 vnoremap <silent> <C-S>    <C-C>:update<CR>
 inoremap <silent> <C-S>    <C-O>:update<CR>
@@ -226,6 +223,15 @@ imap <silent> <S-F12> <C-O><S-F12>
 
 " Toggle conealing with space-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
+" Mappings in Denite modals
+call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>', 'noremap')
+
+call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
+
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
 
 autocmd BufLeave,FocusLost * silent! wall
 
