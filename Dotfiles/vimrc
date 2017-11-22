@@ -228,7 +228,7 @@ imap <silent> <S-F12> <C-O><S-F12>
 " Toggle conealing with space-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
-nnoremap <C-p>             :<C-u>Denite file_rec<CR>
+nnoremap <C-p>             :<C-u>Denite buffer file_rec<CR>
 nnoremap <Leader>d         :<C-u>DeniteBufferDir file_rec<CR>
 nnoremap <Leader>s         :<C-u>Denite buffer<CR>
 "nnoremap <Leader>ss        :<C-u>DeniteBufferDir buffer<CR>
@@ -339,11 +339,13 @@ let g:merlin_textobject_shrink = 'M'
 let g:goyo_width = 100
 
 " #### Denite
-call denite#custom#option('default', {
- \    'prompt':      '❯'
- \  , 'auto-resize': v:true
- \  , 'ignorecase':  v:false
- \  , 'smartcase':   v:true
+call denite#custom#option('_', {
+ \    'prompt':         '❯'
+ \  , 'auto_resize':    v:true
+ \  , 'ignorecase':     v:false
+ \  , 'smartcase':      v:true
+ \  , 'source_names':   'short'
+ \  , 'auto_preview':   v:true
  \ })
 
 " Ripgrep 4 lyfe!

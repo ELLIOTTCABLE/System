@@ -17,7 +17,7 @@ Plug 'Shougo/denite.nvim'
 
 " Pending:
 "    <https://github.com/ocaml/merlin/issues/729>
-Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
+"Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'amerlyq/vim-focus-autocmd'
 Plug 'cskeeters/vim-smooth-scroll'
