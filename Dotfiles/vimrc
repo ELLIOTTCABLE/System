@@ -171,35 +171,39 @@ nnoremap ` '
 " See `:help Y`
 map Y y$
 
+" Because why `j` et al step over a bajillion visible lines at a time, I cannot fathom.
+nnoremap j gj
+nnoremap k gk
+
 nnoremap  <Leader>w <C-W>
 
 noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
-noremap  <silent> <C-S>         :update<CR>
-vnoremap <silent> <C-S>    <C-C>:update<CR>
-inoremap <silent> <C-S>    <C-O>:update<CR>
-noremap           <C-W>         :confirm quit<CR>
-vnoremap          <C-W>    <C-C>:confirm quit<CR>
-inoremap          <C-W>    <C-O>:confirm quit<CR>
+noremap  <silent> <C-S>         :<C-u>update<CR>
+vnoremap <silent> <C-S>    <C-C>:<C-u>update<CR>
+inoremap <silent> <C-S>    <C-O>:<C-u>update<CR>
+noremap           <C-W>         :<C-u>confirm quit<CR>
+vnoremap          <C-W>    <C-C>:<C-u>confirm quit<CR>
+inoremap          <C-W>    <C-O>:<C-u>confirm quit<CR>
 
-noremap  <silent> <C-K>         :nohlsearch<CR>
-vnoremap <silent> <C-K>    <C-C>:nohlsearch<CR>
-inoremap <silent> <C-K>    <C-O>:nohlsearch<CR>
+noremap  <silent> <C-K>         :<C-u>nohlsearch<CR>
+vnoremap <silent> <C-K>    <C-C>:<C-u>nohlsearch<CR>
+inoremap <silent> <C-K>    <C-O>:<C-u>nohlsearch<CR>
 
 
-"noremap  <silent> <F1>          :NERDTreeTabsToggle<Return>
-"inoremap <silent> <F1>     <C-O>:NERDTreeTabsToggle<Return>
-"vnoremap <silent> <F1>     <Esc>:NERDTreeTabsToggle<Return>
-"noremap  <silent> <F2>          :GundoToggle<Return>
-"inoremap <silent> <F2>     <C-O>:GundoToggle<Return>
-"vnoremap <silent> <F2>     <Esc>:GundoToggle<Return>
-"noremap  <silent> <F3>          :TagbarToggle<Return>
-"inoremap <silent> <F3>     <C-O>:TagbarToggle<Return>
-"vnoremap <silent> <F3>     <Esc>:TagbarToggle<Return>
+"noremap  <silent> <F1>          :<C-u>NERDTreeTabsToggle<Return>
+"inoremap <silent> <F1>     <C-O>:<C-u>NERDTreeTabsToggle<Return>
+"vnoremap <silent> <F1>     <Esc>:<C-u>NERDTreeTabsToggle<Return>
+"noremap  <silent> <F2>          :<C-u>GundoToggle<Return>
+"inoremap <silent> <F2>     <C-O>:<C-u>GundoToggle<Return>
+"vnoremap <silent> <F2>     <Esc>:<C-u>GundoToggle<Return>
+"noremap  <silent> <F3>          :<C-u>TagbarToggle<Return>
+"inoremap <silent> <F3>     <C-O>:<C-u>TagbarToggle<Return>
+"vnoremap <silent> <F3>     <Esc>:<C-u>TagbarToggle<Return>
 
-noremap  <silent> <F8>          :set spell!<Return>
-inoremap <silent> <F8>     <C-O>:set spell!<Return>
-vnoremap <silent> <F8>     <Esc>:set spell!<Return>
+noremap  <silent> <F8>          :<C-u>set spell!<Return>
+inoremap <silent> <F8>     <C-O>:<C-u>set spell!<Return>
+vnoremap <silent> <F8>     <Esc>:<C-u>set spell!<Return>
 "
 "call togglebg#map("<F5>")
 "
