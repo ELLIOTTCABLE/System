@@ -41,6 +41,12 @@ Plug 'honza/vim-snippets'
 
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern' }
 
+" #### Small utilities
+
+" I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
+Plug 'vim-scripts/ShowTrailingWhitespace'
+Plug 'vim-scripts/DeleteTrailingWhitespace'
+
 " #### Languages
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'

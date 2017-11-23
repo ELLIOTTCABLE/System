@@ -99,56 +99,12 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "
 "
 " === Styles ===
+" Colourize trailing whitespace
+hi ShowTrailingWhitespace ctermbg=Red guibg=Red
 
 " Obscure the iconic vim 'empty-line tildes'
 hi EndOfBuffer ctermbg=fg
 hi! link EndOfBuffer SignColumn
-
-" This toggles the hilighting of trailing-whitespace.
-fun! ToggleExtraWhitespace()
-
-   if exists('b:ews') && b:ews == 1
-     "echom "Disabling trailing-whitespace hilighting in" bufnr('%') "..."
-      let b:ews=0
-      call HighlightExtraWhitespace()
-
-     "echom "-- Removing ExtraWhitespace augroup"
-      au!      ExtraWhitespace
-      augroup! ExtraWhitespace
-
-   else
-     "echom "Enabling trailing-whitespace hilighting in" bufnr('%') "..."
-      let b:ews=1
-      call HighlightExtraWhitespace()
-
-     "echom "-- Adding ExtraWhitespace augroup"
-      augroup  ExtraWhitespace
-         au!
-         au BufEnter    * match ExtraWhitespace /\s\+$/
-         au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-         au InsertLeave * match ExtraWhiteSpace /\s\+$/
-      augroup END
-
-      if mode() == "i" | do ExtraWhitespace InsertEnter | else | do ExtraWhitespace BufEnter | endif
-
-   endif
-endfun
-
-" This adds (or removes) the actual hilighting to your ColourScheme. (It's must be re-called every
-" time you toggle hilighting, or change your scheme.)
-fun! HighlightExtraWhitespace()
-   if exists('b:ews') && b:ews == 1
-     "echom "-- Adding ExtraWhitespace hilighting"
-      highlight ExtraWhitespace ctermbg=red guibg=red
-   else
-     "echom "-- Removing ExtraWhitespace hilighting"
-      highlight clear ExtraWhitespace
-   endif
-endfun
-au ColorScheme * call HighlightExtraWhitespace()
-
-" (Uncomment the following line if you want trailing-whitespace hilighted by default!)
-bufdo call ToggleExtraWhitespace() | au BufAdd * call ToggleExtraWhitespace()
 
 "if &diff
 "   let g:color_coded_enabled = 0
@@ -294,10 +250,6 @@ vnoremap <silent> <F8>     <Esc>:<C-u>set spell!<Return>
 nmap <silent> <F9>  :Goyo<cr>
 imap <silent> <F9>  <C-O><F9>
 
-" F10 to toggle hilighting extra whitespace
-nmap <silent> <F10> :call ToggleExtraWhitespace()<cr>
-imap <silent> <F10> <C-O><F10>
-
 " F11 to toggle the signcolumn (‘gutter’)
 nmap <silent> <F11> :exec &signcolumn == "no" ? "set signcolumn=yes" : "set signcolumn=no"<cr>
 imap <silent> <F11> <C-O><F11>
@@ -308,8 +260,13 @@ imap <silent> <F12> <C-O><F12>
 map  <silent> <S-F12> :let @/ = @_<CR>
 imap <silent> <S-F12> <C-O><S-F12>
 
-" Toggle conealing with space-c
+" Toggle conealing with <Space>-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
+" Toggle highlighting of trailing whitespace with <Space>-s4
+" mnemonic: 'whiteZpace'
+nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
+nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
 
 " <Ctrl-P> for both switching between buffers, and opening new ones!
 nnoremap <C-p>             :<C-u>Denite -source-names=hide buffer file_rec<CR>
