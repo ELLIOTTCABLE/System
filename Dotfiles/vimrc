@@ -23,8 +23,6 @@ set listchars+=tab:\ ─
 set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
 set ignorecase smartcase gdefault
-let mapleader = " "
-let maplocalleader = ","
 
 set scrolloff=3
 set title
@@ -175,7 +173,82 @@ map Y y$
 nnoremap j gj
 nnoremap k gk
 
-nnoremap  <Leader>w <C-W>
+" The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
+" includes some other global-plugin features.
+let mapleader = " "
+let maplocalleader = ","
+
+" EasyMotion stomps:
+"   - fF, tT, wW, bB, eE, geE, j, k, nN, s,
+"map <Leader> <Plug>(easymotion-prefix)
+
+let g:EasyMotion_do_mapping = 0
+
+" I chose to stomp the non-<Leader> versions for fF and tT, but not for wW/bB/eE/geE, because it's more
+" useful to spam the latter (as in `wwwww`). Theoretically, EasyMotion should *supplant* that
+" behaviour; but realistically, I still use the latter thanks to muscle-memory.
+nmap f <Plug>(easymotion-fl)
+xmap f <Plug>(easymotion-fl)
+omap f <Plug>(easymotion-fl)
+
+nmap F <Plug>(easymotion-Fl)
+xmap F <Plug>(easymotion-Fl)
+omap F <Plug>(easymotion-Fl)
+
+nmap t <Plug>(easymotion-tl)
+xmap t <Plug>(easymotion-tl)
+omap t <Plug>(easymotion-tl)
+
+nmap T <Plug>(easymotion-Tl)
+xmap T <Plug>(easymotion-Tl)
+omap T <Plug>(easymotion-Tl)
+
+" Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
+" prefixed mappings for bidirectional/overwin-mode:
+
+" mnemonic: 'sneak'
+nmap <Leader>s <Plug>(easymotion-overwin-f2)
+xmap <Leader>s <Plug>(easymotion-bd-f2)
+omap <Leader>s <Plug>(easymotion-bd-f2)
+
+" This makes <Leader>-k and <Leader>-b a little inconsistent, but I prefer the extra mapping-
+" mnemonic space.
+nmap <Leader>j <Plug>(easymotion-overwin-line)
+xmap <Leader>j <Plug>(easymotion-bd-jk)
+omap <Leader>j <Plug>(easymotion-bd-jk)
+"nmap <Leader>k <Plug>(easymotion-overwin-line)
+"xmap <Leader>k <Plug>(easymotion-bd-jk)
+"omap <Leader>k <Plug>(easymotion-bd-jk)
+
+" And finally, since `w` and `e` match so many words, especially bidirectionally, I leave them
+" prefixed *and* window-bound.
+nmap <Leader>w <Plug>(easymotion-bd-w)
+xmap <Leader>w <Plug>(easymotion-bd-w)
+omap <Leader>w <Plug>(easymotion-bd-w)
+"nmap <Leader>b <Plug>(easymotion-bd-w)
+"xmap <Leader>b <Plug>(easymotion-bd-w)
+"omap <Leader>b <Plug>(easymotion-bd-w)
+
+" <Space><Space> → jump-to-anywhere
+map <Leader><Leader> <Plug>(easymotion-lineanywhere)
+
+
+nmap <Leader>n <Plug>(easymotion-bd-n)
+xmap <Leader>n <Plug>(easymotion-bd-n)
+omap <Leader>n <Plug>(easymotion-bd-n)
+
+" Even though I've discarded the non-<Leader> versions of these, the classic mnemonic is memorable
+nmap <Leader>; <Plug>(easymotion-next)
+nmap <Leader>, <Plug>(easymotion-prev)
+
+
+
+" Complete an EasyMotion by hitting <Space> again
+" FIXME: <https://github.com/easymotion/vim-easymotion/issues/356>
+"EMCommandLineNoreMap <Space> <CR>
+
+" FIXME: Remap <Ctrl-W>!
+"nnoremap  <Leader>w <C-W>
 
 noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
@@ -243,20 +316,23 @@ nnoremap <Leader>8         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
 nnoremap <Leader><F1>      :<C-u>Denite help<CR>
 
 " Mappings in Denite modals
-call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',       'noremap')
-call denite#custom#map('normal', '<Esc>', '<NOP>',                            'noremap')
+call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
+call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
 
-call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('normal', '<C-j>', '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('normal', '<C-k>', '<denite:move_to_previous_line>',   'noremap')
+" (Chosen to match the easymotion-bd-jk mapping)
+call denite#custom#map('normal', '<Leader>j', '<denite:quick_move>',             'noremap')
 
-call denite#custom#map('insert', '<C-n>', '<denite:assign_next_matched_text>', 'noremap')
+call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',          'noremap')
+call denite#custom#map('normal', '<C-j>', '<denite:move_to_next_line>',          'noremap')
+call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
+call denite#custom#map('normal', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
+
+call denite#custom#map('insert', '<C-n>', '<denite:assign_next_matched_text>',   'noremap')
 call denite#custom#map('insert', '<C-p>', '<denite:assign_previous_matched_text>', 'noremap')
 
 " ... w...why are these missing ...
-call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>', 'noremap')
-call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',      'noremap')
+call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>',    'noremap')
+call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',         'noremap')
 
 " Make Denite results less fugly
 hi link deniteMatchedChar Special
@@ -363,6 +439,18 @@ augroup DeniteResize
   autocmd!
   autocmd VimResized,VimEnter * call denite#custom#option('default', 'winheight', winheight(0) / 2)
 augroup end
+
+" #### EasyMotion
+let g:EasyMotion_prompt = '❯ '
+let g:EasyMotion_enter_jump_first = 1
+
+" `ff` will include 'F' in the options, `f\` will include '|', etc.
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
+
+" All matches will be upper-case ('S'), but the lower-case key will jump to them ('s')
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_keys = 'ASDGHKLQWERTYUIOPZXCVBNMFJ;'   " The defaults, capitalized for use_upper
 
 "let NERDChristmasTree = 1
 "let NERDTreeShowBookmarks = 1

@@ -22,6 +22,8 @@ Plug 'Shougo/denite.nvim'
 Plug 'amerlyq/vim-focus-autocmd'
 Plug 'cskeeters/vim-smooth-scroll'
 
+Plug 'easymotion/vim-easymotion'
+
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ervandew/supertab'
 
