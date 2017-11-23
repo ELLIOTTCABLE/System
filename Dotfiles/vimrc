@@ -129,9 +129,9 @@ map Y y$
 nnoremap j gj
 nnoremap k gk
 
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
+map /  <Plug>(incsearch-easymotion-/)
+map ?  <Plug>(incsearch-easymotion-?)
+map g/ <Plug>(incsearch-easymotion-stay)
 
 map n  <Plug>(incsearch-nohl-n)
 map N  <Plug>(incsearch-nohl-N)
@@ -207,11 +207,12 @@ omap <Leader>n <Plug>(easymotion-bd-n)
 nmap <Leader>; <Plug>(easymotion-next)
 nmap <Leader>, <Plug>(easymotion-prev)
 
-
-
 " Complete an EasyMotion by hitting <Space> again
-" FIXME: <https://github.com/easymotion/vim-easymotion/issues/356>
-"EMCommandLineNoreMap <Space> <CR>
+augroup easymotion-keymap
+   autocmd!
+   autocmd VimEnter * EMCommandLineNoreMap <Space> <CR>
+augroup END
+
 
 " FIXME: Remap <Ctrl-W>!
 "nnoremap  <Leader>w <C-W>
