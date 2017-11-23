@@ -301,13 +301,15 @@ imap <silent> <S-F12> <C-O><S-F12>
 " Toggle conealing with space-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
-nnoremap <C-p>             :<C-u>Denite buffer file_rec<CR>
+" <Ctrl-P> for both switching between buffers, and opening new ones!
+nnoremap <C-p>             :<C-u>Denite -source-names=hide buffer file_rec<CR>
+
 nnoremap <Leader>d         :<C-u>DeniteBufferDir file_rec<CR>
-nnoremap <Leader>s         :<C-u>Denite buffer<CR>
 "nnoremap <Leader>ss        :<C-u>DeniteBufferDir buffer<CR>
+
 nnoremap <Leader>/         :<C-u>Denite grep:. -mode=normal<CR>
 nnoremap <Leader>8         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
-"nnoremap <Leader>s/        :<C-u>DeniteBufferDir grep:. -mode=normal<CR>
+nnoremap <Leader>*         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
 
 "nnoremap <Leader>o         :<C-u>Denite location_list -mode=normal -no-empty<CR>
 "nnoremap <Leader>hs        :<C-u>Denite history:search -mode=normal<CR>
@@ -429,8 +431,6 @@ call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git
 call denite#custom#var('grep',     'command', ['rg'])
 call denite#custom#var('grep',     'default_opts', ['--hidden', '--vimgrep', '--no-heading', '-S'])
 call denite#custom#var('grep',     'recursive_opts', [])
-call denite#custom#var('grep',     'pattern_opt',  ['--regexp'])
-call denite#custom#var('grep',     'separator',    ['--'])
 call denite#custom#var('grep',     'final_opts',   [])
 
 
