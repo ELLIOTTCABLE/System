@@ -11,21 +11,28 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
+
 Plug 'vim-syntastic/syntastic'
 
-Plug 'Shougo/denite.nvim'
+"Plug 'amerlyq/vim-focus-autocmd'
 
-" Pending:
-"    <https://github.com/ocaml/merlin/issues/729>
-"Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
-
-Plug 'amerlyq/vim-focus-autocmd'
+" ### Navigation
 Plug 'cskeeters/vim-smooth-scroll'
 
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 
+" Pending:
+"    <https://github.com/ocaml/merlin/issues/729>
+"Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
+
+Plug 'Shougo/denite.nvim'
+
+" VimR already has a GUI buffer-explorer built-in
+Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
+
+" #### Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ervandew/supertab'
 
@@ -34,16 +41,16 @@ Plug 'honza/vim-snippets'
 
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern' }
 
+" #### Languages
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
+" #### Colourschemes
 " I'm using different colourschemes in GUI and TUI vims.
 Plug 'arcticicestudio/nord-vim'
 Plug 'lifepillar/vim-solarized8'
 Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
 
-" VimR already has a GUI buffer-explorer built-in
-Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
 Plug 'Shougo/echodoc.vim'
 
 " Initialize plugin system
