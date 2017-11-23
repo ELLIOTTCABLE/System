@@ -433,12 +433,6 @@ call denite#custom#var('grep',     'pattern_opt',  ['--regexp'])
 call denite#custom#var('grep',     'separator',    ['--'])
 call denite#custom#var('grep',     'final_opts',   [])
 
-" Reset value of '50%' on window resize
-" FIXME: Why is this necessary, with `denite-options-auto-resize`?
-augroup DeniteResize
-  autocmd!
-  autocmd VimResized,VimEnter * call denite#custom#option('default', 'winheight', winheight(0) / 2)
-augroup end
 
 " #### EasyMotion
 let g:EasyMotion_prompt = '❯ '
