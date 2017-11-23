@@ -173,6 +173,17 @@ map Y y$
 nnoremap j gj
 nnoremap k gk
 
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+
 " The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
 " includes some other global-plugin features.
 let mapleader = " "
@@ -205,7 +216,6 @@ omap T <Plug>(easymotion-Tl)
 
 " Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
 " prefixed mappings for bidirectional/overwin-mode:
-
 " mnemonic: 'sneak'
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 xmap <Leader>s <Plug>(easymotion-bd-f2)
@@ -445,6 +455,13 @@ let g:EasyMotion_use_smartsign_us = 1
 " All matches will be upper-case ('S'), but the lower-case key will jump to them ('s')
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_keys = 'ASDGHKLQWERTYUIOPZXCVBNMFJ;'   " The defaults, capitalized for use_upper
+
+" #### incsearch.vim
+let g:incsearch#auto_nohlsearch = 1
+let g:incsearch#consistent_n_direction = 1
+let g:incsearch#do_not_save_error_message_history = 1
+
+let g:incsearch#magic = '\v' " very magic
 
 "let NERDChristmasTree = 1
 "let NERDTreeShowBookmarks = 1

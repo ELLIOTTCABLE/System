@@ -23,6 +23,8 @@ Plug 'amerlyq/vim-focus-autocmd'
 Plug 'cskeeters/vim-smooth-scroll'
 
 Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ervandew/supertab'
