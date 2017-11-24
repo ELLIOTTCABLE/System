@@ -8,6 +8,8 @@ endfunction
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'itchyny/lightline.vim'
+
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode

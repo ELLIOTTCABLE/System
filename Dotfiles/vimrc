@@ -16,7 +16,9 @@ set cursorline colorcolumn=+1,+2,+3
 set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
 set smartcase ignorecase
-set laststatus=1 cmdheight=2 " higher cmdheight for deoplete / echodoc.vim
+
+" deoplete / echodoc.vim wants a higher cmdheight; but I'm using noshowmode and lightline instead.
+set laststatus=2 cmdheight=1 noshowmode
 
 set nowrap
 set virtualedit=block
@@ -44,13 +46,18 @@ endif
 
 source ~/.vim/packages.vim
 
+let g:lightline = {}
+
+" Set the colour-scheme
 if has("gui_vimr")
    colorscheme nord
+   let g:lightline.colorscheme = 'nord'
 else
    set background=light
    let g:seiya_auto_enable = 1
    let g:solarized_use16 = 1
    colorscheme solarized8
+   let g:lightline.colorscheme = 'solarized'
 endif
 
 
