@@ -17,9 +17,6 @@ set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
 set smartcase ignorecase
 
-" deoplete / echodoc.vim wants a higher cmdheight; but I'm using noshowmode and lightline instead.
-set laststatus=2 cmdheight=1 noshowmode
-
 set nowrap
 set virtualedit=block
 set listchars+=tab:\ ─
@@ -35,6 +32,9 @@ set completeopt=longest,menuone,preview
 set conceallevel=1
 
 syntax on
+
+" This is overridden in the vim-lightline configuration below.
+set laststatus=2 cmdheight=2 showmode
 
 
 " `vim-plug` installation & package-loading
@@ -217,8 +217,7 @@ nmap <Leader>; <Plug>(easymotion-next)
 nmap <Leader>, <Plug>(easymotion-prev)
 
 " Complete an EasyMotion by hitting <Space> again
-augroup easymotion-keymap
-   au!
+augroup easymotion-keymap | au!
    au VimEnter * EMCommandLineNoreMap <Space> <CR>
 augroup END
 
@@ -322,8 +321,7 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 hi link deniteMatchedChar Special
 
 " Write files, by default
-augroup focus-loss-auto-write
-   au!
+augroup focus-loss-auto-write | au!
    au BufLeave,FocusLost * silent! wall
 augroup END
 
@@ -357,8 +355,7 @@ set updatetime=250
 
 
 " === Filetype extension ===
-augroup filetypes
-   au!
+augroup filetypes | au!
    au BufNewFile,BufFilePre,BufRead *.md
     \ set filetype=markdown
 
@@ -379,8 +376,7 @@ augroup filetypes
 augroup END
 
 
-augroup ocamlmaps
-   au!
+augroup ocamlmaps | au!
    au FileType ocaml nmap <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
    au FileType ocaml nmap <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
    au FileType ocaml nmap <LocalLeader>r   <Plug>(MerlinRename)
@@ -411,7 +407,16 @@ call denite#custom#option('_', {
  \  , 'smartcase':      v:true
  \  , 'source_names':   'short'
  \  , 'auto_preview':   v:true
+ \  , 'statusline':     v:false
  \ })
+
+function! FixDeniteStatusline()
+   if !exists('g:loaded_lightline') | call denite#custom#option('_', 'statusline', v:true) | endif
+endfunction
+
+augroup fix-denite | au!
+   au VimEnter * call FixDeniteStatusline()
+augroup END
 
 " Ripgrep 4 lyfe!
 call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git', ''])
@@ -470,6 +475,31 @@ let g:incsearch#magic = '\v' " very magic
 "let g:javascript_conceal_this             = "@"
 "let g:javascript_conceal_arrow_function   = "⇒"
 
+
+" #### lightline.vim
+if exists('g:loaded_lightline')
+   set laststatus=2 cmdheight=1 noshowmode
+endif
+
+let g:lightline.component_function = {
+ \    'readonly': 'LightlineReadonly',
+ \    'mode':     'LightlineModePlusDenite',
+ \ }
+
+function! LightlineReadonly()
+   return &readonly && &filetype !~# '\v(help|denite)' ? 'RO' : ''
+endfunction
+
+" See: <https://gist.github.com/pocari/84c78efa38b5c2fc1f659d1aac3face8>
+function! LightlineModePlusDenite()
+   if &ft == 'denite'
+      let mode_str = substitute(denite#get_status_mode(), "-\\| ", "", "g")
+      call lightline#link(tolower(mode_str[0]))
+      return mode_str
+   else
+      return winwidth('.') > 60 ? lightline#mode() : ''
+   endif
+endfunction
 
 " #### Syntastic
 set statusline+=%#warningmsg#
@@ -584,8 +614,7 @@ let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
 " FIXME: .... more
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-p>"
-augroup supertab-config
-   au!
+augroup supertab-config | au!
    au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
    au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 augroup END
