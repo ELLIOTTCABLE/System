@@ -41,7 +41,7 @@ syntax on
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  au VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 source ~/.vim/packages.vim
@@ -100,10 +100,11 @@ function! s:goyo_leave()
    " ...
 endfunction
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" These autocmds self-unique, thanks to the `!`
+au! User GoyoEnter nested call <SID>goyo_enter()
+au! User GoyoLeave nested call <SID>goyo_leave()
 
-"autocmd FileType c,cpp nested :TagbarOpen
+"au FileType c,cpp nested :TagbarOpen
 "
 "
 " === Styles ===
@@ -217,8 +218,8 @@ nmap <Leader>, <Plug>(easymotion-prev)
 
 " Complete an EasyMotion by hitting <Space> again
 augroup easymotion-keymap
-   autocmd!
-   autocmd VimEnter * EMCommandLineNoreMap <Space> <CR>
+   au!
+   au VimEnter * EMCommandLineNoreMap <Space> <CR>
 augroup END
 
 
@@ -321,7 +322,10 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 hi link deniteMatchedChar Special
 
 " Write files, by default
-autocmd BufLeave,FocusLost * silent! wall
+augroup focus-loss-auto-write
+   au!
+   au BufLeave,FocusLost * silent! wall
+augroup END
 
 "" gist-vim defaults
 "if has("mac")
@@ -355,23 +359,25 @@ set updatetime=250
 " === Filetype extension ===
 augroup filetypes
    au!
-   autocmd BufNewFile,BufFilePre,BufRead *.md
+   au BufNewFile,BufFilePre,BufRead *.md
     \ set filetype=markdown
 
-   autocmd BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}
+   au BufNewFile,BufFilePre,BufRead {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}
     \ set filetype=ruby
 
-   autocmd BufNewFile,BufFilePre,BufRead *.pegjs
+   au BufNewFile,BufFilePre,BufRead *.pegjs
     \ set filetype=pegjs
 
-   autocmd BufNewFile,BufFilePre,BufRead {.profile,.zprofile,.zlogin,.zlogout,.zshrc,.zshenv}
+   au BufNewFile,BufFilePre,BufRead {.profile,.zprofile,.zlogin,.zlogout,.zshrc,.zshenv}
     \ set filetype=zsh
+
+   " Like, I'm supposed to put these in separate files, but lol no thx?
+   au FileType gitcommit set wrap tw=0
+
+   " To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
+   au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 augroup END
 
-au FileType gitcommit set wrap tw=0
-
-" To fold by indentation in CoffeeScript files, but don't enable by default. (`zi` to enable)
-autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 
 augroup ocamlmaps
    au!
@@ -578,8 +584,11 @@ let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
 " FIXME: .... more
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-p>"
-au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+augroup supertab-config
+   au!
+   au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+   au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+augroup END
 
 
 let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
