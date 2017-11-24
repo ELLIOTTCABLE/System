@@ -19,6 +19,7 @@ set smartcase ignorecase
 set laststatus=1 cmdheight=2 " higher cmdheight for deoplete / echodoc.vim
 
 set nowrap
+set virtualedit=block
 set listchars+=tab:\ ─
 set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
 
@@ -304,6 +305,11 @@ call denite#custom#map('insert', '<C-p>', '<denite:assign_previous_matched_text>
 call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>',    'noremap')
 call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',         'noremap')
 
+" Prevent UltiSnips from stomping on <C-j/k>
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<C-b>"
+let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+
 " Make Denite results less fugly
 hi link deniteMatchedChar Special
 
@@ -536,6 +542,11 @@ let g:focau = {}
 "let g:focau.widgets = ['clipboard', 'buffers', 'number']
 let g:focau.widgets = []
 
+
+" #### vim-move
+" Use <C-j> and <C-k> in normal and visual mode to move lines around
+let g:move_key_modifier = 'C'
+
 " #### Deoplete
 let g:deoplete#complete_method = "omnifunc"
 let g:deoplete#enable_at_startup = 1
@@ -571,7 +582,6 @@ let g:SuperTabClosePreviewOnPopupClose = 1
 
 " #### UltiSnips
 " FIXME: .... more
-let g:UltiSnipsExpandTrigger="<C-j>"
 
 
 " #### vim-gitgutter
