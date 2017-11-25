@@ -407,7 +407,6 @@ call denite#custom#option('_', {
  \  , 'ignorecase':     v:false
  \  , 'smartcase':      v:true
  \  , 'source_names':   'short'
- \  , 'auto_preview':   v:true
  \  , 'statusline':     v:false
  \ })
 
