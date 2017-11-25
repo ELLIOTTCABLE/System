@@ -387,11 +387,22 @@ let g:merlin_textobject_shrink = 'M'
 
 "" === Plugins ===
 " #### Startify
-let g:startify_list_order = [
- \    ['Recent files:'], 'files',
- \    ['Bookmarks:'], 'bookmarks',
- \    ['Sessions:'], 'sessions',
- \    ['Shortcuts:'], 'commands'   ]
+if getcwd() ==# $HOME
+   let g:startify_list_order = [
+    \    ['Recent files:'], 'files',
+    \    ['Bookmarks:'], 'bookmarks',
+    \    ['Sessions:'], 'sessions',
+    \    ['Shortcuts:'], 'commands'   ]
+   let g:startify_files_number = 20
+else
+   let g:startify_list_order = [
+    \    ['Recent files in current directory:'], 'dir',
+    \    ['Recent files elsewhere:'], 'files',
+    \    ['Bookmarks:'], 'bookmarks',
+    \    ['Sessions:'], 'sessions',
+    \    ['Shortcuts:'], 'commands'   ]
+   let g:startify_files_number = 10
+endif
 let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc' ]
 let g:startify_commands = [ ':help reference' ]
 
@@ -399,6 +410,10 @@ let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles = 1
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
+let g:startify_use_env = 1
+
+let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
+ \ 'b', 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'B', 'N']
 
 " #### Goyo
 let g:goyo_width = 100
@@ -620,7 +635,6 @@ function! LightlineFiletype()
     \ : (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() : "\u0078 ")
 endfunction
 
-
 " See: <https://gist.github.com/pocari/84c78efa38b5c2fc1f659d1aac3face8>
 function! LightlineMode()
    if &ft == 'denite'
@@ -631,6 +645,8 @@ function! LightlineMode()
       return winwidth('.') > 60 ? lightline#mode() : ''
    endif
 endfunction
+
+let g:lightline_buffer_excludes = ['vimfiler']
 
 " #### Syntastic
 set statusline+=%#warningmsg#
