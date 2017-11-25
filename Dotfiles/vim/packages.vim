@@ -53,6 +53,7 @@ Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
 
 " #### Small utilities
 Plug 'matze/vim-move'
+Plug 'takac/vim-hardtime'
 
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
 Plug 'vim-scripts/ShowTrailingWhitespace'
