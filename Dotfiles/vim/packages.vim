@@ -31,8 +31,6 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 
 Plug 'Shougo/denite.nvim'
 
-" VimR already has a GUI buffer-explorer built-in
-Plug 'ap/vim-buftabline', PlugIf(!has('gui_vimr'))
 
 " #### Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -47,7 +45,7 @@ Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do'
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
-" #### Colourschemes
+" #### Colourschemes & appearance
 " I'm using different colourschemes in GUI and TUI vims.
 Plug 'arcticicestudio/nord-vim'
 Plug 'lifepillar/vim-solarized8'
@@ -61,6 +59,9 @@ Plug 'vim-scripts/ShowTrailingWhitespace'
 Plug 'vim-scripts/DeleteTrailingWhitespace'
 
 Plug 'Shougo/echodoc.vim'
+
+" #### Late-loaders (come on, vim-plug, support `defer:`!)
+Plug 'ryanoasis/vim-devicons'
 
 " Initialize plugin system
 call plug#end()

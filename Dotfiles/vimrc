@@ -31,10 +31,11 @@ set completeopt=longest,menuone,preview
 
 set conceallevel=1
 
+" This is overridden in the vim-lightline configuration below.
+set showtabline=2 laststatus=2 cmdheight=2 showmode
+
 syntax on
 
-" This is overridden in the vim-lightline configuration below.
-set laststatus=2 cmdheight=2 showmode
 
 
 " `vim-plug` installation & package-loading
@@ -410,14 +411,6 @@ call denite#custom#option('_', {
  \  , 'statusline':     v:false
  \ })
 
-function! FixDeniteStatusline()
-   if !exists('g:loaded_lightline') | call denite#custom#option('_', 'statusline', v:true) | endif
-endfunction
-
-augroup fix-denite | au!
-   au VimEnter * call FixDeniteStatusline()
-augroup END
-
 " Ripgrep 4 lyfe!
 call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git', ''])
 call denite#custom#var('grep',     'command', ['rg'])
@@ -477,21 +470,133 @@ let g:incsearch#magic = '\v' " very magic
 
 
 " #### lightline.vim
-if exists('g:loaded_lightline')
-   set laststatus=2 cmdheight=1 noshowmode
+" VimR already has a GUI buffer-explorer built-in
+if has('gui_vimr')
+   set showtabline=0
+   g:lightline.enable.tabline = 0
 endif
 
-let g:lightline.component_function = {
- \    'readonly': 'LightlineReadonly',
- \    'mode':     'LightlineModePlusDenite',
+function! FixConfigurationForLightline()
+   if !exists('g:loaded_lightline')
+      call denite#custom#option('_', 'statusline', v:true)
+   else
+      set laststatus=2 cmdheight=1 noshowmode
+   endif
+endfunction
+
+augroup fix-lightline | au!
+   au VimEnter * call FixConfigurationForLightline()
+augroup END
+
+let g:lightline.active = {
+ \    'left':  [  ['mode', 'paste'],
+ \                ['bufnum', 'filename', 'readonly',  'modified']  ],
+ \    'right': [  ['charvaluehex', 'lineinfo'],
+ \                ['percent'],
+ \                ['fileencoding', 'fileformat', 'filetype']  ]
  \ }
+let g:lightline.inactive = {
+ \    'left':  [  [ 'bufnum', 'filename' ]  ],
+ \    'right': [  [ 'lineinfo' ],
+ \                [ 'percent' ]  ],
+ \ }
+
+let g:lightline.tabline = {
+ \    'left':  [  ['tabs']  ],
+ \    'right': [  ['close']  ],
+ \ }
+let g:lightline.tab = {
+ \    'active':   ['tabnum', 'filename', 'modified'],
+ \    'inactive': ['tabnum', 'filename', 'modified'],
+ \ }
+
+let g:lightline.separator =            { 'left': "\uE0B0", 'right': "\uE0B2" }
+let g:lightline.subseparator =         { 'left': "\uFE19", 'right': "\uFE19" }
+let g:lightline.tabline_separator =    {}
+let g:lightline.tabline_subseparator = {}
+
+let g:lightline.component = { 'lineinfo': "\uE0A1%-3l\uE0A3%-2v" }
+let g:lightline.component_function = {
+ \    'mode':        'LightlineMode',
+ \    'readonly':    'LightlineReadonly',
+ \    'modified':    'LightlineModified',
+ \    'fileencoding': 'LightlineFileencoding',
+ \    'fileformat':  'LightlineFileformat',
+ \    'filetype':    'LightlineFiletype',
+ \ }
+
+let g:lightline.component_visible_condition = {
+ \    'modified': '&modified||!&modifiable',
+ \    'readonly': '&readonly',
+ \    'paste': '&paste',
+ \    'spell': '&spell',
+ \    'fileencoding': '!IsWeirdBuffer()',
+ \    'fileformat': '!IsWeirdBuffer() && winwidth(0) >=# g:lightline_thin_width',
+ \    'filetype': '!IsWeirdBuffer() && winwidth(0) >=# g:lightline_thin_width',
+ \ }
+
+
+let g:lightline_wide_width = 100
+let g:lightline_thin_width = 80
+
+function! IsWeirdBuffer()
+   return &filetype =~# '\v(denite)'
+endfunction
+
+function! LightlineModified()
+   return &modified || !&modifiable ? "\uF040" : ''
+endfunction
 
 function! LightlineReadonly()
    return &readonly && &filetype !~# '\v(help|denite)' ? 'RO' : ''
 endfunction
 
+function! LightlineFileencoding()
+   if IsWeirdBuffer()
+      return ''
+
+   elseif winwidth(0) >=# g:lightline_thin_width
+      return &fileencoding !=# "" ? &fileencoding : &encoding " Always 'utf-8' in NeoVim
+   else
+      return ''
+   endif
+endfunction
+
+if !exists('*WebDevIconsGetFileTypeSymbol')
+   function! WebDevIconsGetFileTypeSymbol()
+      return ''
+   endfunction
+   function! WebDevIconsGetFileFormatSymbol()
+      return ''
+   endfunction
+endif
+
+function! LightlineFileformat()
+   if IsWeirdBuffer()
+      return ''
+
+   elseif winwidth(0) >=# g:lightline_wide_width
+      return WebDevIconsGetFileFormatSymbol() . &fileformat
+   elseif winwidth(0) >=# g:lightline_thin_width
+      return WebDevIconsGetFileFormatSymbol()
+   else
+      return ''
+   endif
+endfunction
+
+function! LightlineFiletype()
+   if IsWeirdBuffer()
+      return ''
+   endif
+
+   return winwidth(0) >=# g:lightline_thin_width
+    \ ? (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() . &filetype : "\u0078 none")
+    \ : (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() : "\u0078 ")
+endfunction
+
+
 " See: <https://gist.github.com/pocari/84c78efa38b5c2fc1f659d1aac3face8>
-function! LightlineModePlusDenite()
+function! LightlineMode()
    if &ft == 'denite'
       let mode_str = substitute(denite#get_status_mode(), "-\\| ", "", "g")
       call lightline#link(tolower(mode_str[0]))
