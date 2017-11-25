@@ -286,6 +286,9 @@ nnoremap <Leader><F1>      :<C-u>Denite help<CR>
 call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
 call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
 
+call denite#custom#map('_',      '<C-s>', '<denite:do_action:splitswitch>',      'noremap')
+call denite#custom#map('_',      '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+
 " (Chosen to match the easymotion-bd-jk mapping)
 call denite#custom#map('normal', '<Leader>j', '<denite:quick_move>',             'noremap')
 
@@ -417,6 +420,8 @@ call denite#custom#var('grep',     'default_opts', ['--hidden', '--vimgrep', '--
 call denite#custom#var('grep',     'recursive_opts', [])
 call denite#custom#var('grep',     'final_opts',   [])
 
+" Disable the vim-devicons plugin, as it's rather broken:
+let g:webdevicons_enable_denite = 0
 
 " #### EasyMotion
 let g:EasyMotion_prompt = '❯ '
