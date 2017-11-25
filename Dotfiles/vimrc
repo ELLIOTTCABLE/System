@@ -501,7 +501,8 @@ let g:lightline.inactive = {
  \ }
 
 let g:lightline.tabline = {
- \    'left':  [  ['tabs']  ],
+ \    'left':  [  ['bufferinfo'], ['separator'],
+ \                ['bufferbefore', 'buffercurrent', 'bufferafter']   ],
  \    'right': [  ['close']  ],
  \ }
 let g:lightline.tab = {
@@ -511,7 +512,7 @@ let g:lightline.tab = {
 
 "let g:lightline.separator =           { 'left': "\uE0B0", 'right': "\uE0B2" } " angles
 "let g:lightline.separator =           { 'left': "\u259B", 'right': "\u259F" } " OCR
-let g:lightline.separator =            { 'left': "\u2590\u2595", 'right': "\u258F\u258C" } " OCR
+let g:lightline.separator =            { 'left': "\u2590\u2595", 'right': "\u258F\u258C" } " blocks
 
 let g:lightline.subseparator =         { 'left': "\uFE19", 'right': "\uFE19" } " vert ellipsis
 "let g:lightline.subseparator =        { 'left': "\u259E", 'right': "\u259E" } " OCR
@@ -525,6 +526,16 @@ let g:lightline.component = {
  \    'charvaluehex': "%2B",
  \    'lineinfo': "\uE0A1%-3l\uE0A3%-2v",
  \ }
+let g:lightline.component_expand = {
+ \    'buffercurrent':  'lightline#buffer#buffercurrent',
+ \    'bufferbefore':   'lightline#buffer#bufferbefore',
+ \    'bufferafter':    'lightline#buffer#bufferafter',
+ \ }
+let g:lightline.component_type = {
+ \    'buffercurrent':  'tabsel',
+ \    'bufferbefore':   'raw',
+ \    'bufferafter':    'raw',
+ \ }
 let g:lightline.component_function = {
  \    'mode':        'LightlineMode',
  \    'readonly':    'LightlineReadonly',
@@ -532,6 +543,7 @@ let g:lightline.component_function = {
  \    'fileencoding': 'LightlineFileencoding',
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
+ \    'bufferinfo':  'lightline#buffer#bufferinfo',
  \ }
 
 let g:lightline.component_visible_condition = {
