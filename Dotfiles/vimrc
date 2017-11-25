@@ -120,9 +120,17 @@ hi! link EndOfBuffer SignColumn
 "   let g:color_coded_enabled = 0
 "endif
 
+
 " === Mappings ===
 " Thanks, Damian. http://ell.io/i6io1
 nnoremap ; :
+nnoremap ; :
+
+nnoremap ;; ;
+vnoremap ;; ;
+
+nnoremap ,, ,
+vnoremap ,, ,
 
 " Fuck '.
 nnoremap ' `
@@ -138,6 +146,15 @@ map Y y$
 " Because why `j` et al step over a bajillion visible lines at a time, I cannot fathom.
 nnoremap j gj
 nnoremap k gk
+
+" #### Global mappings
+for map_command in ['noremap', 'noremap!', 'tnoremap']
+   " When it comes to windows, I don't like how _ and = (which are related mappings) and - and +
+   " (also related) require different shift-keying. Thus, I'm swapping them — unshifted '-' and '='
+   " for one purpose, and shifted '_' and '+' for another.
+   execute map_command . ' <silent> <C-w>- <C-\><C-n><C-w>_'
+   execute map_command . ' <silent> <C-w>_ <C-\><C-n><C-w>-'
+endfor
 
 map /  <Plug>(incsearch-easymotion-/)
 map ?  <Plug>(incsearch-easymotion-?)
@@ -155,30 +172,18 @@ map g# <Plug>(incsearch-nohl-g#)
 let mapleader = " "
 let maplocalleader = ","
 
+let g:EasyMotion_do_mapping = 0
 " EasyMotion stomps:
 "   - fF, tT, wW, bB, eE, geE, j, k, nN, s,
 "map <Leader> <Plug>(easymotion-prefix)
 
-let g:EasyMotion_do_mapping = 0
-
 " I chose to stomp the non-<Leader> versions for fF and tT, but not for wW/bB/eE/geE, because it's more
 " useful to spam the latter (as in `wwwww`). Theoretically, EasyMotion should *supplant* that
 " behaviour; but realistically, I still use the latter thanks to muscle-memory.
-nmap f <Plug>(easymotion-fl)
-xmap f <Plug>(easymotion-fl)
-omap f <Plug>(easymotion-fl)
-
-nmap F <Plug>(easymotion-Fl)
-xmap F <Plug>(easymotion-Fl)
-omap F <Plug>(easymotion-Fl)
-
-nmap t <Plug>(easymotion-tl)
-xmap t <Plug>(easymotion-tl)
-omap t <Plug>(easymotion-tl)
-
-nmap T <Plug>(easymotion-Tl)
-xmap T <Plug>(easymotion-Tl)
-omap T <Plug>(easymotion-Tl)
+nmap f <Plug>(easymotion-fl) | xmap f <Plug>(easymotion-fl) | omap f <Plug>(easymotion-fl)
+nmap F <Plug>(easymotion-Fl) | xmap F <Plug>(easymotion-Fl) | omap F <Plug>(easymotion-Fl)
+nmap t <Plug>(easymotion-tl) | xmap t <Plug>(easymotion-tl) | omap t <Plug>(easymotion-tl)
+nmap T <Plug>(easymotion-Tl) | xmap T <Plug>(easymotion-Tl) | omap T <Plug>(easymotion-Tl)
 
 " Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
 " prefixed mappings for bidirectional/overwin-mode:
@@ -221,23 +226,6 @@ nmap <Leader>, <Plug>(easymotion-prev)
 augroup easymotion-keymap | au!
    au VimEnter * EMCommandLineNoreMap <Space> <CR>
 augroup END
-
-
-" FIXME: Remap <Ctrl-W>!
-"nnoremap  <Leader>w <C-W>
-
-noremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-
-noremap  <silent> <C-S>         :<C-u>update<CR>
-vnoremap <silent> <C-S>    <C-C>:<C-u>update<CR>
-inoremap <silent> <C-S>    <C-O>:<C-u>update<CR>
-noremap           <C-W>         :<C-u>confirm quit<CR>
-vnoremap          <C-W>    <C-C>:<C-u>confirm quit<CR>
-inoremap          <C-W>    <C-O>:<C-u>confirm quit<CR>
-
-noremap  <silent> <C-K>         :<C-u>nohlsearch<CR>
-vnoremap <silent> <C-K>    <C-C>:<C-u>nohlsearch<CR>
-inoremap <silent> <C-K>    <C-O>:<C-u>nohlsearch<CR>
 
 
 "noremap  <silent> <F1>          :<C-u>NERDTreeTabsToggle<Return>
