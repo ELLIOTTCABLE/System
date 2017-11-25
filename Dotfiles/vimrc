@@ -383,7 +383,19 @@ let g:merlin_textobject_shrink = 'M'
 
 
 "" === Plugins ===
-"call arpeggio#load()
+" #### Startify
+let g:startify_list_order = [
+ \    ['Recent files:'], 'files',
+ \    ['Bookmarks:'], 'bookmarks',
+ \    ['Sessions:'], 'sessions',
+ \    ['Shortcuts:'], 'commands'   ]
+let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc' ]
+let g:startify_commands = [ ':help reference' ]
+
+let g:startify_fortune_use_unicode = 1
+let g:startify_update_oldfiles = 1
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
 
 " #### Goyo
 let g:goyo_width = 100
@@ -498,12 +510,22 @@ let g:lightline.tab = {
  \    'inactive': ['tabnum', 'filename', 'modified'],
  \ }
 
-let g:lightline.separator =            { 'left': "\uE0B0", 'right': "\uE0B2" }
-let g:lightline.subseparator =         { 'left': "\uFE19", 'right': "\uFE19" }
+"let g:lightline.separator =           { 'left': "\uE0B0", 'right': "\uE0B2" } " angles
+"let g:lightline.separator =           { 'left': "\u259B", 'right': "\u259F" } " OCR
+let g:lightline.separator =            { 'left': "\u2590\u2595", 'right': "\u258F\u258C" } " OCR
+
+let g:lightline.subseparator =         { 'left': "\uFE19", 'right': "\uFE19" } " vert ellipsis
+"let g:lightline.subseparator =        { 'left': "\u259E", 'right': "\u259E" } " OCR
+"let g:lightline.subseparator =        { 'left': "\u276F", 'right': "\u276E" } " angle brackets
+"let g:lightline.subseparator =        { 'left': "\u00A6", 'right': "\u00A6" } " broken bar
+
 let g:lightline.tabline_separator =    {}
 let g:lightline.tabline_subseparator = {}
 
-let g:lightline.component = { 'lineinfo': "\uE0A1%-3l\uE0A3%-2v" }
+let g:lightline.component = {
+ \    'charvaluehex': "%2B",
+ \    'lineinfo': "\uE0A1%-3l\uE0A3%-2v",
+ \ }
 let g:lightline.component_function = {
  \    'mode':        'LightlineMode',
  \    'readonly':    'LightlineReadonly',
@@ -514,8 +536,8 @@ let g:lightline.component_function = {
  \ }
 
 let g:lightline.component_visible_condition = {
- \    'modified': '&modified||!&modifiable',
- \    'readonly': '&readonly',
+ \    'modified': '(&modified||!&modifiable)&&!IsWeirdBuffer()',
+ \    'readonly': '&readonly&&!IsWeirdBuffer()',
  \    'paste': '&paste',
  \    'spell': '&spell',
  \    'fileencoding': '!IsWeirdBuffer()',
@@ -528,15 +550,15 @@ let g:lightline_wide_width = 100
 let g:lightline_thin_width = 80
 
 function! IsWeirdBuffer()
-   return &filetype =~# '\v(denite)'
+   return &filetype =~# '\v(startify|denite)'
 endfunction
 
 function! LightlineModified()
-   return &modified || !&modifiable ? "\uF040" : ''
+   return (&modified || !&modifiable) && !IsWeirdBuffer() ? "\uF040" : ''
 endfunction
 
 function! LightlineReadonly()
-   return &readonly && &filetype !~# '\v(help|denite)' ? 'RO' : ''
+   return &readonly && !IsWeirdBuffer() ? 'RO' : ''
 endfunction
 
 function! LightlineFileencoding()
