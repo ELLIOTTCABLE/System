@@ -47,7 +47,8 @@ endif
 
 source ~/.vim/packages.vim
 
-let g:lightline = {}
+
+if !exists('g:lightline') | let g:lightline = {} | endif
 
 " Set the colour-scheme
 if has("gui_vimr")
@@ -113,8 +114,11 @@ au! User GoyoLeave nested call <SID>goyo_leave()
 hi ShowTrailingWhitespace ctermbg=Red guibg=Red
 
 " Obscure the iconic vim 'empty-line tildes'
-hi EndOfBuffer ctermbg=fg
-hi! link EndOfBuffer SignColumn
+" FIXME: VimR appears to reliably crash, with these?
+if !has('gui_vimr')
+   hi EndOfBuffer ctermbg=fg
+   hi! link EndOfBuffer SignColumn
+endif
 
 "if &diff
 "   let g:color_coded_enabled = 0
@@ -492,10 +496,13 @@ let g:incsearch#magic = '\v' " very magic
 
 
 " #### lightline.vim
+if !exists('g:lightline') | let g:lightline = {} | endif
+if !exists('g:lightline.enable') | let g:lightline.enable = {} | endif
+
 " VimR already has a GUI buffer-explorer built-in
 if has('gui_vimr')
    set showtabline=0
-   g:lightline.enable.tabline = 0
+   let g:lightline.enable.tabline = 0
 endif
 
 function! FixConfigurationForLightline()
