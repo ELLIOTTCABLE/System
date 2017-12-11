@@ -3,20 +3,7 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-export SYSTEM_OSX='Mac OS X'
-export SYSTEM_TIGER='Mac OS X 10.4'
-export SYSTEM_LEOPARD='Mac OS X 10.5'
-export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
-export SYSTEM_LION='Mac OS X 10.7'
-export SYSTEM_MOUNTAIN_LION='Mac OS X 10.8'
-export SYSTEM_MAVERICKS='Mac OS X 10.9'
-export SYSTEM_NIX='Linux'
-export SYSTEM_CENTOS='Centos'
-export SYSTEM_CENTOS5='Centos 5'
-export SYSTEM_FEDORA='Fedora Core'
-export SYSTEM_FEDORA4='Fedora Core 4'
-export SYSTEM_ARCH='Arch Linux'
-export SYSTEM_UNKNOWN='Unknown'
+source $HOME/.shenv
 
 source $HOME/.profile.local
 while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
@@ -68,7 +55,7 @@ fi
 alias wget='wget -q --show-progress'
 
 export EDITOR='nvim'
-export VISUAL='nvim'
+export VISUAL='vimr'
 
 alias et='edit .'
 alias etr='edit app config lib db public spec test vendor/plugins Rakefile'
@@ -88,16 +75,6 @@ nvan() { nvim "+map q :<C-u>qa<CR>" "+help $1" "+only" "+Goyo 80x100%" ;}
 vanr() { vimr --nvim "+map q :<C-u>qa<CR>" "+help $1" "+only" "+Goyo 80x100%" ;}
 
 nvpu() { nvim "+PlugUpdate" "+only" "+q" ;}
-
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
- #export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"        # Slow.
-  export AWS_HOME="$HOME/.ec2"
-fi
-
-#FIXME: bash-incompatible
-#export EC2_PRIVATE_KEY="$(print $HOME/.ec2/pk-*.pem(N))"
-#export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
 
 alias q='exit'
 bye() {
@@ -329,14 +306,6 @@ C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors 
 export CXX="g++"
 C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
 
-# Homebrew
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-   # Hardcoding this; saves the startup cost of re-running this for every shell.
-  #export HOMEBREW_PREFIX="$(brew --prefix)"
-   export HOMEBREW_PREFIX="/usr/local"
-   export HOMEBREW_CASK_OPTS='--appdir=/Applications'
-fi
-
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
 fi
@@ -369,27 +338,3 @@ rse() {
 
 # Create files as u=rwx, g=rx, o=rx
 umask 022
-
-# FIXME: The default path, with ~/.zshrc and ~/.profile disabled, seems to be `/usr/bin:/bin`. This
-#        should be `/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin`, as it is for new accounts. I've
-#        screwed up some configuration somewhere, but I have no idea where. I'm hard-coding this,
-#        for now; but it needs to be tracked down and fixed. (AS OF MAVERICKS)
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
-
-# TODO: I'm pretty sure there's a command to manage these.
-# XXX: Make sure to update ~/.MacOSX/environment.plist as well if you edit these!
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  6. < Homebrew
-  PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  5. < Homebrew's llvm / clang
-
-  PATH="$PATH:/Library/TeX/texbin"     # -4. > MacTeX
-  PATH="$PATH:/usr/X11/bin"            # -3. > X11
-fi
-PATH="$HOME/.bin:$PATH"                #  4. < local binaries
-PATH="$HOME/.cargo/bin:$PATH"          #  3. < Cargo (Rust) binaries
-PATH="$HOME/.nodenv/shims:$PATH"       #  2. < nodenv shims
-PATH="./node_modules/.bin:$PATH"       #  1. < npm (local)
-
-PATH="$PATH:/usr/local/cuda/bin"       # -2. > CUDA
-PATH="$PATH:$EC2_HOME/bin"             # -1. > EC2
-export PATH

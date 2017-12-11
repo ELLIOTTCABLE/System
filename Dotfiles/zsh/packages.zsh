@@ -33,6 +33,8 @@ zplug supercrabtree/k
 # These offer useful prompt/status-functions
 zplug jsahlen/nodenv.plugin.zsh
 zplug ELLIOTTCABLE/rbenv.plugin.zsh
+
+# NOTE: I had to *also* call OPAM's `variables.sh` from `.shenv`.
 zplug ~/.opam/opam-init,      from:local, use:init.zsh
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"

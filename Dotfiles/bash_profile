@@ -1,3 +1,4 @@
+source $HOME/.shenv
 source $HOME/.profile
 
 source $HOME/.bash_prompt
