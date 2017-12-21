@@ -196,10 +196,10 @@ let g:EasyMotion_do_mapping = 0
 " I chose to stomp the non-<Leader> versions for fF and tT, but not for wW/bB/eE/geE, because it's more
 " useful to spam the latter (as in `wwwww`). Theoretically, EasyMotion should *supplant* that
 " behaviour; but realistically, I still use the latter thanks to muscle-memory.
-nmap f <Plug>(easymotion-fl) | xmap f <Plug>(easymotion-fl) | omap f <Plug>(easymotion-fl)
-nmap F <Plug>(easymotion-Fl) | xmap F <Plug>(easymotion-Fl) | omap F <Plug>(easymotion-Fl)
-nmap t <Plug>(easymotion-tl) | xmap t <Plug>(easymotion-tl) | omap t <Plug>(easymotion-tl)
-nmap T <Plug>(easymotion-Tl) | xmap T <Plug>(easymotion-Tl) | omap T <Plug>(easymotion-Tl)
+nmap f <Plug>(easymotion-fl)|xmap f <Plug>(easymotion-fl)|omap f <Plug>(easymotion-fl)
+nmap F <Plug>(easymotion-Fl)|xmap F <Plug>(easymotion-Fl)|omap F <Plug>(easymotion-Fl)
+nmap t <Plug>(easymotion-tl)|xmap t <Plug>(easymotion-tl)|omap t <Plug>(easymotion-tl)
+nmap T <Plug>(easymotion-Tl)|xmap T <Plug>(easymotion-Tl)|omap T <Plug>(easymotion-Tl)
 
 " Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
 " prefixed mappings for bidirectional/overwin-mode:
