@@ -1,3 +1,4 @@
+" NOTE: Intentionally using the same name as Solarized's version, so they don't stomp on oneanother.
 if exists('g:loaded_togglebg') || &cp || v:version < 700
   finish
 endif
@@ -6,28 +7,45 @@ let g:loaded_togglebg = v:true
 let s:cpo_save = &cpo
 set cpo&vim
 
+
 if !exists("g:togglebg_define_commands") || g:togglebg_define_commands
    command! -bar -nargs=* -complete=custom,<SID>complete_background ToggleBackground
        \ call togglebg#(<f-args>)
-
+   command! -bar -nargs=1 -complete=color SafeColorscheme
+       \ call togglebg#colorscheme(<f-args>)
    if exists(':Bg') ==# 2
       command! -bar -nargs=* -complete=custom,<SID>complete_background Bg
           \ call togglebg#(<f-args>)
    endif
 
-   command! -bar -nargs=1 -complete=color SafeColorscheme call togglebg#colorscheme(<f-args>)
+   call s:debug("Defined togglebg commands")
 endif
 
+" Again, intentionally using Solarized's mappings
+if !exists("g:togglebg_define_mapping") || g:togglebg_define_mapping
+   nnoremap <unique> <script> <Plug>ToggleBackground <SID>TogBG
+   inoremap <unique> <script> <Plug>ToggleBackground <ESC><SID>TogBG<ESC>a
+   vnoremap <unique> <script> <Plug>ToggleBackground <ESC><SID>TogBG<ESC>gv
 
+   noremap <SID>togglebg  :call <SID>togglebg#()<CR>
 
+   call s:debug("Defined <Plug>ToggleBackground mapping")
+endif
 
-function! togglebg#colorscheme(colo_name)
-   call <SID>find_links()
-   exec "colorscheme " . a:colo_name
-   call <SID>restore_links()
+" Consider this deprecated. I'm only copying it to make transition easier — but it's rather
+" purposeless, given that you can just use the map-commands yourself.
+function! togglebg#map(activation)
+   try
+      exe "silent! nmap <unique> ".a:activation." <Plug>ToggleBackground"
+      exe "silent! imap <unique> ".a:activation." <Plug>ToggleBackground"
+      exe "silent! vmap <unique> ".a:activation." <Plug>ToggleBackground"
 
-   call s:debug("Set colorscheme: " . a:colo_name)
+      call s:debug("Mapped " . a:activation . "to <Plug>ToggleBackground!")
+   finally
+      return 0
+   endtry
 endfunction
+
 
 " Toggle `background`, either reloading the current colorscheme, or switching to a different one,
 " in the process.
@@ -62,10 +80,10 @@ function! togglebg#(...)
       let l:colorscheme = a:2
 
    elseif l:background ==? 'light' && exists("g:colorschemes.light")
-            \ && type(g:colorschemes.light) == type('')
+            \ && type(g:colorschemes.light) ==# type('')
       let l:colorscheme = g:colorschemes.light
    elseif l:background ==? 'dark' && exists("g:colorschemes.dark")
-            \ && type(g:colorschemes.dark) == type('')
+            \ && type(g:colorschemes.dark) ==# type('')
       let l:colorscheme = g:colorschemes.dark
 
    elseif exists('g:colors_name')
@@ -87,6 +105,14 @@ endfunction
 "    <https://github.com/altercation/solarized/issues/102#issuecomment-275269574>
 "
 " They allow for the 'safe' swapping of colorschemes that add language-specific highlight-groups.
+function! togglebg#colorscheme(colo_name)
+   call <SID>find_links()
+   exec "colorscheme " . a:colo_name
+   call <SID>restore_links()
+
+   call s:debug("Set colorscheme: " . a:colo_name)
+endfunction
+
 if !exists('s:known_links')
    let s:known_links = {}
 endif
@@ -136,8 +162,8 @@ function! s:restore_links() " {{{1
    endfor
 endfunction
 
-" NOTE: I really would rather use xolox#misc#msg#debug, but ... requiring the user to install vim-misc
-"       just for that? Meh.
+" NOTE: I really would rather use xolox#misc#msg#debug, but ... requiring the user to install
+"       vim-misc just for that? Meh.
 function! s:debug(msg)
    if &vbs >= 1
       echom a:msg
