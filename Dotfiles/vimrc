@@ -14,7 +14,7 @@ set hidden
 set textwidth=100 wrapmargin=3
 set cursorline colorcolumn=+1,+2,+3
 set number signcolumn=auto
-set smarttab expandtab tabstop=8 softtabstop=8 shiftwidth=3 shiftround
+set smarttab expandtab tabstop=8 softtabstop=3 shiftwidth=3 shiftround
 set smartcase ignorecase
 
 set nowrap
