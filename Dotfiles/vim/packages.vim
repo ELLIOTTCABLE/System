@@ -60,8 +60,10 @@ Plug 'arcticicestudio/nord-vim'  " dark theme
 
 
 " #### Small utilities
+Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
 Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
+Plug 'AndrewRadev/bufferize.vim'
 
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
 Plug 'vim-scripts/ShowTrailingWhitespace'
