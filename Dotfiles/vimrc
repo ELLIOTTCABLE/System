@@ -63,6 +63,18 @@ else
 endif
 
 
+if has("gui_vimr")
+   let g:colorschemes = {
+    \ 'dark':  'nord',
+    \ 'light': 'base16-atelier-lakeside-light'
+    \ }
+
+   call togglebg#("dark")
+else
+   call togglebg#("light", "solarized8")
+endif
+
+
 " Command-line tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.class,.svn

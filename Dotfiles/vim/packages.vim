@@ -50,9 +50,14 @@ Plug 'HerringtonDarkholme/yats.vim'
 
 " #### Colourschemes & appearance
 " I'm using different colourschemes in GUI and TUI vims.
-Plug 'arcticicestudio/nord-vim'
+" First, the backup, Terminal theme:
 Plug 'lifepillar/vim-solarized8'
 Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
+
+" Second, my actual, VimR/gui setup:
+Plug 'chriskempson/base16-vim'   " light theme (base16-atelier-lakeside-light)
+Plug 'arcticicestudio/nord-vim'  " dark theme
+
 
 " #### Small utilities
 Plug 'matze/vim-move'
