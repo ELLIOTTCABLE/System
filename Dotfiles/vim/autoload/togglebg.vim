@@ -23,11 +23,11 @@ endif
 
 " Again, intentionally using Solarized's mappings
 if !exists("g:togglebg_define_mapping") || g:togglebg_define_mapping
-   nnoremap <unique> <script> <Plug>ToggleBackground <SID>TogBG
-   inoremap <unique> <script> <Plug>ToggleBackground <ESC><SID>TogBG<ESC>a
-   vnoremap <unique> <script> <Plug>ToggleBackground <ESC><SID>TogBG<ESC>gv
+   nnoremap <unique> <script> <Plug>ToggleBackground <SID>togglebg
+   inoremap <unique> <script> <Plug>ToggleBackground <C-\><C-n><SID>togglebg<C-\><C-n>a
+   vnoremap <unique> <script> <Plug>ToggleBackground <C-\><C-n><SID>togglebg<C-\><C-n>gv
 
-   noremap <SID>togglebg  :call <SID>togglebg#()<CR>
+   noremap <SID>togglebg  :call togglebg#()<CR>
 
    call s:debug("Defined <Plug>ToggleBackground mapping")
 endif
