@@ -8,6 +8,20 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 
+" NOTE: I really would rather use xolox#misc#msg#debug, but ... requiring the user to install
+"       vim-misc just for that? Meh.
+function! s:debug(msg)
+   if &vbs >= 1
+      echom a:msg
+   endif
+endfunction
+
+function! s:init()
+   if !exists("no_plugin_maps") && !hasmapto('<Plug>ToggleBackground')
+      call togglebg#map("<F5>")
+   endif
+endfunction
+
 if !exists("g:togglebg_define_commands") || g:togglebg_define_commands
    command! -bar -nargs=* -complete=custom,<SID>complete_background ToggleBackground
        \ call togglebg#(<f-args>)
@@ -162,14 +176,12 @@ function! s:restore_links() " {{{1
    endfor
 endfunction
 
-" NOTE: I really would rather use xolox#misc#msg#debug, but ... requiring the user to install
-"       vim-misc just for that? Meh.
-function! s:debug(msg)
-   if &vbs >= 1
-      echom a:msg
-   endif
-endfunction
 
+if v:vim_did_enter
+   call s:init()
+else
+   au VimEnter * call s:init()
+endif
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
