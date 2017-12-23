@@ -62,11 +62,35 @@ else
    let g:lightline.colorscheme = 'solarized'
 endif
 
+function! s:ResetLightlineColorscheme()
+   if &background ==# 'light' && exists("g:colorschemes.lightline.light")
+      g:lightline.colorscheme = g:colorschemes.lightline.light
+   elseif &background ==# 'dark' && exists("g:colorschemes.lightline.dark")
+      g:lightline.colorscheme = g:colorschemes.lightline.dark
+   endif
+endfunction
 
+" FIXME: This is hacky, and intentionally stomps on / re-implements Lightline's own autocommands.
+function! s:FixLightlineAutocommands()
+   augroup lightline
+      au! ColorScheme
+      au  ColorScheme * call s:ResetLightlineColorscheme()
+      au  ColorScheme * call lightline#update()
+      au  ColorScheme * call lightline#highlight()
+   augroup END
+endfunction
+
+au VimEnter * call s:FixLightlineAutocommands()
+
+" Finally, I actually configure, and invoke, the color-switcher.
 if has("gui_vimr")
    let g:colorschemes = {
     \ 'dark':  'nord',
-    \ 'light': 'base16-atelier-lakeside-light'
+    \ 'light': 'base16-atelier-lakeside-light',
+    \ 'lightline': {
+    \    'dark': 'nord',
+    \    'light': 'nord'
+    \ }
     \ }
 
    call togglebg#("dark")
@@ -122,6 +146,8 @@ au! User GoyoLeave nested call <SID>goyo_leave()
 "
 "
 " === Styles ===
+let g:solarized_visibility = "high"
+
 " Colourize trailing whitespace
 hi ShowTrailingWhitespace ctermbg=Red guibg=Red
 
@@ -257,9 +283,9 @@ augroup END
 noremap  <silent> <F8>          :<C-u>set spell!<Return>
 inoremap <silent> <F8>     <C-O>:<C-u>set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:<C-u>set spell!<Return>
-"
-"call togglebg#map("<F5>")
-"
+
+call togglebg#map("<Leader>bg")
+
 " F9 to toggle focus-mode
 nmap <silent> <F9>  :Goyo<cr>
 imap <silent> <F9>  <C-O><F9>
@@ -512,8 +538,10 @@ if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:lightline.enable') | let g:lightline.enable = {} | endif
 
 " VimR already has a GUI buffer-explorer built-in
+" FIXME: VimR uses the built-in tabline; I'd really like this to switch from a bufline to a
+" traditional tabline, but *keep it themed by Lightline*, if possible.
 if has('gui_vimr')
-   set showtabline=0
+   set showtabline=1
    let g:lightline.enable.tabline = 0
 endif
 
