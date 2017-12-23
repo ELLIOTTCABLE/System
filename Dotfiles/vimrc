@@ -324,6 +324,7 @@ nnoremap <Leader>*         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
 
 nnoremap <Leader><F1>      :<C-u>Denite help<CR>
 
+
 " Mappings in Denite modals
 call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
 call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
@@ -331,8 +332,13 @@ call denite#custom#map('normal', '<Esc>', '<NOP>',                              
 call denite#custom#map('insert', '<CR>',  '<denite:do_action:switch>',           'noremap')
 call denite#custom#map('normal', '<CR>',  '<denite:do_action:switch>',           'noremap')
 
+call denite#custom#map('_',      '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
+call denite#custom#map('insert', '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
+
 call denite#custom#map('_',      '<C-s>', '<denite:do_action:splitswitch>',      'noremap')
 call denite#custom#map('_',      '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+
 
 " (Chosen to match the easymotion-bd-jk mapping)
 call denite#custom#map('normal', '<Leader>j', '<denite:quick_move>',             'noremap')
@@ -449,7 +455,14 @@ else
    let g:startify_files_number = 10
 endif
 let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc' ]
-let g:startify_commands = [ ':help reference' ]
+let g:startify_commands = [ ':help reference', ':PlugUpdate' ]
+
+let g:startify_skiplist = [
+ \    'COMMIT_EDITMSG',
+ \    escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
+ \    '/usr/local/Cellar/neovim/.*/runtime/doc',
+ \    'plugged/.*/doc',
+ \ ]
 
 let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles = 1
