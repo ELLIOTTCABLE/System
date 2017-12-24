@@ -50,23 +50,11 @@ source ~/.vim/packages.vim
 
 if !exists('g:lightline') | let g:lightline = {} | endif
 
-" Set the colour-scheme
-if has("gui_vimr")
-   colorscheme nord
-   let g:lightline.colorscheme = 'nord'
-else
-   set background=light
-   let g:seiya_auto_enable = 1
-   let g:solarized_use16 = 1
-   colorscheme solarized8
-   let g:lightline.colorscheme = 'solarized'
-endif
-
 function! s:ResetLightlineColorscheme()
    if &background ==# 'light' && exists("g:colorschemes.lightline.light")
-      g:lightline.colorscheme = g:colorschemes.lightline.light
+      let g:lightline.colorscheme = g:colorschemes.lightline.light
    elseif &background ==# 'dark' && exists("g:colorschemes.lightline.dark")
-      g:lightline.colorscheme = g:colorschemes.lightline.dark
+      let g:lightline.colorscheme = g:colorschemes.lightline.dark
    endif
 endfunction
 
@@ -89,12 +77,15 @@ if has("gui_vimr")
     \ 'light': 'base16-atelier-lakeside-light',
     \ 'lightline': {
     \    'dark': 'nord',
-    \    'light': 'nord'
+    \    'light': 'OldHope'
     \ }
     \ }
 
    call togglebg#("dark")
 else
+   let g:seiya_auto_enable = 1
+   let g:solarized_use16 = 1
+   let g:lightline.colorscheme = 'solarized'
    call togglebg#("light", "solarized8")
 endif
 
