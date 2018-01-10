@@ -397,7 +397,8 @@ set updatetime=250
 "                                 \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
 
 
-" === Filetype extension ===
+" === Filetypes ===
+" #### Extensions
 augroup filetypes | au!
    au BufNewFile,BufFilePre,BufRead *.md
     \ set filetype=markdown
@@ -418,22 +419,24 @@ augroup filetypes | au!
    au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 augroup END
 
-
+" #### OCaml
 augroup ocamlmaps | au!
-   au FileType ocaml nmap <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
-   au FileType ocaml nmap <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
-   au FileType ocaml nmap <LocalLeader>r   <Plug>(MerlinRename)
-   au FileType ocaml nmap <LocalLeader>R   <Plug>(MerlinRenameAppend)
+   au FileType ocaml map <silent> <buffer> <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
+   au FileType ocaml map <silent> <buffer> <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
+   au FileType ocaml map <silent> <buffer> <LocalLeader>r   <Plug>(MerlinRename)
+   au FileType ocaml map <silent> <buffer> <LocalLeader>R   <Plug>(MerlinRenameAppend)
 
    " I don't know why Merlin doesn't ship with a mapping for these.
-   au FileType ocaml nmap <LocalLeader>y  :MerlinYankLatestType<cr>
-   au FileType ocaml nmap <LocalLeader>l  :MerlinLocate<cr>
+   au FileType ocaml map <silent> <buffer> <LocalLeader>y  <C-u>:MerlinYankLatestType<cr>
+   au FileType ocaml map <silent> <buffer> <LocalLeader>l  <C-u>:MerlinLocate<cr>
 
+   " FIXME: Report these; they should support buffer-local settings as well as global ones
+   au FileType ocaml let g:merlin_textobject_grow   = 'm'
+   au FileType ocaml let g:merlin_textobject_shrink = 'M'
+   au FileType ocaml call merlin#Register()
 augroup END
 
 " FIXME: idk how to make these non-global, though. They should really be au-filetype'd.
-let g:merlin_textobject_grow   = 'm'
-let g:merlin_textobject_shrink = 'M'
 
 
 "" === Plugins ===
