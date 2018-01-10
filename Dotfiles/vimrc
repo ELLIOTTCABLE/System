@@ -420,6 +420,8 @@ augroup filetypes | au!
 augroup END
 
 " #### OCaml
+let g:no_ocaml_maps=1
+
 augroup ocamlmaps | au!
    au FileType ocaml map <silent> <buffer> <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
    au FileType ocaml map <silent> <buffer> <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
