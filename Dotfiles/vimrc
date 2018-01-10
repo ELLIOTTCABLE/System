@@ -187,6 +187,18 @@ for map_command in ['noremap', 'noremap!', 'tnoremap']
    " for one purpose, and shifted '_' and '+' for another.
    execute map_command . ' <silent> <C-w>- <C-\><C-n><C-w>_'
    execute map_command . ' <silent> <C-w>_ <C-\><C-n><C-w>-'
+
+   " Duplicate some macOS bindings in the GUI
+   if has('gui_vimr')
+      " “⌘ -T” maps to “fuzzy-open file” in many macOS text-editors
+      " FIXME: this needs to be remapped, oops
+      " REPORTME: VimR pre-maps ⌘ -T.
+      execute map_command . ' <silent> <D-t> <C-\><C-n><C-p>'
+
+      " ⇧ ⌘ [ / ] navigates tabpages in every other macOS application, so,
+      execute map_command . ' <silent> <S-D-}> <C-\><C-n>gt'
+      execute map_command . ' <silent> <S-D-{> <C-\><C-n>gT'
+   endif
 endfor
 
 map /  <Plug>(incsearch-easymotion-/)
