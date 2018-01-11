@@ -287,8 +287,6 @@ noremap  <silent> <F8>          :<C-u>set spell!<Return>
 inoremap <silent> <F8>     <C-O>:<C-u>set spell!<Return>
 vnoremap <silent> <F8>     <Esc>:<C-u>set spell!<Return>
 
-call togglebg#map("<Leader>bg")
-
 " F9 to toggle focus-mode
 nmap <silent> <F9>  :Goyo<cr>
 imap <silent> <F9>  <C-O><F9>
@@ -305,6 +303,8 @@ imap <silent> <S-F12> <C-O><S-F12>
 
 " Toggle conealing with <Space>-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
+map  <silent> <Leader>bg   <Plug>ToggleBackground
 
 " Toggle highlighting of trailing whitespace with <Space>-s4
 " mnemonic: 'whiteZpace'
