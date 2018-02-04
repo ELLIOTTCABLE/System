@@ -61,6 +61,8 @@ Plug 'arcticicestudio/nord-vim'  " dark theme
 
 " #### Small utilities
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
+Plug 'tpope/vim-abolish' " Life is unlivable without :Subvert. Let's be real.
+Plug 'tpope/vim-surround'
 Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
 Plug 'AndrewRadev/bufferize.vim'
