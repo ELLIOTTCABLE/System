@@ -158,6 +158,13 @@ nrs(){ local script="$1"; shift; npm --loglevel=silent run-script "$script" -- "
 alias svisor="supervisor --no-restart-on exit"
 alias cvisor="svisor --extensions 'node|js|coffee|iced' --exec coffee"
 
+### OCaml
+# `:MerlinLocate` et al cannot locate OPAM-installed stuff, unless that stuff is left laying around
+# (see: <https://github.com/ocaml/merlin/wiki/Letting-merlin-locate-go-to-stuff-in-.opam>)
+export OPAMKEEPBUILDDIR=true
+export OCAMLPARAM="_,bin-annot=1"
+
+
 alias grep='grep --color=auto'
 alias ag="ag --group --pager='less -XFRS' \
    --color --color-path=91 --color-line-number='`printf "m   \033[96"`' --color-match=34"

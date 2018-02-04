@@ -54,16 +54,18 @@ source $HOME/.opam/opam-init/variables.sh
 
 
 # TODO: I'm pretty sure there's a command to manage these.
+# FIXME: opam's global stuff is currently overriding the local definitions here. fix that.
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  6. < Homebrew
-  PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  5. < Homebrew's llvm / clang
+  PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  7. < Homebrew
+  PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  6. < Homebrew's llvm / clang
 
   PATH="$PATH:/Library/TeX/texbin"     # -4. > MacTeX
   PATH="$PATH:/usr/X11/bin"            # -3. > X11
 fi
-PATH="$HOME/.bin:$PATH"                #  4. < local binaries
-PATH="$HOME/.cargo/bin:$PATH"          #  3. < Cargo (Rust) binaries
-PATH="$HOME/.nodenv/shims:$PATH"       #  2. < nodenv shims
+PATH="$HOME/.bin:$PATH"                #  5. < local binaries
+PATH="$HOME/.cargo/bin:$PATH"          #  4. < Cargo (Rust) binaries
+PATH="$HOME/.nodenv/shims:$PATH"       #  3. < nodenv shims
+PATH="./_opam/bin:$PATH"               #  2. < opam (local)
 PATH="./node_modules/.bin:$PATH"       #  1. < npm (local)
 
 PATH="$PATH:/usr/local/cuda/bin"       # -2. > CUDA
