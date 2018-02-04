@@ -11,7 +11,7 @@ if !has('nvim')
 endif
 
 set hidden
-set textwidth=100 wrapmargin=3
+set textwidth=100 wrapmargin=3 nojoinspaces
 set cursorline colorcolumn=+1,+2,+3
 set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=3 shiftwidth=3 shiftround
@@ -175,10 +175,6 @@ nnoremap ` '
 
 " See `:help Y`
 map Y y$
-
-" Because why `j` et al step over a bajillion visible lines at a time, I cannot fathom.
-nnoremap j gj
-nnoremap k gk
 
 " #### Global mappings
 for map_command in ['noremap', 'noremap!', 'tnoremap']
