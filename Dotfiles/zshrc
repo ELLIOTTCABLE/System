@@ -165,7 +165,6 @@ done
 # ==========
 # = Prompt =
 # ==========
-
 PURE_PROMPT_SYMBOL_COLOR='157'   # purer-prompt addition
 PURE_CMD_MAX_EXEC_TIME='3'
 PURE_GIT_DOWN_ARROW='⟱ '
@@ -178,6 +177,31 @@ PURE_GIT_UP_ARROW='⟰ '
 #  return $STATUS
 #}
 #zle -N   zle-line-init
+
+
+# ### Terminal-cursor manipulation
+# To match the terminal-cursor to the current vi-mode, we first need to ensure the cursor swaps
+# every time the vi-mode swaps:
+autoload -Uz add-zsh-hook add-zle-hook-widget
+add-zle-hook-widget  line-init      set-vi-mode-terminal-cursor
+add-zle-hook-widget  keymap-select  set-vi-mode-terminal-cursor
+
+set-vi-mode-terminal-cursor () {
+   case $KEYMAP in
+      vicmd) echo -ne '\e[1 q';; # block cursor
+      viins|main|*) echo -ne '\e[5 q';; # bar cursor
+   esac
+}
+
+# ... then, we'll need to make zsh *reset* the cursor when invoking the actual command submitted.
+# NOTE: I can't *query* the terminal's prior setting — if you want your terminal to default to a
+# different cursor, you'll have to edit it *here*, as well as in your terminal settings!
+add-zsh-hook         preexec        reset-vi-mode-terminal-cursor
+
+reset-vi-mode-terminal-cursor () {
+   echo -ne '\e[1 q'
+}
+
 
 # ### Titlebar and tab titles
 # (Requires the `termsupport` from OMZ.)
