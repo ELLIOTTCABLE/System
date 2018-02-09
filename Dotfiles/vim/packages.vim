@@ -37,7 +37,7 @@ Plug 'Shougo/denite.nvim'
 
 " #### Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab' " FIXME: HOW DO COMPLETUN WERK
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'

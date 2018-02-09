@@ -438,6 +438,10 @@ augroup ocamlmaps | au!
 
    " Need to override `ocp-indent.vim`'s built-in indentexpr with `let-def/ocp-indent-vim`'s.
    au FileType ocaml setlocal indentexpr=ocpindent#OcpIndentLine()
+
+   " REPORTME: It looks like Merlin's omnifunc is broken with Deoplete? I'm using
+   "	       `copy/deoplete-ocaml` instead, so.
+   "au FileType ocaml set omnifunc<
 augroup END
 
 
@@ -821,23 +825,29 @@ let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#case_insensitive = 1
 let g:deoplete#sources#ternjs#include_keywords = 1
 
-let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
+" FIXME: Deoplete support by Merlin's `merlin#Complete` omnifunc seems broken. Disabling in favour
+"        of `copy/deoplete-ocaml`, for now.
+"let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
+
+" As suggested by `copy/deoplete-ocaml`:
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources.ocaml = ['buffer', 'around']
 
 
 " #### SuperTab
 " FIXME: .... more
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabContextDefaultCompletionType = "<c-p>"
-augroup supertab-config | au!
-   au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-   au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-augroup END
-
-
-let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
-let g:SuperTabLongestEnhanced = 1
-let g:SuperTabLongestHighlight = 1
-let g:SuperTabClosePreviewOnPopupClose = 1
+"let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabContextDefaultCompletionType = "<c-p>"
+"augroup supertab-config | au!
+"   au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+"   au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+"augroup END
+"
+"
+"let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
+"let g:SuperTabLongestEnhanced = 1
+"let g:SuperTabLongestHighlight = 1
+"let g:SuperTabClosePreviewOnPopupClose = 1
 
 " #### UltiSnips
 " FIXME: .... more
