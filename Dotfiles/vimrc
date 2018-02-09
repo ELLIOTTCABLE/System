@@ -418,6 +418,9 @@ augroup END
 " #### OCaml
 let g:no_ocaml_maps=1
 
+if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
+let g:polyglot_disabled += ['ocaml']
+
 augroup ocamlmaps | au!
    au FileType ocaml map <silent> <buffer> <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
    au FileType ocaml map <silent> <buffer> <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
@@ -432,9 +435,10 @@ augroup ocamlmaps | au!
    au FileType ocaml let g:merlin_textobject_grow   = 'm'
    au FileType ocaml let g:merlin_textobject_shrink = 'M'
    au FileType ocaml call merlin#Register()
-augroup END
 
-" FIXME: idk how to make these non-global, though. They should really be au-filetype'd.
+   " Need to override `ocp-indent.vim`'s built-in indentexpr with `let-def/ocp-indent-vim`'s.
+   au FileType ocaml setlocal indentexpr=ocpindent#OcpIndentLine()
+augroup END
 
 
 "" === Plugins ===
@@ -545,7 +549,6 @@ let g:incsearch#magic = '\v' " very magic
 "let g:javascript_conceal_function         = "ƒ"
 "let g:javascript_conceal_this             = "@"
 "let g:javascript_conceal_arrow_function   = "⇒"
-
 
 " #### lightline.vim
 if !exists('g:lightline') | let g:lightline = {} | endif

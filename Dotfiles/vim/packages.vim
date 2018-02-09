@@ -30,7 +30,7 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 
 " Pending:
 "    <https://github.com/ocaml/merlin/issues/729>
-"Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
+Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'Shougo/denite.nvim'
 
@@ -43,6 +43,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern' }
+
+Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 
 " #### Languages
 Plug 'sheerun/vim-polyglot'
@@ -109,6 +111,9 @@ for tool in s:opam_packages
    endif
 endfor
 " ## end of OPAM user-setup addition for vim / base ## keep this line
+
+" Has to come last, to override `ocp-indent.vim`'s `indentexpr` setting.
+Plug 'let-def/ocp-indent-vim'
 
 
 " Initialize plugin system
