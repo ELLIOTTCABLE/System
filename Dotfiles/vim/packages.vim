@@ -96,12 +96,13 @@ function! OpamConfOcpIndex()
 endfunction
 let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
 
-function! OpamConfMerlin()
-   call plug#(fnameescape(s:opam_share_dir . '/merlin/vim'))
-endfunction
-let s:opam_configuration['merlin'] = function('OpamConfMerlin')
+"function! OpamConfMerlin()
+"   call plug#(fnameescape(s:opam_share_dir . '/merlin/vim'))
+"endfunction
+"let s:opam_configuration['merlin'] = function('OpamConfMerlin')
 
-let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+"let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+let s:opam_packages = ["ocp-indent", "ocp-index"]
 let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
 let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
 for tool in s:opam_packages
@@ -114,6 +115,8 @@ endfor
 
 " Has to come last, to override `ocp-indent.vim`'s `indentexpr` setting.
 Plug 'let-def/ocp-indent-vim'
+
+Plug '~/Documents/Code/Source/merlin/vim/merlin/'
 
 
 " Initialize plugin system
