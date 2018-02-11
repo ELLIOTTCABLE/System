@@ -31,7 +31,7 @@ zplug Vifon/deer, use:"deer"
 zplug supercrabtree/k
 
 # These offer useful prompt/status-functions
-zplug jsahlen/nodenv.plugin.zsh
+zplug ELLIOTTCABLE/nodenv.plugin.zsh # A repaired fork of `jsahlen/nodenv.plugin.zsh`
 zplug ELLIOTTCABLE/rbenv.plugin.zsh
 
 # NOTE: I had to *also* call OPAM's `variables.sh` from `.shenv`.
