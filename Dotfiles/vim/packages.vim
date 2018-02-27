@@ -68,6 +68,7 @@ Plug 'tpope/vim-surround'
 Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
 Plug 'AndrewRadev/bufferize.vim'
+Plug 'tomtom/tcomment_vim'
 
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
 Plug 'vim-scripts/ShowTrailingWhitespace'
