@@ -302,7 +302,7 @@ map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<
 
 map  <silent> <Leader>bg   <Plug>ToggleBackground
 
-" Toggle highlighting of trailing whitespace with <Space>-s4
+" Toggle highlighting of trailing whitespace with <Space>-zs
 " mnemonic: 'whiteZpace'
 nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
 nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
@@ -322,6 +322,22 @@ nnoremap <Leader>*         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
 "nnoremap <Leader>hc        :<C-u>Denite history:cmd -mode=normal<CR>
 
 nnoremap <Leader><F1>      :<C-u>Denite help<CR>
+
+
+" These default to `[c`, `]c`, `ic`, and `ac`; but the latter conflicts with TComment.
+let g:gitgutter_map_keys = 0
+nmap [h <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
+
+" Thanks to disabling `gitgutter_map_keys`, I also have to re-define these to their defaults.
+nmap <Leader>hp <Plug>GitGutterPreviewHunk
+nmap <Leader>hs <Plug>GitGutterStageHunk
+nmap <Leader>hu <Plug>GitGutterUndoHunk
 
 
 " Mappings in Denite modals
