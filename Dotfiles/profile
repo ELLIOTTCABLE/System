@@ -69,10 +69,10 @@ move-n-link()( [ $# -ne 2 ] && print "Usage: move-n-link FROM TO" && exit 1;
 export CLICOLOR='yes'
 
 # Vim invocations
-van()  {  vim "+map q :<C-u>qa<CR>" "+help $1" "+only" ;}
-mvan() { mvim "+map q :<C-u>qa<CR>" "+help $1" "+only" ;}
-nvan() { nvim "+map q :<C-u>qa<CR>" "+help $1" "+only" "+Goyo 80x100%" ;}
-vanr() { vimr --nvim "+map q :<C-u>qa<CR>" "+help $1" "+only" "+Goyo 80x100%" ;}
+van()  {  vim               '+call vimman#("'"$1"'")' ;}
+mvan() { mvim               '+call vimman#("'"$1"'")' ;}
+nvan() { nvim               '+call vimman#("'"$1"'")' ;}
+vanr() { vimr --nvim --wait '+call vimman#("'"$1"'")' ;}
 
 nvpu() { nvim "+PlugUpdate" "+only" "+q" ;}
 

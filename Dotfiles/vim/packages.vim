@@ -60,6 +60,9 @@ Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
 Plug 'chriskempson/base16-vim'   " light theme (base16-atelier-lakeside-light)
 Plug 'arcticicestudio/nord-vim'  " dark theme
 
+" Finally, the "manpage" theme
+Plug 'logico-dev/typewriter'
+
 
 " #### Small utilities
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
