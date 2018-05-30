@@ -50,6 +50,8 @@ Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
+Plug 'tpope/vim-scriptease'
+
 " #### Colourschemes & appearance
 " I'm using different colourschemes in GUI and TUI vims.
 " First, the backup, Terminal theme:
