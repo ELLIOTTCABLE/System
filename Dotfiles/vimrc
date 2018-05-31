@@ -501,6 +501,15 @@ let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p
 " #### Goyo
 let g:goyo_width = 100
 
+" #### Fugitive
+augroup my-fugitive | au!
+   autocmd BufReadPost fugitive://* set bufhidden=delete
+   autocmd User fugitive
+    \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+    \   nnoremap <buffer> .. :edit %:h<CR> |
+    \ endif
+augroup END
+
 " #### Denite
 call denite#custom#option('_', {
  \    'prompt':         '❯'
@@ -596,7 +605,8 @@ augroup END
 
 let g:lightline.active = {
  \    'left':  [  ['mode', 'paste'],
- \                ['bufnum', 'filename', 'readonly',  'modified']  ],
+ \                ['bufnum', 'filename', 'readonly',  'modified'],
+ \                ['gitbranch'],  ],
  \    'right': [  ['charvaluehex', 'lineinfo'],
  \                ['percent'],
  \                ['fileencoding', 'fileformat', 'filetype']  ]
@@ -651,6 +661,7 @@ let g:lightline.component_function = {
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
  \    'bufferinfo':  'lightline#buffer#bufferinfo',
+ \    'gitbranch':   'fugitive#head',
  \ }
 
 let g:lightline.component_visible_condition = {

@@ -33,6 +33,7 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'Shougo/denite.nvim'
+Plug 'chemzqm/unite-location'
 
 
 " #### Completion
@@ -67,6 +68,7 @@ Plug 'logico-dev/typewriter'
 
 
 " #### Small utilities
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
 Plug 'tpope/vim-abolish' " Life is unlivable without :Subvert. Let's be real.
 Plug 'tpope/vim-surround'
