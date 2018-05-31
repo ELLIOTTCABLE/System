@@ -421,7 +421,7 @@ augroup filetypes | au!
    au BufNewFile,BufFilePre,BufRead *.pegjs
     \ set filetype=pegjs
 
-   au BufNewFile,BufFilePre,BufRead {.profile,.zprofile,.zlogin,.zlogout,.zshrc,.zshenv}
+   au BufNewFile,BufFilePre,BufRead {*profile,*zlogin,*zlogout,*shrc,*shenv}
     \ set filetype=zsh
 
    " Like, I'm supposed to put these in separate files, but lol no thx?
@@ -609,18 +609,18 @@ let g:lightline.active = {
  \                ['gitbranch'],  ],
  \    'right': [  ['charvaluehex', 'lineinfo'],
  \                ['percent'],
- \                ['fileencoding', 'fileformat', 'filetype']  ]
+ \                ['fileencoding', 'fileformat', 'filetype'],  ],
  \ }
 let g:lightline.inactive = {
  \    'left':  [  [ 'bufnum', 'filename' ]  ],
  \    'right': [  [ 'lineinfo' ],
- \                [ 'percent' ]  ],
+ \                [ 'percent' ],  ],
  \ }
 
 let g:lightline.tabline = {
  \    'left':  [  ['bufferinfo'], ['separator'],
- \                ['bufferbefore', 'buffercurrent', 'bufferafter']   ],
- \    'right': [  ['close']  ],
+ \                ['bufferbefore', 'buffercurrent', 'bufferafter'],   ],
+ \    'right': [  ['close'],  ],
  \ }
 let g:lightline.tab = {
  \    'active':   ['tabnum', 'filename', 'modified'],
