@@ -30,7 +30,7 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 
 " Pending:
 "    <https://github.com/ocaml/merlin/issues/729>
-Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
+"Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'Shougo/denite.nvim'
 Plug 'chemzqm/unite-location'
@@ -50,6 +50,12 @@ Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 " #### Languages
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
+
+" Pending sheerun/vim-polyglot#320.
+if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
+let g:polyglot_disabled += ['ocaml']
+
+Plug 'rgrinberg/vim-ocaml'
 
 Plug 'tpope/vim-scriptease'
 
