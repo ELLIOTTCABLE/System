@@ -72,7 +72,7 @@ export CLICOLOR='yes'
 van()  {  vim               '+call vimman#("'"$1"'")' ;}
 mvan() { mvim               '+call vimman#("'"$1"'")' ;}
 nvan() { nvim               '+call vimman#("'"$1"'")' ;}
-vanr() { vimr --nvim --wait '+call vimman#("'"$1"'")' ;}
+vanr() { vimr --nvim        '+call vimman#("'"$1"'")' ;}
 
 nvpu() { nvim "+PlugUpdate" "+only" "+q" ;}
 

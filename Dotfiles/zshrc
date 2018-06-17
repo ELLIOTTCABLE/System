@@ -129,9 +129,13 @@ bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
 
 # Allow `!` in command-mode to open the current command-line in a full vim:
+nvim-command-line () {
+   local VISUAL='nvim'
+   edit-command-line
+}
 autoload edit-command-line && {
-   zle -N edit-command-line
-   bindkey -M vicmd ! edit-command-line
+   zle -N nvim-command-line
+   bindkey -M vicmd ! nvim-command-line
 }
 
 # zsh-surround

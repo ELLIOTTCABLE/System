@@ -154,6 +154,11 @@ endif
 "endif
 
 
+" === Commands ===
+" From https://stackoverflow.com/questions/4545275/vim-close-all-buffers-but-this-one#comment86214068_42071865
+command! BufOnly silent! execute "%bd|e#|bd#"
+
+
 " === Mappings ===
 " Thanks, Damian. http://ell.io/i6io1
 nnoremap ; :
