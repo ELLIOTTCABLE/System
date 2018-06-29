@@ -39,6 +39,139 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Vimmer's Colemak Number-row",
+                        "manipulators": [
+                            {
+                                "description": "Left index: shift-4/$ ⇒ 1",
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "1"
+                                    }
+                                ],
+                                "conditions": [
+                                   {
+                                      "type": "input_source_if",
+                                      "input_sources": [
+                                         {
+                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                         }
+                                      ]
+                                   }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Left index: 4 ⇒ shift-1/!",
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "1",
+                                        "modifiers": [
+                                           "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "conditions": [
+                                   {
+                                      "type": "input_source_if",
+                                      "input_sources": [
+                                         {
+                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                         }
+                                      ]
+                                   }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Left middle: shift-3/# ⇒ 3",
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "3"
+                                    }
+                                ],
+                                "conditions": [
+                                   {
+                                      "type": "input_source_if",
+                                      "input_sources": [
+                                         {
+                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                         }
+                                      ]
+                                   }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Left middle: 3 ⇒ shift-3/#",
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "3",
+                                        "modifiers": [
+                                           "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "conditions": [
+                                   {
+                                      "type": "input_source_if",
+                                      "input_sources": [
+                                         {
+                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                         }
+                                      ]
+                                   }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
