@@ -18,19 +18,15 @@ module.exports = {
       // custom css to embed in the terminal window
       termCSS: '',
 
-      base16: {
-         scheme: 'eighties'
-      },
-
       hyperStatusLine: {
          fontSize: 10
 
-       , dirtyColor: '#cc99cc' // eighties-0E
-       , aheadColor: '##99cc99' // eighties-0B
+       , dirtyColor: '#B5BD68' // eighties-0E
+       , aheadColor: '#04C975' // eighties-0B
       },
 
       hyperBorder: {
-         borderColors: ['#99cc99', '#66cccc']
+         borderColors: ['#8ABEB7', '#80B6AD']
        , borderWidth: '3px'
        , borderAngle: '120deg'
        , animate: true
@@ -45,11 +41,10 @@ module.exports = {
    plugins: [
       'hypercwd'
 
-    , 'hypersixteen'
+    , 'hyper-aurora'
     , 'hyperterm-bold-tab'
     , 'hyperborder'
 
-  //, 'hyperterm-alternatescroll'      // Pending lkzhao/hyperterm-alternatescroll#11
   //, 'hyperterm-focus-reporting'      // Pending brianc/hyperterm-focus-reporting#1
 
     , 'hyper-tabs-enhanced'
