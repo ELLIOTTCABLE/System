@@ -37,7 +37,6 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' substitute 1
 zstyle ':completion:*' verbose true
-zstyle :compinstall filename '/Users/elliottcable/.zshrc'
 
 # Lines configured by zsh-newuser-install
 setopt AUTOCD BEEP EXTENDEDGLOB NOMATCH NOTIFY
