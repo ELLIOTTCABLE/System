@@ -3,7 +3,13 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-source $HOME/.shenv
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.profile (before): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
+
+
+source "$HOME/.shenv"
 
 source $HOME/.profile.local
 while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
@@ -346,6 +352,12 @@ rse() {
 #  test -f "$f" && . "$f"
 #done
 # }}}
+
+
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.profile (after): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
 
 # Create files as u=rwx, g=rx, o=rx
 umask 022

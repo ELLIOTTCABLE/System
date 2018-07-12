@@ -3,8 +3,14 @@
 #
 # See: <https://kb.iu.edu/d/abdy>
 
+#echo '~/.shenv: $SHENV_EVALUATED = '\'"$SHENV_EVALUATED"\'
 if [[ -z "$SHENV_EVALUATED" ]]; then
 SHENV_EVALUATED='true'
+
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.shenv (before): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
 
 
 # FIXME: The default path, with ~/.zshrc and ~/.profile disabled, seems to be `/usr/bin:/bin`. This
@@ -72,5 +78,10 @@ PATH="$PATH:/usr/local/cuda/bin"       # -2. > CUDA
 PATH="$PATH:$EC2_HOME/bin"             # -1. > EC2
 export PATH
 
+
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.shenv (after): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
 
 fi # [[ -z "$SHENV_EVALUATED" ]]

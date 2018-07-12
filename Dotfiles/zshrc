@@ -6,6 +6,12 @@ if [[ "$PROFILE_STARTUP" == true ]]; then
     setopt xtrace prompt_subst
 fi
 
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.zshrc (before): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
+
+
 if [ -f "$HOME/.profile.local" ]; then source "$HOME/.profile.local"; fi
 
 source "$HOME/.profile"
@@ -331,6 +337,11 @@ else
    #}
 fi
 
+
+if [[ "$DEBUG_PATH" == true ]]; then
+   echo '~/.zshrc (after): $PATH = '
+   echo $PATH | tr ':' "\n" | nl
+fi
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
