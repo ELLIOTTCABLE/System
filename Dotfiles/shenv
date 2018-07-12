@@ -13,11 +13,34 @@ if [[ "$DEBUG_PATH" == true ]]; then
 fi
 
 
+# Remove or replace an element of $1
+#
+#   $1 name of the shell variable to set (e.g. 'PATH')
+#   $2 the precise string to be removed/replaced
+#   $3 the replacement string (use "" for removal)
+function replace_el () {
+   list="$(eval echo '$'"$1")"
+   export $1="$(echo "$list" | tr ":" "\n" | sed "s:^$2\$:$3:; /^\$/d" | tr "\n" ":" | sed 's|:$||')"
+}
+
+function prepend_el () {
+   replace_el "$1" "$2"
+   list="$(eval echo '$'"$1")"
+   export $1="$2:$list"
+}
+
+function append_el () {
+   replace_el "$1" "$2"
+   list="$(eval echo '$'"$1")"
+   export $1="$list:$2"
+}
+
+
 # FIXME: The default path, with ~/.zshrc and ~/.profile disabled, seems to be `/usr/bin:/bin`. This
 #        should be `/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin`, as it is for new accounts. I've
 #        screwed up some configuration somewhere, but I have no idea where. I'm hard-coding this,
 #        for now; but it needs to be tracked down and fixed. (AS OF MAVERICKS)
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 
 
 export SYSTEM_OSX='Mac OS X'
@@ -55,19 +78,24 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
 fi
 
 
+# $PATH setup
+# ===========
+# NOTE: Be aware that `packages.zsh` is loaded *after* this, and thus several zsh packages (notably
+# Nodenv and Rbenv) are going to prepend *all* of these, taking first-place in the lookup order.
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  PATH="$HOMEBREW_PREFIX/bin:$PATH"             #  7. < Homebrew
-  PATH="$HOMEBREW_PREFIX/opt/llvm/bin:$PATH"    #  6. < Homebrew's llvm / clang
+  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  5. < Homebrew
+  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  4. < Homebrew's llvm / clang
 
-  PATH="$PATH:/Library/TeX/texbin"     # -4. > MacTeX
-  PATH="$PATH:/usr/X11/bin"            # -3. > X11
+  append_el PATH "/Library/TeX/texbin"    # -4. > MacTeX
+  append_el PATH "/usr/X11/bin"           # -3. > X11
 fi
-PATH="$HOME/.bin:$PATH"                #  5. < local binaries
-PATH="$HOME/.cargo/bin:$PATH"          #  4. < Cargo (Rust) binaries
-PATH="./node_modules/.bin:$PATH"       #  1. < npm (local)
+prepend_el PATH "$HOME/.bin"              #  3. < local binaries
+prepend_el PATH "$HOME/.cargo/bin"        #  2. < Cargo (Rust) binaries
+prepend_el PATH "./node_modules/.bin"     #  1. < npm (local)
 
-PATH="$PATH:/usr/local/cuda/bin"       # -2. > CUDA
-PATH="$PATH:$AWS_HOME/bin"             # -1. > EC2
+append_el PATH "/usr/local/cuda/bin"      # -2. > CUDA
+append_el PATH "$AWS_HOME/bin"            # -1. > EC2
+
 export PATH
 
 
