@@ -43,11 +43,24 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'], 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern' }
+Plug 'carlitux/deoplete-ternjs', {
+ \ 'for': ['javascript', 'javascript.jsx'],
+ \ 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern'
+ \ }
 
 Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 
 " #### Languages
+Plug 'autozimu/LanguageClient-neovim', {
+ \ 'for': ['ocaml', 'reason'],
+ \ 'branch': 'next',
+ \ 'do': 'bash install.sh',
+ \ }
+
+Plug 'reasonml-editor/vim-reason-plus', {
+ \ 'for': ['ocaml', 'reason'],
+ \ }
+
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 
@@ -110,13 +123,19 @@ function! OpamConfOcpIndex()
 endfunction
 let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
 
-"function! OpamConfMerlin()
-"   call plug#(fnameescape(s:opam_share_dir . '/merlin/vim'))
-"endfunction
-"let s:opam_configuration['merlin'] = function('OpamConfMerlin')
+function! OpamConfMerlin()
+  call plug#(fnameescape(s:opam_share_dir . '/merlin/vim'))
+endfunction
+let s:opam_configuration['merlin'] = function('OpamConfMerlin')
 
-"let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
-let s:opam_packages = ["ocp-indent", "ocp-index"]
+
+if g:use_own_merlin
+   let s:opam_packages = ["ocp-indent", "ocp-index"]
+   Plug '~/Documents/Code/Source/merlin/vim/merlin/'
+else
+   let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+endif
+
 let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
 let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
 for tool in s:opam_packages
@@ -129,8 +148,6 @@ endfor
 
 " Has to come last, to override `ocp-indent.vim`'s `indentexpr` setting.
 Plug 'let-def/ocp-indent-vim'
-
-Plug '~/Documents/Code/Source/merlin/vim/merlin/'
 
 
 " Initialize plugin system

@@ -36,6 +36,9 @@ set showtabline=2 laststatus=2 cmdheight=2 showmode
 
 syntax on
 
+" NOTE: Swap this to iterate on the Merlin vim-plugin
+let g:use_own_merlin     = v:false
+let g:use_languageclient = v:true
 
 
 " `vim-plug` installation & package-loading
@@ -49,6 +52,8 @@ source ~/.vim/packages.vim
 
 
 if !exists('g:lightline') | let g:lightline = {} | endif
+if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
+
 
 function! s:ResetLightlineColorscheme()
    if &background ==# 'light' && exists("g:colorschemes.lightline.light")
@@ -315,6 +320,9 @@ nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
 " <Ctrl-P> for both switching between buffers, and opening new ones!
 nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_rec<CR>
 
+" (Need to remap ControlP, so it doesn't stomp on the above Denite mapping.)
+let g:ctrlp_map = '<c-o>'
+
 nnoremap <Leader>d         :<C-u>DeniteBufferDir file_rec<CR>
 "nnoremap <Leader>ss        :<C-u>DeniteBufferDir buffer<CR>
 
@@ -439,23 +447,34 @@ augroup END
 " #### OCaml
 let g:no_ocaml_maps=1
 
+let g:LanguageClient_serverCommands.reason = ['ocaml-language-server', '--stdio']
+let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio']
+
+let g:LanguageClient_autoStart = v:true
+
 augroup ocamlmaps | au!
-   au FileType ocaml map <silent> <buffer> <LocalLeader>*   <Plug>(MerlinSearchOccurrencesForward)
-   au FileType ocaml map <silent> <buffer> <LocalLeader>#   <Plug>(MerlinSearchOccurrencesBackward)
-   au FileType ocaml map <silent> <buffer> <LocalLeader>r   <Plug>(MerlinRename)
-   au FileType ocaml map <silent> <buffer> <LocalLeader>R   <Plug>(MerlinRenameAppend)
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>*  <Plug>(MerlinSearchOccurrencesForward)
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>#  <Plug>(MerlinSearchOccurrencesBackward)
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>r  <Plug>(MerlinRename)
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>R  <Plug>(MerlinRenameAppend)
 
    " I don't know why Merlin doesn't ship with a mapping for these.
-   au FileType ocaml map <silent> <buffer> <LocalLeader>y  <C-u>:MerlinYankLatestType<cr>
-   au FileType ocaml map <silent> <buffer> <LocalLeader>l  <C-u>:MerlinLocate<cr>
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>y  <C-u>:MerlinYankLatestType<cr>
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>l  <C-u>:MerlinLocate<cr>
 
    " FIXME: Report these; they should support buffer-local settings as well as global ones
-   au FileType ocaml let g:merlin_textobject_grow   = 'm'
-   au FileType ocaml let g:merlin_textobject_shrink = 'M'
-   au FileType ocaml call merlin#Register()
+   au FileType ocaml,reason let g:merlin_textobject_grow   = 'm'
+   au FileType ocaml,reason let g:merlin_textobject_shrink = 'M'
+   au FileType ocaml,reason call merlin#Register()
 
    " Need to override `ocp-indent.vim`'s built-in indentexpr with `let-def/ocp-indent-vim`'s.
-   au FileType ocaml setlocal indentexpr=ocpindent#OcpIndentLine()
+   "au FileType ocaml setlocal indentexpr=ocpindent#OcpIndentLine()
+   au FileType ocaml let &l:formatprg = "refmt --parse ml --print ml" .
+    \ " --print-width " . &l:textwidth .
+    \ " --interface " . (match(expand("%"), "\\.mli$") == -1 ? "false" : "true")
+
+   au FileType reason let &l:formatprg = "refmt --parse re --print re --print-width " . &l:textwidth .
+    \ " --interface " . (match(expand("%"), "\\.rei$") == -1 ? "false" : "true")
 
    " REPORTME: It looks like Merlin's omnifunc is broken with Deoplete? I'm using
    "	       `copy/deoplete-ocaml` instead, so.
