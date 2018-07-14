@@ -77,20 +77,24 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
    export HOMEBREW_CASK_OPTS='--fontdir=/Library/Fonts'
 fi
 
+# This is a *horrible* hack to get ahold of the default `$OPAM_SWITCH_PREFIX`.
+eval "$(head -n2 ~/.opam/opam-init/variables.sh)"
+
 
 # $PATH setup
 # ===========
 # NOTE: Be aware that `packages.zsh` is loaded *after* this, and thus several zsh packages (notably
 # Nodenv and Rbenv) are going to prepend *all* of these, taking first-place in the lookup order.
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  5. < Homebrew
-  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  4. < Homebrew's llvm / clang
+  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  6. < Homebrew
+  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  5. < Homebrew's llvm / clang
 
   append_el PATH "/Library/TeX/texbin"    # -4. > MacTeX
   append_el PATH "/usr/X11/bin"           # -3. > X11
 fi
-prepend_el PATH "$HOME/.bin"              #  3. < local binaries
-prepend_el PATH "$HOME/.cargo/bin"        #  2. < Cargo (Rust) binaries
+prepend_el PATH "$HOME/.bin"              #  4. < local binaries
+prepend_el PATH "$HOME/.cargo/bin"        #  3. < Cargo (Rust) binaries
+prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM (*default* switch, i.e. global)
 prepend_el PATH "./node_modules/.bin"     #  1. < npm (local)
 
 append_el PATH "/usr/local/cuda/bin"      # -2. > CUDA
