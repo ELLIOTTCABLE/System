@@ -1,0 +1,49 @@
+sanitise tridactyllocal
+set theme greenmat
+
+set hintfiltermode vimperator-reflow
+set historyresults 100
+set tabopencontaineraware true
+" This breaks a lot of websites, unfortunately. The TabEnter alternative should work, though?
+"set allowautofocus false
+autocmd TabEnter .* unfocus
+set smoothscroll true
+
+            " hjklasdfgyuiopqwertnmzxcvb, but in Colemak :P
+set hintchars hneioarstdjluyqwfpgkmzxcvb
+
+" 1. Absolute-path necessary right now, see: <https://github.com/cmcaine/tridactyl/issues/684>
+" 2. `--nvim` implies `-n`, new-window, although that's undocumented
+" 3. `+only` runs `:only` in the temporary file after Vim initializes
+set editorcmd /usr/local/bin/vimr --wait --nvim +only
+
+" DuckDuckGo is pure hope and magic. Let's enable every single bang at once.
+set searchengine duckduckgo
+bind ! fillcmdline_notrail tabopen search !
+
+" Swap : and ;
+bind ; fillcmdline
+
+" Replace the various hint-modes with 'i' (home-row in Colemak!)
+bind ii hint -i
+bind iI hint -I
+bind ik hint -k
+bind iy hint -y
+bind ip hint -p
+bind iP hint -P
+bind ir hint -r
+bind is hint -s
+bind iS hint -S
+bind ia hint -a
+bind iA hint -A
+bind i; hint -;
+bind i# hint -#
+bind iv hint -v
+bind iw hint -w
+
+" autocmd TabEnter ... reddit?
+
+" Make goddamn `viewconfig nmaps` readable, thx
+unbind <SA-ArrowUp><SA-ArrowUp><SA-ArrowDown><SA-ArrowDown><SA-ArrowLeft><SA-ArrowRight><SA-ArrowLeft><SA-ArrowRight>ba
+
+" vim: set filetype=vim:

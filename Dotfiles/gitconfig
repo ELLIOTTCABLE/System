@@ -32,7 +32,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
-	editor = vim
+	editor = vimr -n --wait
 [repack]
 	usedeltabaseoffset = true
 [branch]
