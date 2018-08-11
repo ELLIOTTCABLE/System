@@ -33,6 +33,7 @@
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
 	editor = vimr -n --wait
+	autocrlf = input
 [repack]
 	usedeltabaseoffset = true
 [branch]

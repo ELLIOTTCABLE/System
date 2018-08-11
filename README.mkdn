@@ -95,3 +95,11 @@ configurations can be symlinked from my Dropbox:
        '~/Library/Preferences/.GlobalPreferences.plist'
 
 (May require existing files be removed, or directories be created, first.)
+
+----
+
+Windows still needs some work, but here's some hints:
+
+ - Hyper.is works with PowerShell
+ - VSCodeVim is less work than *actual* vim, probably. Less of my configuration, though.
+ - `New-Item -Path C:\Users\ec\.tridactylrc -ItemType SymbolicLink -Value C:\Users\ec\Documents\GitHub\System\Dotfiles\config\tridactyl\tridactylrc`
