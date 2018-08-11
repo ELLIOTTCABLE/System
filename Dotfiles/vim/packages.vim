@@ -11,7 +11,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'mhinz/vim-startify'
 
 Plug 'itchyny/lightline.vim'
-Plug 'taohex/lightline-buffer'
+Plug 'taohexxx/lightline-buffer'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
