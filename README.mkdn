@@ -11,21 +11,31 @@ updates itself). The `.zshrc` will automate this the first time you run the term
 
 ----
 
-rbenv, nodenv, etc must be installed via Homebrew, along with their plugins:
+rbenv, nodenv, and their plugins must be installed manually:
 
-    brew install rbenv rbenv-use ruby-build
+    git clone https://github.com/nodenv/nodenv.git ~/.nodenv
+    ln -s "$SYSTEM_REPO/Dotfiles/config/nodenv/default-packages" ~/.nodenv/
 
-    rbenv install 2.4                                    # Or whatever,
+    (  mkdir ~/.nodenv/plugins && cd ~/.nodenv/plugins && \
+       for PLUGIN in node-build node-build-update-defs nodenv-aliases \
+       nodenv-default-packages nodenv-each nodenv-package-rehash; do
+          git clone "https://github.com/nodenv/$PLUGIN.git"
+       done )
 
-    brew tap nodenv/nodenv
-    brew install                                                                  \
-       nodenv node-build                                                          \
-       nodenv-package-rehash node-build-update-defs nodenv-aliases                \
-       nodenv-package-json-engine nodenv-npm-migrate
+    nodenv update-version-defs
+    nodenv install 10.8.0                              # Or whatever,
 
-    nodenv update-version-defs                           # update available versions
-    nodenv install 8.1.4                                 # install latest one blah blah,
-    nodenv global 8                                      # yadda yadda
+    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+    ln -s "$SYSTEM_REPO/Dotfiles/config/rbenv/default-gems" ~/.rbenv/
+
+    (  mkdir ~/.rbenv/plugins && cd ~/.rbenv/plugins && \
+       for PLUGIN in rkh/rbenv-update rbenv/ruby-build tpope/rbenv-aliases \
+       rkh/rbenv-whatis rbenv/rbenv-default-gems rbenv/rbenv-each; do
+          git clone "https://github.com/$PLUGIN.git"
+       done )
+
+    rbenv install 2.5.1                                # Or whatever,
+    rbenv alias --auto
 
 ----
 

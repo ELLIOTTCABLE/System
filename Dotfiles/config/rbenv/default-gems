@@ -1,0 +1,14 @@
+bundler
+pry
+byebug
+rake
+rubocop
+simplecov
+rdoc
+rack
+unicorn
+shotgun
+vimgolf
+travis
+neovim
+CoffeeTags
