@@ -15,7 +15,13 @@ set hintchars hneioarstdjluyqwfpgkmzxcvb
 " 1. Absolute-path necessary right now, see: <https://github.com/cmcaine/tridactyl/issues/684>
 " 2. `--nvim` implies `-n`, new-window, although that's undocumented
 " 3. `+only` runs `:only` in the temporary file after Vim initializes
-set editorcmd /usr/local/bin/vimr --wait --nvim +only
+set nixeditorcmd /usr/local/bin/vimr --wait --nvim +only
+set wineditorcmd code --wait --new-window
+
+js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = ["linux", "openbsd", "mac"].includes(os.os) ? tri.config.get("nixeditorcmd") : tri.config.get("wineditorcmd"); tri.config.set("editorcmd", editorcmd)})
+
+" Cribbed from the example tridactylrc
+jsb browser.runtime.getPlatformInfo().then(os=>{const profiledir = os.os=="win" ? " C:\\Users\\ec\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\5gaxkj5v.default" : "auto"; tri.config.set("profiledir", profiledir)})
 
 " DuckDuckGo is pure hope and magic. Let's enable every single bang at once.
 set searchengine duckduckgo
