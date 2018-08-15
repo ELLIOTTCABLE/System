@@ -21,6 +21,8 @@ Plug 'vim-syntastic/syntastic'
 
 "Plug 'amerlyq/vim-focus-autocmd'
 
+Plug 'editorconfig/editorconfig-vim'
+
 " ### Navigation
 Plug 'cskeeters/vim-smooth-scroll'
 
