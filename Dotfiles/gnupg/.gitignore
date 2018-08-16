@@ -1,0 +1,7 @@
+crls.d/
+openpgp-revocs.d/
+private-keys-v1.d/
+pubring.kbx
+*.status
+tofu.db
+trustdb.gpg
