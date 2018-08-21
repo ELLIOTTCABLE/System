@@ -30,9 +30,9 @@ zplug Vifon/deer, use:"deer"
 #  some git status information on files and directories.”
 zplug supercrabtree/k
 
-# These offer useful prompt/status-functions
-zplug ELLIOTTCABLE/nodenv.plugin.zsh # A repaired fork of `jsahlen/nodenv.plugin.zsh`
-zplug ELLIOTTCABLE/rbenv.plugin.zsh
+# These are explicitly loaded at shenv-time; but I want zplug to install/manage them.
+zplug ELLIOTTCABLE/nodenv.plugin.zsh, if:"false"
+zplug ELLIOTTCABLE/rbenv.plugin.zsh, if:"false"
 
 # NOTE: I had to *also* call OPAM's `variables.sh` from `.shenv`.
 zplug ~/.opam/opam-init,      from:local, use:init.zsh

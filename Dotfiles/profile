@@ -9,21 +9,57 @@ if [[ "$DEBUG_PATH" == true ]]; then
 fi
 
 
-source "$HOME/.shenv"
-
-source $HOME/.profile.local
 while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
-  echo '$SYSTEM \033[0;91mis not set!\033[m Opening $EDITOR so you can set it…'
-  sleep 2
-  rm $HOME/.profile.local
-  cp $HOME/.files/profile.local $HOME/.profile.local # FIXME: `.files` shouldn't be hardcoded
-  edit $HOME/.profile.local
-  source $HOME/.profile.local
+   echo '$SYSTEM \033[0;91mis not set!\033[m Opening nano so you can configure it ...'
+
+   if [[ -d "$HOME/Library/System" ]]; then
+      SYSTEM_REPO="$HOME/Library/System"
+   elif [[ -d "$HOME/.files" ]]; then
+      SYSTEM_REPO="$HOME/.files"
+   else
+      echo '\033[0;91mCannot locate dotfiles!\033[m Please paste the path to your System.git clone:'
+      read -p '$SYSTEM_REPO: ' SYSTEM_REPO
+   fi
+
+   template="$SYSTEM_REPO/Dotfiles/shenv.local.template"
+   if [[ ! -f "$template" ]]; then
+      echo '\033[0;91mStill cannot locate shenv.local template!\033[m Crashing.'
+      echo "Tried: '$template'"
+      sleep 10
+      exit 1
+   fi
+
+
+   sleep 3
+   rm "$HOME/.shenv.local"
+   cp "$SYSTEM_REPO/Dotfiles/shenv.local.template" "$HOME/.shenv.local"
+   echo 'export SYSTEM_REPO="'$SYSTEM_REPO'"' >> "$HOME/.shenv.local"
+   nano "$HOME/.shenv.local"
+   source "$HOME/.shenv.local"
 done
 
 source $HOME/.shell_colours
 
 stty -ixon
+
+# Install nodenv & rbenv
+# FIXME: These leave Bash out in the cold.
+if [ -z "$NODENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[nodenv] nodenv is missing"
+fi
+
+if [ -z "$RBENV_ROOT" ]; then
+   # FIXME: Pretty Mac-centric.
+   printf "\e[31m%s\e[m — you'll need to install it with Homebrew ..." \
+      "[rbenv] rbenv is missing"
+else
+   # NOTE: This is configured by rbenv.plugin.zsh, now.
+   #rbenv() {
+   #   ...
+   #}
+fi
 
 
 # less

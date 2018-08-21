@@ -59,6 +59,9 @@ export SYSTEM_ARCH='Arch Linux'
 export SYSTEM_UNKNOWN='Unknown'
 
 
+source "$HOME/.shenv.local"
+
+
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
  #export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"        # Slow.
@@ -106,6 +109,27 @@ export PATH
 if [[ "$DEBUG_PATH" == true ]]; then
    echo '~/.shenv (after): $PATH = '
    echo $PATH | tr ':' "\n" | nl
+fi
+
+
+nodenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/nodenv.plugin.zsh/nodenv.plugin.zsh"
+if [[ -f "$nodenv_plugin_path" ]]; then
+   source "$nodenv_plugin_path"
+
+   if [[ "$DEBUG_PATH" == true ]]; then
+      echo '~/.shenv (after nodenv.plugin.zsh): $PATH = '
+      echo $PATH | tr ':' "\n" | nl
+   fi
+fi
+
+rbenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/rbenv.plugin.zsh/rbenv.plugin.zsh"
+if [[ -f "$rbenv_plugin_path" ]]; then
+   source "$rbenv_plugin_path"
+
+   if [[ "$DEBUG_PATH" == true ]]; then
+      echo '~/.shenv (after rbenv.plugin.zsh): $PATH = '
+      echo $PATH | tr ':' "\n" | nl
+   fi
 fi
 
 fi # [[ -z "$SHENV_EVALUATED" ]]
