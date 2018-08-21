@@ -89,3 +89,8 @@
 	program = gpg2
 [mergetool "fugitive"]
 	cmd = mvim -f -c \"Gdiff\" \"$MERGED\"
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
