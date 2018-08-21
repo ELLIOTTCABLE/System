@@ -535,6 +535,13 @@ augroup END
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 let g:EditorConfig_max_line_indicator = "exceeding"
 
+" #### ack.vim / Ripgrep
+if executable("rg")
+   let g:ackprg = 'rg --vimgrep --no-heading'
+   set grepprg=rg\ --vimgrep\ --no-heading
+   set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
 " #### Denite
 call denite#custom#option('_', {
  \    'prompt':         '❯'

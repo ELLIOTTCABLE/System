@@ -34,6 +34,8 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 "    <https://github.com/ocaml/merlin/issues/729>
 "Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
+Plug 'mileszs/ack.vim'
+
 Plug 'Shougo/denite.nvim'
 Plug 'chemzqm/unite-location'
 
@@ -93,6 +95,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
 Plug 'tpope/vim-abolish' " Life is unlivable without :Subvert. Let's be real.
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
 Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
 Plug 'AndrewRadev/bufferize.vim'
