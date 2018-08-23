@@ -1,2 +1,7 @@
 #export DEBUG_PATH=true
-source "$HOME/.shenv"
+
+if [[ $- != *i* ]] ; then
+   # Shell is non-interactive; we'll aggressively load the shenv and configure the $PATH, instead of
+   # waiting on ~/.profile.
+   source "$HOME/.shenv"
+fi

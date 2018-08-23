@@ -34,8 +34,8 @@ zplug supercrabtree/k
 zplug ELLIOTTCABLE/nodenv.plugin.zsh, if:"false"
 zplug ELLIOTTCABLE/rbenv.plugin.zsh, if:"false"
 
-# NOTE: I had to *also* call OPAM's `variables.sh` from `.shenv`.
-zplug ~/.opam/opam-init,      from:local, use:init.zsh
+# NOTE: I had to call OPAM's `variables.sh` from `.shenv`, instea.
+#zplug ~/.opam/opam-init,      from:local, use:init.zsh
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"
 

@@ -9,6 +9,9 @@ if [[ "$DEBUG_PATH" == true ]]; then
 fi
 
 
+source "$HOME/.shenv"
+source "$HOME/.shell_colours"
+
 while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
    echo '$SYSTEM \033[0;91mis not set!\033[m Opening nano so you can configure it ...'
 
@@ -37,8 +40,6 @@ while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
    nano "$HOME/.shenv.local"
    source "$HOME/.shenv.local"
 done
-
-source $HOME/.shell_colours
 
 stty -ixon
 
