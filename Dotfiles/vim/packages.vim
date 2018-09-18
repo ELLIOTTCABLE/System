@@ -75,6 +75,8 @@ let g:polyglot_disabled += ['ocaml']
 Plug 'rgrinberg/vim-ocaml'
 
 Plug 'tpope/vim-scriptease'
+" Plug 'docwhat/bats.vim'
+Plug 'vim-scripts/bats.vim'
 
 " #### Colourschemes & appearance
 " I'm using different colourschemes in GUI and TUI vims.
