@@ -63,6 +63,10 @@ else
 fi
 
 
+# ssh
+export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
+
+
 # less
 export PAGER='less'
 source "$HOME/.config/less.temp.sh"
