@@ -10,11 +10,17 @@ master='Master'
 remote=$(git rev-parse --short "$master@{upstream}~5")
 upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
 
-gist
+~/.bin/gist
+
+if [[ "$(git stash list | wc -l)" -ne 0 ]]; then
+   echo -e "\n\033[1m-- Stored stashes: --------\033[0m"
+   git stash list --pretty=solarized-reflog
+fi
+
 echo -e "\n\033[1m-- Recent history: --------\033[0m"
 elliolog "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
-echo -e "\n\033[1m-- Stored stashes: --------\033[0m"
-git stash list --pretty=solarized-reflog
-echo -e "\n\033[1m-- Build-status: ----------\033[0m"
-command -v travis >/dev/null 2>&1 && travis whoami >/dev/null 2>&1 &&
+
+if command -v travis >/dev/null 2>&1 && travis whoami >/dev/null 2>&1; then
+   echo -e "\n\033[1m-- Build-status: ----------\033[0m"
    travis branches
+fi
