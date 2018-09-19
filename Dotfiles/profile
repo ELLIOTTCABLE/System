@@ -259,7 +259,7 @@ alias gerget='g mergetool'
 glog()   { elliolog $* | less -SRXF ;}
 reflog() { glog --all $* $(git log -g --pretty=format:%h) ;}
 
-alias gitlel='git show Master:.gitlabels | less -RS'
+alias gitlel='git show master:.gitlabels | less -RS'
 
 # alternatives, using the 'stage' metaphor
 alias stage='g add'

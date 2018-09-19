@@ -6,7 +6,7 @@ branch=$1
 if [[ -z "$branch" ]]; then
    branch=$(git rev-parse --abbrev-ref HEAD) ;fi         # vvv  Might be a bit of an assumption.
 # This should probably be more robust. Currently, it'll only support three-deep branches.
-master='Master'
+master='master'
 remote=$(git rev-parse --short "$master@{upstream}~5")
 upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
 

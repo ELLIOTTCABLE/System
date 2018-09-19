@@ -3,16 +3,25 @@ flags=( --no-granules --no-minor )
 
 # FIXME: zsh-specific parameter-expansion magix
 if [ -z "$*" ]; then
-   local current branch
+   local next branch
 
-   branch="$(git describe --abbrev=0 --candidates=100 --all 2>/dev/null)"
+   branch="$(git describe --abbrev=0 --candidates=1000 --all 2>/dev/null)"
    branch="${${branch##*/}%%+}"
 
-   if git describe --all 'Current' >/dev/null 2>&1 ; then
-      current='Current'
+   if git describe --all 'next' >/dev/null 2>&1 ; then
+      next='next'
    fi
 
-   set -- "HEAD" "${current:-Master}" "${current:-Master}+" "${branch}" "${branch}+"
+   set -- "HEAD" "${next:-master}"
+   if git rev-parse --verify "${next:-master}+" >/dev/null 2>&1; then
+      set -- "$@" "${next:-master}+"
+   fi
+
+   set -- "$@" "${branch}"
+   if git rev-parse --verify "${branch}+" >/dev/null 2>&1; then
+      set -- "$@" "${branch}+"
+   fi
+   echo "Final arguments: $*"
 fi
 
 # FIXME: --no-minor doesn't work yet, because git-log's being weird.
