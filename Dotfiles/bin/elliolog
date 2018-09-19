@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+flags=( --no-granules --no-minor )
+
+# FIXME: zsh-specific parameter-expansion magix
+if [ -z "$*" ]; then
+   local current branch
+
+   branch="$(git describe --abbrev=0 --candidates=100 --all 2>/dev/null)"
+   branch="${${branch##*/}%%+}"
+
+   if git describe --all 'Current' >/dev/null 2>&1 ; then
+      current='Current'
+   fi
+
+   set -- "HEAD" "${current:-Master}" "${current:-Master}+" "${branch}" "${branch}+"
+fi
+
+# FIXME: --no-minor doesn't work yet, because git-log's being weird.
+# FIXME: Remove --no-granules and --no-minor from the $*
+git log --graph --date-order --cherry-mark --left-right \
+   --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
+   --color --abbrev=5 --pretty=ellio \
+   ${*:|flags} \
+| ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join'

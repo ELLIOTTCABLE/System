@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+git diff -M -C --find-copies-harder -l64 --stat --cached --color \
+| sed -E "s/^(.*)\|/`echo -en '\e[32m'`\1`echo -en '\e[00m'`|/"
+
+git diff -M -C --find-copies-harder -l64 --stat --color \
+| sed -E "s/^(.*)\|/`echo -en '\e[31m'`\1`echo -en '\e[00m'`|/"
+
+git ls-files --others --directory --no-empty-directory --exclude-standard \
+| sed -E "s/^(.*)$/ `echo -en '\e[33m'`\1`echo -en '\e[00m'`/"

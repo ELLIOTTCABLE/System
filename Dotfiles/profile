@@ -240,8 +240,7 @@ alias sci='svn ci -m'
 alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
 
 # git
-alias g='git'           # vvv This is so complex, it should really be a script… lol. vvv
-alias gist='g diff -M -C --find-copies-harder -l64 --stat --cached --color | sed -E "s/^(.*)\|/`echo -en '\''\e[32m'\''`\1`echo -en '\''\e[00m'\''`|/" && g diff -M -C --find-copies-harder -l64 --stat --color | sed -E "s/^(.*)\|/`echo -en '\''\e[31m'\''`\1`echo -en '\''\e[00m'\''`|/" && g ls-files --others --directory --no-empty-directory --exclude-standard | sed -E "s/^(.*)$/ `echo -en '\''\e[33m'\''`\1`echo -en '\''\e[00m'\''`/"'
+alias g='git'
 alias gull='g pull'
 alias gush='g push'
 alias gad='g add'
@@ -257,58 +256,8 @@ alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
 
-# FIXME: zsh-specific parameter-expansion magix
-ellio_log() {
-   local -a flags
-   flags=( --no-granules --no-minor )
-
-   if [ -z "$*" ]; then
-      local current branch
-
-      branch="$(git describe --abbrev=0 --candidates=100 --all 2>/dev/null)"
-      branch="${${branch##*/}%%+}"
-
-      if git describe --all 'Current' >/dev/null 2>&1 ; then
-         current='Current'
-      fi
-
-      set -- "HEAD" "${current:-Master}" "${current:-Master}+" "${branch}" "${branch}+"
-   fi
-
-   # FIXME: --no-minor doesn't work yet, because git-log's being weird.
-   # FIXME: Remove --no-granules and --no-minor from the $*
-   g log --graph --date-order --cherry-mark --left-right \
-      --all-match -E ${${*[(r)--no-granules]}:+--grep='^[^\+]'} ${${*[(r)--no-minor]}:+--grep='^([^\(]|\([^-])'} \
-      --color --abbrev=5 --pretty=ellio \
-      ${*:|flags} \
-   | ruby -an -F"\u001F" -r '~/.source/format-glog' -e 'puts format_glog($F).join' ;}
-glog() {
-   ellio_log $* | less -SRXF ;}
-omglog() {
-   glog --all $* $(git log -g --pretty=format:%h) ;}
-sup() {
-   git -c color.status=true status |
-      awk '/(Changes to be committed|Changes not staged for commit|nothing to commit, working directory clean)/ {exit} {print}'
-
-   branch=$1
-   if [[ -z "$branch" ]]; then
-      branch=$(git rev-parse --abbrev-ref HEAD) ;fi         # vvv  Might be a bit of an assumption.
-   # This should probably be more robust. Currently, it'll only support three-deep branches.
-   master='Master'
-   remote=$(git rev-parse --short "$master@{upstream}~5")
-   upstream=$(git rev-parse --symbolic-full-name --abbrev-ref "@{upstream}")
-
-   gist
-   echo -e "\n\033[1m-- Recent history: --------\033[0m"
-   ellio_log "${remote}..${master}" "${remote}..${upstream}" "${remote}..${branch}"
-   echo -e "\n\033[1m-- Stored stashes: --------\033[0m"
-   git stash list --pretty=solarized-reflog
-   echo -e "\n\033[1m-- Build-status: ----------\033[0m"
-   command -v travis >/dev/null 2>&1 && travis whoami >/dev/null 2>&1 &&
-      travis branches
-}
-
-alias ol='omglog'
+glog()   { elliolog $* | less -SRXF ;}
+reflog() { glog --all $* $(git log -g --pretty=format:%h) ;}
 
 alias gitlel='git show Master:.gitlabels | less -RS'
 
