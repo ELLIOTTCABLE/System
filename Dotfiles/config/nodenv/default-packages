@@ -1,3 +1,4 @@
+npm
 jsonlint
 prettier
 semver
@@ -6,3 +7,4 @@ a11y
 ngrok
 tldr
 neovim
+nativefier
