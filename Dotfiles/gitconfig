@@ -82,7 +82,7 @@
 	defaultToUpstream = true
 	conflictstyle = diff3
 [pretty]
-	ellio = "tformat: %<|(15)%h %C(blue) %<|(30,trunc)%aN %C(red bold) %G?%Creset │ %<|(100,trunc)%s%C(magenta bold)%>>|(105,trunc)%D%Creset —  %<|(125,trunc)%ar"
+	ellio = "tformat: %<|(15)%h%Creset ┯ %C(blue) %<|(35,trunc)%aN %C(red bold) %G?%Creset  %ar %C(magenta bold)%D%Creset%n%<|(14)%Creset ┕┉┉ %s"
 	solarized = "format:%x1b[30m%h%Creset %s %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
 	solarized-reflog = "format:%x1b[33m%gd%Creset %gs %x1b[93;2m— %ar%x1b[0m"
 	solarized-parseable = "format:%x1b[30m%h%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
