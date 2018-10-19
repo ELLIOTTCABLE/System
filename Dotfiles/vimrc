@@ -19,8 +19,8 @@ set smartcase ignorecase
 
 set nowrap
 set virtualedit=block
-set listchars+=tab:\ ─
-set breakindent showbreak=⥟\ \   " For `set wrap linebreak`
+set listchars=tab:»─,extends:›,precedes:‹,nbsp:·
+set breakindent showbreak=↪\     " For `set wrap linebreak`
 
 set ignorecase smartcase gdefault
 
