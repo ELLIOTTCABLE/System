@@ -1,6 +1,6 @@
 [user]
 	name = ELLIOTTCABLE
-	email = me@ell.io
+	email = git@ell.io
 	signingkey = 0x8C149643D99F3060
 [color]
 	status = auto
@@ -33,7 +33,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
-	editor = vimr -n --wait
+	editor = nvim
 	autocrlf = input
 [repack]
 	usedeltabaseoffset = true
@@ -95,3 +95,5 @@
 	clean = git-lfs clean -- %f
 [tag]
 	forceSignAnnotated = true
+[commit]
+	gpgSign = true
