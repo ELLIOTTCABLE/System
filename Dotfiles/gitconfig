@@ -44,6 +44,7 @@
 	status = false
 [push]
 	default = current
+	followTags = true
 [rebase]
 	autosquash = true
 [imap]
@@ -97,3 +98,8 @@
 	forceSignAnnotated = true
 [commit]
 	gpgSign = true
+[merge "npm-merge-driver"]
+	name = automatically merge npm lockfiles
+	driver = npx npm-merge-driver merge %A %O %B %P
+[rerere]
+	enabled = true
