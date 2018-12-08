@@ -26,6 +26,8 @@ Plug 'editorconfig/editorconfig-vim'
 " ### Navigation
 Plug 'cskeeters/vim-smooth-scroll'
 
+Plug 'chaoren/vim-wordmotion'
+
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
