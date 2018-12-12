@@ -125,6 +125,19 @@ if executable("ag")
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
+" This only affects programs entered *inside `:terminal` windows*; I also separately configured Git
+" to open a new `nvim` via `nvr`:
+"
+"    git config --global core.editor 'nvr -s --remote-wait-silent'
+if has('nvim')
+   let $VISUAL = 'nvr -cc split --remote-wait'
+endif
+
+augroup setup-terminal-settings | au!
+   au TermOpen * setlocal nonumber
+   au TermOpen * startinsert
+augroup END
+
 " Fill these functions to tie other plugins into focus-mode
 function! s:goyo_enter()
    " ...
@@ -925,6 +938,10 @@ let g:hardtime_ignore_buffer_patterns = [ "[denite]" ]
 " #### vim-gitgutter
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 1
+
+" #### split-term.vim
+let g:disable_key_mappings = v:true
+let g:split_term_default_shell = "/usr/local/bin/zsh"
 
 " #### merlin
 let g:merlin_completion_arg_type = "always"

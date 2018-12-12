@@ -33,7 +33,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
-	editor = nvim
+	editor = nvr -s --remote-wait-silent
 	autocrlf = input
 [repack]
 	usedeltabaseoffset = true
@@ -103,3 +103,7 @@
 	driver = npx npm-merge-driver merge %A %O %B %P
 [rerere]
 	enabled = true
+[difftool "nvr"]
+	cmd = nvr -s -d \"$LOCAL\" \"$REMOTE\"
+[mergetool "nvr"]
+	cmd = nvr -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"

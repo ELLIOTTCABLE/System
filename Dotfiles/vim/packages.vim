@@ -112,6 +112,8 @@ Plug 'vim-scripts/DeleteTrailingWhitespace'
 
 Plug 'Shougo/echodoc.vim'
 
+Plug 'vimlab/split-term.vim'
+
 " #### Late-loaders (come on, vim-plug, support `defer:`!)
 Plug 'ryanoasis/vim-devicons'
 
