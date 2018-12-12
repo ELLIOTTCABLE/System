@@ -19,6 +19,8 @@ Plug 'junegunn/goyo.vim'                     " “Focused” mode
 
 Plug 'vim-syntastic/syntastic'
 
+Plug 'mbbill/undotree'
+
 "Plug 'amerlyq/vim-focus-autocmd'
 
 Plug 'editorconfig/editorconfig-vim'
@@ -116,6 +118,8 @@ Plug 'tomtom/tcomment_vim'
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
 Plug 'vim-scripts/ShowTrailingWhitespace'
 Plug 'vim-scripts/DeleteTrailingWhitespace'
+Plug 'vim-scripts/JumpToTrailingWhitespace'
+Plug 'inkarkat/vim-CountJump'
 
 Plug 'Shougo/echodoc.vim'
 
