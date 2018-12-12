@@ -1,14 +1,19 @@
 .mono/certs
 
 asciinema/config
+asciinema/install-id
 inkscape/
 keybase/
+com.add0n.node/
+Fritzing/
 
 sow/
 
 configstore/pin-cushion.json
 configstore/update-notifier-*
 configstore/insight-bower.yml
+configstore/ember-cli.json
+configstore/nodemon.json
 
 # Why do so many games store their info in .config!?
 AtomZombieData/
