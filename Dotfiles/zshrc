@@ -300,9 +300,8 @@ bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
 #export ENHANCD_DIR="$HOME/.cache/enhancd"
 
 # ### Vifon/deer
-autoload -U deer
 zle -N deer
-bindkey -M vicmd 'K' deer
+bindkey -M viins '^n' deer
 zstyle ':deer:' height 22
 
 
