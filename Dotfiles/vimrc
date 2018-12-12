@@ -77,6 +77,11 @@ au VimEnter * call s:FixLightlineAutocommands()
 
 " Finally, I actually configure, and invoke, the color-switcher.
 if has("gui_vimr")
+   let g:nord_italic_comments = 1
+   let g:nord_comment_brightness = 8 " Between 1 and 20
+   let g:nord_uniform_diff_background = 1
+   let g:nord_cursor_line_number_background = 1
+
    let g:colorschemes = {
     \ 'dark':  'nord',
     \ 'light': 'base16-atelier-lakeside-light',
