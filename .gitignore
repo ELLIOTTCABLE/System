@@ -9,6 +9,7 @@ Dotfiles/vim/undo
 Dotfiles/vim/.netrwhist
 Dotfiles/vim/spell/
 Dotfiles/vim/autoload/plug.vim
+Dotfiles/vim/session/
 
 Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/jupyter/nbconfig/

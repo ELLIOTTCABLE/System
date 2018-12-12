@@ -38,7 +38,7 @@ syntax on
 
 " NOTE: Swap this to iterate on the Merlin vim-plugin
 let g:use_own_merlin     = v:false
-let g:use_languageclient = v:true
+let g:use_languageclient = v:false
 
 
 " `vim-plug` installation & package-loading
@@ -475,6 +475,8 @@ augroup ocamlmaps | au!
    au FileType ocaml,reason map <silent> <buffer> <LocalLeader>y  <C-u>:MerlinYankLatestType<cr>
    au FileType ocaml,reason map <silent> <buffer> <LocalLeader>l  <C-u>:MerlinLocate<cr>
 
+   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>o  <C-u>:Denite documentSymbol -mode=normal<cr>
+
    " FIXME: Report these; they should support buffer-local settings as well as global ones
    au FileType ocaml,reason let g:merlin_textobject_grow   = 'm'
    au FileType ocaml,reason let g:merlin_textobject_shrink = 'M'
@@ -488,6 +490,10 @@ augroup ocamlmaps | au!
 
    au FileType reason let &l:formatprg = "refmt --parse re --print re --print-width " . &l:textwidth .
     \ " --interface " . (match(expand("%"), "\\.rei$") == -1 ? "false" : "true")
+
+   if g:use_languageclient
+      au FileType ocaml,reason LanguageClientStart
+   endif
 
    " REPORTME: It looks like Merlin's omnifunc is broken with Deoplete? I'm using
    "	       `copy/deoplete-ocaml` instead, so.
@@ -807,9 +813,8 @@ let g:syntastic_mode_map = { 'mode': 'active',
 
 let g:syntastic_ocaml_checkers = []
 
-let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_id_checkers = 1
 

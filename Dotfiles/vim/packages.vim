@@ -54,26 +54,33 @@ Plug 'carlitux/deoplete-ternjs', {
  \ 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern'
  \ }
 
+Plug 'othree/jspc.vim', {
+ \ 'for': ['javascript', 'javascript.jsx', 'typescript'],
+ \ }
+
 Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 
 " #### Languages
-Plug 'autozimu/LanguageClient-neovim', {
- \ 'for': ['ocaml', 'reason'],
- \ 'branch': 'next',
- \ 'do': 'bash install.sh',
- \ }
+if g:use_languageclient
+   Plug 'autozimu/LanguageClient-neovim', {
+    \ 'for': ['ocaml', 'reason'],
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
-Plug 'reasonml-editor/vim-reason-plus', {
- \ 'for': ['ocaml', 'reason'],
- \ }
+   Plug 'reasonml-editor/vim-reason-plus', {
+    \ 'for': ['ocaml', 'reason'],
+    \ }
+endif
 
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
+Plug 'tjvr/vim-nearley'
 
 " Pending sheerun/vim-polyglot#320.
 if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
-let g:polyglot_disabled += ['ocaml']
 
+let g:polyglot_disabled += ['ocaml']
 Plug 'rgrinberg/vim-ocaml'
 
 Plug 'tpope/vim-scriptease'
