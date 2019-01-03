@@ -1,5 +1,6 @@
 npm
 npm-check
+npm-merge-driver
 jsonlint
 prettier
 semver
