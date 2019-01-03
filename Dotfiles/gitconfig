@@ -33,7 +33,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
-	editor = nvr -s --remote-wait-silent
+	editor = nvr -cc split --remote-wait-silent
 	autocrlf = input
 [repack]
 	usedeltabaseoffset = true
@@ -107,3 +107,5 @@
 	cmd = nvr -s -d \"$LOCAL\" \"$REMOTE\"
 [mergetool "nvr"]
 	cmd = nvr -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
+[mergetool "tabnvr"]
+	cmd = nvr -cc '$tabnew' -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
