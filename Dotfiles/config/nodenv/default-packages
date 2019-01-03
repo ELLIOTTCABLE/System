@@ -1,4 +1,5 @@
 npm
+npm-check
 jsonlint
 prettier
 semver
@@ -8,3 +9,4 @@ ngrok
 tldr
 neovim
 nativefier
+tern
