@@ -44,6 +44,16 @@
                         "description": "Vimmer's Colemak Number-row",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left index: shift-4/$ ⇒ 1",
                                 "from": {
                                     "key_code": "4",
@@ -63,19 +73,19 @@
                                         "key_code": "1"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left index: 4 ⇒ shift-1/!",
                                 "from": {
                                     "key_code": "4",
@@ -91,23 +101,23 @@
                                     {
                                         "key_code": "1",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left middle: shift-3/# ⇒ 3",
                                 "from": {
                                     "key_code": "3",
@@ -127,19 +137,19 @@
                                         "key_code": "3"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left middle: 3 ⇒ shift-3/#",
                                 "from": {
                                     "key_code": "3",
@@ -155,23 +165,23 @@
                                     {
                                         "key_code": "3",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left ring: shift-2/@ ⇒ 5",
                                 "from": {
                                     "key_code": "2",
@@ -191,19 +201,19 @@
                                         "key_code": "5"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left ring: 2 ⇒ shift-5/%",
                                 "from": {
                                     "key_code": "2",
@@ -219,23 +229,23 @@
                                     {
                                         "key_code": "5",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left pinkie: shift-1/! ⇒ 7",
                                 "from": {
                                     "key_code": "1",
@@ -255,19 +265,19 @@
                                         "key_code": "7"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left pinkie: 1 ⇒ shift-7/&",
                                 "from": {
                                     "key_code": "1",
@@ -283,23 +293,23 @@
                                     {
                                         "key_code": "7",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left stretch: shift-5/% ⇒ 9",
                                 "from": {
                                     "key_code": "5",
@@ -319,19 +329,19 @@
                                         "key_code": "9"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Left stretch: 5 ⇒ shift-9/(",
                                 "from": {
                                     "key_code": "5",
@@ -347,23 +357,23 @@
                                     {
                                         "key_code": "9",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right index: shift-7/& ⇒ 2",
                                 "from": {
                                     "key_code": "7",
@@ -383,19 +393,19 @@
                                         "key_code": "2"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right index: 7 ⇒ shift-2/@",
                                 "from": {
                                     "key_code": "7",
@@ -411,23 +421,23 @@
                                     {
                                         "key_code": "2",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right middle: shift-8/* ⇒ 4",
                                 "from": {
                                     "key_code": "8",
@@ -447,19 +457,19 @@
                                         "key_code": "4"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right middle: 8 ⇒ shift-4/$",
                                 "from": {
                                     "key_code": "8",
@@ -475,23 +485,23 @@
                                     {
                                         "key_code": "4",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right ring: shift-9/( ⇒ 6",
                                 "from": {
                                     "key_code": "9",
@@ -511,19 +521,19 @@
                                         "key_code": "6"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right ring: 9 ⇒ shift-6/^",
                                 "from": {
                                     "key_code": "9",
@@ -539,23 +549,23 @@
                                     {
                                         "key_code": "6",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right pinkie: shift-0/) ⇒ 8",
                                 "from": {
                                     "key_code": "0",
@@ -575,19 +585,19 @@
                                         "key_code": "8"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right pinkie: 0 ⇒ shift-8/*",
                                 "from": {
                                     "key_code": "0",
@@ -603,23 +613,23 @@
                                     {
                                         "key_code": "8",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right stretch: shift-6/^ ⇒ 0",
                                 "from": {
                                     "key_code": "6",
@@ -639,19 +649,19 @@
                                         "key_code": "0"
                                     }
                                 ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
-                                ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
                                 "description": "Right stretch: 6 ⇒ shift-0/)",
                                 "from": {
                                     "key_code": "6",
@@ -667,19 +677,9 @@
                                     {
                                         "key_code": "0",
                                         "modifiers": [
-                                           "left_shift"
+                                            "left_shift"
                                         ]
                                     }
-                                ],
-                                "conditions": [
-                                   {
-                                      "type": "input_source_if",
-                                      "input_sources": [
-                                         {
-                                            "input_source_id": "com\\.apple\\.keylayout\\.Colemak"
-                                         }
-                                      ]
-                                   }
                                 ],
                                 "type": "basic"
                             }
@@ -849,13 +849,691 @@
                     }
                 }
             ],
-            "name": "Default profile",
+            "name": "Chiclet",
             "selected": true,
             "simple_modifications": [],
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
                 "country_code": 0,
                 "keyboard_type": "ansi"
+            }
+        },
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.simultaneous_threshold_milliseconds": 50,
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_held_down_threshold_milliseconds": 500
+                },
+                "rules": [
+                    {
+                        "description": "CODEmak (Coder's Colemak) Lite: just unshift number row (rev 10/18)",
+                        "manipulators": [
+                            {
+                                "description": "shift-4/$ ⇒ 4",
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "4"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "1 ⇒ shift-1/!",
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "1",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-3/# ⇒ 3",
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "3"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "3 ⇒ shift-3/#",
+                                "from": {
+                                    "key_code": "3",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "3",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-2/@ ⇒ 2",
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "2"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "5 ⇒ shift-5/%",
+                                "from": {
+                                    "key_code": "5",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "5",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-1/! ⇒ 1",
+                                "from": {
+                                    "key_code": "1",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "1"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "7 ⇒ shift-7/&",
+                                "from": {
+                                    "key_code": "7",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "7",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-5/% ⇒ 5",
+                                "from": {
+                                    "key_code": "5",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "5"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "9 ⇒ shift-9/(",
+                                "from": {
+                                    "key_code": "9",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "9",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-7/& ⇒ 7",
+                                "from": {
+                                    "key_code": "7",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "7"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "2 ⇒ shift-2/@",
+                                "from": {
+                                    "key_code": "2",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "2",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-8/* ⇒ 8",
+                                "from": {
+                                    "key_code": "8",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "8"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "4 ⇒ shift-4/$",
+                                "from": {
+                                    "key_code": "4",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "4",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-9/( ⇒ 9",
+                                "from": {
+                                    "key_code": "9",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "9"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "6 ⇒ shift-6/^",
+                                "from": {
+                                    "key_code": "6",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "6",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-0/) ⇒ 0",
+                                "from": {
+                                    "key_code": "0",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "0"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "8 ⇒ shift-8/*",
+                                "from": {
+                                    "key_code": "8",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "8",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "shift-6/^ ⇒ 6",
+                                "from": {
+                                    "key_code": "6",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "6"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "0 ⇒ shift-0/)",
+                                "from": {
+                                    "key_code": "0",
+                                    "modifiers": {
+                                        "optional": [
+                                            "command",
+                                            "control",
+                                            "option"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "0",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [],
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": {
+                        "consumer_key_code": "display_brightness_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": {
+                        "consumer_key_code": "display_brightness_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": {
+                        "key_code": "mission_control"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": {
+                        "key_code": "launchpad"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": {
+                        "key_code": "illumination_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": {
+                        "key_code": "illumination_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": {
+                        "consumer_key_code": "rewind"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": {
+                        "consumer_key_code": "play_or_pause"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": {
+                        "consumer_key_code": "fastforward"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": {
+                        "consumer_key_code": "mute"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": {
+                        "consumer_key_code": "volume_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": {
+                        "consumer_key_code": "volume_increment"
+                    }
+                }
+            ],
+            "name": "Ergodox",
+            "selected": false,
+            "simple_modifications": [],
+            "virtual_hid_keyboard": {
+                "country_code": 0
+            }
+        },
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.simultaneous_threshold_milliseconds": 50,
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_held_down_threshold_milliseconds": 500
+                },
+                "rules": []
+            },
+            "devices": [],
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": {
+                        "consumer_key_code": "display_brightness_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": {
+                        "consumer_key_code": "display_brightness_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": {
+                        "key_code": "mission_control"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": {
+                        "key_code": "launchpad"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": {
+                        "key_code": "illumination_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": {
+                        "key_code": "illumination_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": {
+                        "consumer_key_code": "rewind"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": {
+                        "consumer_key_code": "play_or_pause"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": {
+                        "consumer_key_code": "fastforward"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": {
+                        "consumer_key_code": "mute"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": {
+                        "consumer_key_code": "volume_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": {
+                        "consumer_key_code": "volume_increment"
+                    }
+                }
+            ],
+            "name": "No modifications",
+            "selected": false,
+            "simple_modifications": [],
+            "virtual_hid_keyboard": {
+                "country_code": 0
             }
         }
     ]
