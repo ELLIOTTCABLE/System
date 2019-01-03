@@ -345,6 +345,8 @@ map  <silent> <Leader>bg   <Plug>ToggleBackground
 nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
 nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
 
+nnoremap <silent> <Leader>x :Sayonara<CR>
+
 " <Ctrl-P> for both switching between buffers, and opening new ones!
 nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_rec<CR>
 

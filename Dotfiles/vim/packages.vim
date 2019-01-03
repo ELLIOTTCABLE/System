@@ -120,11 +120,13 @@ Plug 'takac/vim-hardtime'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
 
+Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
+
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...
+Plug 'inkarkat/vim-CountJump'
 Plug 'vim-scripts/ShowTrailingWhitespace'
 Plug 'vim-scripts/DeleteTrailingWhitespace'
 Plug 'vim-scripts/JumpToTrailingWhitespace'
-Plug 'inkarkat/vim-CountJump'
 
 Plug 'Shougo/echodoc.vim'
 
