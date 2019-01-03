@@ -1,4 +1,4 @@
-update-notifier-*.json
+update-notifier-*
 
 # Volatile keys
 nodemon.json
