@@ -13,6 +13,7 @@ endif
 set hidden
 set textwidth=100 wrapmargin=3 nojoinspaces
 set cursorline colorcolumn=+1,+2,+3
+set splitbelow splitright
 set number signcolumn=auto
 set smarttab expandtab tabstop=8 softtabstop=3 shiftwidth=3 shiftround
 set smartcase ignorecase
