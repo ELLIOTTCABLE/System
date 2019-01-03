@@ -51,8 +51,10 @@ endif
 source ~/.vim/packages.vim
 
 
+" ### Variable declarations
 if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
+if !exists('g:ale_fixers') | let g:ale_fixers = {} | endif
 
 
 function! s:ResetLightlineColorscheme()
@@ -470,7 +472,12 @@ augroup filetypes | au!
    au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 augroup END
 
+" ### JavaScript / etc
+let g:ale_fixers.javascript = ['eslint', 'prettier']
+
 " #### OCaml
+let g:ale_fixers.reason = ['eslint', 'prettier']
+let g:ale_fixers.ocaml = ['eslint', 'prettier']
 let g:no_ocaml_maps=1
 
 let g:LanguageClient_serverCommands.reason = ['ocaml-language-server', '--stdio']
@@ -814,26 +821,9 @@ endfunction
 
 let g:lightline_buffer_excludes = ['vimfiler']
 
-" #### Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_error_symbol = "\u2717"
-let g:syntastic_warning_symbol = "\u26A0"
-
-
-let g:syntastic_mode_map = { 'mode': 'active',
- \    'active_filetypes': [],
- \    'passive_filetypes': []
- \ }
-
-let g:syntastic_ocaml_checkers = []
-
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_id_checkers = 1
+" ### ale
+let g:ale_fix_on_save = v:true
+let g:ale_fixers['*'] = ['remove_trailing_lines', 'trim_whitespace']
 
 "" #### vim-easytags
 "set tags=./tags;

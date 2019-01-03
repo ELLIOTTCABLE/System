@@ -17,7 +17,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 
-Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
 
 Plug 'mbbill/undotree'
 
@@ -69,17 +69,17 @@ Plug 'othree/jspc.vim', {
 Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 
 " #### Languages
-if g:use_languageclient
-   Plug 'autozimu/LanguageClient-neovim', {
-    \ 'for': ['ocaml', 'reason'],
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
-   Plug 'reasonml-editor/vim-reason-plus', {
-    \ 'for': ['ocaml', 'reason'],
-    \ }
-endif
+"if g:use_languageclient
+"   Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'for': ['ocaml', 'reason'],
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
+"
+"   Plug 'reasonml-editor/vim-reason-plus', {
+"    \ 'for': ['ocaml', 'reason'],
+"    \ }
+"endif
 
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
