@@ -25,6 +25,12 @@ Plug 'mbbill/undotree'
 
 Plug 'editorconfig/editorconfig-vim'
 
+" #### Git
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'gregsexton/gitv'
+Plug 'sodapopcan/vim-twiggy'
+
 " ### Navigation
 Plug 'cskeeters/vim-smooth-scroll'
 
@@ -104,7 +110,6 @@ Plug 'logico-dev/typewriter'
 
 
 " #### Small utilities
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
 Plug 'tpope/vim-abolish' " Life is unlivable without :Subvert. Let's be real.
 Plug 'tpope/vim-surround'

@@ -181,6 +181,14 @@ endif
 " From https://stackoverflow.com/questions/4545275/vim-close-all-buffers-but-this-one#comment86214068_42071865
 command! BufOnly silent! execute "%bd|e#|bd#"
 
+command! Gin Gcommit
+command! Giff Gdiff
+command! Stiff Gdiff --cached
+"command! Go Gcheckout  " The semantics of these are different enough, that I've opted to omit them.
+"command! Gad Gcheckout
+command! Gush Gpush
+command! Ganch Twiggy
+
 
 " === Mappings ===
 " Thanks, Damian. http://ell.io/i6io1
@@ -554,6 +562,10 @@ augroup my-fugitive | au!
     \   nnoremap <buffer> .. :edit %:h<CR> |
     \ endif
 augroup END
+
+" #### twiggy
+let g:twiggy_local_branch_sort = 'mru'
+let g:twiggy_remote_branch_sort = 'date'
 
 " #### editorconfig-vim
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
