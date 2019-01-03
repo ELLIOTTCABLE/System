@@ -1,9 +1,11 @@
 update-notifier-*.json
 
 # Volatile keys
-bower-github.json
-corber.json
-ember-cli.json
-insight-bower.yml
 nodemon.json
 pin-cushion.json
+corber.json
+ember-cli.json
+ember-cordova.json
+bower-github.json
+insight-cordova.json
+insight-bower.yml

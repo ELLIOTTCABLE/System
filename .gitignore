@@ -1,3 +1,6 @@
+# See also: Dotfiles/config/.gitignore,
+#   Dotfiles/config/configstore/.gitignore
+
 Dotfiles/ssh/known_hosts
 Dotfiles/ssh/.identity*
 Dotfiles/ssh/*_rsa*
@@ -15,5 +18,3 @@ Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/jupyter/nbconfig/
 
 Dotfiles/gnupg/.#*.*.*
-
-# See also: Dotfiles/config/.gitignore
