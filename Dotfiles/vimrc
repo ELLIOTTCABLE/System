@@ -543,7 +543,7 @@ else
    let g:startify_files_number = 10
 endif
 let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc' ]
-let g:startify_commands = [ ':help reference', ':PlugUpdate' ]
+let g:startify_commands = [ ':help reference', ':PlugUpdate', ':VTerm' ]
 
 let g:startify_skiplist = [
  \    'COMMIT_EDITMSG',
