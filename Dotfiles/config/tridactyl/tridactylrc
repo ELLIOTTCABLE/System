@@ -18,6 +18,10 @@ set hintchars hneioarstdjluyqwfpgkmzxcvb
 set nixeditorcmd /usr/local/bin/vimr --wait --nvim +only
 set wineditorcmd code --wait --new-window
 
+autocmd DocStart localhost:4200 mode ignore
+seturl localhost:4200 modeindicator false
+seturl localhost:4200 noiframe true
+
 js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = ["linux", "openbsd", "mac"].includes(os.os) ? tri.config.get("nixeditorcmd") : tri.config.get("wineditorcmd"); tri.config.set("editorcmd", editorcmd)})
 
 " Cribbed from the example tridactylrc
