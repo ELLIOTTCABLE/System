@@ -33,7 +33,12 @@ set completeopt=longest,menuone,preview
 set conceallevel=1
 
 " This is overridden in the vim-lightline configuration below.
-set showtabline=2 laststatus=2 cmdheight=2 showmode
+if exists('g:gui_oni')
+   " If using Oni's externalized statusline, hide vim's native statusline
+   set noruler laststatus=0 noshowcmd noshowmode
+else
+   set showtabline=2 laststatus=2 cmdheight=2 showmode
+endif
 
 syntax on
 
@@ -76,10 +81,16 @@ function! s:FixLightlineAutocommands()
    augroup END
 endfunction
 
-au VimEnter * call s:FixLightlineAutocommands()
+function! s:FixConfigurationForLightline()
+   if !exists('g:loaded_lightline')
+      call denite#custom#option('_', 'statusline', v:true)
+   else
+      set laststatus=2 cmdheight=1 noshowmode
+   endif
+endfunction
 
-" Finally, I actually configure, and invoke, the color-switcher.
-if has("gui_vimr")
+
+function! s:SetupNord()
    let g:nord_italic_comments = 1
    let g:nord_comment_brightness = 8 " Between 1 and 20
    let g:nord_uniform_diff_background = 1
@@ -93,9 +104,28 @@ if has("gui_vimr")
     \    'light': 'OldHope'
     \ }
     \ }
+endfunction
+
+" Finally, I actually configure, and invoke, the color-switcher.
+if exists('g:gui_oni')
+   call s:SetupNord()
+elseif has('gui_vimr')
+   augroup fix-lightline | au!
+      au VimEnter * call s:FixLightlineAutocommands()
+      au VimEnter * call s:FixConfigurationForLightline()
+   augroup END
+
+   call s:SetupNord()
 
    call togglebg#("dark")
 else
+   augroup fix-lightline | au!
+      au VimEnter * call s:FixLightlineAutocommands()
+      au VimEnter * call s:FixConfigurationForLightline()
+   augroup END
+
+   call s:SetupNord()
+
    let g:seiya_auto_enable = 1
    let g:solarized_use16 = 1
    let g:lightline.colorscheme = 'solarized'
@@ -170,7 +200,7 @@ hi ShowTrailingWhitespace ctermbg=Red guibg=Red
 
 " Obscure the iconic vim 'empty-line tildes'
 " FIXME: VimR appears to reliably crash, with these?
-if !has('gui_vimr')
+if !has('gui_vimr') && !exists('g:gui_oni')
    hi EndOfBuffer ctermbg=fg
    hi! link EndOfBuffer SignColumn
 endif
@@ -668,18 +698,6 @@ if has('gui_vimr')
    set showtabline=1
    let g:lightline.enable.tabline = 0
 endif
-
-function! FixConfigurationForLightline()
-   if !exists('g:loaded_lightline')
-      call denite#custom#option('_', 'statusline', v:true)
-   else
-      set laststatus=2 cmdheight=1 noshowmode
-   endif
-endfunction
-
-augroup fix-lightline | au!
-   au VimEnter * call FixConfigurationForLightline()
-augroup END
 
 let g:lightline.active = {
  \    'left':  [  ['mode', 'paste'],
