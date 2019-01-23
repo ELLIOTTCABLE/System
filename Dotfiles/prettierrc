@@ -1,0 +1,6 @@
+printWidth: 90
+tabWidth: 3
+semi: false
+trailingComma: "all"
+jsxBracketSameLine: true
+endOfLine: "lf"
