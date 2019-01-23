@@ -76,10 +76,9 @@ Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 "    \ 'do': 'bash install.sh',
 "    \ }
 "
-"   Plug 'reasonml-editor/vim-reason-plus', {
-"    \ 'for': ['ocaml', 'reason'],
-"    \ }
 "endif
+
+Plug 'reasonml-editor/vim-reason-plus'
 
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
