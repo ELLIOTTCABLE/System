@@ -121,6 +121,7 @@ Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
+Plug 'tmsvg/pear-tree'
 
 Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
 

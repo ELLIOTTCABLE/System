@@ -968,6 +968,11 @@ let g:list_of_insert_keys = []
 
 let g:hardtime_ignore_buffer_patterns = [ "[denite]" ]
 
+" #### pear-tree
+let g:pear_tree_smart_openers = v:true
+let g:pear_tree_smart_closers = v:true
+let g:pear_tree_smart_backspace = v:true
+
 " #### vim-gitgutter
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 1
