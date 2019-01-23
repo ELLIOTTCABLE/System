@@ -518,39 +518,8 @@ let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio'
 
 let g:LanguageClient_autoStart = v:true
 
-augroup ocamlmaps | au!
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>*  <Plug>(MerlinSearchOccurrencesForward)
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>#  <Plug>(MerlinSearchOccurrencesBackward)
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>r  <Plug>(MerlinRename)
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>R  <Plug>(MerlinRenameAppend)
-
-   " I don't know why Merlin doesn't ship with a mapping for these.
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>y  <C-u>:MerlinYankLatestType<cr>
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>l  <C-u>:MerlinLocate<cr>
-
-   au FileType ocaml,reason map <silent> <buffer> <LocalLeader>o  <C-u>:Denite documentSymbol -mode=normal<cr>
-
-   " FIXME: Report these; they should support buffer-local settings as well as global ones
-   au FileType ocaml,reason let g:merlin_textobject_grow   = 'm'
-   au FileType ocaml,reason let g:merlin_textobject_shrink = 'M'
-   au FileType ocaml,reason call merlin#Register()
-
-   " Need to override `ocp-indent.vim`'s built-in indentexpr with `let-def/ocp-indent-vim`'s.
-   "au FileType ocaml setlocal indentexpr=ocpindent#OcpIndentLine()
-   au FileType ocaml let &l:formatprg = "refmt --parse ml --print ml" .
-    \ " --print-width " . &l:textwidth .
-    \ " --interface " . (match(expand("%"), "\\.mli$") == -1 ? "false" : "true")
-
-   au FileType reason let &l:formatprg = "refmt --parse re --print re --print-width " . &l:textwidth .
-    \ " --interface " . (match(expand("%"), "\\.rei$") == -1 ? "false" : "true")
-
-   if g:use_languageclient
-      au FileType ocaml,reason LanguageClientStart
-   endif
-
-   " REPORTME: It looks like Merlin's omnifunc is broken with Deoplete? I'm using
-   "	       `copy/deoplete-ocaml` instead, so.
-   "au FileType ocaml set omnifunc<
+augroup jsmaps | au!
+   au FileType javascript,typescript map <silent> <buffer> <LocalLeader>,t  <Plug>(ale_hover)
 augroup END
 
 
