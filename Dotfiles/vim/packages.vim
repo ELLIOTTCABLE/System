@@ -91,6 +91,9 @@ let g:polyglot_disabled += ['ocaml']
 Plug 'rgrinberg/vim-ocaml'
 
 Plug 'tpope/vim-scriptease'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-reload'
+
 " Plug 'docwhat/bats.vim'
 Plug 'vim-scripts/bats.vim'
 
