@@ -467,9 +467,9 @@ set undofile
 set undolevels=10000
 
 " Directories for swp files
-set backupdir=~/.vim/backup
-set directory=~/.vim/backup
-set undodir=~/.vim/undo,\ .
+set directory=~/.vim/swap//
+set backupdir=.,~/.vim/backup
+set undodir=~/.vim/undo
 
 " suggested by vim-gitgutter
 set updatetime=250
