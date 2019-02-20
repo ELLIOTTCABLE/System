@@ -726,7 +726,7 @@ let g:lightline.component_function = {
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
  \    'bufferinfo':  'lightline#buffer#bufferinfo',
- \    'gitbranch':   'fugitive#head',
+ \    'gitbranch':   'fugitive#Statusline',
  \ }
 
 let g:lightline.component_visible_condition = {
