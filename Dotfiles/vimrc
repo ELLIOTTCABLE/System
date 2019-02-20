@@ -812,7 +812,7 @@ endfunction
 let g:lightline_buffer_excludes = ['vimfiler']
 
 " ### ale
-let g:ale_fix_on_save = v:true
+let g:ale_lint_on_insert_leave = v:true
 let g:ale_fixers['*'] = ['remove_trailing_lines', 'trim_whitespace']
 
 "" #### vim-easytags
