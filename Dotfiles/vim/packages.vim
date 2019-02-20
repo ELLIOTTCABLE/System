@@ -34,6 +34,8 @@ Plug 'sodapopcan/vim-twiggy'
 " ### Navigation
 Plug 'cskeeters/vim-smooth-scroll'
 
+Plug 'wesQ3/vim-windowswap'
+
 Plug 'chaoren/vim-wordmotion'
 
 Plug 'easymotion/vim-easymotion'
@@ -107,8 +109,14 @@ Plug 'miyakogi/seiya.vim', PlugIf(!has('gui_vimr'))
 Plug 'chriskempson/base16-vim'   " light theme (base16-atelier-lakeside-light)
 Plug 'arcticicestudio/nord-vim'  " dark theme
 
-" Finally, the "manpage" theme
+" The "manpage" theme,
 Plug 'logico-dev/typewriter'
+
+" And some others, for funsies
+Plug 'morhetz/gruvbox'
+Plug 'KKPMW/sacredforest-vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'ajh17/spacegray.vim'
 
 
 " #### Small utilities
