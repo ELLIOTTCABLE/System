@@ -1,3 +1,94 @@
 {
-    "telemetry.enableTelemetry": false
+   // Basics
+   "editor.tabSize": 3,
+   "editor.wrappingIndent": "none",
+   "editor.wordWrap": "bounded",
+   "editor.wordWrapColumn": 100,
+   "editor.copyWithSyntaxHighlighting": false,
+   "editor.find.globalFindClipboard": true,
+   "editor.suggest.shareSuggestSelections": true,
+
+   "workbench.startupEditor": "welcomePageInEmptyWorkbench",
+   "workbench.editor.showTabs": false,
+   "workbench.useExperimentalGridLayout": true,
+   "workbench.panel.defaultLocation": "right",
+   "editor.renderLineHighlight": "all",
+   "editor.minimap.showSlider": "always",
+   "breadcrumbs.enabled": true,
+
+   "workbench.editor.closeOnFileDelete": true,
+   "workbench.statusBar.feedback.visible": false,
+
+   "files.autoSave": "onFocusChange",
+   "files.insertFinalNewline": true,
+   "files.trimFinalNewlines": true,
+   "files.useExperimentalFileWatcher": true,
+   "telemetry.enableTelemetry": false,
+
+   // Vim keybindings
+   "vim.normalModeKeyBindingsNonRecursive": [
+      {
+         "before": ["<leader>", "d"],
+         "after": ["d", "d"]
+      },
+      {
+         "before": ["<C-n>"],
+         "commands": [":nohl"]
+      }
+   ],
+
+   // Other vim
+   "vim.easymotion": true,
+   "vim.sneak": true,
+   "vim.incsearch": true,
+   "vim.useSystemClipboard": true,
+   "vim.useCtrlKeys": true,
+   "vim.hlsearch": true,
+   "vim.leader": "<space>",
+   "vim.handleKeys": {
+      "<C-a>": false,
+      "<C-f>": false
+   },
+
+   "workbench.fontAliasing": "auto",
+   "workbench.colorTheme": "Solarized Light",
+   "workbench.iconTheme": "keen-neutral-icon-theme",
+   "editor.fontFamily": "Iosevka Nerd Font",
+   "editor.fontLigatures": true,
+   "editor.fontSize": 13,
+   "editor.cursorStyle": "underline-thin",
+
+   "diffEditor.renderIndicators": false,
+
+   "formattingToggle.activateFor": ["formatOnPaste", "formatOnSave", "formatOnType"],
+   "editor.formatOnPaste": true,
+   "editor.formatOnSave": true,
+   "editor.formatOnType": true,
+
+   // Prettier
+   "prettier.printWidth": 90,
+   "prettier.tabWidth": 3,
+   "prettier.singleQuote": true,
+   "prettier.trailingComma": "all",
+   "prettier.bracketSpacing": true,
+   "prettier.semi": false,
+
+   // ESLint
+   "eslint.provideLintTask": true,
+
+   // Using Vim mappings, above.
+   "gitlens.keymap": "none",
+
+   // Automatically remove indentation in empty lines on save
+   "emptyIndent.removeIndent": true,
+   // Highlight indent on empty lines
+   "emptyIndent.highlightIndent": false,
+   // Highlight indent color
+   // "emptyIndent.highlightColor": "rgba(246,36,89,0.6)",
+   // Excluded file types
+   // "emptyIndent.exclude": [".md"]
+
+   "reason.diagnostics.tools": ["merlin", "bsb"],
+   "reason.codelens.enabled": true,
+   "reason.format.width": 90
 }
