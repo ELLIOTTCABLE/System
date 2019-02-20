@@ -92,6 +92,8 @@ if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
 let g:polyglot_disabled += ['ocaml']
 Plug 'rgrinberg/vim-ocaml'
 
+Plug '~/Sync/Code/vim-menhir'
+
 Plug 'tpope/vim-scriptease'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-reload'
