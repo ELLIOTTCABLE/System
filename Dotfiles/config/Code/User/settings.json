@@ -1,4 +1,7 @@
 {
+   "extensions.showRecommendationsOnlyOnDemand": true,
+   "telemetry.enableTelemetry": false,
+
    // Basics
    "editor.tabSize": 3,
    "editor.wrappingIndent": "none",
@@ -9,12 +12,19 @@
    "editor.suggest.shareSuggestSelections": true,
 
    "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-   "workbench.editor.showTabs": false,
    "workbench.useExperimentalGridLayout": true,
+   "window.titleBarStyle": "native",
+   "window.nativeTabs": true,
+   "workbench.editor.showTabs": false,
+   // "workbench.editor.tabCloseButton": "left",
    "workbench.panel.defaultLocation": "right",
    "editor.renderLineHighlight": "all",
    "editor.minimap.showSlider": "always",
    "breadcrumbs.enabled": true,
+
+   "window.closeWhenEmpty": true,
+   "window.newWindowDimensions": "inherit",
+   "window.openWithoutArgumentsInNewWindow": "on",
 
    "workbench.editor.closeOnFileDelete": true,
    "workbench.statusBar.feedback.visible": false,
@@ -23,7 +33,18 @@
    "files.insertFinalNewline": true,
    "files.trimFinalNewlines": true,
    "files.useExperimentalFileWatcher": true,
-   "telemetry.enableTelemetry": false,
+
+   // Appearance
+   "workbench.fontAliasing": "auto",
+   "workbench.colorTheme": "Solarized Light",
+   "workbench.iconTheme": "keen-neutral-icon-theme",
+   "explorer.decorations.colors": false,
+   "editor.fontFamily": "Iosevka Nerd Font",
+   "editor.fontLigatures": true,
+   "editor.fontSize": 13,
+   "editor.cursorStyle": "underline-thin",
+   "terminal.integrated.fontFamily": "Fantasque Sans Mono",
+   "terminal.integrated.cursorBlinking": true,
 
    // Vim keybindings
    "vim.normalModeKeyBindingsNonRecursive": [
@@ -34,6 +55,11 @@
       {
          "before": ["<C-n>"],
          "commands": [":nohl"]
+      },
+      {
+         // Trigger "Setting Toggle" extension to enable/disable ligatures
+         "before": ["<leader>", "l"],
+         "commands": ["extension.toggle_s1"]
       }
    ],
 
@@ -50,22 +76,46 @@
       "<C-f>": false
    },
 
-   "workbench.fontAliasing": "auto",
-   "workbench.colorTheme": "Solarized Light",
-   "workbench.iconTheme": "keen-neutral-icon-theme",
-   "editor.fontFamily": "Iosevka Nerd Font",
-   "editor.fontLigatures": true,
-   "editor.fontSize": 13,
-   "editor.cursorStyle": "underline-thin",
+   // Navigation & search
+   "explorer.sortOrder": "modified",
+   "search.quickOpen.includeSymbols": true,
+   "search.smartCase": true,
+   "search.useGlobalIgnoreFiles": true,
+   "search.usePCRE2": true,
 
+   // Specific languages and features
+   // ===============================
+
+   // ### Diffs
    "diffEditor.renderIndicators": false,
 
+   // ### Settings-editor
+   "workbench.settings.useSplitJSON": true,
+
+   // ### Terminal & debugger
+   "debug.inlineValues": true,
+   "terminal.integrated.confirmOnExit": true,
+
+   // ### Git
+   "git.alwaysShowStagedChangesResourceGroup": true,
+   "git.autofetch": true,
+   "git.enableCommitSigning": true,
+   "git.postCommitCommand": "push",
+   "gitlens.blame.ignoreWhitespace": true,
+   "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
+   "gitlens.currentLine.scrollable": false,
+   "gitlens.hovers.annotations.over": "annotation",
+   "gitlens.insiders": true,
+   "gitlens.statusBar.command": "gitlens.toggleFileBlame",
+   "gitlens.statusBar.reduceFlicker": true,
+
+   // ### Auto-formatting
    "formattingToggle.activateFor": ["formatOnPaste", "formatOnSave", "formatOnType"],
    "editor.formatOnPaste": true,
    "editor.formatOnSave": true,
    "editor.formatOnType": true,
 
-   // Prettier
+   // ### Prettier
    "prettier.printWidth": 90,
    "prettier.tabWidth": 3,
    "prettier.singleQuote": true,
@@ -73,8 +123,11 @@
    "prettier.bracketSpacing": true,
    "prettier.semi": false,
 
-   // ESLint
+   // ### ESLint
    "eslint.provideLintTask": true,
+
+   // ### NPM
+   "npm.enableScriptExplorer": true,
 
    // Using Vim mappings, above.
    "gitlens.keymap": "none",
@@ -82,13 +135,25 @@
    // Automatically remove indentation in empty lines on save
    "emptyIndent.removeIndent": true,
    // Highlight indent on empty lines
-   "emptyIndent.highlightIndent": false,
+   "emptyIndent.highlightIndent": true,
    // Highlight indent color
    // "emptyIndent.highlightColor": "rgba(246,36,89,0.6)",
    // Excluded file types
    // "emptyIndent.exclude": [".md"]
 
+   // Setting Toggle
+   "toggle.setting1Title": "editor.fontLigatures",
+   "toggle.iconEnabled": false,
+
+   // HTML
+   "html.format.endWithNewline": true,
+   "html.format.maxPreserveNewLines": 2,
+   "html.format.wrapLineLength": 100,
+
+   // ReasonML
    "reason.diagnostics.tools": ["merlin", "bsb"],
    "reason.codelens.enabled": true,
    "reason.format.width": 90
+
+   // Anything after this, was added programmatically
 }
