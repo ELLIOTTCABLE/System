@@ -49,10 +49,6 @@
    // Vim keybindings
    "vim.normalModeKeyBindingsNonRecursive": [
       {
-         "before": ["<leader>", "d"],
-         "after": ["d", "d"]
-      },
-      {
          "before": ["<C-n>"],
          "commands": [":nohl"]
       },
@@ -85,6 +81,11 @@
 
    // Specific languages and features
    // ===============================
+
+   // ### Filetypes and file-specific settings
+   "files.associations": {
+      "dune-project": "dune"
+   },
 
    // ### Diffs
    "diffEditor.renderIndicators": false,
