@@ -39,6 +39,18 @@ rbenv, nodenv, and their plugins must be installed manually:
 
 ----
 
+Unfortunately, opam [isn't interested in fixing this](https://github.com/ocaml/opam/issues/3512).
+Have to manually add a *non-default path* to a ‘default’ switch, if I want to be able to install
+“global binaries” with opam (like `ocamlformat` or `patdiff`.)
+
+(Note that the first of these values is pulled out of my ass — i.e. you'll have to `opam switch
+create 'default'` first or something — but I've hard-coded the second into `~/.shenv` elsewhere in
+this repo.)
+
+    ln -s /Users/ec/.opam/default/bin ~/.bin/opam-default-switch-alias
+
+----
+
 Some Vim plugins require extra setup:
 
  - Deoplete requires Python3 be installed and set up, that the appropriate Python package be

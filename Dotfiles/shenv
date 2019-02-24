@@ -92,14 +92,15 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  6. < Homebrew
   prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  5. < Homebrew's llvm / clang
 
-  append_el PATH "/Library/TeX/texbin"    # -4. > MacTeX
-  append_el PATH "/usr/X11/bin"           # -3. > X11
+  append_el PATH "/Library/TeX/texbin"    # -5. > MacTeX
+  append_el PATH "/usr/X11/bin"           # -4. > X11
 fi
 prepend_el PATH "$HOME/.bin"              #  4. < local binaries
 prepend_el PATH "$HOME/.cargo/bin"        #  3. < Cargo (Rust) binaries
-prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM (*default* switch, i.e. global)
+prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM local bin
 prepend_el PATH "./node_modules/.bin"     #  1. < npm (local)
 
+append_el PATH "$HOME/.bin/opam-default-switch-alias" # -3. < OPAM global bin (see note in README.)
 append_el PATH "/usr/local/cuda/bin"      # -2. > CUDA
 append_el PATH "$AWS_HOME/bin"            # -1. > EC2
 
