@@ -133,6 +133,9 @@ Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tmsvg/pear-tree'
 
+Plug 'haya14busa/vim-asterisk'
+Plug 'qxxxb/vim-searchhi'
+
 Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
 
 " I don't *love* including these from the dead, unmaintained gh/vim-scripts, but ...

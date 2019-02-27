@@ -266,16 +266,33 @@ for map_command in ['noremap', 'noremap!', 'tnoremap']
    endif
 endfor
 
-map /  <Plug>(incsearch-easymotion-/)
-map ?  <Plug>(incsearch-easymotion-?)
-map g/ <Plug>(incsearch-easymotion-stay)
+" Stacking up vim-searchhi and vim-asterisk, as a superior replacement for easymotion's incsearch
+nmap / <Plug>(searchhi-/)
+nmap ? <Plug>(searchhi-?)
+nmap n <Plug>(searchhi-n)
+nmap N <Plug>(searchhi-N)
 
-map n  <Plug>(incsearch-nohl-n)
-map N  <Plug>(incsearch-nohl-N)
-map *  <Plug>(incsearch-nohl-*)
-map #  <Plug>(incsearch-nohl-#)
-map g* <Plug>(incsearch-nohl-g*)
-map g# <Plug>(incsearch-nohl-g#)
+nmap gd <Plug>(searchhi-gd)
+nmap gD <Plug>(searchhi-gD)
+
+vmap / <Plug>(searchhi-v-/)
+vmap ? <Plug>(searchhi-v-?)
+vmap n <Plug>(searchhi-v-n)
+vmap N <Plug>(searchhi-v-N)
+
+vmap gd <Plug>(searchhi-v-gd)
+vmap gD <Plug>(searchhi-v-gD)
+
+map *   <Plug>(asterisk-*)<Plug>(searchhi-update)
+map #   <Plug>(asterisk-#)<Plug>(searchhi-update)
+map g*  <Plug>(asterisk-g*)<Plug>(searchhi-update)
+map g#  <Plug>(asterisk-g#)<Plug>(searchhi-update)
+
+map z*  <Plug>(asterisk-z*)<Plug>(searchhi-update)
+map z#  <Plug>(asterisk-z#)<Plug>(searchhi-update)
+map gz* <Plug>(asterisk-gz*)<Plug>(searchhi-update)
+map gz# <Plug>(asterisk-gz#)<Plug>(searchhi-update)
+
 
 " The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
 " includes some other global-plugin features.
@@ -562,6 +579,9 @@ let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p
 
 " #### Goyo
 let g:goyo_width = 100
+
+" #### searchhi
+let g:searchhi_clear_all_asap = 1
 
 " #### Fugitive
 augroup my-fugitive | au!
