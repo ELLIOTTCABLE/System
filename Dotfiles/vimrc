@@ -61,6 +61,8 @@ source ~/.vim/packages.vim
 if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
 if !exists('g:ale_fixers') | let g:ale_fixers = {} | endif
+if !exists('g:leader_key_map') | let g:leader_key_map = {} | endif
+if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
 
 
 function! s:ResetLightlineColorscheme()
@@ -312,12 +314,14 @@ nmap F <Plug>(easymotion-Fl)|xmap F <Plug>(easymotion-Fl)|omap F <Plug>(easymoti
 nmap t <Plug>(easymotion-tl)|xmap t <Plug>(easymotion-tl)|omap t <Plug>(easymotion-tl)
 nmap T <Plug>(easymotion-Tl)|xmap T <Plug>(easymotion-Tl)|omap T <Plug>(easymotion-Tl)
 
+
 " Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
 " prefixed mappings for bidirectional/overwin-mode:
 " mnemonic: 'sneak'
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 xmap <Leader>s <Plug>(easymotion-bd-f2)
 omap <Leader>s <Plug>(easymotion-bd-f2)
+let g:leader_key_map.s = 'motion-2sneak'
 
 " This makes <Leader>-k and <Leader>-b a little inconsistent, but I prefer the extra mapping-
 " mnemonic space.
@@ -327,6 +331,7 @@ omap <Leader>j <Plug>(easymotion-bd-jk)
 "nmap <Leader>k <Plug>(easymotion-overwin-line)
 "xmap <Leader>k <Plug>(easymotion-bd-jk)
 "omap <Leader>k <Plug>(easymotion-bd-jk)
+let g:leader_key_map.j = 'motion-line'
 
 " And finally, since `w` and `e` match so many words, especially bidirectionally, I leave them
 " prefixed *and* window-bound.
@@ -336,18 +341,17 @@ omap <Leader>w <Plug>(easymotion-bd-w)
 "nmap <Leader>b <Plug>(easymotion-bd-w)
 "xmap <Leader>b <Plug>(easymotion-bd-w)
 "omap <Leader>b <Plug>(easymotion-bd-w)
+let g:leader_key_map.w = 'motion-word'
 
 " <Space><Space> → jump-to-anywhere
 map <Leader><Leader> <Plug>(easymotion-lineanywhere)
+let g:leader_key_map[' '] = 'motion-anywhere'
 
 
 nmap <Leader>n <Plug>(easymotion-bd-n)
 xmap <Leader>n <Plug>(easymotion-bd-n)
 omap <Leader>n <Plug>(easymotion-bd-n)
-
-" Even though I've discarded the non-<Leader> versions of these, the classic mnemonic is memorable
-nmap <Leader>; <Plug>(easymotion-next)
-nmap <Leader>, <Plug>(easymotion-prev)
+let g:leader_key_map.n = 'motion-search'
 
 " Complete an EasyMotion by hitting <Space> again
 augroup easymotion-keymap | au!
@@ -385,15 +389,23 @@ imap <silent> <S-F12> <C-O><S-F12>
 
 " Toggle conealing with <Space>-c
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+let g:leader_key_map.c = 'toggle-conceal'
 
 map  <silent> <Leader>bg   <Plug>ToggleBackground
+let g:leader_key_map['bg'] = 'toggle-background'
 
 " Toggle highlighting of trailing whitespace with <Space>-zs
 " mnemonic: 'whiteZpace'
 nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
 nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
+let g:leader_key_map.z = {
+ \    'name':  '+trailing-whitespace',
+ \    's':     'toggle',
+ \    'x':     'delete',
+ \ }
 
 nnoremap <silent> <Leader>x :Sayonara<CR>
+let g:leader_key_map.x = 'Sayonara'
 
 " <Ctrl-P> for both switching between buffers, and opening new ones!
 nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_rec<CR>
@@ -401,18 +413,26 @@ nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hid
 " (Need to remap ControlP, so it doesn't stomp on the above Denite mapping.)
 let g:ctrlp_map = '<c-o>'
 
-nnoremap <Leader>d         :<C-u>DeniteBufferDir file_rec<CR>
-"nnoremap <Leader>ss        :<C-u>DeniteBufferDir buffer<CR>
+nnoremap <Leader>/            :<C-u>Denite grep:. -mode=normal<CR>
+nnoremap <Leader>8            :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
+nnoremap <Leader>*            :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
+let g:leader_key_map['/'] =   'find-files'
+let g:leader_key_map['8'] =   'find-cursor-word'
 
-nnoremap <Leader>/         :<C-u>Denite grep:. -mode=normal<CR>
-nnoremap <Leader>8         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
-nnoremap <Leader>*         :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
+nnoremap <Leader>ff           :<C-u>DeniteBufferDir file_rec<CR>
+"nnoremap <Leader>ss          :<C-u>DeniteBufferDir buffer<CR>
 
-"nnoremap <Leader>o         :<C-u>Denite location_list -mode=normal -no-empty<CR>
-"nnoremap <Leader>hs        :<C-u>Denite history:search -mode=normal<CR>
-"nnoremap <Leader>hc        :<C-u>Denite history:cmd -mode=normal<CR>
+"nnoremap <Leader>o           :<C-u>Denite location_list -mode=normal -no-empty<CR>
+nnoremap <Leader>fc           :<C-u>Denite command_history -mode=normal<CR>
 
-nnoremap <Leader><F1>      :<C-u>Denite help<CR>
+nnoremap <Leader>fh           :<C-u>Denite help<CR>
+
+let g:leader_key_map.f = {
+ \    'name':  '+find',
+ \    'f':     'find-file',
+ \    'c':     'find-command',
+ \    'h':     'find-help',
+ \ }
 
 
 " These default to `[c`, `]c`, `ic`, and `ac`; but the latter conflicts with TComment.
@@ -429,6 +449,12 @@ xmap ah <Plug>GitGutterTextObjectOuterVisual
 nmap <Leader>hp <Plug>GitGutterPreviewHunk
 nmap <Leader>hs <Plug>GitGutterStageHunk
 nmap <Leader>hu <Plug>GitGutterUndoHunk
+let g:leader_key_map.h = {
+ \    'name':  '+git-hunk',
+ \    'p':     'preview-hunk',
+ \    's':     'stage-hunk',
+ \    'u':     'unstage-hunk',
+ \ }
 
 
 " Mappings in Denite modals
@@ -536,7 +562,11 @@ let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio'
 let g:LanguageClient_autoStart = v:true
 
 augroup jsmaps | au!
-   au FileType javascript,typescript map <silent> <buffer> <LocalLeader>,t  <Plug>(ale_hover)
+   au FileType javascript,typescript map <silent> <buffer> <LocalLeader>tt  <Plug>(ale_hover)
+   let g:localleader_key_map.t = {
+    \    'name':  '+type',
+    \    't':     'type-info',
+    \ }
 augroup END
 
 
@@ -576,6 +606,20 @@ let g:startify_use_env = 1
 
 let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
  \ 'b', 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'B', 'N']
+
+" ### vim-which-key
+augroup my-which-key | au!
+   autocmd  FileType which_key set laststatus=0 noshowmode noruler
+   \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup END
+
+call which_key#register('<Space>', "g:leader_key_map")
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+
+call which_key#register(',', "g:localleader_key_map")
+nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
+vnoremap <silent> <localleader> :<c-u>WhichKeyVisual  ','<CR>
 
 " #### Goyo
 let g:goyo_width = 100

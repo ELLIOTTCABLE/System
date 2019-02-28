@@ -21,6 +21,8 @@ Plug 'w0rp/ale'
 
 Plug 'mbbill/undotree'
 
+Plug 'liuchengxu/vim-which-key'
+
 "Plug 'amerlyq/vim-focus-autocmd'
 
 Plug 'editorconfig/editorconfig-vim'
