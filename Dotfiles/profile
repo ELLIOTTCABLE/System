@@ -113,6 +113,12 @@ alias e='edit'
 move-n-link()( [ $# -ne 2 ] && print "Usage: move-n-link FROM TO" && exit 1;
    mv "$1" "$2" && { ln -s "$2" "$1" || mv "$2" "$1" } )
 
+function whichpath() {
+   command -v "$1" 1>- && \
+      echo $PATH | tr ':' "\n" | nl | \
+      grep --color -C100 -E "$(dirname "$(which "$1")")"
+}
+
 export CLICOLOR='yes'
 
 # Vim invocations
