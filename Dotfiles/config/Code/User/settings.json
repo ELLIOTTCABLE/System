@@ -3,6 +3,7 @@
    "telemetry.enableTelemetry": false,
 
    // Basics
+   // ======
    "editor.tabSize": 3,
    "editor.wrappingIndent": "none",
    "editor.wordWrap": "bounded",
@@ -35,6 +36,7 @@
    "files.useExperimentalFileWatcher": true,
 
    // Appearance
+   // ===========
    "workbench.fontAliasing": "auto",
    "workbench.colorTheme": "Solarized Light",
    "workbench.iconTheme": "keen-neutral-icon-theme",
@@ -47,6 +49,7 @@
    "terminal.integrated.cursorBlinking": true,
 
    // Vim keybindings
+   // ===============
    "vim.normalModeKeyBindingsNonRecursive": [
       {
          "before": ["<C-n>"],
@@ -60,6 +63,7 @@
    ],
 
    // Other vim
+   // ==========
    "vim.easymotion": true,
    "vim.sneak": true,
    "vim.incsearch": true,
@@ -73,6 +77,7 @@
    },
 
    // Navigation & search
+   // ===================
    "explorer.sortOrder": "modified",
    "search.quickOpen.includeSymbols": true,
    "search.smartCase": true,
@@ -142,19 +147,19 @@
    // Excluded file types
    // "emptyIndent.exclude": [".md"]
 
-   // Setting Toggle
+   // ### Setting Toggle
    "toggle.setting1Title": "editor.fontLigatures",
    "toggle.iconEnabled": false,
 
-   // HTML
+   // ### HTML
    "html.format.endWithNewline": true,
    "html.format.maxPreserveNewLines": 2,
    "html.format.wrapLineLength": 100,
 
-   // ReasonML
+   // ### ReasonML
    "reason.diagnostics.tools": ["merlin", "bsb"],
    "reason.codelens.enabled": true,
    "reason.format.width": 90
 
-   // Anything after this, was added programmatically
+   // Anything after this, was added programmatically!
 }
