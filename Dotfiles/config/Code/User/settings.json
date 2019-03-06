@@ -57,13 +57,30 @@
          // Trigger "Setting Toggle" extension to enable/disable ligatures
          "before": ["<leader>", "l"],
          "commands": ["extension.toggle_s1"]
+      },
+
+      // ### Git-related maps
+      {
+         "before": ["]", "h"],
+         "commands": ["workbench.action.editor.nextChange"]
+      },
+      {
+         "before": ["[", "h"],
+         "commands": ["workbench.action.editor.previousChange"]
+      },
+      {
+         "before": ["g", "h"],
+         "commands": ["editor.action.dirtydiff.next"]
+      },
+      {
+         "before": ["g", "H"],
+         "commands": ["editor.action.dirtydiff.previous"]
       }
    ],
 
    // Other vim
    // ==========
    "vim.easymotion": true,
-   "vim.sneak": true,
    "vim.incsearch": true,
    "vim.useSystemClipboard": true,
    "vim.useCtrlKeys": true,
