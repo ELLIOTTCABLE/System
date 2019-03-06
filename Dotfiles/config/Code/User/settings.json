@@ -17,8 +17,6 @@
    "window.titleBarStyle": "native",
    "window.nativeTabs": true,
    "workbench.editor.showTabs": false,
-   // "workbench.editor.tabCloseButton": "left",
-   "workbench.panel.defaultLocation": "right",
    "editor.renderLineHighlight": "all",
    "editor.minimap.showSlider": "always",
    "breadcrumbs.enabled": true,
