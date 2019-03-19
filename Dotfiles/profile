@@ -218,8 +218,6 @@ export OPAMKEEPBUILDDIR=true
 export OCAMLPARAM="_,bin-annot=1"
 
 alias d='dune'
-# TEMPORARY: Pending dune 1.0 release
-alias dune='jbuilder'
 
 
 alias grep='grep --color=auto'
