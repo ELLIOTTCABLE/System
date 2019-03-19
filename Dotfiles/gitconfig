@@ -72,6 +72,7 @@
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [diff]
 	tool = Kaleidoscope
+	external = ~/.bin/git-patdiff-wrapper
 [difftool]
 	prompt = false
 [mergetool "Kaleidoscope"]
