@@ -1,4 +1,5 @@
 printWidth: 90
+useTabs: false
 tabWidth: 3
 semi: false
 trailingComma: "all"
