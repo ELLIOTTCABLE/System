@@ -1,6 +1,8 @@
 npm
 npm-check
 npm-merge-driver
+npm-package-json-lint
+npm-package-json-lint-config-default
 jsonlint
 prettier
 semver
