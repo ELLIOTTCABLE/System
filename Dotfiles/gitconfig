@@ -89,7 +89,7 @@
 	solarized-reflog = "format:%x1b[33m%gd%Creset %gs %x1b[93;2m— %ar%x1b[0m"
 	solarized-parseable = "format:%x1b[30m%h%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
 [mergetool "fugitive"]
-	cmd = mvim -f -c \"Gdiff\" \"$MERGED\"
+	cmd = vimr --wait --cur-env --nvim +Gdiff \"$MERGED\"
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
