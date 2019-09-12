@@ -53,13 +53,19 @@
    // ===============
    "vim.normalModeKeyBindingsNonRecursive": [
       {
-         "before": ["<C-n>"],
-         "commands": [":nohl"]
-      },
-      {
          // Trigger "Setting Toggle" extension to enable/disable ligatures
          "before": ["<leader>", "l"],
          "commands": ["extension.toggle_s1"]
+      },
+
+      {
+         "before": ["g", "q", "q"],
+         "commands": ["rewrap.rewrapComment"]
+      },
+
+      {
+         "before": ["<leader>", "r"],
+         "commands": ["editor.action.rename"]
       },
 
       // ### Git-related maps
@@ -78,12 +84,17 @@
       {
          "before": ["g", "H"],
          "commands": ["editor.action.dirtydiff.previous"]
+      },
+      {
+         "before": ["<leader>", "h", "s"],
+         "commands": ["git.stageSelectedRanges"]
       }
    ],
 
    // Other vim
    // ==========
    "vim.easymotion": true,
+   "vim.camelCaseMotion.enable": true,
    "vim.incsearch": true,
    "vim.useSystemClipboard": true,
    "vim.useCtrlKeys": true,
