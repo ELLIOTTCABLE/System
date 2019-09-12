@@ -118,7 +118,9 @@
 
    // ### Filetypes and file-specific settings
    "files.associations": {
-      "dune-project": "dune"
+      "dune-project": "dune",
+      "*.locked": "ocaml.opam",
+      "vimrc": "viml"
    },
 
    // ### Diffs
