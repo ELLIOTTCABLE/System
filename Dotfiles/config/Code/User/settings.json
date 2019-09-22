@@ -36,18 +36,25 @@
 
    // Appearance
    // ===========
-   "workbench.fontAliasing": "auto",
    "workbench.colorTheme": "Solarized Light",
    "workbench.iconTheme": "keen-neutral-icon-theme",
 
+   // @sync os=mac
+   "editor.fontFamily": "'Iosevka Nerd Font', monospace",
+   // @sync os=windows
+   // "editor.fontFamily": "'Iosevka'",
    "workbench.fontAliasing": "auto",
    "explorer.decorations.colors": false,
-   "editor.fontFamily": "Iosevka Nerd Font",
    "editor.fontLigatures": true,
    "editor.fontSize": 13,
    "editor.cursorStyle": "underline-thin",
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
    "terminal.integrated.cursorBlinking": true,
+
+   // Settings sync
+   // =============
+   "sync.autoDownload": true,
+   "sync.autoUpload": true,
 
    // Vim keybindings
    // ===============
@@ -197,5 +204,7 @@
    "reason.codelens.enabled": true,
    "reason.format.width": 90
 
-   // Anything after this, was added programmatically!
+   // ### Finally, don't commit changes below this line:
+
+   // ... and anything after this, was added programmatically!
 }
