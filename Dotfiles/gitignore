@@ -16,3 +16,4 @@ tags
 .NERDTreeBookmarks
 
 *.code-workspace
+.vscode/
