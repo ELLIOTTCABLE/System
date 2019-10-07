@@ -1,12 +1,15 @@
 # See also: Dotfiles/config/.gitignore,
 #   Dotfiles/config/configstore/.gitignore
 
-Dotfiles/ssh/known_hosts
+Dotfiles/ssh/known_hosts*
 Dotfiles/ssh/.identity*
+Dotfiles/ssh/id_*
 Dotfiles/ssh/*_rsa*
 Dotfiles/ssh/sockets/*
 
 Dotfiles/zsh/modules
+
+Dotfiles/ocp/ocp-build.prefs
 
 Dotfiles/vim/undo
 Dotfiles/vim/.netrwhist
