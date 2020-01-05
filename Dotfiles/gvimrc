@@ -1,14 +1,28 @@
-" MacVIM / GUI settings
-set guifont=Fantasque_Sans_Mono:h12
-
-" Sizes:
-" per window, 110 (gutter: 2, numberwidth: 3+1, body: 100, padding: 3, separator: 1)
-" NERDtree, 25
-set lines=126 columns=135 " one window + NERDtree
-
-" colorscheme solarized
-" set t_Co=256
-"set transparency=6
-
 " agimrLtT → acem
 set guioptions+=c go+=e go-=g go-=i go-=r go-=L go-=t go-=T
+
+" VimR settings
+if has('gui_vimr')
+   VimRSetFontAndSize "IosevkaNerdFontComplete-Term", 14
+
+   " https://github.com/qvacua/vimr/issues/649#issuecomment-469059592
+   function! s:TempHideTools() abort
+      VimRMakeSessionTemporary
+      VimRHideTools
+      " VimRMaximizeWindow
+   endfunction
+   command! -nargs=0 TempHideTools call s:TempHideTools()
+
+" MacVIM settings
+else
+   set guifont=Fantasque_Sans_Mono:h12
+
+   " Sizes:
+   " per window, 110 (gutter: 2, numberwidth: 3+1, body: 100, padding: 3, separator: 1)
+   " NERDtree, 25
+   set lines=126 columns=135 " one window + NERDtree
+
+   " colorscheme solarized
+   " set t_Co=256
+   "set transparency=6
+endif
