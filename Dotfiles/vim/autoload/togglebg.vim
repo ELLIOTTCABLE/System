@@ -27,6 +27,8 @@ if !exists("g:togglebg_define_commands") || g:togglebg_define_commands
        \ call togglebg#(<f-args>)
    command! -bar -nargs=1 -complete=color SafeColorscheme
        \ call togglebg#colorscheme(<f-args>)
+   command! -nargs=1 -complete=custom,s:complete_lightline_colorschemes LightlineColorscheme
+         \ call togglebg#lightline_colorscheme(<q-args>)
    if exists(':Bg') ==# 2
       command! -bar -nargs=* -complete=custom,<SID>complete_background Bg
           \ call togglebg#(<f-args>)
@@ -68,9 +70,14 @@ endfunction
 " colorscheme to activate after changing `background` to `'light'`; and vice versa for
 " `g:colorschemes.dark`.
 "
+" Further, if Lightline is installed and enabled, and a mapping exists at
+" `g:colorschemes.lightline`, then `g:colourschemes.lightline.dark` and `...light` will be used
+" (with similar semantics) when toggling the background.
+"
 " With no arguments, simply toggles; can be given either `'dark'` or `'light'` as the first
-" argument, dictating which background to switch to; and can be given a colorscheme- name as the
-" second argument, to switch to a specific theme after changing the background.
+" argument, dictating which background to switch to; can be given a colorscheme-name as the second
+" argument, to switch to a specific theme after changing the background; and can be given a
+" lightline-specific colorscheme-name as a third argument, with the same semantics.
 function! togglebg#(...)
    " First, decide on a target `background` setting.
    if a:0 >=# 1 && len(a:1) !=# 0
@@ -106,7 +113,29 @@ function! togglebg#(...)
       let l:colorscheme = 'default'
    endif
 
-   call togglebg#colorscheme(l:colorscheme)
+   " Finally, we decide on a colorscheme for Lightline, if the configuration-dictionary exists.
+   if exists('g:lightline')
+      if a:0 >=# 3 && len(a:3) !=# 0
+         let l:lightline_colorscheme = a:3
+
+      elseif l:background ==? 'light' && exists("g:colorschemes.lightline.light")
+               \ && type(g:colorschemes.lightline.light) ==# type('')
+         let l:lightline_colorscheme = g:colorschemes.lightline.light
+      elseif l:background ==? 'dark' && exists("g:colorschemes.lightline.dark")
+               \ && type(g:colorschemes.lightline.dark) ==# type('')
+         let l:lightline_colorscheme = g:colorschemes.lightline.dark
+
+      elseif exists('g:colors_name')
+         let l:lightline_colorscheme = g:colors_name
+      else
+         let l:lightline_colorscheme = 'default'
+      endif
+
+      call togglebg#colorscheme(l:colorscheme, l:lightline_colorscheme)
+   else
+      call togglebg#colorscheme(l:colorscheme)
+   endif
+
 endfunction
 
 " The format of this callback is dictated by the documentation for `command-completion-custom`.
@@ -114,17 +143,44 @@ function! s:complete_background(ArgLead, CmdLine, CursorPos)
    return join(["dark", "light"], "\n")
 endfunction
 
+function! s:complete_lightline_colorschemes(...) abort
+   return join(map(
+         \ globpath(&rtp,"autoload/lightline/colorscheme/*.vim",1,1),
+         \ "fnamemodify(v:val,':t:r')"),
+         \ "\n")
+endfunction
+
 
 " These functions were written by Austin Smith (@auwsmit):
 "    <https://github.com/altercation/solarized/issues/102#issuecomment-275269574>
 "
 " They allow for the 'safe' swapping of colorschemes that add language-specific highlight-groups.
-function! togglebg#colorscheme(colo_name)
+function! togglebg#colorscheme(colo_name, ...)
    call <SID>find_links()
    exec "colorscheme " . a:colo_name
    call <SID>restore_links()
 
    call s:debug("Set colorscheme: " . a:colo_name)
+
+   if a:0 >=# 1 && len(a:1) !=# 0
+      call togglebg#lightline_colorscheme(a:1)
+   endif
+endfunction
+
+" This is from the Lightline.vim docs
+"    <https://github.com/itchyny/lightline.vim/blob/f4fa096a/doc/lightline.txt#L1220-L1267>
+function! togglebg#lightline_colorscheme(ll_colo_name) abort
+   if exists('g:lightline')
+      let g:lightline.colorscheme = a:ll_colo_name
+
+      if exists('#lightline')
+         call lightline#init()
+         call lightline#colorscheme()
+         call lightline#update()
+      endif
+
+      call s:debug("Set lightline colorscheme: " . a:ll_colo_name)
+   endif
 endfunction
 
 if !exists('s:known_links')

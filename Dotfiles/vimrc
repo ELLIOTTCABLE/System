@@ -64,25 +64,7 @@ if !exists('g:ale_fixers') | let g:ale_fixers = {} | endif
 if !exists('g:leader_key_map') | let g:leader_key_map = {} | endif
 if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
 
-
-function! s:ResetLightlineColorscheme()
-   if &background ==# 'light' && exists("g:colorschemes.lightline.light")
-      let g:lightline.colorscheme = g:colorschemes.lightline.light
-   elseif &background ==# 'dark' && exists("g:colorschemes.lightline.dark")
-      let g:lightline.colorscheme = g:colorschemes.lightline.dark
-   endif
-endfunction
-
-" FIXME: This is hacky, and intentionally stomps on / re-implements Lightline's own autocommands.
-function! s:FixLightlineAutocommands()
-   augroup lightline
-      au! ColorScheme
-      au  ColorScheme * call s:ResetLightlineColorscheme()
-      au  ColorScheme * call lightline#update()
-      au  ColorScheme * call lightline#highlight()
-   augroup END
-endfunction
-
+" FIXME: ... when was this supposed to get called?
 function! s:FixConfigurationForLightline()
    if !exists('g:loaded_lightline')
       call denite#custom#option('_', 'statusline', v:true)
@@ -91,10 +73,21 @@ function! s:FixConfigurationForLightline()
    endif
 endfunction
 
+function! s:SetupSolarized()
+   let g:solarized_use16 = 1
+
+   let g:colorschemes = {
+    \ 'dark':  'typewriter-night',
+    \ 'light': 'solarized8',
+    \ 'lightline': {
+    \    'dark': 'deus',
+    \    'light': 'solarized'
+    \ }
+    \ }
+endfunction
 
 function! s:SetupNord()
    let g:nord_italic_comments = 1
-   let g:nord_comment_brightness = 8 " Between 1 and 20
    let g:nord_uniform_diff_background = 1
    let g:nord_cursor_line_number_background = 1
 
@@ -103,7 +96,7 @@ function! s:SetupNord()
     \ 'light': 'base16-atelier-lakeside-light',
     \ 'lightline': {
     \    'dark': 'nord',
-    \    'light': 'OldHope'
+    \    'light': 'PaperColor_light'
     \ }
     \ }
 endfunction
@@ -112,26 +105,14 @@ endfunction
 if exists('g:gui_oni')
    call s:SetupNord()
 elseif has('gui_vimr')
-   augroup fix-lightline | au!
-      au VimEnter * call s:FixLightlineAutocommands()
-      au VimEnter * call s:FixConfigurationForLightline()
-   augroup END
-
    call s:SetupNord()
 
    call togglebg#("dark")
 else
-   augroup fix-lightline | au!
-      au VimEnter * call s:FixLightlineAutocommands()
-      au VimEnter * call s:FixConfigurationForLightline()
-   augroup END
-
-   call s:SetupNord()
+   call s:SetupSolarized()
 
    let g:seiya_auto_enable = 1
-   let g:solarized_use16 = 1
-   let g:lightline.colorscheme = 'solarized'
-   call togglebg#("light", "solarized8")
+   call togglebg#("dark")
 endif
 
 
@@ -721,16 +702,7 @@ let g:incsearch#magic = '\v' " very magic
 "let g:javascript_conceal_arrow_function   = "⇒"
 
 " #### lightline.vim
-if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:lightline.enable') | let g:lightline.enable = {} | endif
-
-" VimR already has a GUI buffer-explorer built-in
-" FIXME: VimR uses the built-in tabline; I'd really like this to switch from a bufline to a
-" traditional tabline, but *keep it themed by Lightline*, if possible.
-if has('gui_vimr')
-   set showtabline=1
-   let g:lightline.enable.tabline = 0
-endif
 
 let g:lightline.active = {
  \    'left':  [  ['mode', 'paste'],
@@ -747,8 +719,7 @@ let g:lightline.inactive = {
  \ }
 
 let g:lightline.tabline = {
- \    'left':  [  ['bufferinfo'], ['separator'],
- \                ['bufferbefore', 'buffercurrent', 'bufferafter'],   ],
+ \    'left':  [  ['tabs'],  ],
  \    'right': [  ['close'],  ],
  \ }
 let g:lightline.tab = {
@@ -772,16 +743,6 @@ let g:lightline.component = {
  \    'charvaluehex': "%2B",
  \    'lineinfo': "\uE0A1%-3l\uE0A3%-2v",
  \ }
-let g:lightline.component_expand = {
- \    'buffercurrent':  'lightline#buffer#buffercurrent',
- \    'bufferbefore':   'lightline#buffer#bufferbefore',
- \    'bufferafter':    'lightline#buffer#bufferafter',
- \ }
-let g:lightline.component_type = {
- \    'buffercurrent':  'tabsel',
- \    'bufferbefore':   'raw',
- \    'bufferafter':    'raw',
- \ }
 let g:lightline.component_function = {
  \    'mode':        'LightlineMode',
  \    'readonly':    'LightlineReadonly',
@@ -789,7 +750,6 @@ let g:lightline.component_function = {
  \    'fileencoding': 'LightlineFileencoding',
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
- \    'bufferinfo':  'lightline#buffer#bufferinfo',
  \    'gitbranch':   'fugitive#Statusline',
  \ }
 
@@ -872,8 +832,6 @@ function! LightlineMode()
       return winwidth('.') > 60 ? lightline#mode() : ''
    endif
 endfunction
-
-let g:lightline_buffer_excludes = ['vimfiler']
 
 " ### ale
 let g:ale_lint_on_insert_leave = v:true
