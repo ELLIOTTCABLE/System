@@ -586,7 +586,7 @@ let g:startify_change_to_vcs_root = 1
 let g:startify_use_env = 1
 
 let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
- \ 'b', 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'B', 'N']
+ \ 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
 
 " ### vim-which-key
 augroup my-which-key | au!
