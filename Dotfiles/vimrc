@@ -437,6 +437,12 @@ let g:leader_key_map.h = {
  \    'u':     'unstage-hunk',
  \ }
 
+nmap <Leader>wc :tcd %:h<CR>
+let g:leader_key_map.w = {
+ \    'name':  '+win',
+ \    'c':     'update-tab-cwd',
+ \ }
+
 
 " Mappings in Denite modals
 call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
