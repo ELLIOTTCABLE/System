@@ -1,0 +1,18 @@
+margin = 90
+
+parse-docstrings = true
+wrap-comments = true
+
+field-space = loose
+let-binding-spacing = sparse
+space-around-records = true
+space-around-arrays = true
+space-around-lists = true
+space-around-variants = true
+
+let-open = auto
+
+indicate-nested-or-patterns = unsafe-no
+break-cases = fit-or-vertical
+break-sequences = true
+sequence-blank-line = preserve-one
