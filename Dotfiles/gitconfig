@@ -110,3 +110,5 @@
 	cmd = nvr -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
 [mergetool "tabnvr"]
 	cmd = nvr -cc '$tabnew' -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
+[status]
+	showStash = true
