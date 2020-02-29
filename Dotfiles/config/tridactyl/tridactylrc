@@ -6,7 +6,7 @@ set historyresults 100
 set tabopencontaineraware true
 " This breaks a lot of websites, unfortunately. The TabEnter alternative should work, though?
 "set allowautofocus false
-autocmd TabEnter .* unfocus
+"autocmd TabEnter .* unfocus
 set smoothscroll true
 
             " hjklasdfgyuiopqwertnmzxcvb, but in Colemak :P
