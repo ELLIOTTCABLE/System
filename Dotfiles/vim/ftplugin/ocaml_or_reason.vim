@@ -1,11 +1,10 @@
-if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
-if !exists('g:localleader_key_map.t') | let g:localleader_key_map.t = {} | endif
+" FIXME: Ugh, why is this global ...
+let g:localleader_key_map.t = { 'name':  '+type' }
+let g:localleader_key_map.f = { 'name':  '+find' }
 
 let g:merlin_disable_default_keybindings = v:true
 
 if &rtp =~ 'merlin'
-   let g:localleader_key_map.name = '+types'
-
    map  <silent> <buffer> <LocalLeader>*  <Plug>(MerlinSearchOccurrencesForward)
    map  <silent> <buffer> <LocalLeader>#  <Plug>(MerlinSearchOccurrencesBackward)
    map  <silent> <buffer> <LocalLeader>r  <Plug>(MerlinRename)
@@ -36,7 +35,7 @@ if &rtp =~ 'merlin'
 
    " FIXME: This is still broken, I think.
    map <silent> <buffer> <LocalLeader>o  <C-u>:Denite documentSymbol -mode=normal<cr>
-   let g:localleader_key_map['fo'] = 'find-symbol'
+   let g:localleader_key_map.f.o = 'find-symbol'
 
 
    " Non-<LocalLeader>-mapped bindings. Am I okay with these?

@@ -66,9 +66,7 @@ if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
 
 " FIXME: ... when was this supposed to get called?
 function! s:FixConfigurationForLightline()
-   if !exists('g:loaded_lightline')
-      call denite#custom#option('_', 'statusline', v:true)
-   else
+   if exists('g:loaded_lightline')
       set laststatus=2 cmdheight=1 noshowmode
    endif
 endfunction
@@ -380,96 +378,131 @@ let g:leader_key_map['bg'] = 'toggle-background'
 nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
 nnoremap <silent> <Leader>zx :DeleteTrailingWhitespace<CR>
 let g:leader_key_map.z = {
- \    'name':  '+trailing-whitespace',
- \    's':     'toggle',
- \    'x':     'delete',
+ \    'name':  '+trailing-whitespace'
+ \  , 's':     'toggle'
+ \  , 'x':     'delete'
  \ }
 
 nnoremap <silent> <Leader>x :Sayonara<CR>
 let g:leader_key_map.x = 'Sayonara'
 
 " <Ctrl-P> for both switching between buffers, and opening new ones!
-nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_rec<CR>
+nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_mru file/rec<CR>
 
 " (Need to remap ControlP, so it doesn't stomp on the above Denite mapping.)
 let g:ctrlp_map = '<c-o>'
 
-nnoremap <Leader>/            :<C-u>Denite grep:. -mode=normal<CR>
-nnoremap <Leader>8            :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
-nnoremap <Leader>*            :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
+nnoremap <Leader>/            :<C-u>Denite grep:. -search<CR>
+nnoremap <Leader>8            :<C-u>DeniteCursorWord grep:. -search<CR>
+nnoremap <Leader>*            :<C-u>DeniteCursorWord grep:. -search<CR>
 let g:leader_key_map['/'] =   'find-files'
 let g:leader_key_map['8'] =   'find-cursor-word'
 
-nnoremap <Leader>ff           :<C-u>DeniteBufferDir file_rec<CR>
+nnoremap <Leader>ff           :<C-u>DeniteBufferDir file/rec<CR>
 "nnoremap <Leader>ss          :<C-u>DeniteBufferDir buffer<CR>
 
-"nnoremap <Leader>o           :<C-u>Denite location_list -mode=normal -no-empty<CR>
-nnoremap <Leader>fc           :<C-u>Denite command_history -mode=normal<CR>
+"nnoremap <Leader>fl           :<C-u>Denite location_list -no-empty<CR>
+nnoremap <Leader>fc           :<C-u>Denite command_history<CR>
+nnoremap <Leader>f"           :<C-u>Denite register<CR>
+nnoremap <Leader>f=           :<C-u>Denite spell<CR>
+nnoremap <Leader>f]           :<C-u>Denite outline<CR>
 
 nnoremap <Leader>fh           :<C-u>Denite help<CR>
 
 let g:leader_key_map.f = {
- \    'name':  '+find',
- \    'f':     'find-file',
- \    'c':     'find-command',
- \    'h':     'find-help',
+ \    'name':  '+find'
+ \  , 'f':     'find-file'
+ \  , 'c':     'find-command'
+ \  , 'h':     'find-help'
+ \  , '"':     'find-register'
+ \  , '=':     'find-spelling'
+ \  , ']':     'find-tag'
  \ }
 
 
 " These default to `[c`, `]c`, `ic`, and `ac`; but the latter conflicts with TComment.
 let g:gitgutter_map_keys = 0
-nmap [h <Plug>GitGutterPrevHunk
-nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>(GitGutterPrevHunk)
+nmap ]h <Plug>(GitGutterNextHunk)
 
-omap ih <Plug>GitGutterTextObjectInnerPending
-omap ah <Plug>GitGutterTextObjectOuterPending
-xmap ih <Plug>GitGutterTextObjectInnerVisual
-xmap ah <Plug>GitGutterTextObjectOuterVisual
+omap ih <Plug>(GitGutterTextObjectInnerPending)
+omap ah <Plug>(GitGutterTextObjectOuterPending)
+xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
 " Thanks to disabling `gitgutter_map_keys`, I also have to re-define these to their defaults.
-nmap <Leader>hp <Plug>GitGutterPreviewHunk
-nmap <Leader>hs <Plug>GitGutterStageHunk
-nmap <Leader>hu <Plug>GitGutterUndoHunk
+nmap <Leader>hp <Plug>(GitGutterPreviewHunk)
+nmap <Leader>hs <Plug>(GitGutterStageHunk)
+nmap <Leader>hu <Plug>(GitGutterUndoHunk)
 let g:leader_key_map.h = {
- \    'name':  '+git-hunk',
- \    'p':     'preview-hunk',
- \    's':     'stage-hunk',
- \    'u':     'unstage-hunk',
+ \    'name':  '+git-hunk'
+ \  , 'p':     'preview-hunk'
+ \  , 's':     'stage-hunk'
+ \  , 'u':     'unstage-hunk'
  \ }
 
 nmap <Leader>wc :tcd %:h<CR>
 let g:leader_key_map.w = {
- \    'name':  '+win',
- \    'c':     'update-tab-cwd',
+ \    'name':  '+win'
+ \  , 'c':     'update-tab-cwd'
  \ }
 
-
 " Mappings in Denite modals
-call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
-call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
+autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+   nnoremap <silent><buffer><expr>  <CR>     denite#do_map('do_action')
+   nnoremap <silent><buffer><expr>  <Space>  denite#do_map('toggle_select').'j'
+   nnoremap <silent><buffer><expr>  a        denite#do_map('choose_action')
+   nnoremap <silent><buffer><expr>  d        denite#do_map('do_action', 'delete')
+   nnoremap <silent><buffer><expr>  p        denite#do_map('do_action', 'preview')
+   nnoremap <silent><buffer><expr>  i        denite#do_map('open_filter_buffer')
+   nnoremap <silent><buffer><expr>  <Esc>    denite#do_map('quit')
 
-call denite#custom#map('_',      '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
-call denite#custom#map('insert', '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
+   " (Chosen to match the easymotion-bd-jk mapping)
+   " nnoremap <silent><buffer><expr> <Leader>j denite#do_map('quick_move')
+   map <silent><buffer>          <Leader>j   <Plug>(easymotion-sol-j)
+endfunction
 
-call denite#custom#map('_',      '<C-s>', '<denite:do_action:splitswitch>',      'noremap')
-call denite#custom#map('_',      '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
-call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+autocmd FileType denite-filter call s:denite_filter_my_settings()
+function! s:denite_filter_my_settings() abort
+   echom "wtf"
 
+   map  <silent><buffer>         <CR>        <Plug>(denite_filter_update)
+   imap <silent><buffer>         <CR>        <Plug>(denite_filter_update)
+   vmap <silent><buffer>         <CR>        <Plug>(denite_filter_update)
 
-" (Chosen to match the easymotion-bd-jk mapping)
-call denite#custom#map('normal', '<Leader>j', '<denite:quick_move>',             'noremap')
+   map  <silent><buffer>         <Esc>       <Plug>(denite_filter_update)
+   imap <silent><buffer>         <Esc>       <Plug>(denite_filter_update)
 
-call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',          'noremap')
-call denite#custom#map('normal', '<C-j>', '<denite:move_to_next_line>',          'noremap')
-call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
-call denite#custom#map('normal', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
+   map  <silent><buffer>         <C-c>       <Plug>(denite_filter_quit)
+   imap <silent><buffer>         <C-c>       <Plug>(denite_filter_quit)
 
-call denite#custom#map('insert', '<C-n>', '<denite:assign_next_matched_text>',   'noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:assign_previous_matched_text>', 'noremap')
-
-" ... w...why are these missing ...
-call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>',    'noremap')
-call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',         'noremap')
+   " (Chosen to match the easymotion-bd-jk mapping)
+   nmap <silent><buffer> <Leader>j <Plug>(denite_filter_update)<Plug>(easymotion-bd-jk)
+endfunction
+"call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
+"call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
+"
+"call denite#custom#map('_',      '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
+"call denite#custom#map('insert', '<C-t>', '<denite:do_action:tabswitch>',        'noremap')
+"
+"call denite#custom#map('_',      '<C-s>', '<denite:do_action:splitswitch>',      'noremap')
+"call denite#custom#map('_',      '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+"call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplitswitch>',     'noremap')
+"
+"
+"
+"call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',          'noremap')
+"call denite#custom#map('normal', '<C-j>', '<denite:move_to_next_line>',          'noremap')
+"call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
+"call denite#custom#map('normal', '<C-k>', '<denite:move_to_previous_line>',      'noremap')
+"
+"call denite#custom#map('insert', '<C-n>', '<denite:assign_next_matched_text>',   'noremap')
+"call denite#custom#map('insert', '<C-p>', '<denite:assign_previous_matched_text>', 'noremap')
+"
+"" ... w...why are these missing ...
+"call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>',    'noremap')
+"call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',         'noremap')
 
 " Prevent UltiSnips from stomping on <C-j/k>
 let g:UltiSnipsExpandTrigger="<Tab>"
@@ -548,13 +581,19 @@ let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio'
 
 let g:LanguageClient_autoStart = v:true
 
-augroup jsmaps | au!
-   au FileType javascript,typescript map <silent> <buffer> <LocalLeader>tt  <Plug>(ale_hover)
-   let g:localleader_key_map.t = {
-    \    'name':  '+type',
-    \    't':     'type-info',
-    \ }
+augroup javascript_maps | au!
+   au FileType javascript,typescript call s:javascript_maps()
 augroup END
+
+function! s:javascript_maps() abort
+   map <silent> <buffer> <LocalLeader>tt  <Plug>(ale_hover)
+
+   if !exists('g:localleader_key_map.t')
+      let g:localleader_key_map.t = { 'name':  '+type' }
+   endif
+
+   let g:localleader_key_map.t.t = 'type-info'
+endfunction
 
 
 "" === Plugins ===
@@ -640,23 +679,50 @@ endif
 
 " #### Denite
 call denite#custom#option('_', {
- \    'prompt':         '❯'
- \  , 'auto_resize':    v:true
- \  , 'ignorecase':     v:false
- \  , 'smartcase':      v:true
- \  , 'source_names':   'short'
- \  , 'statusline':     v:false
- \ })
+\    'prompt':         '❯'
+\  , 'start_filter':   v:true
+\  , 'auto_resize':    v:true
+\  , 'ignorecase':     v:false
+\  , 'smartcase':      v:true
+\  , 'source_names':   'short'
+\  , 'split':          'floating'
+\  , 'filter-split-direction': 'floating'
+\ })
 
-" Ripgrep 4 lyfe!
-call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
+autocmd VimEnter *   call s:denite_resized()
+autocmd VimResized * call s:denite_resized()
+function! s:denite_resized() abort
+   if &columns >= 200
+      call denite#custom#option('_', { 'vertical_preview': v:true })
+   else
+      call denite#custom#option('_', { 'vertical_preview': v:false })
+   endif
+endfunction
+
+call denite#custom#source('file/rec', 'matchers', ['matcher/cpsm'])
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+
 call denite#custom#var('grep',     'command', ['rg'])
 call denite#custom#var('grep',     'default_opts', ['--hidden', '--vimgrep', '--no-heading', '-S'])
 call denite#custom#var('grep',     'recursive_opts', [])
+call denite#custom#var('grep',     'pattern_opt', ['--regexp'])
+call denite#custom#var('grep',     'separator', ['--'])
 call denite#custom#var('grep',     'final_opts',   [])
+
+call denite#custom#alias('source', 'file/rec/git', 'file/rec')
+call denite#custom#var('file/rec/git', 'command', ['git', 'ls-files', '-co', '--exclude-standard'])
+
+call denite#custom#source('grep', 'args', ['', '', '!'])
+
 
 " Disable the vim-devicons plugin, as it's rather broken:
 let g:webdevicons_enable_denite = 0
+
+" #### cpsm (matcher for Denite)
+"let g:cpsm_match_empty_query = 0
+
+" #### neomru (also Denite)
+let g:neomru#filename_format = ':.'
 
 " #### EasyMotion
 let g:EasyMotion_prompt = '❯ '
@@ -830,13 +896,7 @@ endfunction
 
 " See: <https://gist.github.com/pocari/84c78efa38b5c2fc1f659d1aac3face8>
 function! LightlineMode()
-   if &ft == 'denite'
-      let mode_str = substitute(denite#get_status_mode(), "-\\| ", "", "g")
-      call lightline#link(tolower(mode_str[0]))
-      return mode_str
-   else
-      return winwidth('.') > 60 ? lightline#mode() : ''
-   endif
+   return winwidth('.') > 60 ? lightline#mode() : ''
 endfunction
 
 " ### ale

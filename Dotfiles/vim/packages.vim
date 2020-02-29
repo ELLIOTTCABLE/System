@@ -51,6 +51,8 @@ Plug 'mileszs/ack.vim'
 
 Plug 'Shougo/denite.nvim'
 Plug 'chemzqm/unite-location'
+Plug 'nixprime/cpsm', { 'do': 'env PY3=ON ./install.sh' }
+Plug 'Shougo/neomru.vim'
 
 
 " #### Completion
