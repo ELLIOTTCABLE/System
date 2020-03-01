@@ -123,7 +123,18 @@ GnuPG (of effin' course) needs a lot of custom setup.
         cp Dotfiles/gnupg/io.ell.gpg-refresh-keys.plist ~/Library/LaunchAgents/
         launchctl load ~/Library/LaunchAgents/io.ell.gpg-refresh-keys.plist
 
-3. ...
+3. Chill out the "unsafe permissions" warning-errors:
+
+        chmod 700 ~/.gnupg
+
+4. The actual private-key has to be retrieved from the smartcard:
+
+        gpg --card-edit
+        # type 'fetch' at the gpg/card> prompt
+
+        gpg --with-keygrip -K
+        # should show "ssb>" before the private-key lines, to show that they're available on the
+        # attached card
 
 ----
 
