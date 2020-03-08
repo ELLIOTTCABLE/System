@@ -10,6 +10,16 @@ if !has('nvim')
    set encoding=utf-8
 endif
 
+if $XDG_SYNC_HOME != ''
+   let s:xdg_sync_home = $XDG_SYNC_HOME . '/nvim'
+elseif $XDG_DATA_HOME != ''
+   let s:xdg_sync_home = substitute($XDG_DATA_HOME, 'share', 'sync', '')
+else
+   let s:xdg_sync_home = substitute(stdpath('data'), 'share', 'sync', '')
+endif
+
+execute "set shadafile=" . simplify(s:xdg_sync_home . '/shada/main.shada')
+
 set hidden
 set textwidth=100 wrapmargin=3 nojoinspaces
 set cursorline colorcolumn=+1,+2,+3
