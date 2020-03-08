@@ -19,6 +19,7 @@ else
 endif
 
 execute "set shadafile=" . simplify(s:xdg_sync_home . '/shada/main.shada')
+let g:startify_session_dir = simplify(s:xdg_sync_home . '/session')
 
 set hidden
 set textwidth=100 wrapmargin=3 nojoinspaces
