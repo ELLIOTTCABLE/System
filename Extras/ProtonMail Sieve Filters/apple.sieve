@@ -11,7 +11,7 @@ if allof (
     anyof (
         header :comparator "i;unicode-casemap" :is "Subject" [
             "Your Subscription is Expiring",
-            "Your Subscriptions are Expiring",
+            "Your Subscriptions are Expiring"
         ],
         header :comparator "i;unicode-casemap" :matches "Subject" [
             "A sound was played on *",
