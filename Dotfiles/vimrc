@@ -43,6 +43,8 @@ set completeopt=longest,menuone,preview
 
 set conceallevel=1
 
+set foldminlines=3
+
 " This is overridden in the vim-lightline configuration below.
 if exists('g:gui_oni')
    " If using Oni's externalized statusline, hide vim's native statusline
@@ -582,16 +584,6 @@ augroup END
 " ### JavaScript / etc
 let g:ale_fixers.javascript = ['eslint', 'prettier']
 
-" #### OCaml
-let g:ale_fixers.reason = ['eslint', 'prettier']
-let g:ale_fixers.ocaml = ['eslint', 'prettier']
-let g:no_ocaml_maps=1
-
-let g:LanguageClient_serverCommands.reason = ['ocaml-language-server', '--stdio']
-let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio']
-
-let g:LanguageClient_autoStart = v:true
-
 augroup javascript_maps | au!
    au FileType javascript,typescript call s:javascript_maps()
 augroup END
@@ -605,6 +597,18 @@ function! s:javascript_maps() abort
 
    let g:localleader_key_map.t.t = 'type-info'
 endfunction
+
+" #### OCaml
+let g:ale_fixers.reason = ['eslint', 'prettier']
+let g:ale_fixers.ocaml = ['eslint', 'prettier']
+
+" Disable Merlin's built-in maps
+let g:no_ocaml_maps=1
+
+let g:LanguageClient_serverCommands.reason = ['ocaml-language-server', '--stdio']
+let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio']
+
+let g:LanguageClient_autoStart = v:true
 
 
 "" === Plugins ===

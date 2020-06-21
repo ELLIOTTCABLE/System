@@ -2,6 +2,10 @@
 let g:localleader_key_map.t = { 'name':  '+type' }
 let g:localleader_key_map.f = { 'name':  '+find' }
 
+" Enable ocaml/vim-ocaml's foldmethod integration
+let g:ocaml_folding=1
+set nofoldenable
+
 let g:merlin_disable_default_keybindings = v:true
 
 if &rtp =~ 'merlin'

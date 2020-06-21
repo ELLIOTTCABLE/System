@@ -8,6 +8,10 @@ endfunction
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.local/share/nvim/plugged')
 
+" Libraries
+Plug 'LucHermitte/lh-vim-lib'                " Using lh#option#get() in my own mappings
+Plug 'xolox/vim-misc'                        " For vim-reload, et al.
+
 Plug 'mhinz/vim-startify'
 
 Plug 'itchyny/lightline.vim'
@@ -93,12 +97,11 @@ Plug 'tjvr/vim-nearley'
 if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
 
 let g:polyglot_disabled += ['ocaml']
-Plug 'rgrinberg/vim-ocaml'
+Plug 'ocaml/vim-ocaml'
 
 Plug '~/Sync/Code/vim-menhir'
 
 Plug 'tpope/vim-scriptease'
-Plug 'xolox/vim-misc'
 Plug 'xolox/vim-reload'
 
 " Plug 'docwhat/bats.vim'
