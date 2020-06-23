@@ -63,22 +63,14 @@ Plug 'Shougo/neomru.vim'
 
 
 " #### Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'ervandew/supertab' " FIXME: HOW DO COMPLETUN WERK
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-Plug 'carlitux/deoplete-ternjs', {
- \ 'for': ['javascript', 'javascript.jsx'],
- \ 'do': 'NODENV_VERSION=system nodenv exec npm install -g tern'
- \ }
-
 Plug 'othree/jspc.vim', {
  \ 'for': ['javascript', 'javascript.jsx', 'typescript'],
  \ }
-
-Plug 'copy/deoplete-ocaml', { 'for': ['ocaml'] }
 
 " #### Languages
 "if g:use_languageclient

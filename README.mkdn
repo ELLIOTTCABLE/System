@@ -53,13 +53,6 @@ this repo.)
 
 Some Vim plugins require extra setup:
 
- - Deoplete requires Python3 be installed and set up, that the appropriate Python package be
-   installed, and that its update command be executed:
-
-        brew install python3
-        pip3 install --upgrade neovim
-        nvim +UpdateRemotePlugins +q
-
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
 
         brew gem install coffeetags

@@ -927,48 +927,12 @@ let g:ale_fixers['*'] = ['remove_trailing_lines', 'trim_whitespace']
 "let g:easytags_include_members = 1
 "let g:easytags_auto_highlight = 0
 "
-"" for YouCompleteMe (and parse .h files as C, not C++)
-"let g:easytags_opts = [
-"\     '--fields=+l'
-"\   , '--langmap=c:.c.h'
-"\  ]
-"
 "" #### Tagbar
 "let g:tagbar_left = 1
 "let g:tagbar_width = 50
 "let g:tagbar_zoomwidth = 105
 "let g:tagbar_expand = 1
 "let g:tagbar_iconchars = ['▸', '▾']
-"
-"" #### YouCompleteMe
-"let g:ycm_collect_identifiers_from_tags_files = 1
-"
-"let g:ycm_complete_in_comments = 1
-"let g:ycm_complete_in_strings = 1
-"
-"let g:ycm_add_preview_to_completeopt = 1
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:ycm_autoclose_preview_window_after_insertion = 1
-"
-"" This is a duplication of the default values, since they don't exist until runtime, and thus can't
-"" be appended to without an `after` file.
-"" (See: https://github.com/Valloric/YouCompleteMe/issues/1569)
-"
-""let g:ycm_filetype_blacklist['nerdtree'] = 1
-"let g:ycm_filetype_blacklist = {
-"\     'tagbar': 1
-"\   , 'qf': 1
-"\   , 'notes': 1
-"\   , 'markdown': 1
-"\   , 'unite': 1
-"\   , 'text': 1
-"\   , 'vimwiki': 1
-"\   , 'pandoc': 1
-"\   , 'infolog': 1
-"\   , 'mail' : 1
-"\
-"\   , 'nerdtree' : 1
-"\  }
 
 " #### vim-focus-autocmd
 let g:focau = {}
@@ -980,54 +944,9 @@ let g:focau = {}
 "let g:focau.widgets = ['clipboard', 'buffers', 'number']
 let g:focau.widgets = []
 
-
 " #### vim-move
 " Use <C-j> and <C-k> in normal and visual mode to move lines around
 let g:move_key_modifier = 'C'
-
-" #### Deoplete
-let g:deoplete#complete_method = "omnifunc"
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_refresh_always = 1
-
-let g:deoplete#sources = {}
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#input_patterns = {}
-
-let g:deoplete#omni#functions.javascript = ['tern#Complete']
-let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
-let g:deoplete#sources#ternjs#docs = 1
-let g:deoplete#sources#ternjs#types = 1
-let g:deoplete#sources#ternjs#depths = 1
-let g:deoplete#sources#ternjs#case_insensitive = 1
-let g:deoplete#sources#ternjs#include_keywords = 1
-
-" FIXME: Deoplete support by Merlin's `merlin#Complete` omnifunc seems broken. Disabling in favour
-"        of `copy/deoplete-ocaml`, for now.
-"let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w*|#'
-
-" As suggested by `copy/deoplete-ocaml`:
-let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources.ocaml = ['buffer', 'around']
-
-
-" #### SuperTab
-" FIXME: .... more
-"let g:SuperTabDefaultCompletionType = "context"
-"let g:SuperTabContextDefaultCompletionType = "<c-p>"
-"augroup supertab-config | au!
-"   au FileType javascript call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-"   au FileType ocaml      call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-"augroup END
-"
-"
-"let g:SuperTabCrMapping = 1 " won't have any effect, if there's a mapping with <cr> in it
-"let g:SuperTabLongestEnhanced = 1
-"let g:SuperTabLongestHighlight = 1
-"let g:SuperTabClosePreviewOnPopupClose = 1
-
-" #### UltiSnips
-" FIXME: .... more
 
 " #### vim-hardtime
 let g:hardtime_default_on = 1

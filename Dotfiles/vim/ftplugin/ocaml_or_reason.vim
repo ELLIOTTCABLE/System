@@ -59,7 +59,3 @@ endif
 if g:use_languageclient
    LanguageClientStart
 endif
-
-" REPORTME: It looks like Merlin's omnifunc is broken with Deoplete? I'm using
-"	       `copy/deoplete-ocaml` instead, so.
-"au FileType ocaml set omnifunc<
