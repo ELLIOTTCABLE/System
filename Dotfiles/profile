@@ -70,12 +70,6 @@ export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 # less
 export PAGER='less'
 source "$HOME/.config/less.temp.sh"
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-   # This sends the content *both* on standard-input *and* by substituting the filename. This is to
-   # aid filetype recognition, while not requiring me to spit the output out anywhere in particular.
-   export LESSOPEN="||-source-highlight --failsafe --infer-lang -f esc \
-      --style-file='$HOME/.source-highlight/source-highlight-solarized/esc-solarized.style' -i %s"
-fi
 
 # OS X-specific commands
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
