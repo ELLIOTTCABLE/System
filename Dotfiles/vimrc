@@ -630,7 +630,7 @@ else
    let g:startify_files_number = 10
 endif
 let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc' ]
-let g:startify_commands = [ ':help reference', ':PlugUpdate', [':VTerm', ':exe "VTerm" | exe "120wincmd |" | set wfw'] ]
+let g:startify_commands = [ ':help reference', ':PlugUpdate', [':VTerm', ':exe "105VTerm" | set wfw'] ]
 
 let g:startify_skiplist = [
  \    'COMMIT_EDITMSG',
