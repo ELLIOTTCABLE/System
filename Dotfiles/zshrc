@@ -115,12 +115,6 @@ bindkey -M vicmd  '' clear-screen
 # Link the ‘viins’ keymap to the ‘main’ keymap, and activate it
 bindkey -A viins main
 
-# Setup ⌃W to exit the shell
-function close_tab { exit }
-zle -N close_tab_widget close_tab
-bindkey           '' close_tab_widget
-bindkey -M vicmd  '' close_tab_widget
-
 # ‘up/down-line-or-search’ only utilizes the first “word” of the current line;
 # I much prefer it utilizing the entire contents of the line prior to the
 # insertion point (the operation of ‘history-beginning-search-forward/
