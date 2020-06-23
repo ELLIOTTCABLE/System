@@ -11,6 +11,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Libraries
 Plug 'LucHermitte/lh-vim-lib'                " Using lh#option#get() in my own mappings
 Plug 'xolox/vim-misc'                        " For vim-reload, et al.
+Plug 'tomtom/tlib_vim'                       " For tinykeymap
 
 Plug 'mhinz/vim-startify'
 
@@ -25,6 +26,8 @@ Plug 'w0rp/ale'
 Plug 'mbbill/undotree'
 
 Plug 'liuchengxu/vim-which-key'
+
+Plug 'tomtom/tinykeymap_vim'                 " Mini-modes, like Ctrl-W
 
 "Plug 'amerlyq/vim-focus-autocmd'
 
