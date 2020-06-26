@@ -12,6 +12,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'LucHermitte/lh-vim-lib'                " Using lh#option#get() in my own mappings
 Plug 'xolox/vim-misc'                        " For vim-reload, et al.
 Plug 'tomtom/tlib_vim'                       " For tinykeymap
+Plug 'kana/vim-textobj-user'
 
 Plug 'mhinz/vim-startify'
 
@@ -59,6 +60,21 @@ Plug 'chemzqm/unite-location'
 Plug 'nixprime/cpsm', { 'do': 'env PY3=ON ./install.sh' }
 Plug 'Shougo/neomru.vim'
 
+Plug 'thinca/vim-textobj-between'      " if/af, mnemonic default f command
+Plug 'glts/vim-textobj-comment'        " ic/ac/iC
+Plug 'kana/vim-textobj-entire'         " ie/ae, mnemonic 'everything'
+Plug 'somini/vim-textobj-fold'         " iz/az
+Plug 'gilligan/textobj-gitgutter'      " ih
+Plug 'michaeljsmith/vim-indent-object' " ii/ai, repeatable
+Plug 'kana/vim-textobj-line'           " il/al
+Plug 'adriaanzon/vim-textobj-matchit'  " im/am (remapped to % in vimrc)
+Plug 'sgur/vim-textobj-parameter'      " i,/a,
+Plug 'kana/vim-textobj-lastpat'        " i/  a/  i?  a?
+Plug 'reedes/vim-textobj-sentence'     " overrides built-in is/as and )/( movements
+Plug 'reedes/vim-textobj-quote'        " overrides built-in iq/aq (double) and iQ/aQ (single)
+Plug 'adolenc/vim-textobj-toplevel'    " iT/aT
+Plug 'jceb/vim-textobj-uri'            " iu/au, go
+Plug 'Julian/vim-textobj-variable-segment' " iv/av
 
 " #### Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}

@@ -526,6 +526,13 @@ let g:leader_key_map.w = {
  \  , 'w':     'window-swap'
  \ }
 
+" NOTE: Lots of other textobj-mappings, see `packages.vim`
+let g:textobj_matchit_no_default_key_mappings = 1
+xmap a% <Plug>(textobj-matchit-a)
+omap a% <Plug>(textobj-matchit-a)
+xmap i% <Plug>(textobj-matchit-i)
+omap i% <Plug>(textobj-matchit-i)
+
 " TODO: Find mappings for all these, or the coc-denite versions thereof.
 "" Show all diagnostics.
 "nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
@@ -1117,6 +1124,13 @@ let g:merlin_type_history_auto_open = 2
 " #### echodoc.vim
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = "floating"
+
+" #### vim-textobj-...
+" this can (and maybe should?) be triggered per-filetype
+augroup textobj | au!
+   au VimEnter * call textobj#sentence#init()
+            \ | call textobj#quote#init()
+augroup END
 
 
 "let g:gundo_width = 25
