@@ -4,8 +4,9 @@ if !has('nvim')
    filetype plugin indent on
 
    set autoread autoindent backspace=indent,eol,start belloff=all complete-=i display=lastline \
-       history=10000 hlsearch incsearch nolangremap nocompatible nrformats=bin,hex ruler \
-       sessionoptions-=options showcmd tabpagemax=50 ttyfast viminfo+=",!" wildmenu
+       history=10000 hlsearch incsearch nolangremap nocompatible nrformats=bin,hex ruler
+                \ sessionoptions-=options showcmd tabpagemax=50 ttyfast viminfo+=",!"
+                \ wildmenu
 
    set encoding=utf-8
 endif
@@ -25,7 +26,7 @@ set hidden
 set textwidth=100 wrapmargin=3 nojoinspaces
 set cursorline colorcolumn=+1,+2,+3
 set splitbelow splitright
-set number signcolumn=auto
+set number signcolumn=yes
 set smarttab expandtab tabstop=8 softtabstop=3 shiftwidth=3 shiftround
 set smartcase ignorecase
 
@@ -73,7 +74,6 @@ source ~/.vim/packages.vim
 " ### Variable declarations
 if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
-if !exists('g:ale_fixers') | let g:ale_fixers = {} | endif
 if !exists('g:leader_key_map') | let g:leader_key_map = {} | endif
 if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
 
@@ -216,6 +216,11 @@ command! Stiff Gdiff --cached
 command! Gush Gpush
 command! Ganch Twiggy
 
+command! -nargs=0 Format   :call CocAction('format')
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+command! -nargs=? Fold     :call CocAction('fold', <f-args>)
+command! -nargs=0 OR       :CocCommand editor.action.organizeImport
+
 
 " === Mappings ===
 " Thanks, Damian. http://ell.io/i6io1
@@ -259,6 +264,72 @@ for map_command in ['noremap', 'noremap!', 'tnoremap']
       execute map_command . ' <silent> <S-D-{> <C-\><C-n>gT'
    endif
 endfor
+
+" pear-tree default mappings, disabled by g:pear_tree_map_special_keys below.
+imap <BS> <Plug>(PearTreeBackspace)
+imap <Esc> <Plug>(PearTreeFinishExpansion)
+" <CR> overloaded for coc.nvim below
+" imap <CR> <Plug>(PearTreeExpand)
+
+" Mapping <Tab> as indicated by coc.nvim's README
+inoremap <silent><expr> <TAB>
+   \ pumvisible() ? coc#_select_confirm() :
+   \ coc#expandableOrJumpable() ?
+   \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+   \ <SID>check_back_space() ? "\<Tab>" :
+   \ coc#refresh()
+
+function! s:check_back_space() abort
+   let col = col('.') - 1
+   return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<Tab>'
+let g:coc_snippet_prev = '<S-Tab>'
+
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <CR> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+inoremap <Plug>(CocOnEnter) <C-r>=coc#on_enter()<CR>
+if exists('*complete_info')
+  imap <silent><expr> <CR> complete_info()["selected"] != "-1" ? coc#_select_confirm()
+           \: "\<C-g>u\<Plug>(PearTreeExpand)\<Plug>(CocOnEnter)"
+else
+  imap <silent><expr> <CR> pumvisible() ? coc#_select_confirm()
+           \: "\<C-g>u\<Plug>(PearTreeExpand)\<Plug>(CocOnEnter)"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> [G <Plug>(coc-diagnostic-prev-error)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> ]G <Plug>(coc-diagnostic-next-error)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)<Plug>(searchhi-update)
+nmap <silent> gy <Plug>(coc-type-definition)<Plug>(searchhi-update)
+nmap <silent> gi <Plug>(coc-implementation)<Plug>(searchhi-update)
+nmap <silent> gr <Plug>(coc-references)<Plug>(searchhi-update)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Stacking up vim-searchhi and vim-asterisk, as a superior replacement for easymotion's incsearch
 nmap / <Plug>(searchhi-/)
@@ -383,9 +454,6 @@ imap <silent> <S-F12> <C-O><S-F12>
 map <Leader>c :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 let g:leader_key_map.c = 'toggle-conceal'
 
-map  <silent> <Leader>bg   <Plug>ToggleBackground
-let g:leader_key_map['bg'] = 'toggle-background'
-
 " Toggle highlighting of trailing whitespace with <Space>-zs
 " mnemonic: 'whiteZpace'
 nnoremap <silent> <Leader>zs :<C-u>call ShowTrailingWhitespace#Toggle(0)<Bar>echo (ShowTrailingWhitespace#IsSet() ? 'Show trailing whitespace' : 'Not showing trailing whitespace')<CR>
@@ -400,10 +468,26 @@ nnoremap <silent> <Leader>x :Sayonara<CR>
 let g:leader_key_map.x = 'Sayonara'
 
 " <Ctrl-P> for both switching between buffers, and opening new ones!
-nnoremap <C-p>             :<C-u>Denite -default-action=switch -source-names=hide buffer file_mru file/rec<CR>
+nnoremap <C-p> :<C-u>Denite -default-action=switch -source-names=hide buffer file_mru file/rec<CR>
 
 " (Need to remap ControlP, so it doesn't stomp on the above Denite mapping.)
 let g:ctrlp_map = '<c-o>'
+
+nmap <Leader>id <Plug>(coc-diagnostic-info)
+
+let g:leader_key_map.i = {
+ \    'name':  '+info'
+ \  , 'd':     'show-diagnostic'
+ \ }
+
+function! s:cocActionsOpenFromSelected(type) abort
+   execute 'CocCommand actions.open ' . a:type
+endfunction
+xnoremap <silent> <Leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+noremap <silent> <Leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+
+nnoremap <silent> <Leader>y   :<C-u>CocList -A --normal yank<CR>
+let g:leader_key_map.y = 'show-coc-yank'
 
 nnoremap <Leader>/            :<C-u>Denite grep:. -search<CR>
 nnoremap <Leader>8            :<C-u>DeniteCursorWord grep:. -search<CR>
@@ -432,6 +516,69 @@ let g:leader_key_map.f = {
  \  , ']':     'find-tag'
  \ }
 
+let g:windowswap_map_keys = 0
+nmap <silent> <Leader>ww :<C-u>call WindowSwap#EasyWindowSwap()<CR>
+nmap <silent> <Leader>wb <Plug>ToggleBackground
+
+let g:leader_key_map.w = {
+ \    'name':  '+window'
+ \  , 'g':     'toggle-background'
+ \  , 'w':     'window-swap'
+ \ }
+
+" TODO: Find mappings for all these, or the coc-denite versions thereof.
+"" Show all diagnostics.
+"nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+"" Manage extensions.
+"nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+"" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+"" Find symbol of current document.
+"nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+"" Search workspace symbols.
+"nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+"" Do default action for next item.
+"nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+"" Do default action for previous item.
+"nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+"" Resume latest coc list.
+"nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap iC <Plug>(coc-classobj-i)
+omap iC <Plug>(coc-classobj-i)
+xmap aC <Plug>(coc-classobj-a)
+omap aC <Plug>(coc-classobj-a)
+
+nmap <Leader>N <Plug>(coc-range-select)
+xmap <Leader>N <Plug>(coc-range-select)
+let g:leader_key_map['N'] =   'extend-selection'
+
+" Formatting selected code.
+xmap <silent> <leader>rf <Plug>(coc-format-selected)
+nmap <silent> <leader>rf <Plug>(coc-format-selected)
+
+" Apply AutoFix to problem on the current line.
+nmap <Leader>rx <Plug>(coc-fix-current)
+
+" Symbol renaming.
+nmap <Leader>rn <Plug>(coc-rename)
+
+" Symbol alignment
+nnoremap <Leader>r/ :Tabularize /
+
+let g:leader_key_map.r = {
+ \    'name':  '+refactor'
+ \  , 'n':     'rename'
+ \  , 'f':     'reformat'
+ \  , 'x':     'autofix'
+ \  , '/':     'search-and-align'
+ \ }
 
 " These default to `[c`, `]c`, `ic`, and `ac`; but the latter conflicts with TComment.
 let g:gitgutter_map_keys = 0
@@ -478,8 +625,6 @@ endfunction
 
 autocmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort
-   echom "wtf"
-
    map  <silent><buffer>         <CR>        <Plug>(denite_filter_update)
    imap <silent><buffer>         <CR>        <Plug>(denite_filter_update)
    vmap <silent><buffer>         <CR>        <Plug>(denite_filter_update)
@@ -517,17 +662,20 @@ endfunction
 "call denite#custom#map('normal', 'dw',    '<denite:delete_word_after_caret>',    'noremap')
 "call denite#custom#map('normal', '^',     '<denite:move_caret_to_lead>',         'noremap')
 
-" Prevent UltiSnips from stomping on <C-j/k>
-let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<C-b>"
-let g:UltiSnipsJumpBackwardTrigger="<C-z>"
-
 " Make Denite results less fugly
 hi link deniteMatchedChar Special
 
 " Write files, by default
 augroup focus-loss-auto-write | au!
    au BufLeave,FocusLost * silent! wall
+augroup END
+
+augroup coc | au!
+   " Update signature help on jump placeholder.
+   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+   " Update lightline-statusline
+   autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 augroup END
 
 "" gist-vim defaults
@@ -553,10 +701,11 @@ set updatetime=250
 "set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 "" The markdown.vim ftplugin supports ```this kind of syntax-hilighting fence
-"let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
-"                                 \, 'html', 'css', 'xml'
-"                                 \, 'js=javascript', 'coffee', 'json'
-"                                 \, 'ruby', 'python', 'lisp', 'scheme', 'haskell' ]
+let g:markdown_fenced_languages = [ 'c', 'objc', 'make', 'sh'
+                                \, 'html', 'css', 'xml'
+                                \, 'js=javascript', 'coffee', 'json'
+                                \, 'ruby', 'python', 'lisp', 'scheme', 'haskell'
+                                \, 'vim', 'help' ]
 
 
 " === Filetypes ===
@@ -582,26 +731,11 @@ augroup filetypes | au!
 augroup END
 
 " ### JavaScript / etc
-let g:ale_fixers.javascript = ['eslint', 'prettier']
-
-augroup javascript_maps | au!
-   au FileType javascript,typescript call s:javascript_maps()
+augroup javascript | au!
+   au FileType javascript,typescript,json setl formatexpr=CocAction('formatSelected')
 augroup END
 
-function! s:javascript_maps() abort
-   map <silent> <buffer> <LocalLeader>tt  <Plug>(ale_hover)
-
-   if !exists('g:localleader_key_map.t')
-      let g:localleader_key_map.t = { 'name':  '+type' }
-   endif
-
-   let g:localleader_key_map.t.t = 'type-info'
-endfunction
-
 " #### OCaml
-let g:ale_fixers.reason = ['eslint', 'prettier']
-let g:ale_fixers.ocaml = ['eslint', 'prettier']
-
 " Disable Merlin's built-in maps
 let g:no_ocaml_maps=1
 
@@ -609,6 +743,11 @@ let g:LanguageClient_serverCommands.reason = ['ocaml-language-server', '--stdio'
 let g:LanguageClient_serverCommands.ocaml  = ['ocaml-language-server', '--stdio']
 
 let g:LanguageClient_autoStart = v:true
+
+" ### Haskell
+augroup javascript | au!
+   au FileType haskell setl formatexpr=CocAction('formatSelected')
+augroup END
 
 
 "" === Plugins ===
@@ -794,13 +933,13 @@ if !exists('g:lightline.enable') | let g:lightline.enable = {} | endif
 let g:lightline.active = {
  \    'left':  [  ['mode', 'paste'],
  \                ['bufnum', 'filename', 'readonly',  'modified'],
- \                ['gitbranch'],  ],
+ \                ['gitbranch', 'cocstatus'],  ],
  \    'right': [  ['charvaluehex', 'lineinfo'],
  \                ['percent'],
  \                ['fileencoding', 'fileformat', 'filetype'],  ],
  \ }
 let g:lightline.inactive = {
- \    'left':  [  [ 'bufnum', 'filename' ]  ],
+ \    'left':  [  [], [ 'bufnum', 'filename' ]  ],
  \    'right': [  [ 'lineinfo' ],
  \                [ 'percent' ],  ],
  \ }
@@ -838,6 +977,7 @@ let g:lightline.component_function = {
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
  \    'gitbranch':   'fugitive#Statusline',
+ \    'cocstatus':   'coc#status',
  \ }
 
 let g:lightline.component_visible_condition = {
@@ -914,10 +1054,6 @@ function! LightlineMode()
    return winwidth('.') > 60 ? lightline#mode() : ''
 endfunction
 
-" ### ale
-let g:ale_lint_on_insert_leave = v:true
-let g:ale_fixers['*'] = ['remove_trailing_lines', 'trim_whitespace']
-
 "" #### vim-easytags
 "set tags=./tags;
 "let g:easytags_dynamic_files = 2
@@ -960,6 +1096,8 @@ let g:list_of_insert_keys = []
 let g:hardtime_ignore_buffer_patterns = [ "[denite]" ]
 
 " #### pear-tree
+let g:pear_tree_map_special_keys = v:false
+
 let g:pear_tree_smart_openers = v:true
 let g:pear_tree_smart_closers = v:true
 let g:pear_tree_smart_backspace = v:true
@@ -975,6 +1113,11 @@ let g:split_term_default_shell = "/usr/local/bin/zsh"
 " #### merlin
 let g:merlin_completion_arg_type = "always"
 let g:merlin_type_history_auto_open = 2
+
+" #### echodoc.vim
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = "floating"
+
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = 1

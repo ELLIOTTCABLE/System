@@ -21,8 +21,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 
-Plug 'w0rp/ale'
-
 Plug 'mbbill/undotree'
 
 Plug 'liuchengxu/vim-which-key'
@@ -63,14 +61,49 @@ Plug 'Shougo/neomru.vim'
 
 
 " #### Completion
-"Plug 'ervandew/supertab' " FIXME: HOW DO COMPLETUN WERK
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc-denite'
+Plug 'iamcco/coc-actions', {'do': 'yarn install --frozen-lockfile && yarn build'}
+Plug 'voldikss/coc-browser', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
+Plug 'iamcco/coc-diagnostic', {'do': 'yarn install --frozen-lockfile'}
 
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-markdownlint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
+
+
+Plug 'jaredly/reason-language-server', {
+ \ 'rtp': 'editor-extensions/coc.nvim',
+ \ 'do': 'cd editor-extensions/coc.nvim && yarn install --frozen-lockfile',
+ \ }
+
+
+" NeoVim completion-source for Vi/Vim-functions
+" FIXME: Do I need both of these?
+Plug 'Shougo/neco-vim'
+Plug 'neoclide/coc-neco'
+Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
+
+" Completion-source for file-includes, see `:help 'include'`
+Plug 'Shougo/neoinclude.vim'
+Plug 'jsfaint/coc-neoinclude'
 
 Plug 'othree/jspc.vim', {
  \ 'for': ['javascript', 'javascript.jsx', 'typescript'],
  \ }
+
+Plug 'honza/vim-snippets'
 
 " #### Languages
 "if g:use_languageclient
@@ -84,9 +117,12 @@ Plug 'othree/jspc.vim', {
 
 Plug 'reasonml-editor/vim-reason-plus'
 
+Plug 'twinside/vim-haskellfold'
+
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'tjvr/vim-nearley'
+Plug 'kevinoid/vim-jsonc'
 
 " Pending sheerun/vim-polyglot#320.
 if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
@@ -130,6 +166,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'matze/vim-move'
 Plug 'takac/vim-hardtime'
+Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tmsvg/pear-tree'

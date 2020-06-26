@@ -24,6 +24,8 @@ rbenv, nodenv, and their plugins must be installed manually:
 
     nodenv update-version-defs
     nodenv install 10.8.0                              # Or whatever,
+    nodenv default-packages install --all
+    nodenv rehash
 
     git clone https://github.com/rbenv/rbenv.git ~/.rbenv
     ln -s "$SYSTEM_REPO/Dotfiles/config/rbenv/default-gems" ~/.rbenv/
@@ -52,6 +54,18 @@ this repo.)
 ----
 
 Some Vim plugins require extra setup:
+
+ - My coc.nvim setup will use a few additional linters that need to be installed externally. Some
+   are installed via the `nodenv default-packages install` command above; others need to come from
+   Homebrew etc:
+
+       brew install languagetool shellcheck hadolint tidy-html5
+       pip3 install vim-vint
+
+ - LanguageTool can also, optionally, use an additional **8GB** (o_o) of n-gram language-data.
+   Details here:
+
+   <http://wiki.languagetool.org/finding-errors-using-n-gram-data>
 
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
 

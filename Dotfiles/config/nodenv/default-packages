@@ -3,8 +3,12 @@ npm-check
 npm-merge-driver
 npm-package-json-lint
 npm-package-json-lint-config-default
+yarn
 jsonlint
 prettier
+https://github.com/josephfrazier/prettier_d
+diagnostic-languageserver
+vim-language-server
 semver
 hiper
 a11y

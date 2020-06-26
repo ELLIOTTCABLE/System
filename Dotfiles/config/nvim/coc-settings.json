@@ -1,0 +1,178 @@
+{
+   "diagnostic.maxWindowWidth": 110,
+   "suggest.echodocSupport": true,
+   "suggest.acceptSuggestionOnCommitCharacter": true,
+
+   "diagnostic.virtualText": true,
+   "diagnostic.virtualTextCurrentLineOnly": false,
+
+   "diagnostic.maxWindowHeight": 20,
+   "diagnostic.filetypeMap": {},
+
+   "codeLens.enable": true,
+
+   "snippets.enableStatusItem": true,
+
+   // "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown"],
+   // "coc.preferences.formatOnInsertLeave": true,
+   "coc.preferences.formatOnType": true,
+   "coc.preferences.formatOnTypeFiletypes": [],
+
+   // Prettier instead
+   "html.format.enable": false,
+   "json.format.enable": false,
+   "yaml.format.enabled": false,
+   "javascript.format.enabled": false,
+   "typescript.format.enabled": false,
+
+   // Defaults from :help coc-settings
+   "suggest.completionItemKindLabels": {
+      "keyword": "\uf1de",
+      "variable": "\ue79b",
+      "value": "\uf89f",
+      "operator": "\u03a8",
+      "function": "\u0192",
+      "reference": "\ufa46",
+      "constant": "\uf8fe",
+      "method": "\uf09a",
+      "struct": "\ufb44",
+      "class": "\uf0e8",
+      "interface": "\uf417",
+      "text": "\ue612",
+      "enum": "\uf435",
+      "enumMember": "\uf02b",
+      "module": "\uf40d",
+      "color": "\ue22b",
+      "property": "\ue624",
+      "field": "\uf9be",
+      "unit": "\uf475",
+      "event": "\ufacd",
+      "file": "\uf723",
+      "folder": "\uf114",
+      "snippet": "\ue60b",
+      "typeParameter": "\uf728",
+      "default": "\uf29c"
+   },
+
+   // NOTE: while fromRuntimepath is true, if you have install too many plugins it will slow down
+   //       the complete
+   "vimlsp.suggest.fromRuntimepath": true,
+   "vimlsp.indexes.count": 8,
+   "coc.source.neco.shortcut": "VI",
+
+   "html.suggest.angular1": false,
+
+   "tabnine.shortcut": "T9",
+
+   // diagnostic-languageserver
+   "diagnostic-languageserver.linters": {
+      "shellcheck": {
+         "command": "shellcheck",
+         "debounce": 100,
+         "args": ["--format=gcc", "-"],
+         "offsetLine": 0,
+         "offsetColumn": 0,
+         "sourceName": "shellcheck",
+         "formatLines": 1,
+         "formatPattern": [
+            "^[^:]+:(\\d+):(\\d+):\\s+([^:]+):\\s+(.*)$",
+            {
+               "line": 1,
+               "column": 2,
+               "message": 4,
+               "security": 3
+            }
+         ],
+         "securities": {
+            "error": "error",
+            "warning": "warning",
+            "note": "info"
+         }
+      },
+      "vint": {
+         "command": "vint",
+         "debounce": 100,
+         "args": ["--enable-neovim", "-"],
+         "offsetLine": 0,
+         "offsetColumn": 0,
+         "sourceName": "vint",
+         "formatLines": 1,
+         "formatPattern": [
+            "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+            {
+               "line": 1,
+               "column": 2,
+               "message": 3
+            }
+         ]
+      },
+      "hadolint": {
+         "command": "hadolint",
+         "sourceName": "hadolint",
+         "args": ["-f", "json", "-"],
+         "parseJson": {
+            "line": "line",
+            "column": "column",
+            "security": "level",
+            "message": "${message} [${code}]"
+         },
+         "securities": {
+            "error": "error",
+            "warning": "warning",
+            "info": "info",
+            "style": "hint"
+         }
+      },
+      "tidy": {
+         "command": "tidy",
+         "args": ["-e", "-q"],
+         "rootPatterns": [".git/"],
+         "isStderr": true,
+         "debounce": 100,
+         "offsetLine": 0,
+         "offsetColumn": 0,
+         "sourceName": "tidy",
+         "formatLines": 1,
+         "formatPattern": [
+            "^.*?(\\d+).*?(\\d+)\\s+-\\s+([^:]+):\\s+(.*)(\\r|\\n)*$",
+            {
+               "line": 1,
+               "column": 2,
+               "endLine": 1,
+               "endColumn": 2,
+               "message": [4],
+               "security": 3
+            }
+         ],
+         "securities": {
+            "Error": "error",
+            "Warning": "warning"
+         }
+      }
+   },
+   "diagnostic-languageserver.filetypes": {
+      "vim": "vint",
+      "sh": "shellcheck",
+      "dockerfile": "hadolint"
+   },
+   "diagnostic-languageserver.formatters": {},
+   "diagnostic-languageserver.formatFiletypes": {
+      "dart": "dartfmt",
+      "elixir": "mix_format",
+      "eelixir": "mix_format"
+   },
+
+   "languageserver": {
+      "haskell": {
+         "command": "hie-wrapper",
+         "args": ["--lsp"],
+         "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml"],
+         "filetypes": ["hs", "lhs", "haskell"],
+         "initializationOptions": {
+            "languageServerHaskell": {
+               "hlintOn": true
+            }
+         }
+      }
+   }
+}
