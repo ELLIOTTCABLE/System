@@ -134,6 +134,7 @@ Plug 'honza/vim-snippets'
 
 Plug 'reasonml-editor/vim-reason-plus'
 
+Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 Plug 'twinside/vim-haskellfold'
 
 Plug 'sheerun/vim-polyglot'

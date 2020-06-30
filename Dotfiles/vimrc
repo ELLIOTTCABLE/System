@@ -1132,6 +1132,11 @@ augroup textobj | au!
             \ | call textobj#quote#init()
 augroup END
 
+" #### ghcid
+" Use stack to find ghcid, as per:
+"    <https://github.com/ndmitchell/ghcid/issues/209>
+let g:ghcid_command = "stack exec ghcid --"
+
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = 1
