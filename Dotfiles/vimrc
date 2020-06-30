@@ -60,7 +60,6 @@ syntax on
 let g:use_own_merlin     = v:false
 let g:use_languageclient = v:false
 
-
 " `vim-plug` installation & package-loading
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -69,7 +68,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 source ~/.vim/packages.vim
-
 
 " ### Variable declarations
 if !exists('g:lightline') | let g:lightline = {} | endif
@@ -125,7 +123,6 @@ else
    let g:seiya_auto_enable = 1
    call togglebg#("dark")
 endif
-
 
 " Command-line tab completion
 set wildmode=list:longest,list:full
@@ -358,7 +355,6 @@ map z#  <Plug>(asterisk-z#)<Plug>(searchhi-update)
 map gz* <Plug>(asterisk-gz*)<Plug>(searchhi-update)
 map gz# <Plug>(asterisk-gz#)<Plug>(searchhi-update)
 
-
 " The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
 " includes some other global-plugin features.
 let mapleader = " "
@@ -376,7 +372,6 @@ nmap f <Plug>(easymotion-fl)|xmap f <Plug>(easymotion-fl)|omap f <Plug>(easymoti
 nmap F <Plug>(easymotion-Fl)|xmap F <Plug>(easymotion-Fl)|omap F <Plug>(easymotion-Fl)
 nmap t <Plug>(easymotion-tl)|xmap t <Plug>(easymotion-tl)|omap t <Plug>(easymotion-tl)
 nmap T <Plug>(easymotion-Tl)|xmap T <Plug>(easymotion-Tl)|omap T <Plug>(easymotion-Tl)
-
 
 " Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
 " prefixed mappings for bidirectional/overwin-mode:
@@ -410,7 +405,6 @@ let g:leader_key_map.w = 'motion-word'
 map <Leader><Leader> <Plug>(easymotion-lineanywhere)
 let g:leader_key_map[' '] = 'motion-anywhere'
 
-
 nmap <Leader>n <Plug>(easymotion-bd-n)
 xmap <Leader>n <Plug>(easymotion-bd-n)
 omap <Leader>n <Plug>(easymotion-bd-n)
@@ -420,7 +414,6 @@ let g:leader_key_map.n = 'motion-search'
 augroup easymotion-keymap | au!
    au VimEnter * EMCommandLineNoreMap <Space> <CR>
 augroup END
-
 
 "noremap  <silent> <F1>          :<C-u>NERDTreeTabsToggle<Return>
 "inoremap <silent> <F1>     <C-O>:<C-u>NERDTreeTabsToggle<Return>
@@ -485,15 +478,15 @@ function! s:cocActionsOpenFromSelected(type) abort
 endfunction
 xnoremap <silent> <Leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 noremap <silent> <Leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+let g:leader_key_map.a = 'coc-do-action'
 
 nnoremap <silent> <Leader>y   :<C-u>CocList -A --normal yank<CR>
 let g:leader_key_map.y = 'show-coc-yank'
 
 nnoremap <Leader>/            :<C-u>Denite grep:. -search<CR>
-nnoremap <Leader>8            :<C-u>DeniteCursorWord grep:. -search<CR>
 nnoremap <Leader>*            :<C-u>DeniteCursorWord grep:. -search<CR>
 let g:leader_key_map['/'] =   'find-files'
-let g:leader_key_map['8'] =   'find-cursor-word'
+let g:leader_key_map['*'] =   'find-cursor-word'
 
 nnoremap <Leader>ff           :<C-u>DeniteBufferDir file/rec<CR>
 "nnoremap <Leader>ss          :<C-u>DeniteBufferDir buffer<CR>
@@ -517,13 +510,15 @@ let g:leader_key_map.f = {
  \ }
 
 let g:windowswap_map_keys = 0
-nmap <silent> <Leader>ww :<C-u>call WindowSwap#EasyWindowSwap()<CR>
-nmap <silent> <Leader>wb <Plug>ToggleBackground
+nmap <silent> <Leader>WW :<C-u>call WindowSwap#EasyWindowSwap()<CR>
+nmap <silent> <Leader>Wb <Plug>ToggleBackground
+nmap <Leader>Wc :tcd %:h<CR>
 
-let g:leader_key_map.w = {
+let g:leader_key_map.W = {
  \    'name':  '+window'
- \  , 'g':     'toggle-background'
- \  , 'w':     'window-swap'
+ \  , 'b':     'toggle-background'
+ \  , 'W':     'window-swap'
+ \  , 'c':     'update-tab-cwd'
  \ }
 
 " NOTE: Lots of other textobj-mappings, see `packages.vim`
@@ -606,12 +601,6 @@ let g:leader_key_map.h = {
  \  , 'p':     'preview-hunk'
  \  , 's':     'stage-hunk'
  \  , 'u':     'unstage-hunk'
- \ }
-
-nmap <Leader>wc :tcd %:h<CR>
-let g:leader_key_map.w = {
- \    'name':  '+win'
- \  , 'c':     'update-tab-cwd'
  \ }
 
 " Mappings in Denite modals
@@ -875,7 +864,6 @@ call denite#custom#var('file/rec/git', 'command', ['git', 'ls-files', '-co', '--
 
 call denite#custom#source('grep', 'args', ['', '', '!'])
 
-
 " Disable the vim-devicons plugin, as it's rather broken:
 let g:webdevicons_enable_denite = 0
 
@@ -996,7 +984,6 @@ let g:lightline.component_visible_condition = {
  \    'fileformat': '!IsWeirdBuffer() && winwidth(0) >=# g:lightline_thin_width',
  \    'filetype': '!IsWeirdBuffer() && winwidth(0) >=# g:lightline_thin_width',
  \ }
-
 
 let g:lightline_wide_width = 100
 let g:lightline_thin_width = 80
