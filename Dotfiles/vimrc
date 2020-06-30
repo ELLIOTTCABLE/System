@@ -603,6 +603,21 @@ let g:leader_key_map.h = {
  \  , 'u':     'unstage-hunk'
  \ }
 
+" This is the default; I just want to be able to search it in this file. :P
+let g:tcomment_mapleader2 = '<Leader>_'
+let g:leader_key_map['_'] = {
+ \    'name':  '+comment'
+ \  , '_':     'toggle'
+ \  , 'p':     'inner-paragraph'
+ \  , 'b':     'blockstyle'
+ \  , 'i':     'inlinestyle'
+ \  , 'r':     'to-the-right'
+ \  , ' ':     'ask-delims'
+ \  , 'a':     'ask-filetype'
+ \  , 'n':     'ask-number'
+ \  , 's':     'ask-style'
+ \ }
+
 " Mappings in Denite modals
 autocmd FileType denite call s:denite_my_settings()
 function! s:denite_my_settings() abort
