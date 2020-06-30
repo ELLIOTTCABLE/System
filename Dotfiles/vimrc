@@ -83,7 +83,7 @@ function! s:FixConfigurationForLightline()
 endfunction
 
 function! s:SetupSolarized()
-   let g:solarized_use16 = 1
+   let g:solarized_use16 = v:true
 
    let g:colorschemes = {
     \ 'dark':  'typewriter-night',
@@ -96,9 +96,9 @@ function! s:SetupSolarized()
 endfunction
 
 function! s:SetupNord()
-   let g:nord_italic_comments = 1
-   let g:nord_uniform_diff_background = 1
-   let g:nord_cursor_line_number_background = 1
+   let g:nord_italic_comments = v:true
+   let g:nord_uniform_diff_background = v:true
+   let g:nord_cursor_line_number_background = v:true
 
    let g:colorschemes = {
     \ 'dark':  'nord',
@@ -120,7 +120,7 @@ elseif has('gui_vimr')
 else
    call s:SetupSolarized()
 
-   let g:seiya_auto_enable = 1
+   let g:seiya_auto_enable = v:true
    call togglebg#("dark")
 endif
 
@@ -197,7 +197,7 @@ if !has('gui_vimr') && !exists('g:gui_oni')
 endif
 
 "if &diff
-"   let g:color_coded_enabled = 0
+"   let g:color_coded_enabled = v:false
 "endif
 
 
@@ -360,7 +360,7 @@ map gz# <Plug>(asterisk-gz#)<Plug>(searchhi-update)
 let mapleader = " "
 let maplocalleader = ","
 
-let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_do_mapping = v:false
 " EasyMotion stomps:
 "   - fF, tT, wW, bB, eE, geE, j, k, nN, s,
 "map <Leader> <Plug>(easymotion-prefix)
@@ -509,7 +509,7 @@ let g:leader_key_map.f = {
  \  , ']':     'find-tag'
  \ }
 
-let g:windowswap_map_keys = 0
+let g:windowswap_map_keys = v:false
 nmap <silent> <Leader>WW :<C-u>call WindowSwap#EasyWindowSwap()<CR>
 nmap <silent> <Leader>Wb <Plug>ToggleBackground
 nmap <Leader>Wc :tcd %:h<CR>
@@ -522,7 +522,7 @@ let g:leader_key_map.W = {
  \ }
 
 " NOTE: Lots of other textobj-mappings, see `packages.vim`
-let g:textobj_matchit_no_default_key_mappings = 1
+let g:textobj_matchit_no_default_key_mappings = v:true
 xmap a% <Plug>(textobj-matchit-a)
 omap a% <Plug>(textobj-matchit-a)
 xmap i% <Plug>(textobj-matchit-i)
@@ -583,7 +583,7 @@ let g:leader_key_map.r = {
  \ }
 
 " These default to `[c`, `]c`, `ic`, and `ac`; but the latter conflicts with TComment.
-let g:gitgutter_map_keys = 0
+let g:gitgutter_map_keys = v:false
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap ]h <Plug>(GitGutterNextHunk)
 
@@ -695,8 +695,8 @@ augroup END
 "elseif has("unix")
 "  let g:gist_clip_command = 'xclip -selection clipboard'
 "endif
-"let g:gist_detect_filetype = 1
-"let g:gist_open_browser_after_post = 1
+"let g:gist_detect_filetype = v:true
+"let g:gist_open_browser_after_post = v:true
 
 set undofile
 set undolevels=10000
@@ -789,11 +789,11 @@ let g:startify_skiplist = [
  \    'plugged/.*/doc',
  \ ]
 
-let g:startify_fortune_use_unicode = 1
-let g:startify_update_oldfiles = 1
-let g:startify_change_to_dir = 0
-let g:startify_change_to_vcs_root = 1
-let g:startify_use_env = 1
+let g:startify_fortune_use_unicode = v:true
+let g:startify_update_oldfiles = v:true
+let g:startify_change_to_dir = v:false
+let g:startify_change_to_vcs_root = v:true
+let g:startify_use_env = v:true
 
 let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
  \ 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
@@ -816,7 +816,7 @@ vnoremap <silent> <localleader> :<c-u>WhichKeyVisual  ','<CR>
 let g:goyo_width = 100
 
 " #### searchhi
-let g:searchhi_clear_all_asap = 1
+let g:searchhi_clear_all_asap = v:true
 
 " #### Fugitive
 augroup my-fugitive | au!
@@ -880,58 +880,43 @@ call denite#custom#var('file/rec/git', 'command', ['git', 'ls-files', '-co', '--
 call denite#custom#source('grep', 'args', ['', '', '!'])
 
 " Disable the vim-devicons plugin, as it's rather broken:
-let g:webdevicons_enable_denite = 0
+let g:webdevicons_enable_denite = v:false
 
 " #### cpsm (matcher for Denite)
-"let g:cpsm_match_empty_query = 0
+"let g:cpsm_match_empty_query = v:false
 
 " #### neomru (also Denite)
 let g:neomru#filename_format = ':.'
 
 " #### EasyMotion
 let g:EasyMotion_prompt = '❯ '
-let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_enter_jump_first = v:true
 
 " `ff` will include 'F' in the options, `f\` will include '|', etc.
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_use_smartsign_us = 1
+let g:EasyMotion_smartcase = v:true
+let g:EasyMotion_use_smartsign_us = v:true
 
 " All matches will be upper-case ('S'), but the lower-case key will jump to them ('s')
-let g:EasyMotion_use_upper = 1
+let g:EasyMotion_use_upper = v:true
 let g:EasyMotion_keys = 'ASDGHKLQWERTYUIOPZXCVBNMFJ;'   " The defaults, capitalized for use_upper
 
 " #### incsearch.vim
-let g:incsearch#auto_nohlsearch = 1
-let g:incsearch#consistent_n_direction = 1
-let g:incsearch#do_not_save_error_message_history = 1
+let g:incsearch#auto_nohlsearch = v:true
+let g:incsearch#consistent_n_direction = v:true
+let g:incsearch#do_not_save_error_message_history = v:true
 
 let g:incsearch#magic = '\v' " very magic
-
-"let NERDChristmasTree = 1
-"let NERDTreeShowBookmarks = 1
-"let NERDTreeBookmarksFile = '.NERDTreeBookmarks'
-"let NERDTreeMouseMode = 2
-"let NERDTreeSortOrder = ['\/$', '\.h$', '*']
-"let NERDTreeWinPos = 'right'
-"let NERDTreeMinimalUI = 1
-"let NERDTreeDirArrows = 1
-"let NERDTreeWinSize = 25
 "
-"let NERDBlockComIgnoreEmpty = 0
-"let NERDSpaceDelims = 1
-"let NERDCompactSexyComs = 1
-"let NERDDefaultNesting = 0
-"
-"let g:CommandTMaxCachedDirectories = 0
+"let g:CommandTMaxCachedDirectories = v:false
 "let g:CommandTMaxHeight = 10
-"let g:CommandTMatchWindowReverse = 1
-"let g:CommandTScanDotDirectories = 1  " `:set wildignore` handles this better.
+"let g:CommandTMatchWindowReverse = v:true
+"let g:CommandTScanDotDirectories = v:true  " `:set wildignore` handles this better.
 "
 ""let g:CoffeeAutoTagIncludeVars=1
 "
 "" #### vim-javascript
-"let g:javascript_plugin_jsdoc = 1
-"let g:javascript_plugin_flow  = 1
+"let g:javascript_plugin_jsdoc = v:true
+"let g:javascript_plugin_flow  = v:true
 "
 "let g:javascript_conceal_function         = "ƒ"
 "let g:javascript_conceal_this             = "@"
@@ -1066,17 +1051,17 @@ endfunction
 "" #### vim-easytags
 "set tags=./tags;
 "let g:easytags_dynamic_files = 2
-"let g:easytags_resolve_links = 1
-"let g:easytags_async = 1
+"let g:easytags_resolve_links = v:true
+"let g:easytags_async = v:true
 "
-"let g:easytags_include_members = 1
-"let g:easytags_auto_highlight = 0
+"let g:easytags_include_members = v:true
+"let g:easytags_auto_highlight = v:false
 "
 "" #### Tagbar
-"let g:tagbar_left = 1
+"let g:tagbar_left = v:true
 "let g:tagbar_width = 50
 "let g:tagbar_zoomwidth = 105
-"let g:tagbar_expand = 1
+"let g:tagbar_expand = v:true
 "let g:tagbar_iconchars = ['▸', '▾']
 
 " #### vim-focus-autocmd
@@ -1094,11 +1079,11 @@ let g:focau.widgets = []
 let g:move_key_modifier = 'C'
 
 " #### vim-hardtime
-let g:hardtime_default_on = 1
-let g:hardtime_showmsg = 1
+let g:hardtime_default_on = v:true
+let g:hardtime_showmsg = v:true
 let g:hardtime_timeout = 2500
-let g:hardtime_ignore_quickfix = 1
-let g:hardtime_allow_different_key = 1
+let g:hardtime_ignore_quickfix = v:true
+let g:hardtime_allow_different_key = v:true
 
 let g:list_of_insert_keys = []
 
@@ -1112,8 +1097,8 @@ let g:pear_tree_smart_closers = v:true
 let g:pear_tree_smart_backspace = v:true
 
 " #### vim-gitgutter
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 1
+let g:gitgutter_realtime = v:true
+let g:gitgutter_eager = v:true
 
 " #### split-term.vim
 let g:disable_key_mappings = v:true
@@ -1124,7 +1109,7 @@ let g:merlin_completion_arg_type = "always"
 let g:merlin_type_history_auto_open = 2
 
 " #### echodoc.vim
-let g:echodoc#enable_at_startup = 1
+let g:echodoc#enable_at_startup = v:true
 let g:echodoc#type = "floating"
 
 " #### vim-textobj-...
@@ -1141,9 +1126,9 @@ let g:ghcid_command = "stack exec ghcid --"
 
 
 "let g:gundo_width = 25
-"let g:gundo_preview_bottom = 1
-"let g:gundo_help = 0
-"let g:gundo_close_on_revert = 1
+"let g:gundo_preview_bottom = v:true
+"let g:gundo_help = v:false
+"let g:gundo_close_on_revert = v:true
 "
 "let g:sparkupArgs = '--indent-spaces=3 --no-last-newline --post-tag-guides'
 "
