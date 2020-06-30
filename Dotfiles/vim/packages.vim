@@ -109,6 +109,7 @@ Plug 'jaredly/reason-language-server', {
 " FIXME: Do I need both of these?
 Plug 'Shougo/neco-vim'
 Plug 'neoclide/coc-neco'
+Plug 'prabirshrestha/vim-lsp'
 Plug 'iamcco/coc-vimlsp', {'do': 'yarn install --frozen-lockfile'}
 
 " Completion-source for file-includes, see `:help 'include'`
