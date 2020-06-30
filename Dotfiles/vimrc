@@ -281,15 +281,8 @@ function! s:check_back_space() abort
    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<Tab>'
-let g:coc_snippet_prev = '<S-Tab>'
-
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+inoremap <silent><expr> <C-n> pumvisible() ? "\<C-n>" : coc#refresh()
+inoremap <silent><expr> <C-p> pumvisible() ? "\<C-p>" : coc#refresh()
 
 " Use <CR> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
@@ -301,6 +294,25 @@ else
   imap <silent><expr> <CR> pumvisible() ? coc#_select_confirm()
            \: "\<C-g>u\<Plug>(PearTreeExpand)\<Plug>(CocOnEnter)"
 endif
+
+" <C-j> / <C-k> are mapped in insert and select modes by coc.nvim (see `:h g:coc_snippet_next`);
+" this adds normal-mode to that set for consistency, and falls back to vim-move's line-swapping.
+nnoremap <silent><expr> <C-j> get(b:, 'coc_snippet_active', 0) == 0 ? "\<Plug>MoveLineDown" :
+   \ ":<C-u>call coc#rpc#request('snippetNext', [])\<CR>"
+nnoremap <silent><expr> <C-k> get(b:, 'coc_snippet_active', 0) == 0 ? "\<Plug>MoveLineUp" :
+   \ ":<C-u>call coc#rpc#request('snippetPrev', [])\<CR>"
+
+" Use <C-j> and <C-k> in normal and visual mode to move lines around. (vim-move provides
+" `g:move_key_modifier` for this; but it's not granular enough for my needs. I am instead
+" reproducing its config here.)
+let g:move_map_keys = v:false
+nmap <C-h> <Plug>MoveCharLeft
+nmap <C-l> <Plug>MoveCharRight
+
+vmap <C-j> <Plug>MoveBlockDown
+vmap <C-k> <Plug>MoveBlockUp
+vmap <C-h> <Plug>MoveBlockLeft
+vmap <C-l> <Plug>MoveBlockRight
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -1073,10 +1085,6 @@ let g:focau = {}
 " 'clipboard' appears to be broken (see amerlyq/vim-focus-autocmd#4)
 "let g:focau.widgets = ['clipboard', 'buffers', 'number']
 let g:focau.widgets = []
-
-" #### vim-move
-" Use <C-j> and <C-k> in normal and visual mode to move lines around
-let g:move_key_modifier = 'C'
 
 " #### vim-hardtime
 let g:hardtime_default_on = v:true
