@@ -7,9 +7,13 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
 }
 
 if allof (
-   address :all :comparator "i;unicode-casemap" :is "From" ["waitlist@isthereanydeal.com"],
-   header :comparator "i;unicode-casemap" :matches "Subject" ["Waitlist*: *", "Specials: *"]
+   address :all :comparator "i;unicode-casemap" :is "From" "notify@simple.com",
+   header :comparator "i;unicode-casemap" :is "Subject" [
+      "We sent you a verification code via text message.",
+      "Your interest rate is changing",
+      "New message from Simple"
+   ]
 ) {
    fileinto "Auto";
-   fileinto "Auto\\/Promo";
+   fileinto "Auto\\/Notif";
 }
