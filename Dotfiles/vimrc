@@ -939,14 +939,14 @@ if !exists('g:lightline.enable') | let g:lightline.enable = {} | endif
 
 let g:lightline.active = {
  \    'left':  [  ['mode', 'paste'],
- \                ['bufnum', 'filename', 'readonly',  'modified'],
+ \                ['bufnum', 'winname', 'readonly',  'modified'],
  \                ['gitbranch', 'cocstatus'],  ],
  \    'right': [  ['charvaluehex', 'lineinfo'],
  \                ['percent'],
  \                ['fileencoding', 'fileformat', 'filetype'],  ],
  \ }
 let g:lightline.inactive = {
- \    'left':  [  [], [ 'bufnum', 'filename' ]  ],
+ \    'left':  [  [], [ 'bufnum', 'winname' ]  ],
  \    'right': [  [ 'lineinfo' ],
  \                [ 'percent' ],  ],
  \ }
@@ -956,8 +956,8 @@ let g:lightline.tabline = {
  \    'right': [  ['close'],  ],
  \ }
 let g:lightline.tab = {
- \    'active':   ['tabnum', 'filename', 'modified'],
- \    'inactive': ['tabnum', 'filename', 'modified'],
+ \    'active':   ['tabnum', 'tabname', 'modified'],
+ \    'inactive': ['tabnum', 'tabname', 'modified'],
  \ }
 
 "let g:lightline.separator =           { 'left': "\uE0B0", 'right': "\uE0B2" } " angles
@@ -980,11 +980,15 @@ let g:lightline.component_function = {
  \    'mode':        'LightlineMode',
  \    'readonly':    'LightlineReadonly',
  \    'modified':    'LightlineModified',
+ \    'winname':     'LightlineWinName',
  \    'fileencoding': 'LightlineFileencoding',
  \    'fileformat':  'LightlineFileformat',
  \    'filetype':    'LightlineFiletype',
  \    'gitbranch':   'fugitive#Statusline',
  \    'cocstatus':   'coc#status',
+ \ }
+let g:lightline.tab_component_function = {
+ \    'tabname': 'LightlineTabName',
  \ }
 
 let g:lightline.component_visible_condition = {
@@ -1002,6 +1006,167 @@ let g:lightline_thin_width = 80
 
 function! IsWeirdBuffer()
    return &filetype =~# '\v(startify|denite)'
+endfunction
+
+function! HasWinDir()
+   let hasEitherWinOrTabDir = haslocaldir()
+   if !hasEitherWinOrTabDir
+      return v:false
+   else
+      let hasTabDir = haslocaldir(-1)
+      if !hasTabDir
+         return v:true
+      else
+         " This is an imperfect proxy, as they could simply be *set to the same value*
+         return getcwd() !=# getcwd(-1)
+      endif
+   endif
+endfunction
+
+function! LightlineTabName(tabn)
+   let twd = getcwd(-1, a:tabn)
+
+   " Tab-local working directory (:tcd) component
+   let relative_twd = ''
+   let twd_component = ''
+   if haslocaldir(-1, a:tabn)
+      let pwd = getcwd(-1, -1)
+      let relative_twd = xolox#misc#path#relative(twd, pwd)
+      if relative_twd !=# '/'
+         if relative_twd[:8] ==# '../../../'
+            let direct_twd = fnamemodify(twd, ':~')
+            if strdisplaywidth(relative_twd) > strdisplaywidth(direct_twd)
+               let twd_component = direct_twd
+            else
+               let twd_component = relative_twd
+            endif
+         else
+            let twd_component = relative_twd
+         end
+      endif
+   endif
+
+   let buflist = tabpagebuflist(a:tabn)
+   let winnr = tabpagewinnr(a:tabn)
+   let filepath = expand('#'.buflist[winnr - 1].':p')
+
+   if filepath ==# ''
+      if twd_component ==# ''
+         return '[UNNAMED]'
+      endif
+      return twd_component . '/⃣ [UNNAMED]'
+   endif
+
+   let relative_filepath = xolox#misc#path#relative(filepath, twd)
+
+   if relative_filepath[:8] ==# '../../../'
+      let direct_filepath = fnamemodify(filepath, ':~')
+      if strdisplaywidth(relative_filepath) > strdisplaywidth(direct_filepath)
+         let filepath_component = direct_filepath
+      else
+         let filepath_component = relative_filepath
+      endif
+   else
+      let filepath_component = relative_filepath
+   end
+
+   if filepath_component ==# ''
+      return twd_component
+   elseif filepath_component[:0] ==# '/' || filepath_component[:0] ==# '~'
+      return twd_component . ' ' . subsep . ' ' . filepath_component
+   else
+      if twd_component[-1:] ==# '/'
+         let twd_component = twd_component[:-2]
+      endif
+      return twd_component . '/⃣ ' . filepath_component
+   endif
+endfunction
+
+function! LightlineWinName()
+   let subsep = g:lightline.subseparator.left
+   let twd = getcwd(-1)
+   let wwd = getcwd()
+
+   " Tab-local working directory (:tcd) component
+   let relative_twd = ''
+   let twd_component = ''
+   if haslocaldir(-1)
+      let pwd = getcwd(-1, -1)
+      let relative_twd = xolox#misc#path#relative(twd, pwd)
+      if relative_twd !=# '/'
+         if relative_twd[:8] ==# '../../../'
+            let direct_twd = fnamemodify(twd, ':~')
+            if strdisplaywidth(relative_twd) > strdisplaywidth(direct_twd)
+               let twd_component = direct_twd
+            else
+               let twd_component = relative_twd
+            endif
+         else
+            let twd_component = relative_twd
+         end
+      endif
+   endif
+
+   " Window-local working directory (:lcd) component
+   let relative_wwd = ''
+   let wwd_component = ''
+   if HasWinDir()
+      let relative_wwd = xolox#misc#path#relative(wwd, twd)
+      if relative_wwd !=# '/'
+         if relative_wwd[:8] ==# '../../../'
+            let direct_wwd = fnamemodify(wwd, ':~')
+            if strdisplaywidth(relative_wwd) > strdisplaywidth(direct_wwd)
+               let wwd_component = direct_wwd
+            else
+               let wwd_component = relative_wwd
+            endif
+         else
+            let wwd_component = relative_wwd
+         end
+      endif
+   endif
+
+   " Both working-directories, combined
+   if wwd_component ==# ''
+      let dirs_component = twd_component
+   elseif wwd_component[:0] ==# '/' || wwd_component[:0] ==# '~'
+      let dirs_component = twd_component . ' ' . subsep . ' ' . wwd_component
+   else
+      if twd_component[-1:] ==# '/'
+         let twd_component = twd_component[:-2]
+      endif
+      let dirs_component = twd_component . '/⃣ ' . wwd_component
+   endif
+
+   let filepath = expand('%:p')
+
+   if filepath ==# ''
+      return dirs_component . '/⃣ [UNNAMED]'
+   endif
+
+   let relative_filepath = xolox#misc#path#relative(filepath, wwd)
+
+   if relative_filepath[:8] ==# '../../../'
+      let direct_filepath = fnamemodify(filepath, ':~')
+      if strdisplaywidth(relative_filepath) > strdisplaywidth(direct_filepath)
+         let filepath_component = direct_filepath
+      else
+         let filepath_component = relative_filepath
+      endif
+   else
+      let filepath_component = relative_filepath
+   end
+
+   if filepath_component ==# ''
+      return dirs_component
+   elseif filepath_component[:0] ==# '/' || filepath_component[:0] ==# '~'
+      return dirs_component . ' ' . subsep . ' ' . filepath_component
+   else
+      if dirs_component[-1:] ==# '/'
+         let dirs_component = dirs_component[:-2]
+      endif
+      return dirs_component . '/⃣ ' . filepath_component
+   endif
 endfunction
 
 function! LightlineModified()
