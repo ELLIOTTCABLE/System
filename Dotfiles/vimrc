@@ -1070,7 +1070,9 @@ function! LightlineTabName(tabn)
       let filepath_component = relative_filepath
    end
 
-   if filepath_component ==# ''
+   if twd_component ==# ''
+      return filepath_component
+   elseif filepath_component ==# ''
       return twd_component
    elseif filepath_component[:0] ==# '/' || filepath_component[:0] ==# '~'
       return twd_component . ' ' . subsep . ' ' . filepath_component
@@ -1127,7 +1129,9 @@ function! LightlineWinName()
    endif
 
    " Both working-directories, combined
-   if wwd_component ==# ''
+   if twd_component ==# ''
+      let dirs_component = wwd_component
+   elseif wwd_component ==# ''
       let dirs_component = twd_component
    elseif wwd_component[:0] ==# '/' || wwd_component[:0] ==# '~'
       let dirs_component = twd_component . ' ' . subsep . ' ' . wwd_component
@@ -1157,7 +1161,9 @@ function! LightlineWinName()
       let filepath_component = relative_filepath
    end
 
-   if filepath_component ==# ''
+   if dirs_component ==# ''
+      return filepath_component
+   elseif filepath_component ==# ''
       return dirs_component
    elseif filepath_component[:0] ==# '/' || filepath_component[:0] ==# '~'
       return dirs_component . ' ' . subsep . ' ' . filepath_component
