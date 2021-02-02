@@ -1,0 +1,27 @@
+[buildPlans.iosevka-ec]
+family = "Iosevka EC"
+spacing = "normal"
+serifs = "sans"
+
+  [buildPlans.iosevka-ec.variants]
+  inherits = "ss17"
+
+    [buildPlans.iosevka-ec.variants.design]
+    three = "flattop"
+    five = "oblique-upper-left-bar"
+    six = "straight-bar"
+    seven = "crossbar"
+    nine = "straight-bar"
+    asterisk = "flip-penta-low"
+    underscore = "above-baseline"
+    caret = "high"
+    brace = "straight"
+    number-sign = "slanted-open"
+    ampersand = "closed"
+    at = "short"
+    percent = "dots"
+    lig-ltgteq = "slanted"
+    question = "corner-flat-hooked"
+
+  [buildPlans.iosevka-ec.ligations]
+  inherits = "dlig"
