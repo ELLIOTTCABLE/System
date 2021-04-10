@@ -91,6 +91,9 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
   +() { qlmanage -p "$@" 2>/dev/null ;}
+
+  # "intel brew"
+  alias ibrew='arch -x86_64 brew'
 fi
 
 alias wget='wget -q --show-progress'
@@ -177,6 +180,9 @@ alias sls='screen -list'
 
 # Ruby
 alias ri='ri -Tf ansi'
+
+# See: https://github.com/Homebrew/homebrew-core/pull/47402
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 # Rails
 alias sc='./script/console'
