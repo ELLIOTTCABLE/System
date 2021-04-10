@@ -43,7 +43,7 @@ function append_el () {
 PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 
 
-export SYSTEM_OSX='Mac OS X'
+export SYSTEM_OSX='Mac'
 export SYSTEM_TIGER='Mac OS X 10.4'
 export SYSTEM_LEOPARD='Mac OS X 10.5'
 export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
@@ -77,6 +77,7 @@ if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
    # Hardcoding this; saves the startup cost of re-running this for every shell.
   #export HOMEBREW_PREFIX="$(brew --prefix)"
    export HOMEBREW_PREFIX="/usr/local"
+   export HOMEBREW_ARM_PREFIX="/opt/homebrew"
    export HOMEBREW_CASK_OPTS='--fontdir=/Library/Fonts'
 fi
 
@@ -89,12 +90,18 @@ eval "$(head -n2 ~/.opam/opam-init/variables.sh)"
 # NOTE: Be aware that `packages.zsh` is loaded *after* this, and thus several zsh packages (notably
 # Nodenv and Rbenv) are going to prepend *all* of these, taking first-place in the lookup order.
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  6. < Homebrew
-  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  5. < Homebrew's llvm / clang
+  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  7. < Homebrew
+  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  6. < Homebrew's llvm / clang
 
   append_el PATH "/Library/TeX/texbin"    # -6. > MacTeX
   append_el PATH "/usr/X11/bin"           # -5. > X11
 fi
+
+# Big Sur and later - note that `=` in sh is *matching*, not equality like `-eq`.
+if [[ $SYSTEM = *Mac* ]] && [[ $SYSTEM != *' 10.'* ]]; then
+  prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin"       #  5. < Homebrew (ARM-native)
+fi
+
 prepend_el PATH "$HOME/.bin"              #  4. < local binaries
 prepend_el PATH "$HOME/.cargo/bin"        #  3. < Cargo (Rust) binaries
 prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM local bin
