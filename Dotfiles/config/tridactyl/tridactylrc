@@ -1,12 +1,8 @@
-sanitise tridactyllocal
-set theme greenmat
+set theme shydactyl
 
 set hintfiltermode vimperator-reflow
 set historyresults 100
 set tabopencontaineraware true
-" This breaks a lot of websites, unfortunately. The TabEnter alternative should work, though?
-"set allowautofocus false
-"autocmd TabEnter .* unfocus
 set smoothscroll true
 
             " hjklasdfgyuiopqwertnmzxcvb, but in Colemak :P
@@ -18,9 +14,9 @@ set hintchars hneioarstdjluyqwfpgkmzxcvb
 set nixeditorcmd /usr/local/bin/vimr --wait --nvim +only
 set wineditorcmd code --wait --new-window
 
-autocmd DocStart localhost:4200 mode ignore
-seturl localhost:4200 modeindicator false
-seturl localhost:4200 noiframe true
+" autocmd DocStart localhost:4200 mode ignore
+" seturl localhost:4200 modeindicator false
+" seturl localhost:4200 noiframe true
 
 js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = ["linux", "openbsd", "mac"].includes(os.os) ? tri.config.get("nixeditorcmd") : tri.config.get("wineditorcmd"); tri.config.set("editorcmd", editorcmd)})
 
@@ -32,7 +28,7 @@ set searchengine duckduckgo
 bind ! fillcmdline_notrail tabopen search !
 
 " Swap : and ;
-bind ; fillcmdline
+bind ; fillcmdline_notrail
 
 " Replace the various hint-modes with 'i' (home-row in Colemak!)
 bind ii hint -i
