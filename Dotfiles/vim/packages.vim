@@ -77,7 +77,7 @@ Plug 'jceb/vim-textobj-uri'            " iu/au, go
 Plug 'Julian/vim-textobj-variable-segment' " iv/av
 
 " #### Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 Plug 'neoclide/coc-denite'
 Plug 'iamcco/coc-actions', {'do': 'yarn install --frozen-lockfile && yarn build'}
 Plug 'voldikss/coc-browser', {'do': 'yarn install --frozen-lockfile'}
@@ -123,15 +123,6 @@ Plug 'othree/jspc.vim', {
 Plug 'honza/vim-snippets'
 
 " #### Languages
-"if g:use_languageclient
-"   Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'for': ['ocaml', 'reason'],
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
-"
-"endif
-
 Plug 'reasonml-editor/vim-reason-plus'
 
 Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
@@ -231,7 +222,9 @@ endfunction
 let s:opam_configuration['merlin'] = function('OpamConfMerlin')
 
 
-if g:use_own_merlin
+if !g:use_merlin
+   let s:opam_packages = ["ocp-indent", "ocp-index"]
+elseif g:use_own_merlin
    let s:opam_packages = ["ocp-indent", "ocp-index"]
    Plug '~/Documents/Code/Source/merlin/vim/merlin/'
 else

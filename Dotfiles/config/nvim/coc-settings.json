@@ -1,7 +1,12 @@
 {
+   "signature.maxWindowWidth": 110,
    "diagnostic.maxWindowWidth": 110,
    "suggest.echodocSupport": true,
    "suggest.acceptSuggestionOnCommitCharacter": true,
+
+   "diagnostic.enableSign": true,
+   "diagnostic.enableHighlightLineNumber": true,
+   "diagnostic.signPriority": 15,
 
    "diagnostic.virtualText": true,
    "diagnostic.virtualTextCurrentLineOnly": false,
@@ -163,13 +168,25 @@
    },
 
    "languageserver": {
+      "ocaml-lsp": {
+         "command": "opam",
+         "args": ["config", "exec", "--", "ocamllsp"],
+         "filetypes": ["ocaml", "reason"]
+      },
       "haskell": {
-         "command": "hie-wrapper",
+         "command": "haskell-language-server-wrapper",
          "args": ["--lsp"],
-         "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml"],
-         "filetypes": ["hs", "lhs", "haskell"],
+         "rootPatterns": [
+            "*.cabal",
+            "stack.yaml",
+            "cabal.project",
+            "package.yaml",
+            "hie.yaml"
+         ],
+         "filetypes": ["hs", "lhs", "haskell", "lhaskell"],
          "initializationOptions": {
             "languageServerHaskell": {
+               "formattingProvider": "brittany",
                "hlintOn": true
             }
          }

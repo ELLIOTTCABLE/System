@@ -17,10 +17,12 @@ sow/
 
 coc/commands
 coc/mru
+coc/lists
 coc/snippets-mru
 coc/extensions/*
 coc/memos.json
 coc/history.json
+coc/list-*-history.json
 
 
 # Why do so many games store their info in .config!?

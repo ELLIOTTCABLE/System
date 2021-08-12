@@ -57,6 +57,7 @@ endif
 syntax on
 
 " NOTE: Swap this to iterate on the Merlin vim-plugin
+let g:use_merlin         = v:false
 let g:use_own_merlin     = v:false
 let g:use_languageclient = v:false
 
@@ -314,6 +315,41 @@ vmap <C-k> <Plug>MoveBlockUp
 vmap <C-h> <Plug>MoveBlockLeft
 vmap <C-l> <Plug>MoveBlockRight
 
+" Stacking up vim-searchhi and vim-asterisk, as a superior replacement for easymotion's incsearch
+nmap / <Plug>(searchhi-/)
+nmap ? <Plug>(searchhi-?)
+nmap n <Plug>(searchhi-n)
+nmap N <Plug>(searchhi-N)
+
+nmap gd <Plug>(searchhi-gd)
+nmap gD <Plug>(searchhi-gD)
+
+
+vmap / <Plug>(searchhi-v-/)
+vmap ? <Plug>(searchhi-v-?)
+vmap n <Plug>(searchhi-v-n)
+vmap N <Plug>(searchhi-v-N)
+
+" FIXME: Make sure these aren't overriden if the buffer doesn't support the proper Coc actions
+vmap gd <Plug>(searchhi-v-gd)
+vmap gD <Plug>(searchhi-v-gD)
+let g:goto_key_map.d = 'goto-local-def-builtin'
+let g:goto_key_map.D = 'goto-global-def-builtin'
+
+map *   <Plug>(asterisk-*)<Plug>(searchhi-update)
+map #   <Plug>(asterisk-#)<Plug>(searchhi-update)
+map g*  <Plug>(asterisk-g*)<Plug>(searchhi-update)
+map g#  <Plug>(asterisk-g#)<Plug>(searchhi-update)
+let g:goto_key_map['*'] = 'word-under-cursor-forward'
+let g:goto_key_map['#'] = 'word-under-cursor-backward'
+
+map z*  <Plug>(asterisk-z*)<Plug>(searchhi-update)
+map z#  <Plug>(asterisk-z#)<Plug>(searchhi-update)
+map gz* <Plug>(asterisk-gz*)<Plug>(searchhi-update)
+map gz# <Plug>(asterisk-gz#)<Plug>(searchhi-update)
+let g:goto_key_map['z*'] = 'word-under-cursor-forward-ztay'
+let g:goto_key_map['z#'] = 'word-under-cursor-backward-ztay'
+
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> [G <Plug>(coc-diagnostic-prev-error)
@@ -325,6 +361,20 @@ nmap <silent> gd <Plug>(coc-definition)<Plug>(searchhi-update)
 nmap <silent> gy <Plug>(coc-type-definition)<Plug>(searchhi-update)
 nmap <silent> gi <Plug>(coc-implementation)<Plug>(searchhi-update)
 nmap <silent> gr <Plug>(coc-references)<Plug>(searchhi-update)
+nmap <silent> gRs :<C-u>call CocActionAsync('jumpReferences', 'split')<CR><Plug>(searchhi-update)
+nmap <silent> gRv :<C-u>call CocActionAsync('jumpReferences', 'vsplit')<CR><Plug>(searchhi-update)
+nmap <silent> gRt :<C-u>call CocActionAsync('jumpReferences', 'tabe')<CR><Plug>(searchhi-update)
+let g:goto_key_map.d = 'coc-definition'
+let g:goto_key_map.y = 'coc-type-definition'
+let g:goto_key_map.i = 'coc-implementation'
+let g:goto_key_map.r = 'coc-references'
+
+let g:goto_key_map.R = {
+ \    'name':  '+references'
+ \  , 's':     'coc-references-split'
+ \  , 'v':     'coc-references-vsplit'
+ \  , 't':     'coc-references-tab'
+ \ }
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -339,33 +389,6 @@ endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Stacking up vim-searchhi and vim-asterisk, as a superior replacement for easymotion's incsearch
-nmap / <Plug>(searchhi-/)
-nmap ? <Plug>(searchhi-?)
-nmap n <Plug>(searchhi-n)
-nmap N <Plug>(searchhi-N)
-
-nmap gd <Plug>(searchhi-gd)
-nmap gD <Plug>(searchhi-gD)
-
-vmap / <Plug>(searchhi-v-/)
-vmap ? <Plug>(searchhi-v-?)
-vmap n <Plug>(searchhi-v-n)
-vmap N <Plug>(searchhi-v-N)
-
-vmap gd <Plug>(searchhi-v-gd)
-vmap gD <Plug>(searchhi-v-gD)
-
-map *   <Plug>(asterisk-*)<Plug>(searchhi-update)
-map #   <Plug>(asterisk-#)<Plug>(searchhi-update)
-map g*  <Plug>(asterisk-g*)<Plug>(searchhi-update)
-map g#  <Plug>(asterisk-g#)<Plug>(searchhi-update)
-
-map z*  <Plug>(asterisk-z*)<Plug>(searchhi-update)
-map z#  <Plug>(asterisk-z#)<Plug>(searchhi-update)
-map gz* <Plug>(asterisk-gz*)<Plug>(searchhi-update)
-map gz# <Plug>(asterisk-gz#)<Plug>(searchhi-update)
 
 " The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
 " includes some other global-plugin features.
@@ -489,7 +512,7 @@ function! s:cocActionsOpenFromSelected(type) abort
    execute 'CocCommand actions.open ' . a:type
 endfunction
 xnoremap <silent> <Leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-noremap <silent> <Leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+noremap <silent> <Leader>a :<C-u>silent set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 let g:leader_key_map.a = 'coc-do-action'
 
 nnoremap <silent> <Leader>y   :<C-u>CocList -A --normal yank<CR>
@@ -1301,8 +1324,12 @@ augroup END
 " #### ghcid
 " Use stack to find ghcid, as per:
 "    <https://github.com/ndmitchell/ghcid/issues/209>
-let g:ghcid_command = "stack exec ghcid --"
+let g:ghcid_command = "stack exec ghcid -- --allow-eval"
 
+let g:ghcid_keep_open = v:true
+
+" #### haskell-vim
+let g:haskell_indent_disable = v:true
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = v:true
