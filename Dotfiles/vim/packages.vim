@@ -42,6 +42,7 @@ Plug 'sodapopcan/vim-twiggy'
 Plug 'cskeeters/vim-smooth-scroll'
 
 Plug 'wesQ3/vim-windowswap'
+Plug 'wellle/visual-split.vim'
 
 Plug 'chaoren/vim-wordmotion'
 
