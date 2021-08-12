@@ -197,6 +197,18 @@ augroup setup-terminal-settings | au!
    au TermOpen * startinsert
 augroup END
 
+function! s:terminal_clear() abort
+   let l:bufname = bufname()
+   let l:scrollback = getbufvar(l:bufname, '&scrollback')
+
+   call setbufvar(l:bufname, '&scrollback', 1)
+   sleep 100m
+   exe "norm \<c-l>"
+   call setbufvar(l:bufname, '&scrollback', l:scrollback)
+endfunction
+
+command! -bar -range=0 Tclear \ call s:terminal_clear()
+
 " Fill these functions to tie other plugins into focus-mode
 function! s:goyo_enter()
    " ...
@@ -539,7 +551,7 @@ nnoremap <silent> <Leader>x :Sayonara<CR>
 let g:leader_key_map.x = 'Sayonara'
 
 " <Ctrl-P> for both switching between buffers, and opening new ones!
-nnoremap <C-p> :<C-u>Denite -default-action=switch -source-names=hide buffer file_mru file/rec<CR>
+nnoremap <C-p> :<C-u>Denite -default-action=switch buffer file_mru file/rec<CR>
 
 " (Need to remap ControlP, so it doesn't stomp on the above Denite mapping.)
 let g:ctrlp_map = '<c-o>'
@@ -959,6 +971,11 @@ call denite#custom#var('grep',     'final_opts',   [])
 call denite#custom#alias('source', 'file/rec/git', 'file/rec')
 call denite#custom#var('file/rec/git', 'command', ['git', 'ls-files', '-co', '--exclude-standard'])
 
+" Filter neomru results by current project, as per:
+"     <https://github.com/Shougo/neomru.vim/issues/50>
+call denite#custom#source('file_mru', 'matchers',
+ \ ['matcher/cpsm', 'matcher/project_files'])
+
 call denite#custom#source('grep', 'args', ['', '', '!'])
 
 " Disable the vim-devicons plugin, as it's rather broken:
@@ -969,6 +986,7 @@ let g:webdevicons_enable_denite = v:false
 
 " #### neomru (also Denite)
 let g:neomru#filename_format = ':.'
+let g:neomru#time_format = '%Y-%m-%d'
 
 " #### EasyMotion
 let g:EasyMotion_prompt = '❯ '
