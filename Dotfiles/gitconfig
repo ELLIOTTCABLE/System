@@ -89,7 +89,7 @@
 	solarized-reflog = "format:%x1b[33m%gd%Creset %gs %x1b[93;2m— %ar%x1b[0m"
 	solarized-parseable = "format:%x1b[30m%h%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
 [mergetool "fugitive"]
-	cmd = vimr --wait --cur-env --nvim +Gdiff \"$MERGED\"
+	cmd = vimr --wait --cur-env --nvim +Gvdiffsplit! \"$MERGED\"
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
@@ -112,3 +112,6 @@
 	cmd = nvr -cc '$tabnew' -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
 [status]
 	showStash = true
+[mergetool "mergefmt"]
+	cmd = merge-fmt mergetool --base=$BASE --current=$LOCAL --other=$REMOTE -o $MERGED
+	trustExitCode = true

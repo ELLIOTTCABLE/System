@@ -118,6 +118,8 @@ function whichpath() {
 
 export CLICOLOR='yes'
 
+export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
+
 # Vim invocations
 van()  {  vim               '+call vimman#("'"$1"'")' ;}
 mvan() { mvim               '+call vimman#("'"$1"'")' ;}
