@@ -20,6 +20,11 @@ Plug 'itchyny/lightline.vim'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
+
+if has('nvim-0.5')
+   Plug 'kosayoda/nvim-lightbulb'
+endif
+
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 
 Plug 'mbbill/undotree'
@@ -27,6 +32,12 @@ Plug 'mbbill/undotree'
 Plug 'liuchengxu/vim-which-key'
 
 Plug 'tomtom/tinykeymap_vim'                 " Mini-modes, like Ctrl-W
+
+if has('nvim-0.5')
+   Plug 'neovim/nvim-lspconfig'
+   Plug 'kabouzeid/nvim-lspinstall'
+   Plug 'norcalli/nvim-colorizer.lua'
+endif
 
 "Plug 'amerlyq/vim-focus-autocmd'
 
@@ -145,6 +156,14 @@ Plug '~/Sync/Code/vim-menhir'
 Plug 'tpope/vim-scriptease'
 Plug 'xolox/vim-reload'
 
+if has('nvim-0.5')
+   Plug 'rafcamlet/nvim-luapad'
+endif
+
+" Note that `nvim-lspconfig` is responsible for a lot of this.
+let g:polyglot_disabled += ['fsharp']
+Plug 'PhilT/vim-fsharp'
+
 " Plug 'docwhat/bats.vim'
 Plug 'vim-scripts/bats.vim'
 
@@ -167,6 +186,10 @@ Plug 'KKPMW/sacredforest-vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'ajh17/spacegray.vim'
 
+if has('nvim-0.5')
+  Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'yamatsum/nvim-nonicons'
+endif
 
 " #### Small utilities
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
@@ -180,6 +203,8 @@ Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tmsvg/pear-tree'
+
+Plug '~/Sync/Code/vim-twitch-portrait'
 
 Plug 'haya14busa/vim-asterisk'
 Plug 'qxxxb/vim-searchhi'

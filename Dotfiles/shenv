@@ -102,7 +102,9 @@ if [[ $SYSTEM = *Mac* ]] && [[ $SYSTEM != *' 10.'* ]]; then
   prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin"       #  5. < Homebrew (ARM-native)
 fi
 
-prepend_el PATH "$HOME/.bin"              #  4. < local binaries
+
+prepend_el PATH "$HOME/.bin"              #  5. < local binaries
+prepend_el PATH "$HOME/.dotnet/tools"     #  4. < .NET Core SDK: tools
 prepend_el PATH "$HOME/.cargo/bin"        #  3. < Cargo (Rust) binaries
 prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM local bin
 prepend_el PATH "./node_modules/.bin"     #  1. < npm (local)

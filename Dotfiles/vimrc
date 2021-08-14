@@ -70,6 +70,11 @@ endif
 
 source ~/.vim/packages.vim
 
+" Load some newer lua-side configuration
+if has('nvim-0.5')
+  lua require 'elliott'
+endif
+
 " ### Variable declarations
 if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
