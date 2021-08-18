@@ -828,36 +828,49 @@ augroup END
 
 "" === Plugins ===
 " #### Startify
-if getcwd() ==# $HOME
-   let g:startify_list_order = [
-    \    ['Recent files:'], 'files',
-    \    ['Bookmarks:'], 'bookmarks',
-    \    ['Sessions:'], 'sessions',
-    \    ['Shortcuts:'], 'commands'   ]
-   let g:startify_files_number = 20
-else
-   let g:startify_list_order = [
-    \    ['Recent files in current directory:'], 'dir',
-    \    ['Recent files elsewhere:'], 'files',
-    \    ['Bookmarks:'], 'bookmarks',
-    \    ['Sessions:'], 'sessions',
-    \    ['Shortcuts:'], 'commands'   ]
-   let g:startify_files_number = 10
-endif
+function! s:configure_startify() abort
+   if getcwd() ==# $HOME
+      let g:startify_change_cmd = 'cd'
+      let g:startify_change_to_vcs_root = 1
+
+      let g:startify_lists = [
+      \    { 'type': 'files',      'header': ['   Recent files:'] },
+      \    { 'type': 'sessions',   'header': ['   Sessions:'] },
+      \    { 'type': 'bookmarks',  'header': ['   Bookmarks:'] },
+      \    { 'type': 'commands',   'header': ['   Commands:'] },
+      \ ]
+      let g:startify_files_number = 15
+   else
+      let g:startify_change_cmd = 'lcd'
+      let g:startify_change_to_vcs_root = 1
+
+      let g:startify_lists = [
+      \    { 'type': 'dir',        'header': ['   Recent files ('.getcwd().'):'] },
+      \    { 'type': 'files',      'header': ['   Recent files elsewhere:'] },
+      \    { 'type': 'sessions',   'header': ['   Sessions:'] },
+      \    { 'type': 'bookmarks',  'header': ['   Bookmarks:'] },
+      \    { 'type': 'commands',   'header': ['   Commands:'] },
+      \ ]
+      let g:startify_files_number = 7
+   endif
+endfunction
+call s:configure_startify()
+
+augroup startify | au!
+   autocmd User StartifyDirChanging call s:configure_startify()
+augroup END
+
 let g:startify_bookmarks = [ '~/.vimrc', '~/.zshrc', '$COC_VIMCONFIG/coc-settings.json' ]
 let g:startify_commands = [ ':help reference', ':PlugUpdate', [':VTerm', ':exe "105VTerm" | set wfw'] ]
 
 let g:startify_skiplist = [
  \    'COMMIT_EDITMSG',
- \    escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
- \    '/usr/local/Cellar/neovim/.*/runtime/doc',
- \    'plugged/.*/doc',
  \ ]
 
 let g:startify_fortune_use_unicode = v:true
 let g:startify_update_oldfiles = v:true
 let g:startify_change_to_dir = v:false
-let g:startify_change_to_vcs_root = v:true
+" let g:startify_change_to_vcs_root = v:true " configured above
 let g:startify_use_env = v:true
 
 let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',

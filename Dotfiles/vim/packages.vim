@@ -14,7 +14,7 @@ Plug 'xolox/vim-misc'                        " For vim-reload, et al.
 Plug 'tomtom/tlib_vim'                       " For tinykeymap
 Plug 'kana/vim-textobj-user'
 
-Plug 'mhinz/vim-startify'
+Plug 'ELLIOTTCABLE/vim-startify'
 
 Plug 'itchyny/lightline.vim'
 
