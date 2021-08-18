@@ -69,6 +69,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 source ~/.vim/packages.vim
+source ~/.vim/which_key.vim
 
 " Load some newer lua-side configuration
 if has('nvim-0.5')
@@ -78,37 +79,6 @@ endif
 " ### Variable declarations
 if !exists('g:lightline') | let g:lightline = {} | endif
 if !exists('g:LanguageClient_serverCommands') | let g:LanguageClient_serverCommands = {} | endif
-if !exists('g:leader_key_map') | let g:leader_key_map = {} | endif
-if !exists('g:localleader_key_map') | let g:localleader_key_map = {} | endif
-if !exists('g:goto_key_map') | let g:goto_key_map = {} | endif
-
-" Need to duplicate built-in mappings so WhichKey can be aware of them
-noremap <silent> g<C-G> g<C-G>
-let g:goto_key_map['<C-G>'] = 'show-cursor-pos'
-noremap <silent> gg gg
-let g:goto_key_map.g = 'goto-top'
-noremap <silent> gj gj
-let g:goto_key_map.f = 'go-display-line-down'
-noremap <silent> gk gk
-let g:goto_key_map.f = 'go-display-line-up'
-noremap <silent> g0 g0
-let g:goto_key_map.f = 'go-display-column-0'
-noremap <silent> g^ g^
-let g:goto_key_map.f = 'go-display-start'
-noremap <silent> g$ g$
-let g:goto_key_map.f = 'go-display-end'
-noremap <silent> gf gf
-let g:goto_key_map.f = 'goto-file'
-noremap <silent> g8 g8
-let g:goto_key_map['8'] = 'print-char-as-hex'
-noremap <silent> g' g'
-let g:goto_key_map["'"] = 'mark-without-jumplist'
-noremap <silent> g` g`
-let g:goto_key_map["`"] = 'mark-without-jumplist'
-noremap <silent> g+ g+
-let g:goto_key_map["+"] = 'undo-chrono-forward'
-noremap <silent> g- g-
-let g:goto_key_map["-"] = 'undo-chrono-backwards'
 
 " FIXME: ... when was this supposed to get called?
 function! s:FixConfigurationForLightline()
@@ -910,6 +880,10 @@ vnoremap <silent> <localleader> :<c-u>WhichKeyVisual  ','<CR>
 call which_key#register('g', "g:goto_key_map")
 nnoremap <silent> g :<c-u>WhichKey 'g'<CR>
 vnoremap <silent> g :<c-u>WhichKeyVisual 'g'<CR>
+
+call which_key#register('z', "g:fold_key_map")
+nnoremap <silent> z :<c-u>WhichKey 'z'<CR>
+vnoremap <silent> z :<c-u>WhichKeyVisual 'z'<CR>
 
 " #### Goyo
 let g:goyo_width = 100
