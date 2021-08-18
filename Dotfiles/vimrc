@@ -151,8 +151,6 @@ if has("mouse")
   "map <ScrollWheelDown> <C-E>
 endif
 
-let g:python3_host_prog = '/usr/local/bin/python3'
-
 if executable("ag")
   "set grepprg=ag\ --nogroup\ --nocolor
    set grepprg=ag\ --vimgrep\ --nocolor
@@ -1361,7 +1359,20 @@ let g:gitgutter_eager = v:true
 
 " #### split-term.vim
 let g:disable_key_mappings = v:true
-let g:split_term_default_shell = "/usr/local/bin/zsh"
+
+" Handle /opt/homebrew on Big Sur
+if filereadable("/opt/homebrew/bin/zsh")
+   let g:split_term_default_shell = "/opt/homebrew/bin/zsh"
+else
+   let g:split_term_default_shell = "/usr/local/bin/zsh"
+endif
+
+if filereadable("/usr/local/bin/python3")
+   let g:python3_host_prog = "/opt/homebrew/bin/python3"
+else
+   let g:python3_host_prog = "/usr/local/bin/python3"
+endif
+
 
 " #### merlin
 let g:merlin_completion_arg_type = "always"
