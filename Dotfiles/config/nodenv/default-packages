@@ -6,7 +6,6 @@ npm-package-json-lint-config-default
 yarn
 jsonlint
 prettier
-https://github.com/josephfrazier/prettier_d
 diagnostic-languageserver
 vim-language-server
 semver
