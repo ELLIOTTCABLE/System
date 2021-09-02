@@ -400,9 +400,10 @@ nmap <silent> gd <Plug>(coc-definition)<Plug>(searchhi-update)
 nmap <silent> gy <Plug>(coc-type-definition)<Plug>(searchhi-update)
 nmap <silent> gi <Plug>(coc-implementation)<Plug>(searchhi-update)
 nmap <silent> gr <Plug>(coc-references)<Plug>(searchhi-update)
-nmap <silent> gRs :<C-u>call CocActionAsync('jumpReferences', 'split')<CR><Plug>(searchhi-update)
-nmap <silent> gRv :<C-u>call CocActionAsync('jumpReferences', 'vsplit')<CR><Plug>(searchhi-update)
-nmap <silent> gRt :<C-u>call CocActionAsync('jumpReferences', 'tabe')<CR><Plug>(searchhi-update)
+nmap <silent> gR :<C-u>call CocActionAsync('jumpReferences', 'split')<CR><Plug>(searchhi-update)
+" nmap <silent> gRs :<C-u>call CocActionAsync('jumpReferences', 'split')<CR><Plug>(searchhi-update)
+" nmap <silent> gRv :<C-u>call CocActionAsync('jumpReferences', 'vsplit')<CR><Plug>(searchhi-update)
+" nmap <silent> gRt :<C-u>call CocActionAsync('jumpReferences', 'tabe')<CR><Plug>(searchhi-update)
 let g:goto_key_map.d = 'coc-definition'
 let g:goto_key_map.y = 'coc-type-definition'
 let g:goto_key_map.i = 'coc-implementation'
@@ -910,6 +911,37 @@ vnoremap <silent> g :<c-u>WhichKeyVisual 'g'<CR>
 call which_key#register('z', "g:fold_key_map")
 nnoremap <silent> z :<c-u>WhichKey 'z'<CR>
 vnoremap <silent> z :<c-u>WhichKeyVisual 'z'<CR>
+
+" Remap built-in folding commands to refresh indent_blankline.nvim after changing folding. See:
+"    <https://git.io/JECAJ>
+nnoremap <Plug>(ReIndentline) :IndentBlanklineRefresh<CR>
+vnoremap <Plug>(ReIndentline) <C-\><C-n><Plug>(ReIndentline)gv
+inoremap <Plug>(ReIndentline) <C-\><C-n><Plug>(ReIndentline)i
+
+noremap <silent> zf zf<Plug>(ReIndentline)
+noremap <silent> zF zF<Plug>(ReIndentline)
+noremap <silent> zd zd<Plug>(ReIndentline)
+noremap <silent> zD zD<Plug>(ReIndentline)
+noremap <silent> zE zE<Plug>(ReIndentline)
+
+noremap <silent> zo zo<Plug>(ReIndentline)
+noremap <silent> zO zO<Plug>(ReIndentline)
+noremap <silent> zc zc<Plug>(ReIndentline)
+noremap <silent> zC zC<Plug>(ReIndentline)
+noremap <silent> za za<Plug>(ReIndentline)
+noremap <silent> zA zA<Plug>(ReIndentline)
+noremap <silent> zv zv<Plug>(ReIndentline)
+noremap <silent> zx zx<Plug>(ReIndentline)
+
+noremap <silent> zm zm<Plug>(ReIndentline)
+noremap <silent> zM zM<Plug>(ReIndentline)
+noremap <silent> zr zr<Plug>(ReIndentline)
+noremap <silent> zR zR<Plug>(ReIndentline)
+
+noremap <silent> zn zn<Plug>(ReIndentline)
+noremap <silent> zN zN<Plug>(ReIndentline)
+noremap <silent> zi zi<Plug>(ReIndentline)
+
 
 " #### Goyo
 let g:goyo_width = 100

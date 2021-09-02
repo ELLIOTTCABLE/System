@@ -9,6 +9,8 @@ endfunction
 call plug#begin('~/.local/share/nvim/plugged')
 
 " Libraries
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 Plug 'LucHermitte/lh-vim-lib'                " Using lh#option#get() in my own mappings
 Plug 'xolox/vim-misc'                        " For vim-reload, et al.
 Plug 'tomtom/tlib_vim'                       " For tinykeymap
@@ -17,6 +19,7 @@ Plug 'kana/vim-textobj-user'
 Plug 'ELLIOTTCABLE/vim-startify'
 
 Plug 'itchyny/lightline.vim'
+Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'feature/left-shift'}
 
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
@@ -36,7 +39,6 @@ Plug 'tomtom/tinykeymap_vim'                 " Mini-modes, like Ctrl-W
 if has('nvim-0.5')
    Plug 'neovim/nvim-lspconfig'
    Plug 'kabouzeid/nvim-lspinstall'
-   Plug 'norcalli/nvim-colorizer.lua'
 endif
 
 "Plug 'amerlyq/vim-focus-autocmd'
@@ -110,13 +112,6 @@ Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
 
-
-Plug 'jaredly/reason-language-server', {
- \ 'rtp': 'editor-extensions/coc.nvim',
- \ 'do': 'cd editor-extensions/coc.nvim && yarn install --frozen-lockfile',
- \ }
-
-
 " NeoVim completion-source for Vi/Vim-functions
 " FIXME: Do I need both of these?
 Plug 'Shougo/neco-vim'
@@ -141,12 +136,16 @@ Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 Plug 'twinside/vim-haskellfold'
 
 Plug 'sheerun/vim-polyglot'
-Plug 'HerringtonDarkholme/yats.vim'
 Plug 'tjvr/vim-nearley'
 Plug 'kevinoid/vim-jsonc'
 
 " Pending sheerun/vim-polyglot#320.
 if !exists('g:polyglot_disabled') | let g:polyglot_disabled = [] | endif
+
+let g:polyglot_disabled += ['javascript', 'typescript']
+Plug 'othree/yajs.vim'
+Plug 'othree/es.next.syntax.vim'
+Plug 'herringtondarkholme/yats.vim'
 
 let g:polyglot_disabled += ['ocaml']
 Plug 'ocaml/vim-ocaml'
@@ -188,8 +187,10 @@ Plug 'ajh17/spacegray.vim'
 Plug 'ayu-theme/ayu-vim'
 
 if has('nvim-0.5')
-  Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'yamatsum/nvim-nonicons'
+   Plug 'kyazdani42/nvim-web-devicons'
+   Plug 'yamatsum/nvim-nonicons'
+   Plug 'folke/lsp-colors.nvim'
+   Plug 'norcalli/nvim-colorizer.lua'
 endif
 
 " #### Small utilities
@@ -221,6 +222,12 @@ Plug 'vim-scripts/JumpToTrailingWhitespace'
 Plug 'Shougo/echodoc.vim'
 
 Plug 'vimlab/split-term.vim'
+
+if has('nvim-0.5')
+   Plug 'nvim-lua/plenary.nvim'
+   Plug 'folke/todo-comments.nvim'
+   Plug 'folke/trouble.nvim'
+endif
 
 " #### Late-loaders (come on, vim-plug, support `defer:`!)
 Plug 'ryanoasis/vim-devicons'

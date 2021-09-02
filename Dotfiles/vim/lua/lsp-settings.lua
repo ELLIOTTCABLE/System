@@ -1,6 +1,11 @@
 -- Mostly shamelessly stolen from Karim:
 --    <https://github.com/kabouzeid/nvim-lspinstall/wiki>
 
+-- Uncomment to enable debugging:
+-- vim.lsp.set_log_level("debug")
+
+vim.cmd("command! LspEditLog lua vim.cmd('e'..vim.lsp.get_log_path())")
+
 -- keymaps
 local on_attach = function(client, bufnr)
    local function buf_map(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -29,6 +34,7 @@ local on_attach = function(client, bufnr)
    buf_map_goto("n", "d", "goto-def", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
    buf_map_goto("n", "i", "goto-impl", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
    buf_map_goto("n", "r", "goto-refs", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+   buf_map_goto("n", "R", "list-refs", "<cmd>Trouble lsp_references<cr>", opts)
 
    buf_map_ll("n", "a", "code-action", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
    buf_map_ll("n", "wa", "add-wfolder", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
@@ -42,6 +48,13 @@ local on_attach = function(client, bufnr)
    buf_map_ll("n", "f", "format", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
    buf_map_ll("v", "f", "range-format", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
    buf_map_ll("n", "l", "codelens", "<cmd>lua vim.lsp.codelens.run()<CR>", opts)
+
+   buf_map_ll("n", "xx", "list-open", "<cmd>Trouble<cr>", opts)
+   buf_map_ll("n", "xw", "list-wspace-diag", "<cmd>Trouble lsp_workspace_diagnostics<cr>", opts)
+   buf_map_ll("n", "xd", "list-doc-diag", "<cmd>Trouble lsp_document_diagnostics<cr>", opts)
+   buf_map_ll("n", "xl", "list-loclist", "<cmd>Trouble loclist<cr>", opts)
+   buf_map_ll("n", "xq", "list-quickfix", "<cmd>Trouble quickfix<cr>", opts)
+   buf_map_ll("n", "xq", "list-quickfix", "<cmd>Trouble quickfix<cr>", opts)
 
    -- vim already has builtin docs
    if vim.bo.ft ~= "vim" then buf_map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts) end
