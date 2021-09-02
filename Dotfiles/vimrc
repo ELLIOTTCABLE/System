@@ -890,8 +890,10 @@ let g:startify_skiplist = [
 let g:startify_fortune_use_unicode = v:true
 let g:startify_update_oldfiles = v:true
 let g:startify_change_to_dir = v:false
-" let g:startify_change_to_vcs_root = v:true " configured above
 let g:startify_use_env = v:true
+let g:startify_session_sort = v:true
+let g:startify_session_number = 10
+" let g:startify_change_to_vcs_root = v:true " configured above
 
 let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
  \ 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
