@@ -1,0 +1,48 @@
+// vim: ft=jsonc
+{
+   // Byeeeee, bitch. Getchur Microsoft-flavour out muh mouth.
+   "FormattingOptions": {
+      "EnableEditorConfigSupport": true,
+      "OrganizeImports": true,
+      "IndentBraces": false,
+      "IndentBlock": true,
+      "IndentSwitchSection": true,
+      "IndentSwitchCaseSection": true,
+      "IndentSwitchCaseSectionWhenBlock": true,
+      "NewLinesForBracesInTypes": false,
+      "NewLinesForBracesInMethods": false,
+      "NewLinesForBracesInProperties": false,
+      "NewLinesForBracesInAccessors": false,
+      "NewLinesForBracesInAnonymousMethods": false,
+      "NewLinesForBracesInControlBlocks": false,
+      "NewLinesForBracesInAnonymousTypes": false,
+      "NewLinesForBracesInObjectCollectionArrayInitializers": false,
+      "NewLinesForBracesInLambdaExpressionBody": false,
+      "NewLineForElse": false,
+      "NewLineForCatch": false,
+      "NewLineForFinally": false
+   },
+
+   "RoslynExtensionsOptions": {
+      "documentAnalysisTimeoutMs": 5000,
+      "enableDecompilationSupport": true,
+      "enableImportCompletion": true,
+      "enableAnalyzersSupport": true,
+      "LocationPaths": [
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/common",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/analyzers",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/refactorings",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/fixes"
+      ]
+   },
+
+   "RenameOptions": {
+      "RenameInComments": true,
+      "RenameOverloads": true,
+      "RenameInStrings": true
+   },
+
+   "ImplementTypeOptions": {
+      "PropertyGenerationBehavior": "PreferAutoProperties"
+   }
+}
