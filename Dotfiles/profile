@@ -62,6 +62,8 @@ else
    #}
 fi
 
+export HISTIGNORE="fg"
+
 
 # ssh
 export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
