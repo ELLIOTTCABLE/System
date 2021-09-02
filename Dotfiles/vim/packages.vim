@@ -17,6 +17,8 @@ Plug 'tomtom/tlib_vim'                       " For tinykeymap
 Plug 'kana/vim-textobj-user'
 
 Plug 'ELLIOTTCABLE/vim-startify'
+Plug 'ELLIOTTCABLE/vim-gfriend'
+Plug 'ELLIOTTCABLE/vim-cing-lear'
 
 Plug 'itchyny/lightline.vim'
 Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'feature/left-shift'}

@@ -177,21 +177,15 @@ if has('nvim')
 endif
 
 augroup setup-terminal-settings | au!
+   au TermOpen * nmap <silent> <D-k> :CLear<CR>
+   au TermOpen * tmap <silent> <D-k> <C-\><C-n>:CLear<CR>
+
    au TermOpen * setlocal nonumber
    au TermOpen * startinsert
 augroup END
 
-function! s:terminal_clear() abort
-   let l:bufname = bufname()
-   let l:scrollback = getbufvar(l:bufname, '&scrollback')
-
-   call setbufvar(l:bufname, '&scrollback', 1)
-   sleep 100m
-   exe "norm \<c-l>"
-   call setbufvar(l:bufname, '&scrollback', l:scrollback)
-endfunction
-
-command! -bar -range=0 Tclear \ call s:terminal_clear()
+" Update the '' mark when hitting "return"
+tnoremap <CR> <C-\><C-n>m'i<CR>
 
 " Fill these functions to tie other plugins into focus-mode
 function! s:goyo_enter()
@@ -680,6 +674,16 @@ let g:leader_key_map.h = {
  \  , 'p':     'preview-hunk'
  \  , 's':     'stage-hunk'
  \  , 'u':     'unstage-hunk'
+ \ }
+
+nmap <silent> <Leader>gf :<C-u>call gfriend#goto_cfile(winwidth(0) >=# 180 ? 'vsp' : 'sp')<CR>
+nmap <silent> <Leader>gF :<C-u>call gfriend#goto_cWORD(winwidth(0) >=# 180 ? 'vsp' : 'sp')<CR>
+nmap <silent> <Leader>gc :<C-u>call gfriend#goto_cfile(winwidth(0) >=# 180 ? 'Gvsp' : 'Gsp', 'Ged')<CR>
+let g:leader_key_map.g = {
+ \    'name':  '+goto'
+ \  , 'f':     'goto-file-prev-window'
+ \  , 'F':     'goto-file-line-prev-window'
+ \  , 'c':     'goto-fugitive-object-prev-window'
  \ }
 
 " This is the default; I just want to be able to search it in this file. :P
