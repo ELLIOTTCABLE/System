@@ -899,6 +899,8 @@ let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p
  \ 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
 
 " ### vim-which-key
+let g:which_key_fallback_to_native_key = 1
+
 augroup my-which-key | au!
    autocmd  FileType which_key set laststatus=0 noshowmode noruler
    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
