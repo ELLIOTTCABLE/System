@@ -1,0 +1,73 @@
+/* THIS FILE MUST BE MANUALLY LOADED IN THE TST SETTINGS. */
+
+/* Hide twisty and collapse/expand tree by clicking on tab's icon #1743 */
+tab-item tab-twisty {
+  margin-right: -0.7em;
+  opacity: 0 !important;
+  position: relative;
+  z-index: 10000;
+}
+
+/* Grouping tabs with spaces instead of indented tree #2777 */
+tab-item[data-level="0"] {
+  margin-top: calc(var(--tab-size) / 3); /* please change this as you like */
+}
+
+tab-item[data-level="0"].pinned,
+tab-item[data-level="0"].pinned + tab-item[data-level="0"],
+tab-item[data-level="0"] + tab-item[data-level="0"]:not([data-child-ids]) {
+  margin-top: 0;
+}
+
+/* Show title of unread tabs in italic #1363 */
+tab-item.unread .label-content {
+  font-style: italic;
+}
+
+#tabbar {
+  counter-reset: vtabs atabs tabs;
+  /* vtabs tracks visible tabs, atabs tracks active tabs, tabs tracks all tabs */
+}
+tab-item:not(.collapsed):not(.discarded) {
+  counter-increment: vtabs atabs tabs;
+}
+tab-item:not(.collapsed) {
+  counter-increment: vtabs tabs;
+}
+tab-item:not(.discarded) {
+  counter-increment: atabs tabs;
+}
+tab-item {
+  counter-increment: tabs;
+}
+
+/* Numbering of tabs #1601, #2220 */
+tab-item .extra-items-container.behind {
+  z-index: unset !important;
+}
+tab-item .extra-items-container.behind::after {
+  background: Highlight;
+  color: HighlightText;
+  content: counter(vtabs);
+  font-size: x-small;
+  right: 0.2em;
+  padding: 0.2em;
+  pointer-events: none;
+  position: absolute;
+  bottom: 0.2em;
+
+  z-index: 1000;
+}
+
+/* Hide the "new tab" button at the bottom edge of the tab bar #1591 */
+.newtab-button-box {
+  display: none;
+}
+#tabbar {
+  bottom: 0 !important; /* Eliminate dead space on bottom */
+}
+
+/* "#tabbar" is required for TST 3.4.0 and later! */
+#tabbar tab-item:not(:hover) tab-closebox {
+  display: none;
+}
