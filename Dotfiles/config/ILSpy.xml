@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ILSpy version="7.0.1.1">
+  <AssemblyLists>
+    <List name="(Default)">
+      <Assembly>/Applications/ILSpy.app/Contents/MacOS/System.Private.CoreLib.dll</Assembly>
+      <Assembly>/Applications/ILSpy.app/Contents/MacOS/System.Private.Uri.dll</Assembly>
+      <Assembly>/Applications/ILSpy.app/Contents/MacOS/System.Linq.dll</Assembly>
+      <Assembly>/Applications/ILSpy.app/Contents/MacOS/System.Private.Xml.dll</Assembly>
+      <Assembly>/Users/ec/Sync/Code/Source/Dubs-Bad-Hygiene/1.3/Assemblies/BadHygiene.dll</Assembly>
+    </List>
+  </AssemblyLists>
+</ILSpy>
