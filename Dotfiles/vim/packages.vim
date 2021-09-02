@@ -207,6 +207,7 @@ Plug 'godlygeek/tabular'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tmsvg/pear-tree'
+Plug 'kazhala/close-buffers.nvim'
 
 Plug '~/Sync/Code/vim-twitch-portrait'
 
