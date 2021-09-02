@@ -94,6 +94,9 @@ function! togglebg#(...)
    let &background = l:background
    call s:debug("Set background: " . l:background)
 
+   let g:ayucolor = l:background
+   call s:debug("Set ayucolor: " . l:background)
+
    " Now, we decide on a theme to set. If `g:colorschemes` is set to a dict, then we choose a
    " colorscheme depending on the new value of `background`; else, we simply re-load the current
    " colorscheme.

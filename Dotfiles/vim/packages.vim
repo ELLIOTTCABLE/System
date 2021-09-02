@@ -185,6 +185,7 @@ Plug 'morhetz/gruvbox'
 Plug 'KKPMW/sacredforest-vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'ajh17/spacegray.vim'
+Plug 'ayu-theme/ayu-vim'
 
 if has('nvim-0.5')
   Plug 'kyazdani42/nvim-web-devicons'

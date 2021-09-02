@@ -115,11 +115,22 @@ function! s:SetupNord()
     \ }
 endfunction
 
+function! s:SetupAyu()
+   let g:colorschemes = {
+    \ 'dark':  'ayu',
+    \ 'light': 'ayu',
+    \ 'lightline': {
+    \    'dark': 'ayu_dark',
+    \    'light': 'ayu_light'
+    \ }
+    \ }
+endfunction
+
 " Finally, I actually configure, and invoke, the color-switcher.
 if exists('g:gui_oni')
    call s:SetupNord()
 elseif has('gui_vimr')
-   call s:SetupNord()
+   call s:SetupAyu()
 
    call togglebg#("dark")
 else
@@ -574,14 +585,18 @@ let g:leader_key_map.f = {
 
 let g:windowswap_map_keys = v:false
 nmap <silent> <Leader>WW :<C-u>call WindowSwap#EasyWindowSwap()<CR>
+nmap <silent> <Leader>WB <Plug>ToggleBackground
 nmap <silent> <Leader>Wb <Plug>ToggleBackground
+nmap <Leader>WC :tcd %:h<CR>
 nmap <Leader>Wc :tcd %:h<CR>
 
 let g:leader_key_map.W = {
  \    'name':  '+window'
- \  , 'b':     'toggle-background'
+ \  , 'B':     'toggle-background'
+ \  , 'b':     'which_key_ignore'
  \  , 'W':     'window-swap'
- \  , 'c':     'update-tab-cwd'
+ \  , 'C':     'update-tab-cwd'
+ \  , 'c':     'which_key_ignore'
  \ }
 
 " NOTE: Lots of other textobj-mappings, see `packages.vim`
@@ -1398,6 +1413,7 @@ let g:ghcid_keep_open = v:true
 
 " #### haskell-vim
 let g:haskell_indent_disable = v:true
+
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = v:true
