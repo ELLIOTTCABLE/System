@@ -1456,6 +1456,9 @@ let g:ghcid_keep_open = v:true
 " #### haskell-vim
 let g:haskell_indent_disable = v:true
 
+" #### the built-in vim.vim syntax
+let g:vimsyn_embed = 'lPr'
+
 
 "let g:gundo_width = 25
 "let g:gundo_preview_bottom = v:true
