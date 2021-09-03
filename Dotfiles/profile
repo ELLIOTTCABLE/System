@@ -120,7 +120,9 @@ function whichpath() {
 
 export CLICOLOR='yes'
 
-export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
+if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
+   export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
+fi
 
 # Vim invocations
 van()  {  vim               '+call vimman#("'"$1"'")' ;}
