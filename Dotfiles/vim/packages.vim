@@ -26,9 +26,7 @@ Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'feature/left-shift'}
 Plug 'airblade/vim-gitgutter'
 Plug 'jacquesbh/vim-showmarks'
 
-if has('nvim-0.5')
-   Plug 'kosayoda/nvim-lightbulb'
-endif
+Plug 'kosayoda/nvim-lightbulb', PlugIf(has('nvim-0.5'))
 
 Plug 'junegunn/goyo.vim'                     " “Focused” mode
 
@@ -38,10 +36,8 @@ Plug 'liuchengxu/vim-which-key'
 
 Plug 'tomtom/tinykeymap_vim'                 " Mini-modes, like Ctrl-W
 
-if has('nvim-0.5')
-   Plug 'neovim/nvim-lspconfig'
-   Plug 'kabouzeid/nvim-lspinstall'
-endif
+Plug 'neovim/nvim-lspconfig', PlugIf(has('nvim-0.5'))
+Plug 'kabouzeid/nvim-lspinstall', PlugIf(has('nvim-0.5'))
 
 "Plug 'amerlyq/vim-focus-autocmd'
 
@@ -157,9 +153,7 @@ Plug '~/Sync/Code/vim-menhir'
 Plug 'tpope/vim-scriptease'
 Plug 'xolox/vim-reload'
 
-if has('nvim-0.5')
-   Plug 'rafcamlet/nvim-luapad'
-endif
+Plug 'rafcamlet/nvim-luapad', PlugIf(has('nvim-0.5'))
 
 " Note that `nvim-lspconfig` is responsible for a lot of this.
 let g:polyglot_disabled += ['fsharp']
@@ -188,12 +182,10 @@ Plug 'cocopon/iceberg.vim'
 Plug 'ajh17/spacegray.vim'
 Plug 'ayu-theme/ayu-vim'
 
-if has('nvim-0.5')
-   Plug 'kyazdani42/nvim-web-devicons'
-   Plug 'yamatsum/nvim-nonicons'
-   Plug 'folke/lsp-colors.nvim'
-   Plug 'norcalli/nvim-colorizer.lua'
-endif
+Plug 'kyazdani42/nvim-web-devicons', PlugIf(has('nvim-0.5'))
+Plug 'yamatsum/nvim-nonicons', PlugIf(has('nvim-0.5'))
+Plug 'folke/lsp-colors.nvim', PlugIf(has('nvim-0.5'))
+Plug 'norcalli/nvim-colorizer.lua', PlugIf(has('nvim-0.5'))
 
 " #### Small utilities
 Plug 'tpope/vim-eunuch' " Necessary for :Move, :Rename, :Delete, etc
@@ -226,11 +218,9 @@ Plug 'Shougo/echodoc.vim'
 
 Plug 'vimlab/split-term.vim'
 
-if has('nvim-0.5')
-   Plug 'nvim-lua/plenary.nvim'
-   Plug 'folke/todo-comments.nvim'
-   Plug 'folke/trouble.nvim'
-endif
+Plug 'nvim-lua/plenary.nvim', PlugIf(has('nvim-0.5'))
+Plug 'folke/todo-comments.nvim', PlugIf(has('nvim-0.5'))
+Plug 'folke/trouble.nvim', PlugIf(has('nvim-0.5'))
 
 " #### Late-loaders (come on, vim-plug, support `defer:`!)
 Plug 'ryanoasis/vim-devicons'
