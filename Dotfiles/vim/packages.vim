@@ -72,6 +72,11 @@ Plug 'chemzqm/unite-location'
 Plug 'nixprime/cpsm', { 'do': 'env PY3=ON ./install.sh' }
 Plug 'Shougo/neomru.vim'
 
+" See: <https://github.com/wellle/targets.vim/blob/master/cheatsheet.md>
+Plug 'wellle/targets.vim'              " in(/il}/tons more
+" Plug 'reedes/vim-textobj-sentence'     " overrides built-in is/as and )/( movements
+" Plug 'reedes/vim-textobj-quote'        " overrides built-in iq/aq (double) and iQ/aQ (single)
+
 Plug 'thinca/vim-textobj-between'      " if/af, mnemonic default f command
 Plug 'glts/vim-textobj-comment'        " ic/ac/iC
 Plug 'kana/vim-textobj-entire'         " ie/ae, mnemonic 'everything'
@@ -82,8 +87,6 @@ Plug 'kana/vim-textobj-line'           " il/al
 Plug 'adriaanzon/vim-textobj-matchit'  " im/am (remapped to % in vimrc)
 Plug 'sgur/vim-textobj-parameter'      " i,/a,
 Plug 'kana/vim-textobj-lastpat'        " i/  a/  i?  a?
-Plug 'reedes/vim-textobj-sentence'     " overrides built-in is/as and )/( movements
-Plug 'reedes/vim-textobj-quote'        " overrides built-in iq/aq (double) and iQ/aQ (single)
 Plug 'adolenc/vim-textobj-toplevel'    " iT/aT
 Plug 'jceb/vim-textobj-uri'            " iu/au, go
 Plug 'Julian/vim-textobj-variable-segment' " iv/av
