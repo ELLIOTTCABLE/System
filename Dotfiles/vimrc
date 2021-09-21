@@ -439,52 +439,48 @@ let g:EasyMotion_do_mapping = v:false
 " I chose to stomp the non-<Leader> versions for fF and tT, but not for wW/bB/eE/geE, because it's more
 " useful to spam the latter (as in `wwwww`). Theoretically, EasyMotion should *supplant* that
 " behaviour; but realistically, I still use the latter thanks to muscle-memory.
-nmap f <Plug>(easymotion-fl)|xmap f <Plug>(easymotion-fl)|omap f <Plug>(easymotion-fl)
-nmap F <Plug>(easymotion-Fl)|xmap F <Plug>(easymotion-Fl)|omap F <Plug>(easymotion-Fl)
-nmap t <Plug>(easymotion-tl)|xmap t <Plug>(easymotion-tl)|omap t <Plug>(easymotion-tl)
-nmap T <Plug>(easymotion-Tl)|xmap T <Plug>(easymotion-Tl)|omap T <Plug>(easymotion-Tl)
+if has('nvim-0.5')
+   " use Lightspeed.nvim, but only if not inside a macro.
+   "    <https://github.com/ggandor/lightspeed.nvim/tree/6ca32a15#notes>
+   nmap <expr> f reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_f" : "f"
+   nmap <expr> F reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_F" : "F"
+   nmap <expr> t reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_t" : "t"
+   nmap <expr> T reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_T" : "T"
+else
+   nmap f <Plug>(easymotion-fl)|xmap f <Plug>(easymotion-fl)|omap f <Plug>(easymotion-fl)
+   nmap F <Plug>(easymotion-Fl)|xmap F <Plug>(easymotion-Fl)|omap F <Plug>(easymotion-Fl)
+   nmap t <Plug>(easymotion-tl)|xmap t <Plug>(easymotion-tl)|omap t <Plug>(easymotion-tl)
+   nmap T <Plug>(easymotion-Tl)|xmap T <Plug>(easymotion-Tl)|omap T <Plug>(easymotion-Tl)
 
-" Since the within-line searches are handled by non-prefixed mappings above, I use the <Leader>-
-" prefixed mappings for bidirectional/overwin-mode:
-" mnemonic: 'sneak'
-nmap <Leader>s <Plug>(easymotion-overwin-f2)
-xmap <Leader>s <Plug>(easymotion-bd-f2)
-omap <Leader>s <Plug>(easymotion-bd-f2)
-let g:leader_key_map.s = 'motion-2sneak'
+   " mnemonic: 'sneak'
+   nmap s <Plug>(easymotion-f2)
+   xmap s <Plug>(easymotion-f2)
+   omap s <Plug>(easymotion-f2)
+   nmap S <Plug>(easymotion-F2)
+   xmap S <Plug>(easymotion-F2)
+   omap S <Plug>(easymotion-F2)
 
-" This makes <Leader>-k and <Leader>-b a little inconsistent, but I prefer the extra mapping-
-" mnemonic space.
-nmap <Leader>j <Plug>(easymotion-overwin-line)
-xmap <Leader>j <Plug>(easymotion-bd-jk)
-omap <Leader>j <Plug>(easymotion-bd-jk)
-"nmap <Leader>k <Plug>(easymotion-overwin-line)
-"xmap <Leader>k <Plug>(easymotion-bd-jk)
-"omap <Leader>k <Plug>(easymotion-bd-jk)
-let g:leader_key_map.j = 'motion-line'
+   " <Space><Space> → jump-to-anywhere
+   map <Leader><Leader> <Plug>(easymotion-lineanywhere)
+   let g:leader_key_map[' '] = 'motion-anywhere'
 
-" And finally, since `w` and `e` match so many words, especially bidirectionally, I leave them
-" prefixed *and* window-bound.
-nmap <Leader>w <Plug>(easymotion-bd-w)
-xmap <Leader>w <Plug>(easymotion-bd-w)
-omap <Leader>w <Plug>(easymotion-bd-w)
-"nmap <Leader>b <Plug>(easymotion-bd-w)
-"xmap <Leader>b <Plug>(easymotion-bd-w)
-"omap <Leader>b <Plug>(easymotion-bd-w)
-let g:leader_key_map.w = 'motion-word'
+   " Complete an EasyMotion by hitting <Space> again
+   augroup easymotion-keymap | au!
+      au VimEnter * EMCommandLineNoreMap <Space> <CR>
+   augroup END
+endif
 
-" <Space><Space> → jump-to-anywhere
-map <Leader><Leader> <Plug>(easymotion-lineanywhere)
-let g:leader_key_map[' '] = 'motion-anywhere'
+" Undo Startify's s/S mappings, so they can stay sneaky. Use p/P instead.
+" mnemonic: "sPlit"
+function! s:unstartify()
+   unmap <buffer> s
+   unmap <buffer> S
 
-nmap <Leader>n <Plug>(easymotion-bd-n)
-xmap <Leader>n <Plug>(easymotion-bd-n)
-omap <Leader>n <Plug>(easymotion-bd-n)
-let g:leader_key_map.n = 'motion-search'
+   nnoremap <buffer><nowait><silent> p :call startify#set_mark('S')<cr>
+   nnoremap <buffer><nowait><silent> P :call startify#set_batchmode('S')<cr>
+endfunction
 
-" Complete an EasyMotion by hitting <Space> again
-augroup easymotion-keymap | au!
-   au VimEnter * EMCommandLineNoreMap <Space> <CR>
-augroup END
+autocmd User Startified call s:unstartify()
 
 "noremap  <silent> <F1>          :<C-u>NERDTreeTabsToggle<Return>
 "inoremap <silent> <F1>     <C-O>:<C-u>NERDTreeTabsToggle<Return>
@@ -714,9 +710,11 @@ function! s:denite_my_settings() abort
    nnoremap <silent><buffer><expr>  i        denite#do_map('open_filter_buffer')
    nnoremap <silent><buffer><expr>  <Esc>    denite#do_map('quit')
 
-   " (Chosen to match the easymotion-bd-jk mapping)
-   " nnoremap <silent><buffer><expr> <Leader>j denite#do_map('quick_move')
-   map <silent><buffer>          <Leader>j   <Plug>(easymotion-sol-j)
+   if has('nvim-0.5')
+      nnoremap <silent><buffer><expr>  <Leader>j   denite#do_map('quick_move')
+   else
+      map <silent><buffer>             <Leader>j   <Plug>(easymotion-sol-j)
+   endif
 endfunction
 
 autocmd FileType denite-filter call s:denite_filter_my_settings()
@@ -731,8 +729,11 @@ function! s:denite_filter_my_settings() abort
    map  <silent><buffer>         <C-c>       <Plug>(denite_filter_quit)
    imap <silent><buffer>         <C-c>       <Plug>(denite_filter_quit)
 
-   " (Chosen to match the easymotion-bd-jk mapping)
-   nmap <silent><buffer> <Leader>j <Plug>(denite_filter_update)<Plug>(easymotion-bd-jk)
+   if has('nvim-0.5')
+      nnoremap <silent><buffer><expr>  <Leader>j   denite#do_map('quick_move')
+   else
+      map <silent><buffer>             <Leader>j   <Plug>(easymotion-sol-j)
+   endif
 endfunction
 "call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',          'noremap')
 "call denite#custom#map('normal', '<Esc>', '<NOP>',                               'noremap')
@@ -895,8 +896,8 @@ let g:startify_session_sort = v:true
 let g:startify_session_number = 10
 " let g:startify_change_to_vcs_root = v:true " configured above
 
-let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'p', 'z', 'x', 'c',
- \ 'n', 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
+let g:startify_custom_indices = ['a', 'd', 'f', 'h', 'l', 'w', 'r', 'y', 'o', 'z', 'x', 'c', 'n',
+    \ 'm', ',', 'A', 'D', 'F', 'H', 'L', 'W', 'R', 'Y', 'O', 'P', 'Z', 'X', 'C', 'N']
 
 " ### vim-which-key
 let g:which_key_fallback_to_native_key = 1

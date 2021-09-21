@@ -57,9 +57,12 @@ Plug 'wellle/visual-split.vim'
 
 Plug 'chaoren/vim-wordmotion'
 
-Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-easymotion.vim'
+
+" Plug 'phaazon/hop.nvim', PlugIf(has('nvim-0.5'))
+Plug 'ggandor/lightspeed.nvim', PlugIf(has('nvim-0.5'))
+Plug 'easymotion/vim-easymotion', PlugIf(!has('nvim-0.5'))
+Plug 'haya14busa/incsearch-easymotion.vim', PlugIf(!has('nvim-0.5'))
 
 " Pending:
 "    <https://github.com/ocaml/merlin/issues/729>

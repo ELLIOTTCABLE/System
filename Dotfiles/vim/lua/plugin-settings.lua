@@ -132,3 +132,8 @@ require("todo-comments").setup {
 require('close_buffers').setup({
    preserve_window_layout = { 'this', 'nameless' },  -- Types of deletion that should preserve the window layout
 })
+
+
+-- lightspeed.nvim {{{1
+require'lightspeed'.setup({
+})
