@@ -1442,10 +1442,18 @@ let g:echodoc#type = "floating"
 
 " #### vim-textobj-...
 " this can (and maybe should?) be triggered per-filetype
-augroup textobj | au!
-   au VimEnter * call textobj#sentence#init()
-            \ | call textobj#quote#init()
-augroup END
+" augroup textobj | au!
+"    au VimEnter * call textobj#sentence#init()
+"             \ | call textobj#quote#init()
+" augroup END
+
+" #### targets.vim
+" I want `viN(`, etc, to match other <Shift-blah> reverse-direction mappings
+let g:targets_nl = 'nN'
+let g:targets_gracious = v:true
+
+" #### vim-textobj-uri
+let g:goto_key_map.o = 'open-uri'
 
 " #### ghcid
 " Use stack to find ghcid, as per:
