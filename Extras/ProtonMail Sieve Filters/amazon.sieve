@@ -9,7 +9,10 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
 
 if allof (
    address :all :comparator "i;unicode-casemap" :is "From" "store-news@amazon.com",
-   header :comparator "i;unicode-casemap" :matches "Subject" "elliott cable: New from *"
+   header :comparator "i;unicode-casemap" :matches "Subject" [
+      "elliott cable: New from *",
+      "New from *"
+   ]
 ) {
    fileinto "Auto";
    fileinto "Auto\\/Promo";

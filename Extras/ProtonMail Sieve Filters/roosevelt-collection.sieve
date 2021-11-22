@@ -6,34 +6,48 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
    return;
 }
 
+
 if allof (
-   address :all :comparator "i;unicode-casemap" :is "From" "loftsroosevelt@bozzuto.com",
+   address :all :comparator "i;unicode-casemap" :is "From" [
+      "loftsroosevelt@bozzuto.com",
+      "contactus@comvibe.com"
+   ],
    header :comparator "i;unicode-casemap" :is "Subject" [
       "You have a delivery",
       "You have deliveries",
       "Your delivery has been picked up",
       "Your deliveries have been picked up",
-      "We got the message."
+      "We got the message.",
+      "Consider it done."
    ]
 ) {
    fileinto "Auto";
    fileinto "Auto\\/Notif";
 
+
 } elsif allof (
-   address :all :comparator "i;unicode-casemap" :is "From" "loftsroosevelt@bozzuto.com",
+   address :all :comparator "i;unicode-casemap" :is "From" [
+      "noreply@risebuildings.com"
+   ],
    header :comparator "i;unicode-casemap" :matches "Subject" [
-      "Community Newsletter: *"
+      "* is here!"
    ]
 ) {
    fileinto "Auto";
-   fileinto "Auto\\/Newsletter";
+   fileinto "Auto\\/Notif";
+
 
 } elsif allof (
    address :all :comparator "i;unicode-casemap" :is "From" [
       "noreply@bozzuto.com",
-      "noreply@gozego.com"
+      "noreply@gozego.com",
+      "ebill@ebill.conservicemail.com"
    ],
-   header :comparator "i;unicode-casemap" :is "Subject" ["Payment Receipt", "Billing Statement"]
+   header :comparator "i;unicode-casemap" :is "Subject" [
+      "Payment Receipt",
+      "Billing Statement",
+      "Monthly Conservice Statement for Roosevelt Collection Lofts"
+   ]
 ) {
    fileinto "!!";
    fileinto "!!\\/Receipt";

@@ -8,6 +8,7 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
 
 if allof (
     address :all :comparator "i;unicode-casemap" :is "From" [
+        "noreply@email.apple.com",
         "no_reply@email.apple.com",
         "shipping_notification@orders.apple.com",
         "order_change@store.apple.com",
@@ -23,6 +24,7 @@ if allof (
         ],
         header :comparator "i;unicode-casemap" :matches "Subject" [
             "A sound was played on *",
+            "Find My has been disabled on *",
             "Your shipment is on its way. Order No. *",
             "Order * change confirmation.",
             "Your Apple ID was used to sign in to iCloud on *",
@@ -43,6 +45,7 @@ if allof (
         header :comparator "i;unicode-casemap" :is "Subject" [
             "Your receipt from Apple.",
             "Your Subscription Confirmation",
+            "Subscription Confirmation",
             "Your Subscription Renewal",
             "Your payment has been received",
             "Your Apple Card statement is ready"

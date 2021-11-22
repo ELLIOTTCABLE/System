@@ -8,7 +8,7 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
 
 if allof (
    address :all :comparator "i;unicode-casemap" :is "From" "bounces@alerts.oknotify2.com",
-   header :comparator "i;unicode-casemap" :is "Subject" [
+   header :comparator "i;unicode-casemap" :matches "Subject" [
       "You matched with *",
       "* likes you!",
       "* New message from *"

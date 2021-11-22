@@ -11,7 +11,8 @@ if allof (
       "route53-dev-admin@amazon.com"
    ],
    header :comparator "i;unicode-casemap" :matches "Subject" [
-      "Automatic renewal of * succeeded"
+      "Automatic renewal of * succeeded",
+      "[Domain renewing automatically] Your domain * will be automatically renewed"
    ]
 ) {
    fileinto "Auto";
