@@ -226,7 +226,8 @@ Plug 'vimlab/split-term.vim'
 
 Plug 'nvim-lua/plenary.nvim', PlugIf(has('nvim-0.5'))
 Plug 'folke/todo-comments.nvim', PlugIf(has('nvim-0.5'))
-Plug 'folke/trouble.nvim', PlugIf(has('nvim-0.5'))
+Plug 'cormacrelf/trouble.nvim', PlugIf(has('nvim-0.5'), { 'branch': 'cascading-sev-2' })
+
 
 " #### Late-loaders (come on, vim-plug, support `defer:`!)
 Plug 'ryanoasis/vim-devicons'

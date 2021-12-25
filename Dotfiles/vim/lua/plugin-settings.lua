@@ -55,7 +55,7 @@ require'nvim-web-devicons'.setup {
 -- trouble {{{1
 require("trouble").setup {
    position = "top", -- position of the list can be: bottom, top, left, right
-   height = 15, -- height of the trouble list when position is top or bottom
+   height = 8, -- height of the trouble list when position is top or bottom
    mode = "lsp_workspace_diagnostics", -- "lsp_workspace_diagnostics", "lsp_document_diagnostics", "quickfix", "lsp_references", "loclist"
 
    action_keys = { -- key mappings for actions in the trouble list
