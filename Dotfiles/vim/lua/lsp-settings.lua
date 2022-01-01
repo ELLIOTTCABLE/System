@@ -1,8 +1,10 @@
 -- Much of this was shamelessly stolen from Karim:
 --    <https://github.com/kabouzeid/nvim-lspinstall/wiki>
 
--- Uncomment to enable debugging:
+-- To enable debugging:
+-- 1. Uncomment this,
 -- vim.lsp.set_log_level("debug")
+-- 2. ... uncomment the `debug = true` argument to `null-ls` below
 
 vim.cmd("command! LspEditLog lua vim.cmd('e'..vim.lsp.get_log_path())")
 
@@ -13,7 +15,6 @@ local common_on_attach = function(client, bufnr)
 
    local function buf_map_goto(mode, mapping, desc, ...)
       vim.g.goto_key_map[mapping] = desc
-      print(desc)
       buf_map(mode, "g" .. mapping, ...)
    end
 
@@ -144,15 +145,19 @@ local null_ls = require 'null-ls'
 local methods = require 'null-ls.methods'
 
 null_ls.setup {
-   debug = true,
+   -- debug = true,
    on_attach = common_on_attach,
    sources = {
+      -- JavaScript / TypeScript
+      -- (Use `prettier` only for range-formatting; fall back to `prettierd` for normal usage.)
       null_ls.builtins.formatting.prettier.with {
          method = { methods.internal.RANGE_FORMATTING },
-         prefer_local = "node_modules/.bin",
+         prefer_local = 'node_modules/.bin',
       },
       null_ls.builtins.formatting.prettierd,
-   }
+      null_ls.builtins.diagnostics.eslint_d,
+      null_ls.builtins.code_actions.eslint_d,
+   },
 }
 
 

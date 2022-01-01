@@ -7,7 +7,7 @@ yarn
 jsonlint
 prettier
 @fsouza/prettierd
-diagnostic-languageserver
+eslint_d
 vim-language-server
 semver
 hiper
