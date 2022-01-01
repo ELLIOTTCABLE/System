@@ -138,8 +138,16 @@ lsp_installer.on_server_ready(function(server)
    local config = make_config()
 
    -- language specific config
-   if server == "lua" then
+   if server.name == "sumneko_lua" then
       config.settings = lua_settings
+   end
+
+   if server.name == "jsonls" then
+      local filetypes = require('lspconfig.server_configurations.' .. server.name)
+         .default_config.filetypes
+
+      -- Add jsonc
+      vim.list_extend(filetypes, { "jsonc" })
    end
 
    -- This setup() function is exactly the same as lspconfig's setup function.
