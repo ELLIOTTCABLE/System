@@ -1,4 +1,4 @@
--- Mostly shamelessly stolen from Karim:
+-- Much of this was shamelessly stolen from Karim:
 --    <https://github.com/kabouzeid/nvim-lspinstall/wiki>
 
 -- Uncomment to enable debugging:
@@ -140,24 +140,53 @@ local function make_config()
 end
 
 
+local null_ls = require 'null-ls'
+local methods = require 'null-ls.methods'
+
+null_ls.setup {
+   debug = true,
+   on_attach = common_on_attach,
+   sources = {
+      null_ls.builtins.formatting.prettier.with {
+         method = { methods.internal.RANGE_FORMATTING },
+         prefer_local = "node_modules/.bin",
+      },
+      null_ls.builtins.formatting.prettierd,
+   }
+}
+
+
 local lsp_installer = require("nvim-lsp-installer")
 
 -- Register a handler that will be called for all installed servers.
 -- Alternatively, you may also register handlers on specific server instances instead (see example below).
 lsp_installer.on_server_ready(function(server)
    local config = make_config()
+   local filetypes = require('lspconfig.server_configurations.' .. server.name)
+      .default_config.filetypes
 
    -- language specific config
+
    if server.name == "sumneko_lua" then
       config.settings = lua_settings
    end
 
    if server.name == "jsonls" then
-      local filetypes = require('lspconfig.server_configurations.' .. server.name)
-         .default_config.filetypes
-
       -- Add jsonc
       vim.list_extend(filetypes, { "jsonc" })
+   end
+
+   -- Disable JavaScript formatters, so they don't conflict with null-ls / Prettier:
+   --    <https://github.com/jose-elias-alvarez/null-ls.nvim/wiki/Avoiding-LSP-formatting-conflicts>
+   if vim.tbl_contains({"jsonls", "stylelint_lsp", "tsserver"}, server.name) then
+      local orig_on_attach = config.on_attach
+
+      config.on_attach = function(client, bufnr)
+         client.resolved_capabilities.document_formatting = false
+         client.resolved_capabilities.document_range_formatting = false
+
+         orig_on_attach(client, bufnr)
+      end
    end
 
    -- This setup() function is exactly the same as lspconfig's setup function.

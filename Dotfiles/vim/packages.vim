@@ -38,6 +38,7 @@ Plug 'tomtom/tinykeymap_vim'                 " Mini-modes, like Ctrl-W
 
 Plug 'neovim/nvim-lspconfig', PlugIf(has('nvim-0.5'))
 Plug 'williamboman/nvim-lsp-installer', PlugIf(has('nvim-0.5'))
+Plug 'jose-elias-alvarez/null-ls.nvim', PlugIf(has('nvim-0.5'))
 
 "Plug 'amerlyq/vim-focus-autocmd'
 
