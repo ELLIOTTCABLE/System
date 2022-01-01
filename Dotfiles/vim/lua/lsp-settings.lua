@@ -74,41 +74,32 @@ local common_on_attach = function(client, bufnr)
 
    -- Set autocommands conditional on server_capabilities
    if client.resolved_capabilities.document_highlight then
-      vim.api.nvim_exec(
-         [[
+      vim.cmd [[
          augroup lsp_document_highlight
             autocmd! * <buffer>
             autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
             autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
          augroup END
-      ]],
-         false
-      )
+      ]]
    end
 
    -- TODO: Make this configurable via a buffer-local variable, and add a bind to toggle it
    if client.resolved_capabilities.document_formatting then
-      vim.api.nvim_exec(
-         [[
+      vim.cmd [[
          augroup lsp_format_on_save
             autocmd! * <buffer>
             autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
          augroup END
-      ]],
-         false
-      )
+      ]]
    end
 
    if client.resolved_capabilities.code_lens then
-      vim.api.nvim_exec(
-         [[
+      vim.cmd [[
          augroup lsp_codelens
             autocmd! * <buffer>
             autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()
          augroup END
-      ]],
-         false
-      )
+      ]]
    end
 end
 
