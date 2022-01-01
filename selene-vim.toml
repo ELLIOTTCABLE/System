@@ -1,0 +1,123 @@
+# A [standard library][] for Selene (a Lua static-analysis tool), declaring the global values
+# available in the Neovim 0.6 API.
+#
+# Don't depend on this being accurate; check `:help lua-stdlib` et al. for yourself.
+#
+# I am unlikely to enter every value in the Vim API into this file, because I am lazy. Feel free to
+# take this and run with it; although if you do, maybe [tweet at me][] and let me know.
+#
+# [standard library]: <https://kampfkarren.github.io/selene/usage/std.html>
+# [tweet at me]: <https://twitter.com/ELLIOTTCABLE>
+
+[selene]
+base = "lua52"
+name = "roblox"
+
+
+# Global table `vim`
+# ==================
+
+# #### :h vim.split()
+[[vim.split.args]]
+type = "string"
+
+[[vim.split.args]]
+type = "string"
+
+# TODO: Describe the {kwargs}-map
+# [[vim.split.args]]
+# type = ...
+
+
+# #### :h vim.list_extend()
+[[vim.list_extend.args]]
+type = "table"
+
+[[vim.list_extend.args]]
+type = "table"
+
+[[vim.list_extend.args]]
+required = false
+type = "number"
+
+[[vim.list_extend.args]]
+required = false
+type = "number"
+
+
+# #### :h vim.tbl_contains()
+[[vim.tbl_contains.args]]
+type = "table"
+
+[[vim.tbl_contains.args]]
+type = "any"
+
+
+# #### :h vim.cmd()
+[[vim.cmd.args]]
+type = "string"
+
+
+# #### :h vim.fn
+[[vim.fn."*".args]]
+required = false
+type = "..."
+
+
+# #### :h vim.bo
+[vim.bo]
+property = true
+writable = "new-fields"
+
+[vim.bo."*"]
+property = true
+writable = "overridden"
+
+
+# Global table `vim.api`
+# ======================
+
+# #### :h nvim_buf_set_keymap()
+[[vim.api.nvim_buf_set_keymap.args]]
+type = { display = "Buffer handle" }
+
+[[vim.api.nvim_buf_set_keymap.args]]
+# extracted from `:h map-table`
+type = ["", "!", "n", "i", "c", "v", "x", "s", "o", "t", "l"]
+
+[[vim.api.nvim_buf_set_keymap.args]]
+type = "string"
+
+# TODO: Describe the {opts}-map
+# [[vim.api.nvim_buf_set_keymap.args]]
+# type = ...
+
+
+# #### :h nvim_buf_set_option()
+[[vim.api.nvim_buf_set_option.args]]
+type = { display = "Buffer handle" }
+
+[[vim.api.nvim_buf_set_option.args]]
+type = "string"
+
+[[vim.api.nvim_buf_set_option.args]]
+type = "any"
+
+# TODO: Describe the {opts}-map
+# [[vim.api.nvim_buf_set_option.args]]
+# type = ...
+
+
+# Global table `vim.lsp`
+# ==================
+
+# #### :h vim.lsp.protocol.make_client_capabilities()
+[vim.lsp.protocol.make_client_capabilities]
+args = []
+
+
+# Types? I think?
+# ==============
+
+# [selene.structs.Buffer]
+# property = true
