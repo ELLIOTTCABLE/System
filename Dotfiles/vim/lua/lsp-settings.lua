@@ -7,7 +7,7 @@
 vim.cmd("command! LspEditLog lua vim.cmd('e'..vim.lsp.get_log_path())")
 
 -- keymaps
-local on_attach = function(client, bufnr)
+local common_on_attach = function(client, bufnr)
    local function buf_map(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -70,20 +70,30 @@ local on_attach = function(client, bufnr)
    if client.resolved_capabilities.document_highlight then
       vim.api.nvim_exec([[
          augroup lsp_document_highlight
-         autocmd! * <buffer>
-         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+            autocmd! * <buffer>
+            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+         augroup END
+      ]], false)
+   end
+
+   -- TODO: Make this configurable via a buffer-local variable, and add a bind to toggle it
+   if client.resolved_capabilities.document_formatting then
+      vim.api.nvim_exec([[
+         augroup lsp_format_on_save
+            autocmd! * <buffer>
+            autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
          augroup END
       ]], false)
    end
 
    if client.resolved_capabilities.code_lens then
-      vim.cmd [[
+      vim.api.nvim_exec([[
          augroup lsp_codelens
             autocmd! * <buffer>
             autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()
          augroup END
-      ]]
+      ]], false)
    end
 end
 
@@ -125,7 +135,7 @@ local function make_config()
       -- enable snippet support
       capabilities = capabilities,
       -- map buffer local keybindings when the language server attaches
-      on_attach = on_attach,
+      on_attach = common_on_attach,
    }
 end
 
