@@ -1425,7 +1425,7 @@ else
    let g:split_term_default_shell = "/usr/local/bin/zsh"
 endif
 
-if filereadable("/usr/local/bin/python3")
+if filereadable("/opt/homebrew/bin/python3")
    let g:python3_host_prog = "/opt/homebrew/bin/python3"
 else
    let g:python3_host_prog = "/usr/local/bin/python3"
