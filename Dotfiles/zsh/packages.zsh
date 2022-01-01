@@ -8,7 +8,7 @@ zplug lib/termsupport,        from:oh-my-zsh, on:lib/functions
 
 # N.B.: the original `zsh-syntax-highlighting` had to be loaded *last*; I don't know if this is
 # still true for `fast-syntax-highlighting`
-zplug zdharma/fast-syntax-highlighting, defer:3
+zplug zdharma-continuum/fast-syntax-highlighting, defer:3
 
 zplug zsh-users/zsh-autosuggestions
 
