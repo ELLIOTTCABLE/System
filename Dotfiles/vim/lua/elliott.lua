@@ -1,2 +1,2 @@
-require'lsp-settings'
-require'plugin-settings'
+require 'lsp-settings'
+require 'plugin-settings'
