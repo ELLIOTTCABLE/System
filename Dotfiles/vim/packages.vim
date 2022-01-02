@@ -72,6 +72,7 @@ Plug 'haya14busa/incsearch-easymotion.vim', PlugIf(!has('nvim-0.5'))
 "Plug 'ctrlpvim/ctrlp.vim', { 'for': ['ocaml'] }
 
 Plug 'mileszs/ack.vim'
+Plug 'samoshkin/vim-find-files'
 
 Plug 'Shougo/denite.nvim'
 Plug 'chemzqm/unite-location'

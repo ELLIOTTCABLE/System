@@ -998,6 +998,11 @@ if executable('rg')
    set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
 
+" #### vim-find-files / fd
+if executable('rg')
+   let g:find_files_findprg = 'fd --hidden $* $d'
+endif
+
 " #### Denite
 call denite#custom#option('_', {
 \    'prompt':         '❯'
