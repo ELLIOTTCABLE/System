@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 function! PlugIf(cond, ...)
    let opts = get(a:000, 0, {})
    return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
@@ -258,15 +260,15 @@ let s:opam_configuration['merlin'] = function('OpamConfMerlin')
 
 
 if !g:use_merlin
-   let s:opam_packages = ["ocp-indent", "ocp-index"]
+   let s:opam_packages = ['ocp-indent', 'ocp-index']
 elseif g:use_own_merlin
-   let s:opam_packages = ["ocp-indent", "ocp-index"]
+   let s:opam_packages = ['ocp-indent', 'ocp-index']
    Plug '~/Documents/Code/Source/merlin/vim/merlin/'
 else
-   let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+   let s:opam_packages = ['ocp-indent', 'ocp-index', 'merlin']
 endif
 
-let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
+let s:opam_check_cmdline = ['opam list --installed --short --safe --color=never'] + s:opam_packages
 let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
 for tool in s:opam_packages
    " Respect package order (merlin should be after ocp-index)

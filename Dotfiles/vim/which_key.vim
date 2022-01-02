@@ -62,16 +62,16 @@ let g:goto_key_map['8'] = 'print-char-as-hex'
 noremap <silent> g' g'
 let g:goto_key_map["'"] = 'mark-without-jumplist'
 noremap <silent> g` g`
-let g:goto_key_map["`"] = 'mark-without-jumplist'
+let g:goto_key_map['`'] = 'mark-without-jumplist'
 noremap <silent> g+ g+
-let g:goto_key_map["+"] = 'undo-chrono-forward'
+let g:goto_key_map['+'] = 'undo-chrono-forward'
 noremap <silent> g- g-
-let g:goto_key_map["-"] = 'undo-chrono-backwards'
+let g:goto_key_map['-'] = 'undo-chrono-backwards'
 
 noremap <silent> g* g*
-let g:goto_key_map["*"] = 'search-cword-forwards-in-word'
+let g:goto_key_map['*'] = 'search-cword-forwards-in-word'
 noremap <silent> g# g#
-let g:goto_key_map["#"] = 'search-cword-backwards-in-word'
+let g:goto_key_map['#'] = 'search-cword-backwards-in-word'
 
 noremap <silent> gv gv
 let g:goto_key_map.v = 'select-last-selection'
@@ -81,17 +81,17 @@ noremap <silent> gN gN
 let g:goto_key_map.N = 'select-prev-match'
 
 noremap <silent> g~ g~
-let g:goto_key_map["~"] = 'case-swap-motion'
+let g:goto_key_map['~'] = 'case-swap-motion'
 noremap <silent> gu gu
 let g:goto_key_map.u = 'case-lower-motion'
 noremap <silent> gU gU
 let g:goto_key_map.U = 'case-upper-motion'
 
 noremap <silent> g] g]
-let g:goto_key_map["]"] = 'select-from-matching-tags'
+let g:goto_key_map[']'] = 'select-from-matching-tags'
 
 noremap <silent> g& g&
-let g:goto_key_map["&"] = 'resub-with-last-search'
+let g:goto_key_map['&'] = 'resub-with-last-search'
 noremap <silent> gJ gJ
 let g:goto_key_map.J = 'join-without-spaces'
 noremap <silent> gr gr

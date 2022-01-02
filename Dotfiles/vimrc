@@ -11,6 +11,8 @@ if !has('nvim')
    set encoding=utf-8
 endif
 
+scriptencoding utf-8
+
 if $XDG_SYNC_HOME != ''
    let s:xdg_sync_home = $XDG_SYNC_HOME . '/nvim'
 elseif $XDG_DATA_HOME != ''
@@ -19,7 +21,7 @@ else
    let s:xdg_sync_home = substitute(stdpath('data'), 'share', 'sync', '')
 endif
 
-execute "set shadafile=" . simplify(s:xdg_sync_home . '/shada/main.shada')
+execute 'set shadafile=' . simplify(s:xdg_sync_home . '/shada/main.shada')
 let g:startify_session_dir = simplify(s:xdg_sync_home . '/session')
 
 set hidden
@@ -65,7 +67,7 @@ let g:use_languageclient = v:false
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  au VimEnter * PlugInstall --sync | source $MYVIMRC
+  au first_time_setup VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 source ~/.vim/packages.vim
@@ -132,27 +134,27 @@ if exists('g:gui_oni')
 elseif has('gui_vimr')
    call s:SetupAyu()
 
-   call togglebg#("dark")
+   call togglebg#('dark')
 else
    call s:SetupSolarized()
 
    let g:seiya_auto_enable = v:true
-   call togglebg#("dark")
+   call togglebg#('dark')
 endif
 
 " Command-line tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.class,.svn
 
-if has("mouse")
+if has('mouse')
    set mouse=a
 
-   if !has('nvim') && &term == 'screen'
+   if !has('nvim') && &term ==? 'screen'
       " tmux knows the extended mouse mode
       set ttymouse=xterm2
    endif
 
-   if !has('nvim') && v:version >= 704 && &term =~ '^screen'
+   if !has('nvim') && v:version >= 704 && &term =~? '^screen'
       " Odds are good that this is a modern tmux, so let's pick the best mouse-handling mode.
       set ttymouse=sgr
    endif
@@ -162,7 +164,7 @@ if has("mouse")
   "map <ScrollWheelDown> <C-E>
 endif
 
-if executable("ag")
+if executable('ag')
   "set grepprg=ag\ --nogroup\ --nocolor
    set grepprg=ag\ --vimgrep\ --nocolor
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
@@ -197,14 +199,16 @@ function! s:goyo_leave()
 endfunction
 
 " These autocmds self-unique, thanks to the `!`
-au! User GoyoEnter nested call <SID>goyo_enter()
-au! User GoyoLeave nested call <SID>goyo_leave()
+augroup goyo_enter_leave | au!
+   au User GoyoEnter nested call <SID>goyo_enter()
+   au User GoyoLeave nested call <SID>goyo_leave()
+augroup END
 
 "au FileType c,cpp nested :TagbarOpen
 "
 "
 " === Styles ===
-let g:solarized_visibility = "high"
+let g:solarized_visibility = 'high'
 
 " Colourize trailing whitespace
 hi ShowTrailingWhitespace ctermbg=Red guibg=Red
@@ -424,12 +428,14 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup coc_highlight | au!
+   autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup END
 
 " The global <Leader> is the spacebar. This primarily covers the EasyMotion invocations, but also
 " includes some other global-plugin features.
-let mapleader = " "
-let maplocalleader = ","
+let mapleader = ' '
+let maplocalleader = ','
 
 let g:EasyMotion_do_mapping = v:false
 " EasyMotion stomps:
@@ -480,7 +486,9 @@ function! s:unstartify()
    nnoremap <buffer><nowait><silent> P :call startify#set_batchmode('S')<cr>
 endfunction
 
-autocmd User Startified call s:unstartify()
+augroup unstartify | au!
+   autocmd User Startified call s:unstartify()
+augroup END
 
 "noremap  <silent> <F1>          :<C-u>NERDTreeTabsToggle<Return>
 "inoremap <silent> <F1>     <C-O>:<C-u>NERDTreeTabsToggle<Return>
@@ -700,7 +708,10 @@ let g:leader_key_map['_'] = {
  \ }
 
 " Mappings in Denite modals
-autocmd FileType denite call s:denite_my_settings()
+augroup denite_my_settings | au!
+   autocmd FileType denite call s:denite_my_settings()
+augroup END
+
 function! s:denite_my_settings() abort
    nnoremap <silent><buffer><expr>  <CR>     denite#do_map('do_action')
    nnoremap <silent><buffer><expr>  <Space>  denite#do_map('toggle_select').'j'
@@ -717,7 +728,10 @@ function! s:denite_my_settings() abort
    endif
 endfunction
 
-autocmd FileType denite-filter call s:denite_filter_my_settings()
+augroup denite_filter_my_settings | au!
+   autocmd FileType denite-filter call s:denite_filter_my_settings()
+augroup END
+
 function! s:denite_filter_my_settings() abort
    map  <silent><buffer>         <CR>        <Plug>(denite_filter_update)
    imap <silent><buffer>         <CR>        <Plug>(denite_filter_update)
@@ -907,19 +921,19 @@ augroup my-which-key | au!
    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 augroup END
 
-call which_key#register('<Space>', "g:leader_key_map")
+call which_key#register('<Space>', 'g:leader_key_map')
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
 
-call which_key#register(',', "g:localleader_key_map")
+call which_key#register(',', 'g:localleader_key_map')
 nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
 vnoremap <silent> <localleader> :<c-u>WhichKeyVisual  ','<CR>
 
-call which_key#register('g', "g:goto_key_map")
+call which_key#register('g', 'g:goto_key_map')
 nnoremap <silent> g :<c-u>WhichKey 'g'<CR>
 vnoremap <silent> g :<c-u>WhichKeyVisual 'g'<CR>
 
-call which_key#register('z', "g:fold_key_map")
+call which_key#register('z', 'g:fold_key_map')
 nnoremap <silent> z :<c-u>WhichKey 'z'<CR>
 vnoremap <silent> z :<c-u>WhichKeyVisual 'z'<CR>
 
@@ -975,10 +989,10 @@ let g:twiggy_remote_branch_sort = 'date'
 
 " #### editorconfig-vim
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
-let g:EditorConfig_max_line_indicator = "exceeding"
+let g:EditorConfig_max_line_indicator = 'exceeding'
 
 " #### ack.vim / Ripgrep
-if executable("rg")
+if executable('rg')
    let g:ackprg = 'rg --vimgrep --no-heading'
    set grepprg=rg\ --vimgrep\ --no-heading
    set grepformat=%f:%l:%c:%m,%f:%l:%m
@@ -996,8 +1010,11 @@ call denite#custom#option('_', {
 \  , 'filter-split-direction': 'floating'
 \ })
 
-autocmd VimEnter *   call s:denite_resized()
-autocmd VimResized * call s:denite_resized()
+augroup denite_resized | au!
+   autocmd VimEnter *   call s:denite_resized()
+   autocmd VimResized * call s:denite_resized()
+augroup END
+
 function! s:denite_resized() abort
    if &columns >= 200
       call denite#custom#option('_', { 'vertical_preview': v:true })
@@ -1109,7 +1126,7 @@ let g:lightline.tabline_separator =    {}
 let g:lightline.tabline_subseparator = {}
 
 let g:lightline.component = {
- \    'charvaluehex': "%2B",
+ \    'charvaluehex': '%2B',
  \    'lineinfo': "\uE0A1%-3l\uE0A3%-2v",
  \ }
 let g:lightline.component_function = {
@@ -1160,6 +1177,7 @@ function! HasWinDir()
 endfunction
 
 function! LightlineTabName(tabn)
+   let subsep = g:lightline.subseparator.left
    let twd = getcwd(-1, a:tabn)
 
    " Tab-local working directory (:tcd) component
@@ -1324,7 +1342,7 @@ function! LightlineFileencoding()
       return ''
 
    elseif winwidth(0) >=# g:lightline_thin_width
-      return &fileencoding !=# "" ? &fileencoding : &encoding " Always 'utf-8' in NeoVim
+      return &fileencoding !=# '' ? &fileencoding : &encoding " Always 'utf-8' in NeoVim
    else
       return ''
    endif
@@ -1402,7 +1420,7 @@ let g:hardtime_allow_different_key = v:true
 
 let g:list_of_insert_keys = []
 
-let g:hardtime_ignore_buffer_patterns = [ "[denite]" ]
+let g:hardtime_ignore_buffer_patterns = [ '[denite]' ]
 
 " #### pear-tree
 let g:pear_tree_map_special_keys = v:false
@@ -1419,26 +1437,26 @@ let g:gitgutter_eager = v:true
 let g:disable_key_mappings = v:true
 
 " Handle /opt/homebrew on Big Sur
-if filereadable("/opt/homebrew/bin/zsh")
-   let g:split_term_default_shell = "/opt/homebrew/bin/zsh"
+if filereadable('/opt/homebrew/bin/zsh')
+   let g:split_term_default_shell = '/opt/homebrew/bin/zsh'
 else
-   let g:split_term_default_shell = "/usr/local/bin/zsh"
+   let g:split_term_default_shell = '/usr/local/bin/zsh'
 endif
 
-if filereadable("/opt/homebrew/bin/python3")
-   let g:python3_host_prog = "/opt/homebrew/bin/python3"
+if filereadable('/opt/homebrew/bin/python3')
+   let g:python3_host_prog = '/opt/homebrew/bin/python3'
 else
-   let g:python3_host_prog = "/usr/local/bin/python3"
+   let g:python3_host_prog = '/usr/local/bin/python3'
 endif
 
 
 " #### merlin
-let g:merlin_completion_arg_type = "always"
+let g:merlin_completion_arg_type = 'always'
 let g:merlin_type_history_auto_open = 2
 
 " #### echodoc.vim
 let g:echodoc#enable_at_startup = v:true
-let g:echodoc#type = "floating"
+let g:echodoc#type = 'floating'
 
 " #### vim-textobj-...
 " this can (and maybe should?) be triggered per-filetype
@@ -1458,7 +1476,7 @@ let g:goto_key_map.o = 'open-uri'
 " #### ghcid
 " Use stack to find ghcid, as per:
 "    <https://github.com/ndmitchell/ghcid/issues/209>
-let g:ghcid_command = "stack exec ghcid -- --allow-eval"
+let g:ghcid_command = 'stack exec ghcid -- --allow-eval'
 
 let g:ghcid_keep_open = v:true
 

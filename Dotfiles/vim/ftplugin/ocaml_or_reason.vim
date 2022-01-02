@@ -8,7 +8,7 @@ set nofoldenable
 
 let g:merlin_disable_default_keybindings = v:true
 
-if &rtp =~ 'merlin'
+if &runtimepath =~? 'merlin'
    map  <silent> <buffer> <LocalLeader>*  <Plug>(MerlinSearchOccurrencesForward)
    map  <silent> <buffer> <LocalLeader>#  <Plug>(MerlinSearchOccurrencesBackward)
    map  <silent> <buffer> <LocalLeader>r  <Plug>(MerlinRename)
