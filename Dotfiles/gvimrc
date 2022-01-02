@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 " agimrLtT → acem
 set guioptions+=c go+=e go-=g go-=i go-=r go-=L go-=t go-=T
 

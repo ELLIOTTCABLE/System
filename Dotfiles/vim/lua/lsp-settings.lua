@@ -165,6 +165,10 @@ null_ls.setup {
       -- lua
       null_ls.builtins.formatting.stylua,
       null_ls.builtins.diagnostics.selene,
+
+      -- misc
+      null_ls.builtins.diagnostics.vint,
+      null_ls.builtins.diagnostics.yamllint,
    },
 }
 

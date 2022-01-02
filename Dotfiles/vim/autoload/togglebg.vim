@@ -7,7 +7,7 @@ endif
 let g:loaded_togglebg = v:true
 
 let s:cpoptions_save = &cpoptions
-set cpotions&vim
+set cpoptions&vim
 
 
 " NOTE: I really would rather use xolox#misc#msg#debug, but ... requiring the user to install
