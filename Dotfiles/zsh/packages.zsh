@@ -47,7 +47,6 @@ zplug hcgraf/zsh-sudo
 
 # The rest of these just offer additional completions
 zplug zsh-users/zsh-completions
-zplug akoenig/npm-run.plugin.zsh
 zplug vasyharan/zsh-brew-services
 zplug plugins/vagrant,        from:oh-my-zsh
 
