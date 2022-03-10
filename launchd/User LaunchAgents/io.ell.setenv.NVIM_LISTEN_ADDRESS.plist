@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      <key>Label</key>
+      <string>setenv.NVIM_LISTEN_ADDRESS</string>
+      <key>ProgramArguments</key>
+      <array>
+         <string>sh</string>
+         <string>-c</string>
+         <string>launchctl setenv NVIM_LISTEN_ADDRESS /tmp/nvimsocket</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>KeepAlive</key>
+      <true/>
+   </dict>
+</plist>
