@@ -14,9 +14,12 @@ mas "Pastebot", id: 1179623856
 mas "Xcode", id: 497799835
 
 # Binaries for Vim plugins:
-brew "shellcheck"
 brew "hadolint"
+brew "selene"
+brew "shellcheck"
+brew "stylua"
 brew "tidy-html5"
+brew "yamllint"
 
 # Everything else, except services
 # (Some Casks that I want to override MAS)
