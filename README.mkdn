@@ -56,19 +56,14 @@ Run `zplug update` in a new terminal to install those two, then restore the `, i
 
 ----
 
-Unfortunately, opam [isn't interested in fixing this](https://github.com/ocaml/opam/issues/3512).
-Have to manually add a *non-default path* to a ‘default’ switch, if I want to be able to install
-“global binaries” with opam (like `ocamlformat` or `patdiff`.)
-
-(Note that the first of these values is pulled out of my ass — i.e. you'll have to `opam switch
-create 'default'` first or something — but I've hard-coded the second into `~/.shenv` elsewhere in
-this repo.)
-
-    ln -s /Users/ec/.opam/default/bin ~/.bin/opam-default-switch-alias
-
-----
-
 Some Vim plugins require extra setup:
+
+ - Vim's hosts need to be installed. Node's will be installed via `nodenv-default-packages` above,
+   but Ruby and Python need to be installed manually for now:
+
+       pip3 install pynvim
+       sudo gem install neovim
+       # or possibly something with rbenv, if using that
 
  - My coc.nvim setup will use a few additional linters that need to be installed externally. Some
    are installed via the `nodenv default-packages install` command above; others need to come from

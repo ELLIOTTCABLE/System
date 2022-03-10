@@ -1,0 +1,12 @@
+# Installed by Bootstrap/ocaml.sh
+opam-version: "2.0"
+maintainer: "ELLIOTTCABLE"
+authors: [ "ELLIOTTCABLE" ]
+homepage: "https://github.com/ELLIOTTCABLE/System"
+bug-reports: "https://github.com/ELLIOTTCABLE/System/issues"
+depends: [
+  "dune"
+  "patdiff"
+  "ocamlformat"
+]
+synopsis: "DEFAULT PACKAGES"

@@ -13,6 +13,11 @@ Dotfiles/zsh/modules
 
 Dotfiles/ocp/ocp-build.prefs
 
+Dotfiles/opam/config
+Dotfiles/opam/config.lock
+Dotfiles/opam/lock
+Dotfiles/opam/*/
+
 Dotfiles/vim/undo
 Dotfiles/vim/.netrwhist
 Dotfiles/vim/spell/
