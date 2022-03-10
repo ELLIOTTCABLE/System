@@ -39,6 +39,15 @@ rbenv, nodenv, and their plugins must be installed manually:
     rbenv install 2.5.1                                # Or whatever,
     rbenv alias --auto
 
+The *ZSH modules* for those are sourced directly by my dotfiles, instead of being loaded by Zplug —
+but they must be *installed* via Zplug.
+
+Temporarily remove the `, if:"false"` stanzas in `~/.zsh/packages.zsh` for:
+ - `ELLIOTTCABLE/nodenv.plugin.zsh`
+ - `ELLIOTTCABLE/rbenv.plugin.zsh`
+
+Run `zplug update` in a new terminal to install those two, then restore the `, if:"false"` stanzas.
+
 ----
 
 Unfortunately, opam [isn't interested in fixing this](https://github.com/ocaml/opam/issues/3512).
