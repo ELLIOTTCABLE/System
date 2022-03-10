@@ -6,11 +6,8 @@ brew "mas"
 # Essentials
 # (See also: Brewfile.frontload)
 cask "syncthing"
-cask "vimr"
 cask "visual-studio-code"
-cask "moom"
-cask "firefox"
-cask "homebrew/cask-versions/firefox-beta"
+cask "homebrew/cask-versions/firefox-developer-edition"
 cask "bartender"
 
 mas "Pastebot", id: 1179623856
