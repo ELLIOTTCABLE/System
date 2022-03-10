@@ -1,0 +1,343 @@
+[
+  {
+    "uuid": "3baa759b-9afc-41ef-b770-c60e1d9383d2",
+    "description": "Filter rule to skip and prevent redirection tracking on multiple hosts.",
+    "tag": "filter-multiple",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*.tradedoubler.com",
+        "out.reddit.com",
+        "steamcommunity.com",
+        "www.pixiv.net"
+      ],
+      "path": [
+        "*url=*",
+        "jump.php?*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true
+  },
+  {
+    "title": "Remove FBCLID query parameters",
+    "uuid": "07be1337-4d49-475b-9062-8b191099621b",
+    "description": "Remove fbclid query parameters from requests. Facebook click identifier query parameters are commonly used as a method to analyze the origin of traffic.",
+    "tag": "filter-facebook",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*fbclid*"
+      ]
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "paramsFilter": {
+      "values": [
+        "fbclid"
+      ]
+    },
+    "skipRedirectionFilter": true
+  },
+  {
+    "title": "Remove UTM query parameters",
+    "uuid": "5276a290-b21a-4deb-a86e-aa54c3ff1bcc",
+    "description": "Remove UTM query parameters from requests. UTM query parameters are commonly used as a method to analyze the origin of traffic.",
+    "tag": "filter-utm",
+    "pattern": {
+      "scheme": "*",
+      "host": [
+        "*"
+      ],
+      "path": [
+        "*utm_*"
+      ]
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true,
+    "skipRedirectionFilter": true,
+    "paramsFilter": {
+      "values": [
+        "utm_*"
+      ]
+    }
+  },
+  {
+    "title": "Skip Mozilla's outgoing link redirection service",
+    "uuid": "3c4d6fa0-e2fb-4079-b3f0-e453ebe289ae",
+    "tag": "filter-mozilla",
+    "pattern": {
+      "scheme": "*",
+      "host": "outgoing.prod.mozaws.net",
+      "path": "*"
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true
+  },
+  {
+    "title": "Skip outgoing page confirmation on DeviantArt",
+    "uuid": "bc145190-0b68-4ff4-84d3-321e131cd253",
+    "tag": "filter-deviantArt",
+    "pattern": {
+      "scheme": "*",
+      "host": "*.deviantart.com",
+      "path": "*outgoing?*"
+    },
+    "types": [
+      "main_frame"
+    ],
+    "action": "filter",
+    "active": true
+  },
+  {
+    "title": "Stop Facebook's outgoing link redirection service tracking",
+    "uuid": "07be1337-ceec-4a93-a49e-67e051124a7f",
+    "description": "This filter rule prevents Facebook from obtaining the URL of clicked search link via URL redirection.",
+    "tag": "filter-facebook",
+    "pattern": {
+      "scheme": "*",
+      "host": "l.facebook.*",
+      "topLevelDomains": [
+        "com",
+        "net"
+      ],
+      "path": "l.php?u=*"
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "active": true
+  },
+  {
+    "title": "Stop Google search link tracking",
+    "uuid": "60f46cfa-b906-4a2d-ab66-8f26dc35e97f",
+    "description": "This filter rule prevents Google from obtaining the URL of clicked search link via URL redirection. The tracking request done in background is classified as a Sub Document type. This rule provides an example of using the top-level domains pattern.",
+    "tag": "filter-google",
+    "pattern": {
+      "scheme": "*",
+      "host": "*.google.*",
+      "topLevelDomains": [
+        "com",
+        "ad",
+        "ae",
+        "com.af",
+        "com.ag",
+        "com.ai",
+        "al",
+        "am",
+        "co.ao",
+        "com.ar",
+        "as",
+        "at",
+        "com.au",
+        "az",
+        "ba",
+        "com.bd",
+        "be",
+        "bf",
+        "bg",
+        "com.bh",
+        "bi",
+        "bj",
+        "com.bn",
+        "com.bo",
+        "com.br",
+        "bs",
+        "bt",
+        "co.bw",
+        "by",
+        "com.bz",
+        "ca",
+        "cd",
+        "cf",
+        "cg",
+        "ch",
+        "ci",
+        "co.ck",
+        "cl",
+        "cm",
+        "cn",
+        "com.co",
+        "co.cr",
+        "com.cu",
+        "cv",
+        "com.cy",
+        "cz",
+        "de",
+        "dj",
+        "dk",
+        "dm",
+        "com.do",
+        "dz",
+        "com.ec",
+        "ee",
+        "com.eg",
+        "es",
+        "com.et",
+        "fi",
+        "com.fj",
+        "fm",
+        "fr",
+        "ga",
+        "ge",
+        "gg",
+        "com.gh",
+        "com.gi",
+        "gl",
+        "gm",
+        "gp",
+        "gr",
+        "com.gt",
+        "gy",
+        "com.hk",
+        "hn",
+        "hr",
+        "ht",
+        "hu",
+        "co.id",
+        "ie",
+        "co.il",
+        "im",
+        "co.in",
+        "iq",
+        "is",
+        "it",
+        "je",
+        "com.jm",
+        "jo",
+        "co.jp",
+        "co.ke",
+        "com.kh",
+        "ki",
+        "kg",
+        "co.kr",
+        "com.kw",
+        "kz",
+        "la",
+        "com.lb",
+        "li",
+        "lk",
+        "co.ls",
+        "lt",
+        "lu",
+        "lv",
+        "com.ly",
+        "co.ma",
+        "md",
+        "me",
+        "mg",
+        "mk",
+        "ml",
+        "com.mm",
+        "mn",
+        "ms",
+        "com.mt",
+        "mu",
+        "mv",
+        "mw",
+        "com.mx",
+        "com.my",
+        "co.mz",
+        "com.na",
+        "com.nf",
+        "com.ng",
+        "com.ni",
+        "ng",
+        "ne",
+        "nl",
+        "no",
+        "com.np",
+        "nr",
+        "nu",
+        "co.nz",
+        "com.om",
+        "com.pa",
+        "com.pe",
+        "com.pg",
+        "com.ph",
+        "com.pk",
+        "pl",
+        "pn",
+        "com.pr",
+        "ps",
+        "pt",
+        "com.py",
+        "com.qa",
+        "ro",
+        "ru",
+        "rw",
+        "com.sa",
+        "com.sb",
+        "sc",
+        "se",
+        "com.sg",
+        "sh",
+        "si",
+        "sk",
+        "com.sl",
+        "sn",
+        "so",
+        "sm",
+        "sr",
+        "st",
+        "com.sv",
+        "td",
+        "tg",
+        "co.th",
+        "com.tj",
+        "tk",
+        "tl",
+        "tm",
+        "tn",
+        "to",
+        "com.tr",
+        "tt",
+        "com.tw",
+        "co.tz",
+        "com.ua",
+        "co.ug",
+        "co.uk",
+        "com.uy",
+        "co.uz",
+        "com.vc",
+        "co.ve",
+        "vg",
+        "co.vi",
+        "com.vn",
+        "vu",
+        "ws",
+        "rs",
+        "co.za",
+        "co.zm",
+        "co.zw",
+        "cat"
+      ],
+      "path": "url?*"
+    },
+    "types": [
+      "main_frame",
+      "sub_frame"
+    ],
+    "action": "filter",
+    "redirectDocument": true,
+    "active": true
+  }
+]
