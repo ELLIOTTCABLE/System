@@ -1,5 +1,11 @@
 Notes
 -----
+Install Homebrew packages:
+
+    brew bundle
+
+----
+
 Run before using home/.gitignore:
 
     $ git config --global core.excludesfile ~/.gitignore
@@ -66,15 +72,9 @@ Some Vim plugins require extra setup:
 
  - My coc.nvim setup will use a few additional linters that need to be installed externally. Some
    are installed via the `nodenv default-packages install` command above; others need to come from
-   Homebrew etc:
+   Homebrew (via `brew bundle` above) etc:
 
-       brew install languagetool shellcheck hadolint tidy-html5
        pip3 install vim-vint
-
- - LanguageTool can also, optionally, use an additional **8GB** (o_o) of n-gram language-data.
-   Details here:
-
-   <https://dev.languagetool.org/finding-errors-using-n-gram-data>
 
  - CoffeeTags requires the `coffeetags` gem to be installed globally (beware `rvm`!):
 
@@ -125,10 +125,9 @@ Some Vim plugins require extra setup:
 
 GnuPG (of effin' course) needs a lot of custom setup.
 
-1. First off, Tor is configured in my configuration to requst keys over Tor. This means installing
-   tor.
+1. First off, Tor is configured in my configuration to requst keys over Tor. This means starting
+   tor (which was already installed by the above `brew bundle`):
 
-        brew install tor
         brew services start tor
 
 2. As described [here](https://riseup.net/en/security/message-security/openpgp/best-practices), a
