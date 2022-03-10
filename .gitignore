@@ -1,7 +1,8 @@
 # See also: Dotfiles/config/.gitignore,
 #   Dotfiles/config/configstore/.gitignore
 
-Brewfile.lock.json
+Bootstrap/Brewfile.lock.json
+Bootstrap/Brewfile.frontload.lock.json
 
 Dotfiles/ssh/known_hosts*
 Dotfiles/ssh/.identity*
