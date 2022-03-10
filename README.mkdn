@@ -1,8 +1,8 @@
 Notes
 -----
-Install Homebrew packages:
+Install Homebrew packages, symlink all of this config, etc:
 
-    brew bundle
+    rake
 
 ----
 

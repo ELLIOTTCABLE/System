@@ -1,21 +1,10 @@
 # Homebrew features
 tap "homebrew/cask"
-tap "buo/cask-upgrade" # brew cu
+tap "buo/cask-upgrade"
 brew "mas"
 
 # Essentials
-cask "little-snitch"
-cask "karabiner-elements"
-cask "1password"
-
-brew "git"
-brew "zsh"
-brew "neovim"
-brew "coreutils"
-brew "moreutils"
-brew "dash"
-brew "dhall-json"
-
+# (See also: Brewfile.frontload)
 cask "syncthing"
 cask "vimr"
 cask "visual-studio-code"

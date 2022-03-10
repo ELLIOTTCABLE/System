@@ -3,7 +3,7 @@ require 'fileutils'
 task :default => :setup
 
 desc '(DEFAULT) Set up a new machine'
-task :setup => [:hooks, :submodules, :dotfiles] do
+task :setup => [:brew_frontload, :hooks, :submodules, :dotfiles, :brew] do
 end
 
 desc 'Install the git hooks'
@@ -69,4 +69,16 @@ task :symlink do
 
     FileUtils.symlink(from, to)
   end
+end
+
+desc 'Install the rest of the Homebrew packages and Mac App Store apps'
+task :brew_frontload do
+   system "brew bundle --file='" + Dir.pwd+'/Bootstrap/Brewfile.frontload' + "'"
+   fail "Error: #{$?}" unless $?.success?
+end
+
+desc 'Install the rest of the Homebrew packages and Mac App Store apps'
+task :brew => :brew_frontload do
+   system "brew bundle --file='" + Dir.pwd+'/Bootstrap/Brewfile' + "'"
+   fail "Error: #{$?}" unless $?.success?
 end

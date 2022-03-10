@@ -1,0 +1,15 @@
+tap "homebrew/cask"
+tap "buo/cask-upgrade"
+brew "mas"
+
+cask "little-snitch"
+cask "karabiner-elements"
+cask "1password"
+
+brew "git"
+brew "zsh"
+brew "neovim"
+brew "coreutils"
+brew "moreutils"
+brew "dash"
+brew "dhall-json"
