@@ -1,4 +1,6 @@
-# See also: Dotfiles/config/configstore/.gitignore
+# See also: root-level .gitignore,
+#   Dotfiles/config/configstore/.gitignore,
+#   Dotfiles/config/Code/.gitignore
 
 .mono/certs
 

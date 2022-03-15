@@ -1,5 +1,6 @@
 # See also: Dotfiles/config/.gitignore,
-#   Dotfiles/config/configstore/.gitignore
+#   Dotfiles/config/configstore/.gitignore,
+#   Dotfiles/config/Code/.gitignore
 
 Bootstrap/Brewfile.lock.json
 Bootstrap/Brewfile.frontload.lock.json

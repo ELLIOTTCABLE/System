@@ -1,6 +1,10 @@
+// vim: ft=jsonc
 {
-   "extensions.showRecommendationsOnlyOnDemand": true,
-   "telemetry.enableTelemetry": false,
+   "extensions.ignoreRecommendations": true,
+   "telemetry.telemetryLevel": "error",
+
+   "settingsSync.ignoredSettings": [],
+   "settingsSync.ignoredExtensions": ["ms-vscode.mono-debug", "icrawl.discord-vscode"],
 
    // Basics
    // ======
@@ -14,7 +18,6 @@
    "editor.suggest.shareSuggestSelections": true,
 
    "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-   "workbench.useExperimentalGridLayout": true,
    "window.titleBarStyle": "native",
    "window.nativeTabs": true,
    "workbench.editor.showTabs": false,
@@ -26,13 +29,12 @@
    "window.newWindowDimensions": "inherit",
    "window.openWithoutArgumentsInNewWindow": "on",
 
-   "workbench.editor.closeOnFileDelete": true,
-   "workbench.statusBar.feedback.visible": false,
+   // "workbench.editor.closeOnFileDelete": true,
+   "workbench.editor.untitled.hint": "hidden",
 
    "files.autoSave": "onFocusChange",
    "files.insertFinalNewline": true,
    "files.trimFinalNewlines": true,
-   "files.useExperimentalFileWatcher": true,
 
    // Appearance
    // ===========
@@ -50,11 +52,6 @@
    "editor.cursorStyle": "underline-thin",
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
    "terminal.integrated.cursorBlinking": true,
-
-   // Settings sync
-   // =============
-   "sync.autoDownload": true,
-   "sync.autoUpload": true,
 
    // Vim keybindings
    // ===============
@@ -118,11 +115,9 @@
    "search.quickOpen.includeSymbols": true,
    "search.smartCase": true,
    "search.useGlobalIgnoreFiles": true,
-   "search.usePCRE2": true,
 
    // Specific languages and features
    // ===============================
-
    // ### Filetypes and file-specific settings
    "files.associations": {
       "dune-project": "dune",
@@ -149,14 +144,14 @@
    "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
    "gitlens.currentLine.scrollable": false,
    "gitlens.hovers.annotations.over": "annotation",
-   "gitlens.insiders": true,
    "gitlens.mode.statusBar.enabled": false,
-   "gitlens.statusBar.enabled": false,
+   "gitlens.advanced.messages": {
+      "suppressLineUncommittedWarning": true
+   },
 
    // ### Auto-formatting
    "formattingToggle.activateFor": ["formatOnPaste", "formatOnSave", "formatOnType"],
    "editor.formatOnPaste": true,
-   "editor.formatOnSave": true,
    "editor.formatOnType": true,
 
    // ### Prettier
@@ -167,28 +162,26 @@
    "prettier.bracketSpacing": true,
    "prettier.semi": false,
    "prettier.ignorePath": ".prettierignore",
+   "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+   },
+   "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+   },
 
    // ### ESLint
-   "eslint.provideLintTask": true,
+   "eslint.lintTask.enable": true,
 
    // ### Rewrap (comment-wrapping)
    "rewrap.autoWrap.enabled": false,
    "rewrap.wholeComment": false,
 
-   // ### NPM
-   "npm.enableScriptExplorer": true,
-
    // Using Vim mappings, above.
    "gitlens.keymap": "none",
 
-   // Automatically remove indentation in empty lines on save
+   // Mimic Vim's trailing-whitespace behaviour
    "emptyIndent.removeIndent": true,
-   // Highlight indent on empty lines
    "emptyIndent.highlightIndent": true,
-   // Highlight indent color
-   // "emptyIndent.highlightColor": "rgba(246,36,89,0.6)",
-   // Excluded file types
-   // "emptyIndent.exclude": [".md"]
 
    // ### Setting Toggle
    "toggle.setting1Title": "editor.fontLigatures",
@@ -202,7 +195,28 @@
    // ### ReasonML
    "reason.diagnostics.tools": ["merlin", "bsb"],
    "reason.codelens.enabled": true,
-   "reason.format.width": 90
+   "reason.format.width": 90,
+
+   // ### C#, ASP.NET, etc
+   "omnisharp.useGlobalMono": "always",
+   "omnisharp.loggingLevel": "debug",
+   "razor.languageServer.debug": true,
+
+   // Other extensions and non-language-specific features
+   // ==================================================
+   // ### Leetcode
+   "leetcode.hint.configWebviewMarkdown": false,
+   "leetcode.showDescription": "Both",
+   "leetcode.defaultLanguage": "javascript",
+   "leetcode.enableStatusBar": false,
+   "leetcode.hint.commentDescription": false,
+   "leetcode.hint.setDefaultLanguage": false,
+   "leetcode.hint.commandShortcut": false,
+   "leetcode.hideSolved": true,
+
+   // ### TabNine
+   "tabnine.experimentalAutoImports": true,
+   "tabnine.receiveBetaChannelUpdates": true,
 
    // ### Finally, don't commit changes below this line:
 
