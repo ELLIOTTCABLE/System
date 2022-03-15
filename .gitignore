@@ -4,6 +4,8 @@
 Bootstrap/Brewfile.lock.json
 Bootstrap/Brewfile.frontload.lock.json
 
+Dotfiles/git/config.local
+
 Dotfiles/ssh/ahrefs/
 Dotfiles/ssh/config.local
 Dotfiles/ssh/identities/ahrefs/config

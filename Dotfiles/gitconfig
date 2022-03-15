@@ -116,3 +116,6 @@
 	trustExitCode = true
 [init]
 	defaultBranch = main
+
+[include]
+	path = ~/.git/config.local
