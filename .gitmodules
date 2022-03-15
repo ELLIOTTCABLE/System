@@ -103,3 +103,7 @@
 [submodule "Dotfiles/vim/bundle/ListToggle"]
 	path = Dotfiles/vim/bundle/ListToggle
 	url = https://github.com/Valloric/ListToggle.git
+[submodule "Vendor/ssh-ident"]
+	path = Vendor/ssh-ident
+	url = https://github.com/ssh-ident/ssh-ident1
+	branch = dev

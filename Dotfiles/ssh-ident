@@ -1,0 +1,10 @@
+# vim: set ft=bash :
+MATCH_ARGV = [
+  [r"febox.$", "ahrefs"],
+  [r"\s(git@)?github\.com\s.*'ahrefs\/.+\.git'", "ahrefs"],
+  [r"^(git@)?git\.ahrefs\.com$", "ahrefs"],
+  [r"\s(git@)?github\.com\s.*'ELLIOTTCABLE\/.+\.git'", "personal"],
+  [r"^(git@)?(gist\.)?github\.com$", "personal"],
+]
+
+DEFAULT_IDENTITY = "MISSING_IDENTITY"

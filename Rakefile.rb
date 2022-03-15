@@ -18,11 +18,13 @@ task :submodules do
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/backup')
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/vim/undo')
    FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/ssh/sockets')
+   FileUtils.mkdir_p(Dir.pwd+'/Dotfiles/ssh/identities')
 end
 
 desc 'Installs dotfiles from this distribution for the first time'
 task :dotfiles => :symlink do
-   system "chmod 700 " + Dir.pwd+'/Dotfiles/ssh'
+   system "chmod -R u=rwX,go= " + Dir.pwd+'/Dotfiles/ssh'
+   system "chmod u=rwX,go= " + Dir.pwd+'/Dotfiles/gnupg'
 end
 
 desc 'Symlink dotfiles/dotdirs into home directory'

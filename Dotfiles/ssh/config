@@ -7,27 +7,24 @@ Compression yes
 EscapeChar none
 
 ControlMaster auto
-ControlPath ~/.ssh/sockets/%r@%h:%p.sock
+ControlPath ~/.ssh/controls/%r@%h:%p.sock
 ControlPersist 30
+
+Host *
+  UseKeychain yes
+  AddKeysToAgent ask
+  # IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host ell.io *.ell.io Kim.local
    User elliottcable
    IdentitiesOnly yes
    IdentityFile /Volumes/Identity/identity
    ForwardAgent yes
-   # This is currently broken; I get “Bad configuration option: KeychainIntegration”
- # KeychainIntegration no # implies...
- ##AskPassGUI no
 
 Host Redshirt.local
    User elliottcable
    IdentitiesOnly yes
    IdentityFile ~/.identity.insecure
 
-Host *
-   IdentityFile ~/.identity.insecure
-
-#~# --Begin HandyLight--
-#~Host *
-#~   ProxyCommand /usr/bin/nc -x 13.37.13.37:1337 %h %p
-#~# --End HandyLight--
+Match all
+   Include config.local

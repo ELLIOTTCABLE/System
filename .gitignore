@@ -4,11 +4,17 @@
 Bootstrap/Brewfile.lock.json
 Bootstrap/Brewfile.frontload.lock.json
 
+Dotfiles/ssh/ahrefs/
+Dotfiles/ssh/config.local
+Dotfiles/ssh/identities/ahrefs/config
+
 Dotfiles/ssh/known_hosts*
-Dotfiles/ssh/.identity*
+Dotfiles/ssh/identity*
 Dotfiles/ssh/id_*
 Dotfiles/ssh/*_rsa*
-Dotfiles/ssh/sockets/*
+Dotfiles/ssh/identities/*/identity*
+Dotfiles/ssh/controls/
+Dotfiles/ssh/agents/
 
 Dotfiles/zsh/modules
 
@@ -29,3 +35,4 @@ Dotfiles/irssi/logs-*.tar.gz
 Dotfiles/jupyter/nbconfig/
 
 Dotfiles/gnupg/.#*.*.*
+Dotfiles/gnupg/random_seed
