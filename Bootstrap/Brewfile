@@ -41,7 +41,6 @@ mas "Geofency", id: 615538630
 mas "Harvest", id: 506189836
 mas "Hex Fiend", id: 1342896380
 mas "Internet Access Policy Viewer", id: 1482630322
-mas "Lingon 3", id: 450201424
 mas "Pasteboard Viewer", id: 1499215709
 mas "PCalc", id: 403504866
 mas "Pixea", id: 1507782672
@@ -126,6 +125,7 @@ cask "dotnet-sdk"
 cask "google-chrome"
 cask "ilspy"
 cask "kaleidoscope"
+cask "lingon-x"
 cask "mono-mdk"
 cask "monodraw"
 cask "notion"
