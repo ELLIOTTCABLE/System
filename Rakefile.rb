@@ -1,9 +1,34 @@
 require 'fileutils'
 
+# Thanks, StackOverflow
+# <https://stackoverflow.com/a/171011/31897>
+module OS
+   def OS.windows?
+      (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+   end
+ 
+   def OS.mac?
+      (/darwin/ =~ RUBY_PLATFORM) != nil
+   end
+ 
+   def OS.unix?
+      !OS.windows?
+   end
+ 
+   def OS.linux?
+      OS.unix? and not OS.mac?
+   end
+end
+
 task :default => :setup
 
 desc '(DEFAULT) Set up a new machine'
-task :setup => [:brew_frontload, :hooks, :submodules, :dotfiles, :brew] do
+if OS.mac?
+   task :setup => [:brew_frontload, :hooks, :submodules, :dotfiles, :brew] do
+   end
+elsif OS.unix?
+   task :setup => [:hooks, :submodules, :dotfiles] do
+   end
 end
 
 desc 'Install the git hooks'
