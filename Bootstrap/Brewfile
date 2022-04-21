@@ -43,6 +43,7 @@ mas "Hex Fiend", id: 1342896380
 mas "Internet Access Policy Viewer", id: 1482630322
 mas "Pasteboard Viewer", id: 1499215709
 mas "PCalc", id: 403504866
+mas "PDF Expert", id: 1055273043
 mas "Pixea", id: 1507782672
 mas "Reeder", id: 1529448980
 mas "Soulver 3", id: 1508732804
@@ -128,6 +129,7 @@ cask "kaleidoscope"
 cask "lingon-x"
 cask "mono-mdk"
 cask "monodraw"
+cask "nightowl"
 cask "notion"
 cask "omnigraffle"
 cask "rescuetime"
