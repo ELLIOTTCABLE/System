@@ -834,6 +834,9 @@ augroup filetypes | au!
    au BufNewFile,BufFilePre,BufRead {*profile,*zlogin,*zlogout,*shrc,*shenv}
     \ set filetype=zsh
 
+   au BufNewFile,BufFilePre,BufRead *.code-workspace
+    \ set filetype=json5
+
    " Like, I'm supposed to put these in separate files, but lol no thx?
    au FileType gitcommit set wrap tw=0
 
