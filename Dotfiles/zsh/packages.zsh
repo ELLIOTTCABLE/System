@@ -39,8 +39,6 @@ zplug ELLIOTTCABLE/rbenv.plugin.zsh, if:"false"
 
 #zplug marzocchi/zsh-notify,   if:"(( $+commands[terminal-notifier] ))"
 
-zplug oz/safe-paste
-
 # “This plugin toggles "sudo" before the current/previous command by pressing [ESC][ESC] in emacs
 #  -mode or vi-command mode.”
 zplug hcgraf/zsh-sudo
