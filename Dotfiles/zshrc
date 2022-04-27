@@ -109,31 +109,30 @@ zplug load
 # = Key bindings =
 # ================
 
-bindkey           '' clear-screen
-bindkey -M vicmd  '' clear-screen
-
 # Link the ‘viins’ keymap to the ‘main’ keymap, and activate it
-bindkey -A viins main
+bindkey -v
 
-# ‘up/down-line-or-search’ only utilizes the first “word” of the current line;
-# I much prefer it utilizing the entire contents of the line prior to the
-# insertion point (the operation of ‘history-beginning-search-forward/
-# backward’). Until this is fixed, we’ll disable multi–line editing.
-#bindkey '\e[A' up-line-or-search
-#bindkey '\e[B' down-line-or-search
-# However, we still need SINGLE_LINE_ZLE to be unset, so RPROMPT and such work
-unsetopt SINGLE_LINE_ZLE
-bindkey '\e[A' history-beginning-search-backward
-bindkey '\e[B' history-beginning-search-forward
+bindkey    '' clear-screen
+bindkey -a '' clear-screen
+
+# up/down arrows
+# <https://unix.stackexchange.com/a/691482/12095>
+for direction (up down) {
+  autoload $direction-line-or-beginning-search
+  zle -N $direction-line-or-beginning-search
+  key=$terminfo[kcu$direction[1]1]
+  for key ($key ${key/O/[})
+    bindkey $key $direction-line-or-beginning-search
+}
 
 # Allow `!` in command-mode to open the current command-line in a full vim:
 nvim-command-line () {
    local VISUAL='nvim'
    edit-command-line
 }
-autoload edit-command-line && {
+autoload -Uz edit-command-line && {
    zle -N nvim-command-line
-   bindkey -M vicmd ! nvim-command-line
+   bindkey -a ! nvim-command-line
 }
 
 # zsh-surround
@@ -156,13 +155,22 @@ for m in visual viopp; do
 done
 
 # select-bracketed
-autoload -U select-bracketed
+autoload -Uz select-bracketed
 zle -N select-bracketed
 for m in visual viopp; do
    for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
       bindkey -M $m $c select-bracketed
    done
 done
+# here to fix syntax-highlighting of this file in VSCode: '
+
+# copy-earlier-word
+# <https://leahneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html>
+autoload -Uz copy-earlier-word && {
+   zle -N copy-earlier-word
+   bindkey -v '≤' copy-earlier-word # Alt-, on maccOS
+}
+bindkey -v '≥' insert-last-word # Alt-. on maccOS
 
 # ==========
 # = Prompt =
@@ -215,6 +223,12 @@ export DISABLE_AUTO_TITLE='true'
 # ==============================
 # = Other module configuration =
 # ==============================
+
+# ### url-quote-magic
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
 
 # ### junegunn/fzf
 # NOTE: these apply to `fzf` in general, not just the zsh functionality; I'm not sure whether to
