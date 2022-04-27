@@ -323,6 +323,3 @@ if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
     exec 2>&3 3>&-
 fi
-
-# opam configuration
-test -r /Users/ec/.opam/opam-init/init.zsh && . /Users/ec/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
