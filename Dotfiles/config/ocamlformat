@@ -10,8 +10,6 @@ space-around-arrays = true
 space-around-lists = true
 space-around-variants = true
 
-let-open = auto
-
 indicate-nested-or-patterns = unsafe-no
 break-cases = fit-or-vertical
 break-sequences = true
