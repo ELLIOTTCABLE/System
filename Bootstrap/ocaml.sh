@@ -18,4 +18,4 @@ opam switch create _globals --empty --no-switch \
 
 opam install --working-dir --deps-only --set-root --best-effort \
   --switch=_globals \
-  "$SCRIPTPATH/../Dotfiles/opam/default-packages.opam"
+  "$SCRIPTPATH/../Dotfiles/opam/default-packages/default-packages.opam"
