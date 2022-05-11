@@ -175,10 +175,8 @@ bindkey -v '≥' insert-last-word # Alt-. on maccOS
 # ==========
 # = Prompt =
 # ==========
-PURE_PROMPT_SYMBOL_COLOR='157'   # purer-prompt addition
+zstyle :prompt:pure:prompt:success color green
 PURE_CMD_MAX_EXEC_TIME='3'
-PURE_GIT_DOWN_ARROW='⟱ '
-PURE_GIT_UP_ARROW='⟰ '
 
 # Forces *all* new line editors to start in vicmd mode instead of viins mode.
 #function zle-line-init {

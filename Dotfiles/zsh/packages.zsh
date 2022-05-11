@@ -1,5 +1,5 @@
 zplug mafredri/zsh-async,     from:github
-zplug dfurnes/purer,          from:github, use:pure.zsh, as:theme
+zplug sindresorhus/pure,      from:github, use:pure.zsh, as:theme
 
 # Steal omz's termsupport for Apple Terminal. (Hacky as fuck; will have to watch to see if this
 # changes.)
