@@ -1,39 +1,39 @@
 [submodule "Dotfiles/vim/bundle/vim-fugitive"]
 	path = Dotfiles/vim/bundle/vim-fugitive
-	url = git://github.com/tpope/vim-fugitive.git
+	url = https://github.com/tpope/vim-fugitive.git
 [submodule "Dotfiles/vim/bundle/vim-colors-solarized"]
 	path = Dotfiles/vim/bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
+	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "Dotfiles/vim/bundle/nerdcommenter"]
 	path = Dotfiles/vim/bundle/nerdcommenter
-	url = git://github.com/scrooloose/nerdcommenter.git
+	url = https://github.com/scrooloose/nerdcommenter.git
 [submodule "Dotfiles/vim/bundle/vim-surround"]
 	path = Dotfiles/vim/bundle/vim-surround
-	url = git://github.com/tpope/vim-surround.git
+	url = https://github.com/tpope/vim-surround.git
 [submodule "Dotfiles/vim/bundle/command-t"]
 	path = Dotfiles/vim/bundle/command-t
 	url = https://github.com/wincent/command-t.git
 [submodule "Dotfiles/vim/bundle/vim-indent-guides"]
 	path = Dotfiles/vim/bundle/vim-indent-guides
-	url = git://github.com/nathanaelkane/vim-indent-guides.git
+	url = https://github.com/nathanaelkane/vim-indent-guides.git
 [submodule "Dotfiles/vim/bundle/vim-vividchalk"]
 	path = Dotfiles/vim/bundle/vim-vividchalk
-	url = git://github.com/tpope/vim-vividchalk.git
+	url = https://github.com/tpope/vim-vividchalk.git
 [submodule "Dotfiles/vim/bundle/gist-vim"]
 	path = Dotfiles/vim/bundle/gist-vim
-	url = git://github.com/mattn/gist-vim.git
+	url = https://github.com/mattn/gist-vim.git
 [submodule "Dotfiles/irssi/irssi-colors-solarized"]
 	path = Dotfiles/irssi/irssi-colors-solarized
-	url = git://github.com/lkraav/irssi-colors-solarized.git
+	url = https://github.com/lkraav/irssi-colors-solarized.git
 [submodule "Dotfiles/vim/bundle/gundo"]
 	path = Dotfiles/vim/bundle/gundo
-	url = git://github.com/sjl/gundo.vim.git
+	url = https://github.com/sjl/gundo.vim.git
 [submodule "Dotfiles/vim/bundle/autoclose.vim"]
 	path = Dotfiles/vim/bundle/autoclose.vim
-	url = git://github.com/korpz/Autoclose-vim.git
+	url = https://github.com/korpz/Autoclose-vim.git
 [submodule "Dotfiles/vim/bundle/vim-arpeggio"]
 	path = Dotfiles/vim/bundle/vim-arpeggio
-	url = git://github.com/kana/vim-arpeggio.git
+	url = https://github.com/kana/vim-arpeggio.git
 [submodule "Dotfiles/vim/bundle/vim-coffee-script"]
 	path = Dotfiles/vim/bundle/vim-coffee-script
 	url = https://github.com/kchmck/vim-coffee-script.git
@@ -42,10 +42,10 @@
 	url = https://github.com/alunny/pegjs-vim
 [submodule "Dotfiles/vim/bundle/vim-unimpaired"]
 	path = Dotfiles/vim/bundle/vim-unimpaired
-	url = git://github.com/tpope/vim-unimpaired.git
+	url = https://github.com/tpope/vim-unimpaired.git
 [submodule "Dotfiles/vim/bundle/mustache"]
 	path = Dotfiles/vim/bundle/mustache
-	url = git://github.com/mustache/vim-mustache-handlebars.git
+	url = https://github.com/mustache/vim-mustache-handlebars.git
 [submodule "Dotfiles/vim/bundle/vim-openscad"]
 	path = Dotfiles/vim/bundle/vim-openscad
 	url = https://github.com/sirtaj/vim-openscad.git
@@ -75,7 +75,7 @@
 	url = https://github.com/lervag/vimtex.git
 [submodule "Dotfiles/vim/bundle/mediawiki.vim"]
 	path = Dotfiles/vim/bundle/mediawiki.vim
-	url = git://github.com/chikamichi/mediawiki.vim.git
+	url = https://github.com/chikamichi/mediawiki.vim.git
 [submodule "Dotfiles/jupyter/IPython-notebook-extensions"]
 	path = Dotfiles/jupyter/IPython-notebook-extensions
 	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
