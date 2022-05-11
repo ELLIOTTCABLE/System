@@ -1,3 +1,2 @@
-(lang dune 1.0)
-(display short)
-(jobs 8)
+(lang dune 2.0)
+(cache enabled)
