@@ -1,5 +1,6 @@
 // vim: ft=jsonc
 {
+   "workbench.hover.delay": 100,
    "extensions.ignoreRecommendations": true,
    "telemetry.telemetryLevel": "error",
 
@@ -9,8 +10,7 @@
    // Basics
    // ======
    "editor.tabSize": 3,
-   "editor.wrappingIndent": "none",
-   "editor.wordWrap": "bounded",
+   "editor.wrappingIndent": "deepIndent",
    "editor.wordWrapColumn": 120,
    "editor.rulers": [90, 70, 80, 100],
    "editor.copyWithSyntaxHighlighting": false,
@@ -20,9 +20,7 @@
    "workbench.startupEditor": "welcomePageInEmptyWorkbench",
    "window.titleBarStyle": "native",
    "window.nativeTabs": true,
-   "workbench.editor.showTabs": false,
    "editor.renderLineHighlight": "all",
-   "editor.minimap.showSlider": "always",
    "breadcrumbs.enabled": true,
 
    "window.closeWhenEmpty": true,
@@ -36,21 +34,18 @@
    "files.insertFinalNewline": true,
    "files.trimFinalNewlines": true,
 
-   // Appearance
-   // ===========
-   "workbench.colorTheme": "Solarized Light",
-   "workbench.iconTheme": "keen-neutral-icon-theme",
-
    // @sync os=mac
-   "editor.fontFamily": "'Iosevka Nerd Font', monospace",
+   "editor.fontFamily": "'Fantasque Sans Mono', monospace",
    // @sync os=windows
    // "editor.fontFamily": "'Iosevka'",
+   "editor.codeLensFontFamily": "'Iosevka Nerd Font', monospace",
+   "terminal.integrated.fontFamily": "Fantasque Sans Mono",
+
    "workbench.fontAliasing": "auto",
    "explorer.decorations.colors": false,
    "editor.fontLigatures": true,
-   "editor.fontSize": 13,
+   "editor.fontSize": 14,
    "editor.cursorStyle": "underline-thin",
-   "terminal.integrated.fontFamily": "Fantasque Sans Mono",
    "terminal.integrated.cursorBlinking": true,
 
    // Vim keybindings
@@ -92,26 +87,33 @@
       {
          "before": ["<leader>", "h", "s"],
          "commands": ["git.stageSelectedRanges"]
-      }
+      },
+
+      // ### Terminal-mappings
+      // (See also: keybinds.json)
+   ],
+   "terminal.integrated.commandsToSkipShell": [
+      "workbench.action.focusRightGroup",
+      "workbench.action.focusLeftGroup",
+      "workbench.action.focusAboveGroup",
+      "workbench.action.focusBelowGroup",
    ],
 
    // Other vim
    // ==========
    "vim.easymotion": true,
-   "vim.camelCaseMotion.enable": true,
    "vim.incsearch": true,
    "vim.useSystemClipboard": true,
    "vim.useCtrlKeys": true,
    "vim.hlsearch": true,
    "vim.leader": "<space>",
    "vim.handleKeys": {
-      "<C-a>": false,
       "<C-f>": false
    },
 
    // Navigation & search
    // ===================
-   "explorer.sortOrder": "modified",
+   "explorer.sortOrder": "mixed",
    "search.quickOpen.includeSymbols": true,
    "search.smartCase": true,
    "search.useGlobalIgnoreFiles": true,
@@ -123,6 +125,21 @@
       "dune-project": "dune",
       "*.locked": "ocaml.opam",
       "vimrc": "viml"
+   },
+
+   "files.watcherExclude": {
+      // OCaml
+      "**/_build/**": true,
+      "**/_opam/**": true,
+      "**/esy.lock/**": true,
+      "**/_esy/**": true,
+      "**/lib/bs/**": true,
+      "**/lib/js/**": true,
+      "**/lib/ocaml/**": true,
+      "**/*.bs.js": true,
+
+      // Rust
+      "**/rust/target/**": true
    },
 
    // ### Diffs
@@ -217,6 +234,19 @@
    // ### TabNine
    "tabnine.experimentalAutoImports": true,
    "tabnine.receiveBetaChannelUpdates": true,
+
+   // ### Live Share
+   "liveshare.guestApprovalRequired": true,
+   "liveshare.allowGuestDebugControl": true,
+   "liveshare.allowGuestTaskControl": true,
+   "liveshare.focusBehavior": "prompt",
+   "liveshare.joinDebugSessionOption": "Prompt",
+   "liveshare.languages.allowGuestCommandControl": true,
+   "liveshare.launcherClient": "visualStudioCode",
+   "liveshare.notebooks.allowGuestExecuteCells": true,
+   "liveshare.presence": true,
+   "liveshare.publishWorkspaceInfo": true,
+   "liveshare.showInStatusBar": "whileCollaborating",
 
    // ### Finally, don't commit changes below this line:
 
