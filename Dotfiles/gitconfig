@@ -32,7 +32,7 @@
 	legacyheaders = false
 	whitespace = -trailing-space
 	excludesfile = ~/.gitignore
-	editor = nvr -cc split --remote-wait-silent
+	editor = ~/.bin/embedded-editor-proxy.sh --wait
 	autocrlf = input
 [repack]
 	usedeltabaseoffset = true
@@ -67,28 +67,21 @@
 [github]
 	user = elliottcable
 	token = <SNIP>
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [diff]
-	tool = Kaleidoscope
-	external = ~/.bin/git-patdiff-wrapper
+	tool = embedded-editor-proxy
 [difftool]
 	prompt = false
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-[mergetool]
-	prompt = false
 [merge]
-	tool = fugitive
+	tool = embedded-editor-proxy
 	defaultToUpstream = true
 	conflictstyle = diff3
+[mergetool]
+	prompt = false
 [pretty]
 	ellio = "tformat: %<|(15)%h%Creset ┯ %C(blue) %<|(35,trunc)%aN %C(red bold) %G?%Creset  %ar %C(magenta bold)%D%Creset%n%<|(14)%Creset ┕┉┉ %s"
 	solarized = "format:%x1b[30m%h%Creset %s %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
 	solarized-reflog = "format:%x1b[33m%gd%Creset %gs %x1b[93;2m— %ar%x1b[0m"
 	solarized-parseable = "format:%x1b[30m%h%Creset %x1f%s%x1f %x1b[36m%d %x1b[93;2m— %ar%x1b[0m"
-[mergetool "fugitive"]
-	cmd = vimr --wait --cur-env --nvim +Gvdiffsplit! \"$MERGED\"
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
@@ -109,6 +102,16 @@
 	cmd = nvr -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
 [mergetool "tabnvr"]
 	cmd = nvr -cc '$tabnew' -s -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c \"wincmd J | wincmd =\"
+[mergetool "fugitive"]
+	cmd = vimr --wait --cur-env --nvim +Gvdiffsplit! \"$MERGED\"
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+[difftool "embedded-editor-proxy"]
+	cmd = ~/.bin/embedded-editor-proxy.sh --wait --diff \"$LOCAL\" \"$REMOTE\"
+[mergetool "embedded-editor-proxy"]
+	cmd = ~/.bin/embedded-editor-proxy.sh --wait --merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
 [status]
 	showStash = true
 [mergetool "mergefmt"]
