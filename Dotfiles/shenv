@@ -18,21 +18,32 @@ fi
 #   $1 name of the shell variable to set (e.g. 'PATH')
 #   $2 the precise string to be removed/replaced
 #   $3 the replacement string (use "" for removal)
+#   $4 if passed precisely "ONLY_IF_DIR", check for directory-existence before adding element
 function replace_el () {
-   list="$(eval echo '$'"$1")"
-   export $1="$(echo "$list" | tr ":" "\n" | sed "s:^$2\$:$3:; /^\$/d" | tr "\n" ":" | sed 's|:$||')"
+   if [ "$4" != "ONLY_IF_DIR" ] || [ -d "$3" ]; then
+     list="$(eval echo '$'"$1")"
+     export $1="$(
+       echo "$list" | tr ":" "\n" \
+       | sed "s:^$2\$:$3:; /^\$/d" \
+       | tr "\n" ":" | sed 's|:$||' \
+     )"
+   fi
 }
 
 function prepend_el () {
-   replace_el "$1" "$2"
-   list="$(eval echo '$'"$1")"
-   export $1="$2:$list"
+   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
+      replace_el "$1" "$2"
+      list="$(eval echo '$'"$1")"
+      export $1="$2:$list"
+   fi
 }
 
 function append_el () {
-   replace_el "$1" "$2"
-   list="$(eval echo '$'"$1")"
-   export $1="$list:$2"
+   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
+      replace_el "$1" "$2"
+      list="$(eval echo '$'"$1")"
+      export $1="$list:$2"
+   fi
 }
 
 
