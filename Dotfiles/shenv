@@ -74,8 +74,7 @@ export SYSTEM_ARCH='Arch Linux'
 export SYSTEM_UNKNOWN='Unknown'
 
 
-source "$HOME/.shenv.local"
-
+[ -r "$HOME/.shenv.local" ] && source "$HOME/.shenv.local"
 
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
@@ -105,29 +104,36 @@ eval "$(head -n2 ~/.opam/opam-init/variables.sh)"
 # NOTE: Be aware that `packages.zsh` is loaded *after* this, and thus several zsh packages (notably
 # Nodenv and Rbenv) are going to prepend *all* of these, taking first-place in the lookup order.
 if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  prepend_el PATH "$HOMEBREW_PREFIX/bin"           #  7. < Homebrew
-  prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin"  #  6. < Homebrew's llvm / clang
+   if [ -n "$HOMEBREW_PREFIX" ] && [ -d "$HOMEBREW_PREFIX" ]; then
+      prepend_el PATH "$HOMEBREW_PREFIX/bin"                      #  8. < Homebrew
+      prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin" ONLY_IF_DIR #  7. < Homebrew's llvm / clang
+   fi
 
-  append_el PATH "/Library/TeX/texbin"    # -6. > MacTeX
-  append_el PATH "/usr/X11/bin"           # -5. > X11
+   append_el PATH "/Library/TeX/texbin" ONLY_IF_DIR   # -6. > MacTeX
+   append_el PATH "/usr/X11/bin" ONLY_IF_DIR          # -5. > X11
 fi
 
 # Big Sur and later - note that `=` in sh is *matching*, not equality like `-eq`.
 if [[ $SYSTEM = *Mac* ]] && [[ $SYSTEM != *' 10.'* ]]; then
-  prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin"       #  5. < Homebrew (ARM-native)
+   if [ -n "$HOMEBREW_PREFIX" ] && [ -d "$HOMEBREW_PREFIX" ]; then
+      prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin" ONLY_IF_DIR       #  6. < Homebrew (ARM-native)
+   fi
 fi
 
 
-prepend_el PATH "$HOME/.bin"              #  5. < local binaries
-prepend_el PATH "$HOME/.dotnet/tools"     #  4. < .NET Core SDK: tools
-prepend_el PATH "$HOME/.cargo/bin"        #  3. < Cargo (Rust) binaries
-prepend_el PATH "$OPAM_SWITCH_PREFIX/bin" #  2. < OPAM local bin
-prepend_el PATH "./node_modules/.bin"     #  1. < npm (local)
+prepend_el PATH "$HOME/.bin"                          #  5. < local binaries
+prepend_el PATH "$HOME/.dotnet/tools" ONLY_IF_DIR     #  4. < .NET Core SDK: tools
+prepend_el PATH "$HOME/.cargo/bin" ONLY_IF_DIR        #  3. < Cargo (Rust) binaries
+prepend_el PATH "$OPAM_SWITCH_PREFIX/bin"             #  2. < OPAM local bin
+prepend_el PATH "./node_modules/.bin"                 #  1. < npm (local)
 
-append_el PATH "$HOME/.local/bin"         # -4. > haskell-ide-engine installs itself here
-append_el PATH "$HOME/.opam/_globals/bin" # -3. < OPAM global bin (see Bootstrap/ocaml.sh)
-append_el PATH "/usr/local/cuda/bin"      # -2. > CUDA
-append_el PATH "$AWS_HOME/bin"            # -1. > EC2
+append_el PATH "$HOME/.local/bin" ONLY_IF_DIR         # -4. > haskell-ide-engine installs itself here
+append_el PATH "$HOME/.opam/_globals/bin" ONLY_IF_DIR # -3. < OPAM global bin (see Bootstrap/ocaml.sh)
+append_el PATH "/usr/local/cuda/bin" ONLY_IF_DIR      # -2. > CUDA
+
+if [ -n "$AWS_HOME" ] && [ -d "$AWS_HOME" ]; then
+   append_el PATH "$AWS_HOME/bin"                     # -1. > EC2
+fi
 
 export PATH
 
