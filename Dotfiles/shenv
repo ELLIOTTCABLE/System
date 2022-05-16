@@ -40,7 +40,11 @@ function append_el () {
 #        should be `/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin`, as it is for new accounts. I've
 #        screwed up some configuration somewhere, but I have no idea where. I'm hard-coding this,
 #        for now; but it needs to be tracked down and fixed. (AS OF MAVERICKS)
-PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+prepend_el PATH /usr/local/bin
+prepend_el PATH /sbin
+prepend_el PATH /usr/sbin
+prepend_el PATH /bin
+prepend_el PATH /usr/bin
 
 
 export SYSTEM_OSX='Mac'
