@@ -102,13 +102,13 @@ fi
 
 alias wget='wget -q --show-progress'
 
-export EDITOR='nvim'
-export VISUAL='vimr'
+# TODO: Add a --visual flag or sth
+export EDITOR='~/.bin/embedded-editor-proxy.sh --wait'
+export VISUAL='~/.bin/embedded-editor-proxy.sh --wait'
 
 alias et='edit .'
-alias etr='edit app config lib db public spec test vendor/plugins Rakefile'
 
-alias edit=$EDITOR
+alias edit="$EDITOR"
 alias e='edit'
 
 move-n-link()( [ $# -ne 2 ] && print "Usage: move-n-link FROM TO" && exit 1;

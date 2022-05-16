@@ -170,14 +170,6 @@ if executable('ag')
    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
 
-" This only affects programs entered *inside `:terminal` windows*; I also separately configured Git
-" to open a new `nvim` via `nvr`:
-"
-"    git config --global core.editor 'nvr -s --remote-wait-silent'
-if has('nvim')
-   let $VISUAL = 'nvr -cc split --remote-wait'
-endif
-
 augroup setup-terminal-settings | au!
    au TermOpen * nmap <silent> <D-k> :CLear<CR>
    au TermOpen * tmap <silent> <D-k> <C-\><C-n>:CLear<CR>
