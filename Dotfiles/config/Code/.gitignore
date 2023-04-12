@@ -1,7 +1,10 @@
 # See also: root-level .gitignore, Dotfiles/config/.gitignore
 
 # Most of VScode's stuff is synced via the built-in Sync — we *only* want the `settings.json`.
+User/History/
 User/globalStorage/
+User/keybindings.json
+User/profiles/
 User/sync/
 User/workspaceStorage/
 
@@ -11,6 +14,7 @@ CachedConfigurations/
 CachedData/
 CachedExtensionVSIXs/
 CachedExtensions/
+CachedProfilesData/
 Code Cache/
 Cookies
 Cookies-journal
@@ -18,6 +22,7 @@ Crashpad/
 CrashpadMetrics-active.pma
 CrashpadMetrics.pma
 GPUCache/
+IndexedDB/
 Local Storage/
 Network Persistent State
 Preferences
@@ -26,9 +31,11 @@ QuotaManager-journal
 Service Worker/
 Session Storage/
 TransportSecurity
+VideoDecodeStats/
 code.lock
 databases/
 languagepacks.json
 logs/
 machineid
+shared_proto_db/
 storage.json
