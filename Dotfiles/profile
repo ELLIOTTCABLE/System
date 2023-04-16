@@ -82,7 +82,7 @@ export BINARY_DIR="/usr/bin"
 
 # less
 export PAGER='less'
-source "$HOME/.config/less.temp.sh"
+source "$XDG_CONFIG_HOME/less.temp.sh"
 
 # OS X-specific commands
 if [ -n "$IS_MAC" ]; then
