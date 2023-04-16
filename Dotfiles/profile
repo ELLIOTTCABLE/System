@@ -1,33 +1,41 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+#               ^^ (using 'bash' as a reasonable attempt to subset zsh+bash)
+
 if [[ $- != *i* ]] ; then
   # Shell is non-interactive.  Be done now!
   return
 fi
 
-if [[ "$DEBUG_PATH" == true ]]; then
-   echo '~/.profile (before): $PATH = '
-   echo $PATH | tr ':' "\n" | nl
-fi
+debug_path_dump() {
+   if [ "$DEBUG_PATH" = 'true' ]; then
+      # shellcheck disable=SC2088
+      echo "~/.profile ($1): \$PATH = "
+      echo "$PATH" | tr ':' "\n" | nl
+   fi
+}
 
+debug_path_dump 'before'
 
 source "$HOME/.shenv"
 source "$HOME/.shell_colours"
 
 while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
-   echo '$SYSTEM \033[0;91mis not set!\033[m Opening nano so you can configure it ...'
+   printf '%s\n' "\$SYSTEM \033[0;91mis not set!\033[m Opening nano so you can configure it ..."
 
    if [[ -d "$HOME/Library/System" ]]; then
       SYSTEM_REPO="$HOME/Library/System"
    elif [[ -d "$HOME/.files" ]]; then
       SYSTEM_REPO="$HOME/.files"
    else
-      echo '\033[0;91mCannot locate dotfiles!\033[m Please paste the path to your System.git clone:'
-      read -p '$SYSTEM_REPO: ' SYSTEM_REPO
+      printf '%s\n' '\033[0;91mCannot locate dotfiles!\033[m Please paste the path to your System.git clone:'
+      read -rp "\$SYSTEM_REPO: " SYSTEM_REPO
    fi
 
    template="$SYSTEM_REPO/Dotfiles/shenv.local.template"
    if [[ ! -f "$template" ]]; then
-      echo '\033[0;91mStill cannot locate shenv.local template!\033[m Crashing.'
-      echo "Tried: '$template'"
+      printf '%s\n' '\033[0;91mStill cannot locate shenv.local template!\033[m Crashing.'
+      printf '%s\n' "Tried: '$template'"
       sleep 10
       exit 1
    fi
@@ -36,7 +44,7 @@ while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
    sleep 3
    rm "$HOME/.shenv.local"
    cp "$SYSTEM_REPO/Dotfiles/shenv.local.template" "$HOME/.shenv.local"
-   echo 'export SYSTEM_REPO="'$SYSTEM_REPO'"' >> "$HOME/.shenv.local"
+   echo 'export SYSTEM_REPO="'"$SYSTEM_REPO"'"' >> "$HOME/.shenv.local"
    nano "$HOME/.shenv.local"
    source "$HOME/.shenv.local"
 done
@@ -56,6 +64,7 @@ if [ -z "$RBENV_ROOT" ]; then
    printf "\e[31m%s\e[m — you'll need to install it with Homebrew or via git-clone ...\n" \
       "[rbenv] rbenv is missing"
 else
+   true
    # NOTE: This is configured by rbenv.plugin.zsh, now.
    #rbenv() {
    #   ...
@@ -76,17 +85,17 @@ export PAGER='less'
 source "$HOME/.config/less.temp.sh"
 
 # OS X-specific commands
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+if [ -n "$IS_MAC" ]; then
   alias espresso='open -a Espresso'
   alias esp='espresso'
 
   alias xcode='open -a Xcode'
 
-  synalyze() { open "$1" -a '/Applications/Synalyze It!.app' }
+  synalyze() { open "$1" -a '/Applications/Synalyze It!.app' ;}
 
   alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-experimental-extension-apis'
 
-  woman() { man -t $1 | open -fa Preview ;}
+  woman() { man -t "$1" | open -fa Preview ;}
 
   alias droid='say -v cellos droid'
 
@@ -103,20 +112,20 @@ fi
 alias wget='wget -q --show-progress'
 
 # TODO: Add a --visual flag or sth
-export EDITOR='~/.bin/embedded-editor-proxy.sh --wait'
-export VISUAL='~/.bin/embedded-editor-proxy.sh --wait'
+export EDITOR="$HOME/.bin/embedded-editor-proxy.sh --wait"
+export VISUAL="$HOME/.bin/embedded-editor-proxy.sh --wait"
 
 alias et='edit .'
 
-alias edit="$EDITOR"
+alias edit='$EDITOR'
 alias e='edit'
 
 move-n-link()( [ $# -ne 2 ] && print "Usage: move-n-link FROM TO" && exit 1;
-   mv "$1" "$2" && { ln -s "$2" "$1" || mv "$2" "$1" } )
+   mv "$1" "$2" && { ln -s "$2" "$1" || mv "$2" "$1" ;} )
 
 function whichpath() {
    command -v "$1" >&- && \
-      echo $PATH | tr ':' "\n" | nl | \
+      echo "$PATH" | tr ':' "\n" | nl | \
       grep --color -C100 -E "$(dirname "$(which "$1")")"
 }
 
@@ -146,14 +155,15 @@ bye() {
    for volume in "$@"; do
       hdiutil eject "/Volumes/$volume" 2>/dev/null
       st=$?
-      if [ $st -ne 0 -a -d "/Volumes/$volume" ]; then
+      if [ $st -ne 0 ] && [ -d "/Volumes/$volume" ]; then
          echo "Ejection failed. Need to kill some things first ..."
-         for PID in `lsof -t "/Volumes/$volume"`; do
-            read -q 'consent?''Kill `'`ps -p $PID -o 'comm='`'`? '
+         for PID in $(lsof -t "/Volumes/$volume"); do
+            read -rq 'consent?''Kill `'"$(ps -p "$PID" -o 'comm=')"'`? '
             echo
+            # shellcheck disable=SC2154
             case $consent in
                [Nn]*) break 2;;
-               [Yy]*) kill -HUP $PID;
+               [Yy]*) kill -HUP "$PID";
             esac
          done
          hdiutil eject "/Volumes/$volume" && exit
@@ -167,9 +177,9 @@ bye() {
 # Make mkdir recursive
 alias mkdir='mkdir -p'
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+if [ -n "$IS_MAC" ]; then
   # Real trashing for the win!
-  trash() { mv $1 ~/.Trash ;}
+  trash() { mv "$1" ~/.Trash ;}
 
   alias eject='drutil eject 0'
 fi
@@ -202,7 +212,7 @@ elif [[ $SYSTEM =~ $SYSTEM_TIGER ]]; then
 else
   export ERAILS="/usr/local/src/rails/edge"
 fi
-alias erails="ruby $ERAILS/railties/bin/rails"
+alias erails='ruby "$ERAILS"/railties/bin/rails'
 
 # Merb
 alias mat='merb -a thin'
@@ -229,8 +239,10 @@ alias d='dune'
 
 
 alias grep='grep --color=auto'
+
+# shellcheck disable=SC2139
 alias ag="ag --group --pager='less -XFRS' \
-   --color --color-path=91 --color-line-number='`printf "m   \033[96"`' --color-match=34"
+   --color --color-path=91 --color-line-number='$(printf "m   \033[96")' --color-match=34"
 
 rg() { command rg "$@" --pretty \
    --colors 'path:fg:red' --colors 'path:style:intense' --colors 'match:fg:blue' \
@@ -238,7 +250,7 @@ rg() { command rg "$@" --pretty \
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --hidden --follow --smart-case --glob "!.git/*"'
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+if [ -n "$IS_MAC" ]; then
   alias nzb='hellanzb.py'
 fi
 
@@ -249,7 +261,7 @@ alias tm='top -o vsize'
 alias sco='svn co'
 #alias sup='svn up'
 alias sci='svn ci -m'
-alias saa='svn status | grep "^\?" | awk "{print \$2}" | xargs svn add'
+saa() { svn status | grep "^\?" | awk "{print \$2}" | xargs svn add ;}
 
 # git
 alias g='git'
@@ -262,14 +274,15 @@ alias go='g co'
 alias gin='g ci'
 alias grain='g rain'
 alias ganch='g branch'
-alias clanch='git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git clean -fdx'
+clanch() { git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git clean -fdx ;}
 alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
 alias gifft='g difftool'
 alias gerget='g mergetool'
 
-glog()   { elliolog $* | less -SRXF ;}
-reflog() { glog --all $* $(git log -g --pretty=format:%h) ;}
+glog()   { elliolog "$@" | less -SRXF ;}
+# shellcheck disable=SC2046
+reflog() { glog --all "$@" $(git log -g --pretty=format:%h) ;}
 
 alias gitlel='git show master:.gitlabels | less -RS'
 
@@ -290,19 +303,22 @@ alias stiff-last='giff HEAD^ HEAD' # last commit diff
 # This is some seriously evil, hacky shit; but it works, unlike my original attempt with subshells.
 # (Damn you, subshells.)
 agit() {
+   # shellcheck disable=SC2068,SC2299
    env GIT_ALTERNATE_OBJECT_DIRECTORIES="$1/.git/objects" \
       =git ${${*:2}[@]} ;}
 
+# shellcheck disable=SC2206
 zsh_directory_name_functions=(${zsh_directory_name_functions[@]} uncommitish set_uncommitish_repo)
 uncommitish() { if [[ $1 == 'n' ]]; then
    if [[ -z "$UNCOMMITISH_REPO" ]]; then return 1; fi
 
-   rev=$(git --git-dir="$UNCOMMITISH_REPO/.git" rev-parse --verify $2 2>/dev/null); st=$?
-   if (( $st != 0 )); then return $st; fi
+   rev=$(git --git-dir="$UNCOMMITISH_REPO/.git" rev-parse --verify "$2" 2>/dev/null); st=$?
+   if (( st != 0 )); then return $st; fi
 
    reply=("$rev")
 else return 1; fi ;}
 
+# shellcheck disable=2034
 set_uncommitish_repo() { if [[ $1 == 'n' ]]; then
    export UNCOMMITISH_REPO="$2"
    reply=("$2")
@@ -325,16 +341,16 @@ C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors 
 export CXX="g++"
 C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
 
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
+if [ -n "$IS_MAC" ]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"
 fi
 
 export TODOFILE=$HOME/todo.markdown
-if [ -f $TODOFILE ]; then
-  if [[ $(cat $TODOFILE) =~ "- " ]]; then
+if [ -f "$TODOFILE" ]; then
+  if [[ $(cat "$TODOFILE") =~ "- " ]]; then
     echo -e "${SYSTEM_COLOUR_BOLD}Todo List:${CLEAR_COLOUR}"; tput sgr0
     echo -e "${SYSTEM_COLOUR}==========${CLEAR_COLOUR}"; tput sgr0
-    cat $TODOFILE
+    cat "$TODOFILE"
   fi
 fi
 
@@ -343,7 +359,7 @@ fi
 rse() {
   # We need to wrap each phrase of the command in quotes to preserve arguments that contain whitespace
   # Execute the command, swap STDOUT and STDERR, colour STDOUT, swap back
-  ((eval $(for phrase in "$@"; do echo -n "'$phrase' "; done)) 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
+  ( (eval "$(for phrase in "$@"; do echo -n "'$phrase' "; done)") 3>&1 1>&2 2>&3 | sed -e "s/^\(.*\)$/$(echo -en \\033)[31;1m\1$(echo -en \\033)[0m/") 3>&1 1>&2 2>&3
 }
 
 # Bash-only. Whatever.
@@ -355,11 +371,7 @@ rse() {
 #done
 # }}}
 
-
-if [[ "$DEBUG_PATH" == true ]]; then
-   echo '~/.profile (after): $PATH = '
-   echo $PATH | tr ':' "\n" | nl
-fi
+debug_path_dump 'after'
 
 # Create files as u=rwx, g=rx, o=rx
 umask 022

@@ -1,10 +1,10 @@
-zplug mafredri/zsh-async,     from:github
-zplug sindresorhus/pure,      from:github, use:pure.zsh, as:theme
+zplug mafredri/zsh-async, from:github
+zplug sindresorhus/pure, from:github, use:pure.zsh, as:theme
 
 # Steal omz's termsupport for Apple Terminal. (Hacky as fuck; will have to watch to see if this
 # changes.)
-zplug lib/functions,          from:oh-my-zsh
-zplug lib/termsupport,        from:oh-my-zsh, on:lib/functions
+zplug lib/functions, from:oh-my-zsh
+zplug lib/termsupport, from:oh-my-zsh, on:lib/functions
 
 # N.B.: the original `zsh-syntax-highlighting` had to be loaded *last*; I don't know if this is
 # still true for `fast-syntax-highlighting`
@@ -12,7 +12,7 @@ zplug zdharma-continuum/fast-syntax-highlighting, defer:3
 
 zplug zsh-users/zsh-autosuggestions
 
-zplug hlissner/zsh-autopair,  defer:2
+zplug hlissner/zsh-autopair, defer:2
 
 zplug zuxfoucault/colored-man-pages_mod
 
@@ -46,7 +46,7 @@ zplug hcgraf/zsh-sudo
 # The rest of these just offer additional completions
 zplug zsh-users/zsh-completions
 zplug vasyharan/zsh-brew-services
-zplug plugins/vagrant,        from:oh-my-zsh
+zplug plugins/vagrant, from:oh-my-zsh
 
 # Available, but I haven't installed them yet:
 #  - Docker

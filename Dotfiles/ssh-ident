@@ -1,4 +1,6 @@
 # vim: set ft=bash :
+# shellcheck disable=all
+
 MATCH_ARGV = [
   [r"febox.$", "ahrefs"],
   [r"\s(git@)?github\.com\s.*'ahrefs\/.+\.git'", "ahrefs"],

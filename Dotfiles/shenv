@@ -1,64 +1,37 @@
+#!/usr/bin/env dash
+# shellcheck disable=SC2088
 # Sourced by `.zshenv` and `.bash_profile` (instead of `.profile`) to setup environment-variables
 # like `$PATH`. (This is an ugly hack.)
 #
 # See: <https://kb.iu.edu/d/abdy>
 
 #echo '~/.shenv: $SHENV_EVALUATED = '\'"$SHENV_EVALUATED"\'
-if [[ -z "$SHENV_EVALUATED" ]]; then
-SHENV_EVALUATED='true'
-
-if [[ "$DEBUG_PATH" == true ]]; then
-   echo '~/.shenv (before): $PATH = '
-   echo $PATH | tr ':' "\n" | nl
+if [ -n "$SHENV_EVALUATED" ]; then
+   return 1
 fi
 
+SHENV_EVALUATED='true'
 
-# Remove or replace an element of $1
-#
-#   $1 name of the shell variable to set (e.g. 'PATH')
-#   $2 the precise string to be removed/replaced
-#   $3 the replacement string (use "" for removal)
-#   $4 if passed precisely "ONLY_IF_DIR", check for directory-existence before adding element
-function replace_el () {
-   if [ "$4" != "ONLY_IF_DIR" ] || [ -d "$3" ]; then
-     list="$(eval echo '$'"$1")"
-     export $1="$(
-       echo "$list" | tr ":" "\n" \
-       | sed "s:^$2\$:$3:; /^\$/d" \
-       | tr "\n" ":" | sed 's|:$||' \
-     )"
+debug_path_dump() {
+   if [ "$DEBUG_PATH" = 'true' ]; then
+      echo "~/.shenv ($1): \$PATH = "
+      echo "$PATH" | tr ':' "\n" | nl
    fi
 }
 
-function prepend_el () {
-   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
-      replace_el "$1" "$2"
-      list="$(eval echo '$'"$1")"
-      export $1="$2:$list"
+debug_path() {
+   if [ "$DEBUG_PATH" = 'true' ]; then
+      echo "~/.shenv: $1"
    fi
 }
 
-function append_el () {
-   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
-      replace_el "$1" "$2"
-      list="$(eval echo '$'"$1")"
-      export $1="$list:$2"
-   fi
-}
+debug_path_dump 'before'
 
+# This sets '$SYSTEM', if it's been created
+[ -r "$HOME/.shenv.local" ] && . "$HOME/.shenv.local"
 
-# FIXME: The default path, with ~/.zshrc and ~/.profile disabled, seems to be `/usr/bin:/bin`. This
-#        should be `/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin`, as it is for new accounts. I've
-#        screwed up some configuration somewhere, but I have no idea where. I'm hard-coding this,
-#        for now; but it needs to be tracked down and fixed. (AS OF MAVERICKS)
-prepend_el PATH /usr/local/bin
-prepend_el PATH /sbin
-prepend_el PATH /usr/sbin
-prepend_el PATH /bin
-prepend_el PATH /usr/bin
-
-
-export SYSTEM_OSX='Mac'
+export SYSTEM_OSX='Mac OS X'
+export SYSTEM_MACOS='macOS'
 export SYSTEM_TIGER='Mac OS X 10.4'
 export SYSTEM_LEOPARD='Mac OS X 10.5'
 export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
@@ -73,95 +46,221 @@ export SYSTEM_FEDORA4='Fedora Core 4'
 export SYSTEM_ARCH='Arch Linux'
 export SYSTEM_UNKNOWN='Unknown'
 
+kernel="$(uname -s)"
+[ "$kernel" = "Darwin" ] && export IS_MAC='true'
 
-[ -r "$HOME/.shenv.local" ] && source "$HOME/.shenv.local"
-
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-  export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
- #export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"        # Slow.
-  export AWS_HOME="$HOME/.ec2"
+if [ -z "$SYSTEM" ]; then
+   if [ -n "$IS_MAC" ]; then
+      case "$(sw_vers -productVersion)" in
+      10.4*)
+         export SYSTEM="$SYSTEM_TIGER"
+         ;;
+      10.5*)
+         export SYSTEM="$SYSTEM_LEOPARD"
+         ;;
+      10.6*)
+         export SYSTEM="$SYSTEM_SNOW_LEOPARD"
+         ;;
+      10.7*)
+         export SYSTEM="$SYSTEM_LION"
+         ;;
+      10.8*)
+         export SYSTEM="$SYSTEM_MOUNTAIN_LION"
+         ;;
+      10.9*)
+         export SYSTEM="$SYSTEM_MAVERICKS"
+         ;;
+      10.10*)
+         export SYSTEM="$SYSTEM_YOSEMITE"
+         ;;
+      10.11*)
+         export SYSTEM="$SYSTEM_EL_CAPITAN"
+         ;;
+      10.12*)
+         export SYSTEM="$SYSTEM_SIERRA"
+         ;;
+      10.13*)
+         export SYSTEM="$SYSTEM_HIGH_SIERRA"
+         ;;
+      10.14*)
+         export SYSTEM="$SYSTEM_MOJAVE"
+         ;;
+      10.15*)
+         export SYSTEM="$SYSTEM_CATALINA"
+         ;;
+      11.*)
+         export SYSTEM="$SYSTEM_BIG_SUR"
+         ;;
+      12.*)
+         export SYSTEM="$SYSTEM_MONTEREY"
+         ;;
+      13.*)
+         export SYSTEM="$SYSTEM_VENTURA"
+         ;;
+      esac
+   fi
 fi
 
-# FIXME: bash-incompatible
-#export EC2_PRIVATE_KEY="$(print $HOME/.ec2/pk-*.pem(N))"
-#export EC2_CERT="$(print $HOME/.ec2/cert-*.pem(N))"
+if [ -n "$IS_MAC" ]; then
+   arch="$(uname -m)"
+   case "$arch" in
+   x86_64*)
+      case "$(uname -a)" in
+      *ARM64*)
+         export SYSTEM="$SYSTEM (ARM64)"
+         ;;
+      *)
+         export SYSTEM="$SYSTEM (x86_64)"
+         ;;
+      esac
+      ;;
+   i*86)
+      export SYSTEM="$SYSTEM (x86_32)"
+      ;;
+   arm*)
+      export SYSTEM="$SYSTEM (ARM32)"
+      ;;
+   aarch64)
+      export SYSTEM="$SYSTEM (ARM64)"
+      ;;
+   esac
+fi
+
+# Remove or replace an element of $1
+#
+#   $1 name of the shell variable to set (e.g. 'PATH')
+#   $2 the precise string to be removed/replaced
+#   $3 the replacement string (use "" for removal)
+#   $4 if passed precisely "ONLY_IF_DIR", check for directory-existence before adding element
+replace_el() {
+   if [ "$4" != "ONLY_IF_DIR" ] || [ -d "$3" ]; then
+      list="$(eval echo '$'"$1")"
+      export "$1"="$(
+         echo "$list" | tr ":" "\n" |
+            sed "s:^$2\$:$3:; /^\$/d" |
+            tr "\n" ":" | sed 's|:$||'
+      )"
+   fi
+}
+
+prepend_el() {
+   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
+      replace_el "$1" "$2"
+      list="$(eval echo '$'"$1")"
+      export "$1"="$2:$list"
+   fi
+}
+
+append_el() {
+   if [ "$3" != "ONLY_IF_DIR" ] || [ -d "$2" ]; then
+      replace_el "$1" "$2"
+      list="$(eval echo '$'"$1")"
+      export "$1"="$list:$2"
+   fi
+}
+
+# FIXME: The default path, with ~/.zshrc and ~/.profile disabled, seems to be `/usr/bin:/bin`. This
+#        should be `/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin`, as it is for new accounts. I've
+#        screwed up some configuration somewhere, but I have no idea where. I'm hard-coding this,
+#        for now; but it needs to be tracked down and fixed. (AS OF MAVERICKS)
+prepend_el PATH /usr/local/bin
+prepend_el PATH /sbin
+prepend_el PATH /usr/sbin
+prepend_el PATH /bin
+prepend_el PATH /usr/bin
+
+case "$SYSTEM" in
+*"$SYSTEM_MACOS"* | *"$SYSTEM_OSX"*)
+   export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home/"
+   #export EC2_HOME="`/usr/local/bin/brew --prefix ec2-api-tools`"        # Slow.
+   export AWS_HOME="$HOME/.ec2"
+   ;;
+esac
 
 # Homebrew
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-   # Hardcoding this; saves the startup cost of re-running this for every shell.
-  #export HOMEBREW_PREFIX="$(brew --prefix)"
-   export HOMEBREW_PREFIX="/usr/local"
-   export HOMEBREW_ARM_PREFIX="/opt/homebrew"
-   export HOMEBREW_CASK_OPTS='--fontdir=/Library/Fonts'
-fi
+export HOMEBREW_X86_PREFIX="/usr/local"
+export HOMEBREW_ARM_PREFIX="/opt/homebrew"
+export HOMEBREW_CASK_OPTS='--fontdir=/Library/Fonts'
+
+# Hardcoding this; saves the startup cost of re-running this for every shell.
+#export HOMEBREW_PREFIX="$(brew --prefix)"
+case "$SYSTEM" in
+*"$SYSTEM_MACOS"*"ARM"*)
+   export HOMEBREW_PREFIX="$HOMEBREW_ARM_PREFIX"
+   ;;
+*"$SYSTEM_MACOS"* | *"$SYSTEM_OSX"*)
+   export HOMEBREW_PREFIX="$HOMEBREW_X86_PREFIX"
+   ;;
+esac
 
 # This is a *horrible* hack to get ahold of the default `$OPAM_SWITCH_PREFIX`.
 eval "$(head -n2 ~/.opam/opam-init/variables.sh)"
-
 
 # $PATH setup
 # ===========
 # NOTE: Be aware that `packages.zsh` is loaded *after* this, and thus several zsh packages (notably
 # Nodenv and Rbenv) are going to prepend *all* of these, taking first-place in the lookup order.
-if [[ $SYSTEM =~ $SYSTEM_OSX ]]; then
-   if [ -n "$HOMEBREW_PREFIX" ] && [ -d "$HOMEBREW_PREFIX" ]; then
-      prepend_el PATH "$HOMEBREW_PREFIX/bin"                      #  8. < Homebrew
-      prepend_el PATH "$HOMEBREW_PREFIX/opt/llvm/bin" ONLY_IF_DIR #  7. < Homebrew's llvm / clang
+case "$SYSTEM" in
+*"$SYSTEM_MACOS"* | *"$SYSTEM_OSX"*)
+   if [ -n "$HOMEBREW_X86_PREFIX" ] && [ -d "$HOMEBREW_X86_PREFIX" ]; then
+      prepend_el PATH "$HOMEBREW_X86_PREFIX/bin"                      #  8. < Homebrew
+      prepend_el PATH "$HOMEBREW_X86_PREFIX/opt/llvm/bin" ONLY_IF_DIR #  7. < Homebrew's llvm / clang
    fi
 
-   append_el PATH "/Library/TeX/texbin" ONLY_IF_DIR   # -6. > MacTeX
-   append_el PATH "/usr/X11/bin" ONLY_IF_DIR          # -5. > X11
-fi
+   append_el PATH "/Library/TeX/texbin" ONLY_IF_DIR # -6. > MacTeX
+   append_el PATH "/usr/X11/bin" ONLY_IF_DIR        # -5. > X11
+   ;;
+esac
 
 # Big Sur and later - note that `=` in sh is *matching*, not equality like `-eq`.
-if [[ $SYSTEM = *Mac* ]] && [[ $SYSTEM != *' 10.'* ]]; then
-   if [ -n "$HOMEBREW_PREFIX" ] && [ -d "$HOMEBREW_PREFIX" ]; then
-      prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin" ONLY_IF_DIR       #  6. < Homebrew (ARM-native)
+# if [[ $SYSTEM = *Mac* ]] && [[ $SYSTEM != *' 10.'* ]]; then
+case "$SYSTEM" in
+*"$SYSTEM_MACOS"*"ARM"*)
+   if [ -n "$HOMEBREW_ARM_PREFIX" ] && [ -d "$HOMEBREW_ARM_PREFIX" ]; then
+      debug_path "prepending '$HOMEBREW_ARM_PREFIX/bin' (\$SYSTEM is both macOS & ARM)"
+      prepend_el PATH "$HOMEBREW_ARM_PREFIX/bin" ONLY_IF_DIR #  6. < Homebrew (ARM-native)
    fi
-fi
+   ;;
+*)
+   debug_path "not prepending '$HOMEBREW_ARM_PREFIX/bin' (for '$SYSTEM')"
+   ;;
+esac
 
-
-prepend_el PATH "$HOME/.bin"                          #  5. < local binaries
-prepend_el PATH "$HOME/.dotnet/tools" ONLY_IF_DIR     #  4. < .NET Core SDK: tools
-prepend_el PATH "$HOME/.cargo/bin" ONLY_IF_DIR        #  3. < Cargo (Rust) binaries
-prepend_el PATH "$OPAM_SWITCH_PREFIX/bin"             #  2. < OPAM local bin
-prepend_el PATH "./node_modules/.bin"                 #  1. < npm (local)
+prepend_el PATH "$HOME/.bin"                      #  5. < local binaries
+prepend_el PATH "$HOME/.dotnet/tools" ONLY_IF_DIR #  4. < .NET Core SDK: tools
+prepend_el PATH "$HOME/.cargo/bin" ONLY_IF_DIR    #  3. < Cargo (Rust) binaries
+prepend_el PATH "$OPAM_SWITCH_PREFIX/bin"         #  2. < OPAM local bin
+prepend_el PATH "./node_modules/.bin"             #  1. < npm (local)
 
 append_el PATH "$HOME/.local/bin" ONLY_IF_DIR         # -4. > haskell-ide-engine installs itself here
 append_el PATH "$HOME/.opam/_globals/bin" ONLY_IF_DIR # -3. < OPAM global bin (see Bootstrap/ocaml.sh)
 append_el PATH "/usr/local/cuda/bin" ONLY_IF_DIR      # -2. > CUDA
 
 if [ -n "$AWS_HOME" ] && [ -d "$AWS_HOME" ]; then
-   append_el PATH "$AWS_HOME/bin"                     # -1. > EC2
+   append_el PATH "$AWS_HOME/bin" # -1. > EC2
 fi
 
 export PATH
 
-
-if [[ "$DEBUG_PATH" == true ]]; then
-   echo '~/.shenv (after): $PATH = '
-   echo $PATH | tr ':' "\n" | nl
-fi
-
+debug_path_dump 'after'
 
 nodenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/nodenv.plugin.zsh/nodenv.plugin.zsh"
-if [[ -f "$nodenv_plugin_path" ]]; then
-   source "$nodenv_plugin_path"
+if [ -f "$nodenv_plugin_path" ]; then
+   . "$nodenv_plugin_path"
 
-   if [[ "$DEBUG_PATH" == true ]]; then
-      echo '~/.shenv (after nodenv.plugin.zsh): $PATH = '
-      echo $PATH | tr ':' "\n" | nl
-   fi
+   debug_path_dump 'after nodenv.plugin.zsh'
 fi
 
 rbenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/rbenv.plugin.zsh/rbenv.plugin.zsh"
-if [[ -f "$rbenv_plugin_path" ]]; then
-   source "$rbenv_plugin_path"
+if [ -f "$rbenv_plugin_path" ]; then
+   . "$rbenv_plugin_path"
 
-   if [[ "$DEBUG_PATH" == true ]]; then
-      echo '~/.shenv (after rbenv.plugin.zsh): $PATH = '
-      echo $PATH | tr ':' "\n" | nl
-   fi
+   debug_path_dump 'after rbenv.plugin.zsh'
 fi
 
-fi # [[ -z "$SHENV_EVALUATED" ]]
+# Nix
+unset __ETC_PROFILE_NIX_SOURCED
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix

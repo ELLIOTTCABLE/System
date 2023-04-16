@@ -1,6 +1,8 @@
+#!/usr/bin/env zsh
+
 #export DEBUG_PATH=true
 
-if [[ $- != *i* ]] ; then
+if [[ $- != *i* ]]; then
    # Shell is non-interactive; we'll aggressively load the shenv and configure the $PATH, instead of
    # waiting on ~/.profile.
    source "$HOME/.shenv"
