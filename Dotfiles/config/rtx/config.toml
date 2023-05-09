@@ -1,0 +1,18 @@
+# DO NOT EDIT - Generated from
+[plugins]
+cabal = "https://github.com/sestrella/asdf-ghcup.git"
+hls = "https://github.com/sestrella/asdf-ghcup.git"
+
+[tools]
+dotnet = "latest"
+golang = "latest"
+jq = "latest"
+lua = "latest"
+nodejs = "latest"
+opam = "latest"
+php = "latest"
+purescript = "latest"
+python = "latest"
+racket = "latest"
+ruby = "latest"
+rust = "latest"

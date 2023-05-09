@@ -1,8 +1,12 @@
+ELLIOTTCABLE's system configuration
+----
+
+
 Notes
------
+=====
 Install Homebrew packages, symlink all of this config, etc:
 
-    rake
+    ./Bootstrap/bootstrap.sh
 
 ----
 

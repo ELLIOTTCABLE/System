@@ -5,6 +5,7 @@ authors: [ "ELLIOTTCABLE" ]
 homepage: "https://github.com/ELLIOTTCABLE/System"
 bug-reports: "https://github.com/ELLIOTTCABLE/System/issues"
 depends: [
+  "utop"
   "dune"
   "patdiff"
   "ocamlformat"

@@ -47,7 +47,14 @@ export SYSTEM_ARCH='Arch Linux'
 export SYSTEM_UNKNOWN='Unknown'
 
 kernel="$(uname -s)"
-[ "$kernel" = "Darwin" ] && export IS_MAC='true'
+case "$kernel" in
+*Microsoft* | *microsoft*)
+   export IS_WSL='true'
+   ;;
+Darwin*)
+   export IS_MAC='true'
+   ;;
+esac
 
 if [ -z "$SYSTEM" ]; then
    if [ -n "$IS_MAC" ]; then
@@ -253,18 +260,23 @@ export PATH
 
 debug_path_dump 'after'
 
-nodenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/nodenv.plugin.zsh/nodenv.plugin.zsh"
-if [ -f "$nodenv_plugin_path" ]; then
-   . "$nodenv_plugin_path"
+if [ -n "$ZSH_VERSION" ]; then
+   nodenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/nodenv.plugin.zsh/nodenv.plugin.zsh"
+   if [ -f "$nodenv_plugin_path" ]; then
+      . "$nodenv_plugin_path"
 
-   debug_path_dump 'after nodenv.plugin.zsh'
-fi
+      debug_path_dump 'after nodenv.plugin.zsh'
+   fi
 
-rbenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/rbenv.plugin.zsh/rbenv.plugin.zsh"
-if [ -f "$rbenv_plugin_path" ]; then
-   . "$rbenv_plugin_path"
+   rbenv_plugin_path="$HOME/.zsh/modules/ELLIOTTCABLE/rbenv.plugin.zsh/rbenv.plugin.zsh"
+   if [ -f "$rbenv_plugin_path" ]; then
+      . "$rbenv_plugin_path"
 
-   debug_path_dump 'after rbenv.plugin.zsh'
+      debug_path_dump 'after rbenv.plugin.zsh'
+   fi
+
+else
+   debug_path 'not loading nodenv.plugin.zsh or rbenv.plugin.zsh (not zsh)'
 fi
 
 # Nix

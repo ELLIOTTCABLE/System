@@ -1,6 +1,12 @@
+# vim: set ft=ruby:
+
+tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-versions"
+tap "homebrew/services"
 tap "buo/cask-upgrade"
 brew "mas"
+brew "whalebrew"
 
 cask "little-snitch"
 cask "karabiner-elements"
@@ -11,8 +17,14 @@ cask "moom"
 
 brew "git"
 brew "zsh"
+brew "sheldon"
 brew "neovim"
 brew "coreutils"
 brew "moreutils"
 brew "dash"
 brew "dhall-json"
+brew "pre-commit"
+brew "rtx"
+brew "ghcup" # necessary for rtx (via asdf-ghcup) to install cabal, ghc, etc
+
+brew tmux # last, because it triggers bootstrap.sh to continue

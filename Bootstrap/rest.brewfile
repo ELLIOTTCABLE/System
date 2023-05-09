@@ -1,14 +1,21 @@
+# vim: set ft=ruby:
+
 # Homebrew features
+tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-versions"
+tap "homebrew/services"
 tap "buo/cask-upgrade"
 brew "mas"
+brew "whalebrew"
 
 # Essentials
-# (See also: Brewfile.frontload)
+# (See also: frontload.brewfile)
 cask "syncthing"
 cask "visual-studio-code"
 cask "homebrew/cask-versions/firefox-developer-edition"
 cask "bartender"
+cask "timing"
 
 mas "Pastebot", id: 1179623856
 mas "Xcode", id: 497799835
@@ -25,13 +32,18 @@ brew "yamllint"
 # (Some Casks that I want to override MAS)
 cask "daisydisk"
 
+mas "1Password for Safari", id: 1569813296
 mas "Acorn", id: 1547371478
 mas "Amphetamine", id: 937984704
 mas "Banktivity", id: 1480779512
 mas "Boom 2", id: 948176063
 mas "Brother P-touch Editor", id: 1453365242
+mas "CARROT Weather", id: 993487541
+mas "Calcbot", id: 931657367
 mas "Clear", id: 504544917
+mas "CocoaPacketAnalyzer", id: 418357707
 mas "Color Picker", id: 1545870783
+mas "Day One", id: 1055511498
 mas "Deliveries", id: 290986013
 mas "Droplr", id: 498672703
 mas "Fantastical", id: 975937182
@@ -41,12 +53,12 @@ mas "Geofency", id: 615538630
 mas "Harvest", id: 506189836
 mas "Hex Fiend", id: 1342896380
 mas "Internet Access Policy Viewer", id: 1482630322
-mas "Pasteboard Viewer", id: 1499215709
 mas "PCalc", id: 403504866
 mas "PDF Expert", id: 1055273043
+mas "Pasteboard Viewer", id: 1499215709
 mas "Pixea", id: 1507782672
+mas "Plash", id: 1494023538
 mas "Reeder", id: 1529448980
-mas "Soulver 3", id: 1508732804
 mas "Speedtest", id: 1153157709
 mas "Synalyze It!", id: 417074533
 mas "The Archive Browser", id: 510232205
@@ -54,98 +66,206 @@ mas "The Unarchiver", id: 425424353
 mas "Things", id: 904280696
 mas "Transmit", id: 1436522307
 mas "Tunes Notifier", id: 555731861
-mas "Twitter", id: 1482454543
+mas "VBAN Receptor", id: 1462414931
+mas "VBAN Talkie Cherry", id: 1553486090
+mas "WireGuard", id: 1451685025
 mas "Xee³", id: 639764244
 mas "xScope", id: 889428659
 
 brew "ack"
 brew "aria2"
+brew "asciidoc"
+brew "asciidoctor"
 brew "asciinema"
+brew "automake"
 brew "bat"
 brew "bats"
-brew "dog"
-brew "icu4c"
-brew "pcre"
 brew "chicken"
 brew "cloc"
+brew "cmake"
 brew "cmatrix"
+brew "coreutils"
 brew "croc"
 brew "curl"
-brew "rs/tap/curlie"
+brew "curlie"
+brew "dash"
 brew "ddrescue"
+brew "defaultbrowser"
+brew "dhall"
+brew "dhall-json"
+brew "dhall-lsp-server"
+brew "dhall-toml"
 brew "docker"
+brew "dog"
+brew "dog"
+brew "dos2unix"
 brew "exa"
 brew "fd"
-brew "harfbuzz"
 brew "ffmpeg"
+brew "fftw"
 brew "fzf"
+brew "geoip"
 brew "gifsicle"
+brew "git" # in "frontload.brewfile"
 brew "git-cal"
 brew "git-delta"
 brew "git-lfs"
 brew "github-release"
+brew "gnu-tar"
 brew "gnu-typist"
 brew "gnupg"
+brew "gobject-introspection"
 brew "googler"
+brew "gperftools"
 brew "gptfdisk"
+brew "guile"
+brew "hadolint"
 brew "htop"
-brew "httpie"
 brew "hub"
+brew "icu4c"
 brew "imagemagick"
+brew "imageoptim-cli"
 brew "jansson"
+brew "jemalloc"
 brew "jq"
+brew "jsonschema"
 brew "leiningen"
 brew "less"
-brew "lua"
-brew "luajit", args: ["HEAD"]
+brew "libev"
+brew "libmemcached"
 brew "luarocks"
+brew "magic-wormhole"
+brew "make"
+brew "mas"
+brew "memcached"
+brew "moreutils"
 brew "nasm"
+brew "neovim"
+brew "nlohmann-json"
 brew "nmap"
+brew "openblas"
+brew "pcre"
 brew "pgpdump"
 brew "pinentry-mac"
+brew "portaudio"
 brew "prettyping"
 brew "pv"
+brew "python-yq"
+brew "ragel"
 brew "ranger"
 brew "ripgrep"
 brew "rlwrap"
+brew "rtx" # in "frontload.brewfile"
+brew "selene"
+brew "semgrep"
+brew "sheldon" # in "frontload.brewfile"
+brew "shellcheck"
 brew "speedtest-cli"
 brew "sphinx-doc"
+brew "stylua"
 brew "swig"
 brew "tealdeer"
+brew "teamookla/speedtest/speedtest"
 brew "telnet"
 brew "tmux"
+brew "tor" # in "services", below
 brew "tree"
+brew "vultr/vultr-cli/vultr-cli"
+brew "watchexec"
 brew "watchman"
 brew "wget"
+brew "whalebrew"
+brew "yamllint"
 brew "yasm"
 brew "ykman"
 brew "youtube-dl"
+brew "zlib"
+brew "zsh" # in "frontload.brewfile"
 
 cask "anki"
+cask "audio-hijack"
+cask "backblaze"
+cask "bartender" # in "essentials", above
 cask "betterdiscord-installer"
+cask "charles"
 cask "colorsnapper"
+cask "daisydisk" # in "overrides", above
 cask "discord"
+cask "displaperture"
 cask "dotnet-sdk"
+cask "electronmail"
+cask "element"
+cask "elgato-control-center"
+cask "elgato-stream-deck"
+cask "fig"
+cask "firefox" # in "frontload.brewfile"
+cask "fldigi"
+cask "flrig"
+cask "gitify"
 cask "google-chrome"
+cask "homebrew/cask-versions/1password-beta" # in "frontload.brewfile"
+cask "homebrew/cask-versions/1password-cli-beta"
+cask "homebrew/cask-versions/firefox-developer-edition" # in "essentials", above
+cask "honer"
+cask "hookmark"
+cask "hubstaff"
 cask "ilspy"
+cask "imageoptim"
 cask "ipfs"
+cask "irccloud"
+cask "istat-menus"
+cask "jiggler"
 cask "kaleidoscope"
+cask "karabiner-elements" # in "frontload.brewfile"
 cask "keycastr"
+cask "keysmith"
 cask "lingon-x"
+cask "little-snitch" # in "frontload.brewfile"
+cask "loopback"
+cask "midi-monitor"
 cask "mono-mdk"
 cask "monodraw"
+cask "moom" # in "frontload.brewfile"
 cask "nightowl"
 cask "notion"
+cask "obs"
+cask "obs-ndi"
+cask "obs-virtualcam"
+cask "obs-websocket"
 cask "omnigraffle"
+cask "openscad"
+cask "pretzel"
+cask "rapidapi"
 cask "rescuetime"
+cask "script-debugger"
+cask "shortcat"
 cask "signal"
+cask "sketch"
 cask "slack"
+cask "sonobus"
+cask "soulver"
+cask "soundsource"
+cask "spotify"
 cask "steam"
+cask "swiftdefaultappsprefpane"
+cask "syncthing" # in "essentials", above
 cask "synergy-beta"
+cask "timing" # in "essentials", above
 cask "tower"
+cask "vimr" # in "frontload.brewfile"
+cask "visual-studio-code" # in "essentials", above
+cask "visual-studio-code-insiders"
 cask "vlc"
-cask "Homebrew/homebrew-cask-drivers/yubico-authenticator"
+cask "vmware-fusion"
+cask "wireshark"
+cask "yubico-authenticator"
 cask "zoom"
+
+# TODO — need to create formulae
+# cask "apollo-central"
+# cask "luna" # by Universal Audio
+# cask "ua-midi-control"
+# cask "uad"
 
 # Services
 brew "unbound"

@@ -73,11 +73,22 @@ fi
 
 export HISTIGNORE="fg"
 
+# rtx / asdf, runtime version manager
+export RTX_CONFIG_FILE="$XDG_CONFIG_HOME/rtx/config.toml"
+export RTX_NPM_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/rtx/default-npm-packages"
+
+# Haskell, Cabal, and GHCup
+export GHCUP_USE_XDG_DIRS='true'
 
 # ssh
 # This sets SSH_AUTH_SOCK in the case of ForwardAgent:
 export SSH_IDENT="$SYSTEM_REPO/Vendor/ssh-ident/ssh-ident"
 export BINARY_DIR="/usr/bin"
+
+# 1Password
+if [ -f "$XDG_CONFIG_HOME/op/plugins.sh" ]; then
+   source "$XDG_CONFIG_HOME/op/plugins.sh"
+fi
 
 
 # less
@@ -200,7 +211,8 @@ alias sls='screen -list'
 alias ri='ri -Tf ansi'
 
 # See: https://github.com/Homebrew/homebrew-core/pull/47402
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+# FIXME: This uses `brew --prefix` and is likely to be slow.
+#export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 # Rails
 alias sc='./script/console'
