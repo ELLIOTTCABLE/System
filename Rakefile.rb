@@ -6,15 +6,15 @@ module OS
    def OS.windows?
       (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
    end
- 
+
    def OS.mac?
       (/darwin/ =~ RUBY_PLATFORM) != nil
    end
- 
+
    def OS.unix?
       !OS.windows?
    end
- 
+
    def OS.linux?
       OS.unix? and not OS.mac?
    end
@@ -23,13 +23,7 @@ end
 task :default => :setup
 
 desc '(DEFAULT) Set up a new machine'
-if OS.mac?
-   task :setup => [:brew_frontload, :hooks, :submodules, :dotfiles, :brew] do
-   end
-elsif OS.unix?
-   task :setup => [:hooks, :submodules, :dotfiles] do
-   end
-end
+task :setup => [:hooks, :submodules, :dotfiles]
 
 desc 'Install the git hooks'
 task :hooks do
@@ -96,16 +90,4 @@ task :symlink do
 
     FileUtils.symlink(from, to)
   end
-end
-
-desc 'Install the rest of the Homebrew packages and Mac App Store apps'
-task :brew_frontload do
-   system "brew bundle --file='" + Dir.pwd+'/Bootstrap/Brewfile.frontload' + "'"
-   fail "Error: #{$?}" unless $?.success?
-end
-
-desc 'Install the rest of the Homebrew packages and Mac App Store apps'
-task :brew => :brew_frontload do
-   system "brew bundle --file='" + Dir.pwd+'/Bootstrap/Brewfile' + "'"
-   fail "Error: #{$?}" unless $?.success?
 end
