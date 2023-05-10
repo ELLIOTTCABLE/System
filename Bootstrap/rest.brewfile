@@ -242,6 +242,7 @@ cask "shortcat"
 cask "signal"
 cask "sketch"
 cask "slack"
+cask "softube-central"
 cask "sonobus"
 cask "soulver"
 cask "soundsource"
@@ -262,7 +263,6 @@ cask "yubico-authenticator"
 cask "zoom"
 
 # TODO — need to create formulae
-# cask "apollo-central"
 # cask "luna" # by Universal Audio
 # cask "ua-midi-control"
 # cask "uad"

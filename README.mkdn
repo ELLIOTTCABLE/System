@@ -6,7 +6,12 @@ Notes
 =====
 Install Homebrew packages, symlink all of this config, etc:
 
-    ./Bootstrap/bootstrap.sh
+```console
+$ xcode-select --install
+$ git clone https://github.com/ELLIOTTCABLE/System.git ~/Library/System
+$ cd ~/Library/System
+$ ./Bootstrap/bootstrap.sh
+```
 
 ----
 
