@@ -21,10 +21,13 @@ Cookies-journal
 Crashpad/
 CrashpadMetrics-active.pma
 CrashpadMetrics.pma
+DawnCache/
 GPUCache/
 IndexedDB/
+Local State
 Local Storage/
 Network Persistent State
+Network/
 Preferences
 QuotaManager
 QuotaManager-journal
