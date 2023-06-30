@@ -1,7 +1,8 @@
 - name: All hosts idk
   hosts: all
   roles:
-     - aisbergg.acl
+     - role: aisbergg.acl
+       become: true
      - role: geerlingguy.docker
        become: true
      - role: dokku_bot.ansible_dokku
