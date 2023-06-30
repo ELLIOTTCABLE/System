@@ -247,7 +247,6 @@
      app: *worker_name
      config:
         BASE_URL: "{{ base_url }}"
-        BASE_INTERNAL_URL: "http://{{ server_name }}.web:8000"
         RUST_LOG: info
 
         NUM_WORKERS: "1"
