@@ -1,0 +1,5 @@
+dependencies:
+   - name: dokku_bot.ansible_dokku
+     src: https://github.com/dokku/ansible-dokku
+     version: "978b45a"
+     become: true

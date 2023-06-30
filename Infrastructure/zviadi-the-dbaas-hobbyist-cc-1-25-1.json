@@ -1,0 +1,7 @@
+{
+   "label": "zviadi",
+   "region": "ord",
+   "plan": "vultr-dbaas-hobbyist-cc-1-25-1",
+   "database_engine": "pg",
+   "database_engine_version": "15"
+}

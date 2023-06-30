@@ -2,6 +2,8 @@
 #   Dotfiles/config/configstore/.gitignore,
 #   Dotfiles/config/Code/.gitignore
 
+node_modules/
+
 Bootstrap/Brewfile.lock.json
 Bootstrap/Brewfile.frontload.lock.json
 

@@ -1,0 +1,3 @@
+all:
+   hosts:
+      eurydice.with.ec: 45.76.230.26

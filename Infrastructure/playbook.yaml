@@ -1,0 +1,21 @@
+- name: All hosts idk
+  hosts: all
+  roles:
+     - aisbergg.acl
+     - role: geerlingguy.docker
+       become: true
+     - role: dokku_bot.ansible_dokku
+       become: true
+     - professormanhattan.deno
+     - windmill
+
+  vars:
+     dokku_packages_state: latest
+     dokku_hostname: with.ec
+     dokku_manage_nginx: false
+     server_domain: windmill.with.ec
+     database_url: "postgres://{{ lookup('env', 'DATABASE_URL') }}/windmilldb"
+     caddy_letsencrypt_email: "letsencrypt-automated@elliottcable.com"
+     # dokku caddy:set --global letsencrypt-email letsencrypt-automated@elliottcable.com
+     deno_root: /usr/local
+     python_path: /usr/bin/python3

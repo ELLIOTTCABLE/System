@@ -1,0 +1,9 @@
+{
+   "label": "eurydice",
+   "hostname": "eurydice-the-vhp-2c-4gb-intel",
+   "region": "ord",
+   "plan": "vhp-2c-4gb-intel",
+   "os_id": 1743, // Ubuntu 22.04 LTS x64
+   "user_data": "INVALID change me with jq"
+// "reserved_ipv4": "INVALID change me with jq"
+}

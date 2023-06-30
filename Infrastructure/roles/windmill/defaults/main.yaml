@@ -1,0 +1,13 @@
+base_url: "https://{{ server_domain }}"
+
+network_name: windmill-network
+
+server_name: windmill-server
+
+worker_name: windmill-worker
+worker_count: 3
+
+lsp_name: windmill-lsp
+
+deno_root: /usr/local
+python_path: /usr/local/bin/python3
