@@ -234,7 +234,7 @@
 - name: Check the proxy configuration for {{ server_name }}
   ansible.builtin.command: dokku proxy:report {{ server_name|quote }}
   register: server_proxy_report
-  failed_when: "'proxy information' is not in server_proxy_report.stdout"
+  failed_when: "'proxy information' not in server_proxy_report.stdout"
   changed_when: false
 
   tags:
@@ -244,7 +244,7 @@
 
 - name: Configure caddy as the proxy for {{ server_name }}
   ansible.builtin.command: dokku proxy:set {{ server_name|quote }} caddy
-  when: "'caddy' is not in server_proxy_report.stdout"
+  when: "'caddy' not in server_proxy_report.stdout"
 
   tags:
      - windmill.server
@@ -437,7 +437,7 @@
 - name: Check the proxy configuration for {{ lsp_name }}
   ansible.builtin.command: dokku proxy:report {{ lsp_name|quote }}
   register: lsp_proxy_report
-  failed_when: "'proxy information' is not in lsp_proxy_report.stdout"
+  failed_when: "'proxy information' not in lsp_proxy_report.stdout"
   changed_when: false
 
   tags:
@@ -447,7 +447,7 @@
 
 - name: Configure caddy as the proxy for {{ lsp_name }}
   ansible.builtin.command: dokku proxy:set {{ lsp_name|quote }} caddy
-  when: "'caddy' is not in lsp_proxy_report.stdout"
+  when: "'caddy' not in lsp_proxy_report.stdout"
 
   tags:
      - windmill.lsp
