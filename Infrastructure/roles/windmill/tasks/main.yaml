@@ -92,6 +92,8 @@
         - "{{ server_name }}.{{ dokku_hostname }}"
      state: disable
   #  state: absent
+  # TODO: Contribute 'changed_when' support upstream
+  changed_when: false
 
   tags:
      - windmill.server
@@ -186,6 +188,7 @@
 #      user: 1001
 #      group: 1001
 
+# TODO: Contribute 'changed_when' support upstream
 - name: Attach server to network {{ network_name }}
   dokku_network_property:
      app: "{{ server_name }}"
@@ -197,8 +200,20 @@
      - windmill.network
      - dokku.network
 
+- name: Check the proxy configuration for {{ server_name }}
+  ansible.builtin.command: dokku proxy:report {{ server_name|quote }}
+  register: server_proxy_report
+  failed_when: "'proxy information' is not in server_proxy_report.stdout"
+  changed_when: false
+
+  tags:
+     - windmill.server
+     - windmill.proxy
+     - dokku.proxy
+
 - name: Configure caddy as the proxy for {{ server_name }}
   ansible.builtin.command: dokku proxy:set {{ server_name|quote }} caddy
+  when: "'caddy' is not in server_proxy_report.stdout"
 
   tags:
      - windmill.server
@@ -244,6 +259,8 @@
      domains:
         - "{{ worker_name }}.{{ dokku_hostname }}"
      state: disable
+  # TODO: Contribute 'changed_when' support upstream
+  changed_when: false
 
   tags:
      - windmill.worker
@@ -301,6 +318,7 @@
      - windmill.storage
      - dokku.storage
 
+# TODO: Contribute 'changed_when' support upstream
 - name: Attach worker to network {{ network_name }}
   dokku_network_property:
      app: "{{ worker_name }}"
@@ -356,6 +374,8 @@
      domains:
         - "{{ lsp_name }}.{{ dokku_hostname }}"
      state: disable
+  # TODO: Contribute 'changed_when' support upstream
+  changed_when: false
 
   tags:
      - windmill.lsp
@@ -383,8 +403,20 @@
      - windmill.proxy
      - dokku.proxy
 
+- name: Check the proxy configuration for {{ lsp_name }}
+  ansible.builtin.command: dokku proxy:report {{ lsp_name|quote }}
+  register: lsp_proxy_report
+  failed_when: "'proxy information' is not in lsp_proxy_report.stdout"
+  changed_when: false
+
+  tags:
+     - windmill.lsp
+     - windmill.proxy
+     - dokku.proxy
+
 - name: Configure caddy as the proxy for {{ lsp_name }}
   ansible.builtin.command: dokku proxy:set {{ lsp_name|quote }} caddy
+  when: "'caddy' is not in lsp_proxy_report.stdout"
 
   tags:
      - windmill.lsp
