@@ -48,10 +48,17 @@
           - windmill.deno
           - windmill.prerequesites
 
+- name: Check if the nginx proxy is enabled
+  ansible.builtin.command: /lib/systemd/systemd-sysv-install is-enabled nginx
+  register: nginx_enabled
+  failed_when: false
+  changed_when: false
+
 # TODO: Define changed/success using:
 #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
 - name: Deactivate the nginx proxy
   ansible.builtin.command: dokku nginx:stop
+  when: nginx_enabled.rc == 0
 
   tags:
      - windmill.server
@@ -123,10 +130,9 @@
   file:
      path: "/var/lib/dokku/data/storage/{{ server_name }}"
      state: directory
-     owner: 0
-     group: 0
      mode: 0700
   become: true
+  become_user: dokku
 
   tags:
      - windmill.server
@@ -139,10 +145,9 @@
      force: false
      content: "{}"
      dest: "/var/lib/dokku/data/storage/{{ server_name }}/oauth.json"
-     owner: 0
-     group: 0
      mode: 0700
   become: true
+  become_user: dokku
 
   tags:
      - windmill.server
@@ -150,10 +155,13 @@
      - windmill.storage
      - dokku.storage
 
-- name: Load existing oauth.json into a variable
-  ansible.builtin.include_vars:
-     file: "/var/lib/dokku/data/storage/{{ server_name }}/oauth.json"
-     name: oauth_json
+# - name: Load existing oauth.json into a variable
+#   ansible.builtin.include_vars:
+#      file: "/var/lib/dokku/data/storage/{{ server_name }}/oauth.json"
+#      name: oauth_json
+#      remote_src: true
+#   become: true
+#   become_user: dokku
 
 - name: Configure bind-mount for oauth.json for {{ server_name }}
   dokku_docker_options:
