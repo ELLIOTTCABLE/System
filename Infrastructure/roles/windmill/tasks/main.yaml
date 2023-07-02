@@ -66,6 +66,37 @@
      - windmill.proxy
      - dokku.proxy
 
+- name: Check the caddy configuration
+  ansible.builtin.command: dokku caddy:show-config
+  register: caddy_config_report
+  changed_when: false
+
+  tags:
+     - windmill.certs
+     - windmill.proxy
+     - dokku.certs
+     - dokku.proxy
+
+- name: Configure caddy's letsencrypt e-mail settings
+  ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email|quote }}
+  when: caddy_letsencrypt_email not in caddy_config_report.stdout
+
+  tags:
+     - windmill.certs
+     - windmill.proxy
+     - dokku.certs
+     - dokku.proxy
+
+- name: Configure caddy's letsencrypt server-address settings
+  ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server|quote }}
+  when: caddy_letsencrypt_server not in caddy_config_report.stdout
+
+  tags:
+     - windmill.certs
+     - windmill.proxy
+     - dokku.certs
+     - dokku.proxy
+
 - name: Create network {{ network_name }}
   dokku_network:
      name: "{{ network_name }}"
