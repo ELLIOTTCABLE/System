@@ -198,7 +198,7 @@
      - dokku.network
 
 - name: Configure caddy as the proxy for {{ server_name }}
-  ansible.builtin.command: dokku proxy:set {{ server_name }} caddy
+  ansible.builtin.command: dokku proxy:set {{ server_name|quote }} caddy
 
   tags:
      - windmill.server
@@ -313,7 +313,7 @@
      - dokku.network
 
 - name: Disable the proxy for {{ worker_name }}
-  ansible.builtin.command: dokku proxy:disable {{ worker_name }}
+  ansible.builtin.command: dokku proxy:disable {{ worker_name|quote }}
 
   tags:
      - windmill.worker
@@ -384,7 +384,7 @@
      - dokku.proxy
 
 - name: Configure caddy as the proxy for {{ lsp_name }}
-  ansible.builtin.command: dokku proxy:set {{ lsp_name }} caddy
+  ansible.builtin.command: dokku proxy:set {{ lsp_name|quote }} caddy
 
   tags:
      - windmill.lsp
