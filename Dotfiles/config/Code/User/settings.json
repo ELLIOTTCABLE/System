@@ -114,7 +114,6 @@
    // Navigation & search
    // ===================
    "explorer.sortOrder": "mixed",
-   "search.quickOpen.includeSymbols": true,
    "search.smartCase": true,
    "search.useGlobalIgnoreFiles": true,
 
@@ -149,8 +148,8 @@
    "workbench.settings.useSplitJSON": true,
 
    // ### Terminal & debugger
-   "debug.inlineValues": true,
-   "terminal.integrated.confirmOnExit": true,
+   "debug.inlineValues": "on",
+   "terminal.integrated.confirmOnExit": "hasChildProcesses",
 
    // ### Git
    "git.alwaysShowStagedChangesResourceGroup": true,
@@ -199,6 +198,9 @@
    // Mimic Vim's trailing-whitespace behaviour
    "emptyIndent.removeIndent": true,
    "emptyIndent.highlightIndent": true,
+
+   // Indent rainbow
+   "indentRainbow.ignoreErrorLanguages": ["ocaml", "ocaml.interface", "dune"],
 
    // ### Setting Toggle
    "toggle.setting1Title": "editor.fontLigatures",
