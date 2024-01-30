@@ -70,7 +70,7 @@ install_packages_rest() {
 # Install runtimes
 install_runtimes() {
    puts "Installing runtimes..."
-   rtx install --install-missing
+   mise install --install-missing
 }
 
 # ---- ---- ----

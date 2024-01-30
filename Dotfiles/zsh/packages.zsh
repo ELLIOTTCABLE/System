@@ -33,7 +33,7 @@ zplug supercrabtree/k
 # These are explicitly loaded at shenv-time; but I want zplug to install/manage them.
 zplug ELLIOTTCABLE/nodenv.plugin.zsh, if:"false"
 zplug ELLIOTTCABLE/rbenv.plugin.zsh, if:"false"
-zplug dhanak/omz-rtx
+zplug wintermi/zsh-mise
 
 # NOTE: I had to call OPAM's `variables.sh` from `.shenv`, instea.
 #zplug ~/.opam/opam-init,      from:local, use:init.zsh

@@ -1,7 +1,7 @@
 -- NOTE: dhall-to-toml [doesn't yet support "dynamic records"](dh-2509), so this file currently has to be built with `dhall-to-json` and piped through `yq --toml-output`:
 --
 -- ```console
--- $ ./Dotfiles/bin/dhall-to-toml-via-yq ./Dotfiles/config/rtx/config.dhall
+-- $ ./Dotfiles/bin/dhall-to-toml-via-yq ./Dotfiles/config/mise/config.dhall
 -- ```
 --
 -- [dh-2509]: <https://github.com/dhall-lang/dhall-haskell/issues/2509>

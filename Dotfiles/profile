@@ -73,9 +73,9 @@ fi
 
 export HISTIGNORE="fg"
 
-# rtx / asdf, runtime version manager
-export RTX_CONFIG_FILE="$XDG_CONFIG_HOME/rtx/config.toml"
-export RTX_NPM_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/rtx/default-npm-packages"
+# mise / asdf, runtime version manager
+export MISE_CONFIG_FILE="$XDG_CONFIG_HOME/mise/config.toml"
+export MISE_NODE_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/mise/default-npm-packages"
 
 # Haskell, Cabal, and GHCup
 export GHCUP_USE_XDG_DIRS='true'

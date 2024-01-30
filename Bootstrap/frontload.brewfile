@@ -24,7 +24,7 @@ brew "moreutils"
 brew "dash"
 brew "dhall-json"
 brew "pre-commit"
-brew "rtx"
-brew "ghcup" # necessary for rtx (via asdf-ghcup) to install cabal, ghc, etc
+brew "mise"
+brew "ghcup" # necessary for mise (via asdf-ghcup) to install cabal, ghc, etc
 
 brew "tmux" # last, because it triggers bootstrap.sh to continue
