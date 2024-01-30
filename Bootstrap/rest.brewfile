@@ -16,6 +16,7 @@ cask "visual-studio-code"
 cask "homebrew/cask-versions/firefox-developer-edition"
 cask "bartender"
 cask "timing"
+cask "raycast"
 
 mas "Pastebot", id: 1179623856
 mas "Xcode", id: 497799835
@@ -80,6 +81,7 @@ brew "asciinema"
 brew "automake"
 brew "bat"
 brew "bats"
+brew "blueutil"
 brew "chicken"
 brew "cloc"
 brew "cmake"
