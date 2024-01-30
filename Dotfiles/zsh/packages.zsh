@@ -30,10 +30,8 @@ zplug Vifon/deer, use:"deer"
 #  some git status information on files and directories.”
 zplug supercrabtree/k
 
-# These are explicitly loaded at shenv-time; but I want zplug to install/manage them.
-zplug ELLIOTTCABLE/nodenv.plugin.zsh, if:"false"
-zplug ELLIOTTCABLE/rbenv.plugin.zsh, if:"false"
-zplug wintermi/zsh-mise
+# These are explicitly loaded in .shenv; but I want zplug to install/manage them.
+zplug wintermi/zsh-mise, if:"false"
 
 # NOTE: I had to call OPAM's `variables.sh` from `.shenv`, instea.
 #zplug ~/.opam/opam-init,      from:local, use:init.zsh

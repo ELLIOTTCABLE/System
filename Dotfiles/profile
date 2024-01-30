@@ -51,24 +51,10 @@ done
 
 stty -ixon
 
-# Install nodenv & rbenv
 # FIXME: These leave Bash out in the cold.
-if [ -z "$NODENV_ROOT" ]; then
-   # FIXME: Pretty Mac-centric.
+if [ -z "$MISE_SHELL" ]; then
    printf "\e[31m%s\e[m — you'll need to install it with Homebrew or via git-clone ...\n" \
-      "[nodenv] nodenv is missing"
-fi
-
-if [ -z "$RBENV_ROOT" ]; then
-   # FIXME: Pretty Mac-centric.
-   printf "\e[31m%s\e[m — you'll need to install it with Homebrew or via git-clone ...\n" \
-      "[rbenv] rbenv is missing"
-else
-   true
-   # NOTE: This is configured by rbenv.plugin.zsh, now.
-   #rbenv() {
-   #   ...
-   #}
+      "[mise] The mise version-manager is missing"
 fi
 
 export HISTIGNORE="fg"

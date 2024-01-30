@@ -26,45 +26,6 @@ updates itself). The `.zshrc` will automate this the first time you run the term
 
 ----
 
-rbenv, nodenv, and their plugins must be installed manually:
-
-    git clone https://github.com/nodenv/nodenv.git ~/.nodenv
-    ln -s "$SYSTEM_REPO/Dotfiles/config/nodenv/default-packages" ~/.nodenv/
-
-    (  mkdir ~/.nodenv/plugins && cd ~/.nodenv/plugins && \
-       for PLUGIN in node-build node-build-update-defs nodenv-aliases \
-       nodenv-default-packages nodenv-each nodenv-package-rehash; do
-          git clone "https://github.com/nodenv/$PLUGIN.git"
-       done )
-
-    nodenv update-version-defs
-    nodenv install 10.8.0                              # Or whatever,
-    nodenv default-packages install --all
-    nodenv rehash
-
-    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-    ln -s "$SYSTEM_REPO/Dotfiles/config/rbenv/default-gems" ~/.rbenv/
-
-    (  mkdir ~/.rbenv/plugins && cd ~/.rbenv/plugins && \
-       for PLUGIN in rkh/rbenv-update rbenv/ruby-build tpope/rbenv-aliases \
-       rkh/rbenv-whatis rbenv/rbenv-default-gems rbenv/rbenv-each; do
-          git clone "https://github.com/$PLUGIN.git"
-       done )
-
-    rbenv install 2.5.1                                # Or whatever,
-    rbenv alias --auto
-
-The *ZSH modules* for those are sourced directly by my dotfiles, instead of being loaded by Zplug —
-but they must be *installed* via Zplug.
-
-Temporarily remove the `, if:"false"` stanzas in `~/.zsh/packages.zsh` for:
- - `ELLIOTTCABLE/nodenv.plugin.zsh`
- - `ELLIOTTCABLE/rbenv.plugin.zsh`
-
-Run `zplug update` in a new terminal to install those two, then restore the `, if:"false"` stanzas.
-
-----
-
 Some Vim plugins require extra setup:
 
  - Vim's hosts need to be installed. Node's will be installed via `nodenv-default-packages` above,
