@@ -1,85 +1,116 @@
-
-function Install-Package-Manager-Build-Deps {
-
+function Test-Admin {
+   $currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
+   $currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-function Install-Package-Manager {
-   $URL = "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
-   $URL = (Invoke-WebRequest -Uri $URL).Content | ConvertFrom-Json |
-         Select-Object -ExpandProperty "assets" |
-         Where-Object "browser_download_url" -Match '.msixbundle' |
-         Select-Object -ExpandProperty "browser_download_url"
-
-   # Download
-   Invoke-WebRequest -Uri $URL -OutFile "Setup.msix" -UseBasicParsing
-
-   # Install
-   Add-AppxPackage -Path "Setup.msix"
-
-   # Delete file
-   Remove-Item "Setup.msix"
+if ((Test-Admin) -eq $false) {
+   Write-Host "This script requires administrator privileges. Please run it as an administrator."
+   exit
 }
 
+# Set the working directory to the script's grandparent directory
+$grandparentDirectory = Split-Path -Parent -Path (Split-Path -Parent -Path $MyInvocation.MyCommand.Definition)
+if ((Get-Location).Path -ne $grandparentDirectory) {
+   Set-Location -Path $grandparentDirectory
+   Write-Host "Changed directory to $grandparentDirectory"
+}
 
-Install-Package-Manager
+# --- Everything below this line will be run as Administrator ---
 
-# Frontload
-winget install -e --id RandyRants.SharpKeys
-winget install -e --id AgileBits.1Password.Beta
-winget install -e --id Git.Git
-winget install -e --id GitHub.cli
-winget install -e --id GitHub.GitHubDesktop
-winget install -e --id Logitech.OptionsPlus
-winget install -e --id Mozilla.Firefox
-winget install -e --id Microsoft.VisualStudioCode
-winget install -e --id SyncTrayzor.SyncTrayzor
-winget install -e --id Yubico.Authenticator
-winget install -e --id Notion.Notion
-winget install -e --id glzr-io.glazewm
+# Create a "Task Scheduler" task to start GlazeWM at logon.
+# Note: this appears to cause some sort of bug if you don't disable the
+#    "system tray" plugin; see: <https://github.com/glzr-io/glazewm/issues/546>)
+function Initialize-GlazeScheduledTask {
+   $taskName = "GlazeWM"
+   $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 
-# Next
-winget install -e --id Valve.Steam
-winget install -e --id RescueTime.DesktopApp
-winget install -e --id Nvidia.GeForceExperience
-winget install -e --id EpicGames.EpicGamesLauncher
-winget install -e --id Ubisoft.Connect
-winget install -e --id ElectronicArts.EADesktop
+   if ($null -eq $existingTask) {
+      $trigger = New-ScheduledTaskTrigger -AtLogon -User "$env:USERDOMAIN\$env:USERNAME"
 
-# Rest
-winget install -e --id Armin2208.WindowsAutoNightMode
-winget install -e --id AutoHotkey.AutoHotkey
-winget install -e --id Discord.Discord
-winget install -e --id FinalWire.AIDA64.Extreme
-winget install -e --id Google.Chrome
-winget install -e --id icsharpcode.ILSpy
-winget install -e --id IPFS.IPFS-Desktop
-winget install -e --id Microsoft.PowerToys
-winget install -e --id Microsoft.VisualStudio.2022.Community
-winget install -e --id NexusMods.Vortex
-winget install -e --id OpenWhisperSystems.Signal
-winget install -e --id SatisfactoryModding.SatisfactoryModManager
-winget install -e --id SlackTechnologies.Slack
-winget install -e --id Ubisoft.Connect
-winget install -e --id VB-Audio.Voicemeeter.Banana
-winget install -e --id AgileBits.1Password.CLI
-winget install -e --id code52.Carnac
+      $principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" `
+         -LogonType Interactive -RunLevel Highest
 
-# TODO: User-level (non-admin)
-winget install -e --id 9NCBCSZSJRSB # Spotify
+      $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 `
+         -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 
-# ## Setup GlazeWM
-# Note that S4U: https://learn.microsoft.com/en-us/windows/win32/taskschd/principal-logontype#property-value
-# "The user must log on using a service for user (S4U) logon."
-$trigger = New-ScheduledTaskTrigger -AtLogon -User "$env:USERDOMAIN\$env:USERNAME"
+      $action = New-ScheduledTaskAction `
+         -Execute "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\glzr-io.glazewm_Microsoft.Winget.Source_8wekyb3d8bbwe\glazewm.exe"
 
-$principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" `
-   -LogonType Interactive -RunLevel Highest
+      Register-ScheduledTask $taskName -Trigger $trigger -Principal $principal `
+         -Settings $settings -Action $action
+   }
+}
 
-$settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 `
-   -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+# TODO: implement git-hooks on Windows
+# function Init-Hooks {
+#    & "./Scripts/install-git-hooks.sh"
+# }
 
-$action = New-ScheduledTaskAction `
-   -Execute "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\glzr-io.glazewm_Microsoft.Winget.Source_8wekyb3d8bbwe\glazewm.exe"
+# TODO: Create a single-source-of-truth for this list, so it can be shared with the
+# Rakefile or macOS config or whatever
+function Initialize-Submodules {
+   & "git" "submodule" "update" "--init" "--recursive" "--jobs" "4"
+   New-Item -ItemType Directory -Force -Path "$(Get-Location)/Dotfiles/vim/backup"
+   New-Item -ItemType Directory -Force -Path "$(Get-Location)/Dotfiles/vim/undo"
+   New-Item -ItemType Directory -Force -Path "$(Get-Location)/Dotfiles/ssh/sockets"
+   New-Item -ItemType Directory -Force -Path "$(Get-Location)/Dotfiles/ssh/identities"
+}
 
-Register-ScheduledTask "GlazeWM" -Trigger $trigger -Principal $principal `
-   -Settings $settings -Action $action
+# TODO: Figure out if this is even needed on Windows ssh/gnupg?
+# function Init-Dotfiles {
+#    Init-Symlinks
+#    & "icacls" "$((Get-Location)/Dotfiles/ssh)" "/grant:r" "*S-1-5-32-545:(OI)(CI)F"
+#    & "icacls" "$((Get-Location)/Dotfiles/gnupg)" "/grant:r" "*S-1-5-32-545:(OI)(CI)F"
+# }
+
+function Initialize-Symlinks {
+   $files = Get-ChildItem -Path "Dotfiles\*" -File
+   $files += Get-ChildItem -Path "Dotfiles\*" -Directory
+   Write-Host "Linking in $HOME\"
+   foreach ($file in $files) {
+      $from = $file.FullName
+      $to = Join-Path -Path $HOME -ChildPath ("." + $file.Name)
+      if (Test-Path -Path $to) {
+         Write-Host "   ! $to exists... "
+         if ((Get-Item -Path $to).LinkType) {
+            (Get-Item -Path $to).Delete()
+            Write-Host "as a symlink, removed"
+         } else {
+            Write-Host "as a normal file/directory, moving to $($file.Name)~... "
+            $toto = $to + "~"
+            if (Test-Path -Path $toto) {
+               Write-Host "already exists! r)emove, or s)kip? "
+               $order = Read-Host
+               switch ($order) {
+                  "r" {
+                     Write-Host '   ! Removing... '
+                     Remove-Item -Path $toto
+                  }
+                  "s" {
+                     Write-Host '   ! Okay, skipped '
+                     continue
+                  }
+                  default {
+                     Write-Host "   ! Invalid entry, so skipping"
+                     continue
+                  }
+               }
+            }
+            Move-Item -Path $to -Destination $toto
+            Write-Host "Done!"
+         }
+      }
+      New-Item -ItemType SymbolicLink -Path $to -Target $from
+   }
+}
+
+Write-Host "== Initializing submodules..."
+Initialize-Submodules
+Write-Host "== Initializing symlinks..."
+Initialize-Symlinks
+Write-Host "== Initializing Glaze scheduled task..."
+Initialize-GlazeScheduledTask
+Write-Host "== Installing my frontload programs..."
+& "$PSScriptRoot\frontload.ps1"
+Write-Host "== Installing the rest of my programs..."
+& "$PSScriptRoot\rest.ps1"

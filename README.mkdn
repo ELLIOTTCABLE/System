@@ -143,3 +143,15 @@ Windows still needs some work, but here's some hints:
  - Hyper.is works with PowerShell
  - VSCodeVim is less work than *actual* vim, probably. Less of my configuration, though.
  - `New-Item -Path C:\Users\ec\.tridactylrc -ItemType SymbolicLink -Value C:\Users\ec\Documents\GitHub\System\Dotfiles\config\tridactyl\tridactylrc`
+
+----
+
+Okay, got fed up, automated a tiny bit of the Windows setup:
+
+Open an Admin terminal (right-click the Windows logo in the taskbar); then run this
+PowerShell script:
+
+```powershell
+powershell -ExecutionPolicy Bypass `
+   -File C:\Users\ec\System\Bootstrap\bootstrap.ps1
+```
