@@ -25,3 +25,10 @@ SetCapsLockState("AlwaysOff")
 *+9::9
 *+0::0
 #UseHook False
+
+; Remap a select set of Ctrl mods to make my muscle-memory happy with
+; Ctrl/Cmd swapped:
+#HotIf WinActive("ahk_exe code.exe") or WinActive("ahk_exe WindowsTerminal.exe")
+#c::^c
+#q::^q ; vi-mode column select
+#HotIf
