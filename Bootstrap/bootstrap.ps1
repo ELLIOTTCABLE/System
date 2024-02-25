@@ -66,3 +66,20 @@ winget install -e --id code52.Carnac
 
 # TODO: User-level (non-admin)
 winget install -e --id 9NCBCSZSJRSB # Spotify
+
+# ## Setup GlazeWM
+# Note that S4U: https://learn.microsoft.com/en-us/windows/win32/taskschd/principal-logontype#property-value
+# "The user must log on using a service for user (S4U) logon."
+$trigger = New-ScheduledTaskTrigger -AtLogon -User "$env:USERDOMAIN\$env:USERNAME"
+
+$principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" `
+   -LogonType Interactive -RunLevel Highest
+
+$settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 `
+   -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+
+$action = New-ScheduledTaskAction `
+   -Execute "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\glzr-io.glazewm_Microsoft.Winget.Source_8wekyb3d8bbwe\glazewm.exe"
+
+Register-ScheduledTask "GlazeWM" -Trigger $trigger -Principal $principal `
+   -Settings $settings -Action $action
