@@ -1,0 +1,81 @@
+2/24/2024 4:13:33 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid binding 'Alt+Shift+Minus' in keybinding config: Unknown key 'Minus'
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 48
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.ReloadUserConfigHandler.Handle(ReloadUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\ReloadUserConfigHandler.cs:line 35
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 48
+   at CallSite.Target(Closure, CallSite, Bus, Object)
+   at System.Dynamic.UpdateDelegates.UpdateAndExecuteVoid2[T0,T1](CallSite site, T0 arg0, T1 arg1)
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.RunWithSubjectContainerHandler.Handle(RunWithSubjectContainerCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\RunWithSubjectContainerHandler.cs:line 28
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 48
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.RegisterKeybindingsHandler.<>c__DisplayClass4_0.<Handle>b__1() in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\RegisterKeybindingsHandler.cs:line 63
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, ReloadUserConfigCommand, RunWithSubjectContainerCommand, SetActiveWindowBorderCommand, SetFocusedDescendantCommand, SetActiveWindowBorderCommand, SetFocusedDescendantCommand, SetActiveWindowBorderCommand, SyncNativeFocusCommand, RedrawContainersCommand, SetFocusedDescendantCommand, DetachContainerCommand, UnmanageWindowCommand, SyncNativeFocusCommand 
+State dump: {"id":"9ce6cec2-abd3-400c-8b9e-014138991eb5","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[{"device_name":"\\\\.\\DISPLAY1","id":"b533fa6c-394d-48eb-aac0-1ed5330b2e82","x":0,"y":0,"width":6016,"height":3288,"type":"monitor","focus_index":0,"children":[{"tiling_direction":"horizontal","size_percentage":1,"name":"2","id":"8f7f163c-d46f-4fd8-b7c2-f1f6f424cd09","x":20,"y":80,"width":5976,"height":3188,"type":"workspace","focus_index":0,"children":[{"floating_placement":{"left":2442,"top":78,"right":3574,"bottom":3270,"x":2442,"y":78,"width":1132,"height":3192},"border_delta":{"left":0,"top":0,"right":0,"bottom":0},"handle":264438,"previous_state":"tiling","id":"f702c8ed-3582-44ce-8c66-e422a34fa9ce","x":0,"y":0,"width":0,"height":0,"type":"window","focus_index":2,"children":[]},{"floating_placement":{"left":1512,"top":76,"right":4504,"bottom":3272,"x":1512,"y":76,"width":2992,"height":3196},"border_delta":{"left":7,"top":0,"right":7,"bottom":7},"handle":720940,"size_percentage":0.5,"id":"fc1b638e-eb06-49b8-8847-a48f04c96d5f","x":20,"y":80,"width":2978,"height":3188,"type":"window","focus_index":1,"children":[]},{"floating_placement":{"left":1518,"top":80,"right":4498,"bottom":3268,"x":1518,"y":80,"width":2980,"height":3188},"border_delta":{"left":0,"top":0,"right":0,"bottom":0},"handle":200018,"size_percentage":0.5,"id":"dd5d3b3d-31f0-4c67-bc7b-c1a335161321","x":3018,"y":80,"width":2978,"height":3188,"type":"window","focus_index":0,"children":[]}]}]}]}
+
+2/24/2024 4:14:02 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid binding 'Alt+Shift+_' in keybinding config: Unknown key '_'
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"c70b81cb-e2ff-4161-bccb-ab37a0a13ac5","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
+2/24/2024 4:14:19 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid binding 'Alt+=' in keybinding config: Unknown key '='
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"236fc368-c864-47c6-854f-68300cf58aa3","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
+2/24/2024 4:14:53 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid binding 'Alt+OemPlus' in keybinding config: Unknown key 'OemPlus'
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"1c9c3ad4-5f9f-434c-ad41-1c679779dbf0","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
+2/24/2024 4:30:09 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid binding 'Alt+OemPlus' in keybinding config: Unknown key 'OemPlus'
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"7bf9d35d-bda7-469b-a029-11613e8d1aa6","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
+2/24/2024 5:07:30 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid value at property: '$.binding_modes[0].keybindings[0].command'.
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.DeserializeUserConfig(String userConfigPath) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 109
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 49
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"29d6977b-783e-4a02-9789-003c68d37925","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
+2/24/2024 5:08:07 PM
+GlazeWM.Infrastructure.Exceptions.FatalUserException: Failed to parse user config. Invalid command 'focus workspace u'.
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.ValidateDeserializedConfig(UserConfig deserializedConfig) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 209
+   at GlazeWM.Domain.UserConfigs.CommandHandlers.EvaluateUserConfigHandler.Handle(EvaluateUserConfigCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\UserConfigs\CommandHandlers\EvaluateUserConfigHandler.cs:line 58
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.Domain.Common.CommandHandlers.PopulateInitialStateHandler.Handle(PopulateInitialStateCommand command) in D:\a\glazewm\glazewm\GlazeWM.Domain\Common\CommandHandlers\PopulateInitialStateHandler.cs:line 41
+   at GlazeWM.Infrastructure.Bussing.Bus.Invoke[T](T command) in D:\a\glazewm\glazewm\GlazeWM.Infrastructure\Bussing\Bus.cs:line 41
+   at GlazeWM.App.WindowManager.WmStartup.Run()
+Command history: HandleFatalExceptionCommand, EvaluateUserConfigCommand, PopulateInitialStateCommand 
+State dump: {"id":"e24af0c6-ced2-40af-9d1c-b1ec69d5de34","x":0,"y":0,"width":0,"height":0,"type":"root","focus_index":0,"children":[]}
+
