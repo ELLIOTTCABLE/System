@@ -51,6 +51,12 @@
    // Vim keybindings
    // ===============
    "vim.normalModeKeyBindingsNonRecursive": [
+      // See: <https://github.com/VSCodeVim/Vim/issues/8574#issuecomment-1715573738>
+      {
+         "before": ["<C-p>"],
+         "commands": ["workbench.action.quickOpen"]
+      },
+
       {
          // Trigger "Setting Toggle" extension to enable/disable ligatures
          "before": ["<leader>", "l"],
