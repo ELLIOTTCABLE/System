@@ -6,7 +6,8 @@
 --
 -- [dh-2509]: <https://github.com/dhall-lang/dhall-haskell/issues/2509>
 let Prelude =
-      https://prelude.dhall-lang.org/v15.0.0/package.dhall sha256:6b90326dc39ab738d7ed87b970ba675c496bed0194071b332840a87261649dcd
+      https://prelude.dhall-lang.org/v15.0.0/package.dhall
+        sha256:6b90326dc39ab738d7ed87b970ba675c496bed0194071b332840a87261649dcd
 
 let -- Generates a plugin map for the given tools that asdf-ghcup can install
     asdf-ghcup =
@@ -33,13 +34,14 @@ let tools-to-frontload = [ "nodejs" ]
 let tools-to-keep-updated =
       [ "dotnet"
       , "golang"
-      , "jq"
       , "lua"
       , "opam"
-      , "php"
+      , "postgres"
+      , "deno"
       , "python"
       , "ruby"
       , "rust"
+      , "usage"
       ]
 
 let slow-tools = [ "racket", "purescript" ]

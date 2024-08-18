@@ -1,18 +1,19 @@
-# DO NOT EDIT - Generated from
+# GENERATED, DO NOT EDIT (Source: 'Dotfiles/config/mise/config.dhall')
 [plugins]
 cabal = "https://github.com/sestrella/asdf-ghcup.git"
 hls = "https://github.com/sestrella/asdf-ghcup.git"
 
 [tools]
+deno = "latest"
 dotnet = "latest"
 golang = "latest"
-jq = "latest"
 lua = "latest"
 nodejs = "latest"
 opam = "latest"
-php = "latest"
+postgres = "latest"
 purescript = "latest"
 python = "latest"
 racket = "latest"
 ruby = "latest"
 rust = "latest"
+usage = "latest"
