@@ -6,29 +6,77 @@ if allof (environment :matches "vnd.proton.spam-threshold" "*", spamtest :value 
     return;
 }
 
-if allof (
-    address :all :comparator "i;unicode-casemap" :is "From" [
-        "noreply@email.apple.com",
-        "no_reply@email.apple.com",
-        "shipping_notification@orders.apple.com",
-        "order_change@store.apple.com",
-        "developer@email.apple.com",
-        "do_not_reply@itunes.com"
-    ],
-    anyof (
+# Apple Store order-related *notifications* (not receipts)
+if anyof (
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "no_reply@email.apple.com",
         header :comparator "i;unicode-casemap" :is "Subject" [
             "Your Subscription is Expiring",
             "Your Subscriptions are Expiring",
             "Your recent download with your Apple ID",
+        ]
+    ),
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "do_not_reply@itunes.com",
+        anyof (
+            header :comparator "i;unicode-casemap" :is "Subject" [
+                "A refund request has been received",
+                "Decision on refund request",
+            ],
+            header :comparator "i;unicode-casemap" :matches "Subject" [
+                "Your Season Pass for *",
+                "New episode available for download - *",
+            ]
+        )
+    ),
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "developer@email.apple.com",
+        header :comparator "i;unicode-casemap" :is "Subject"
             "Your Membership has been Renewed."
+    ),
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "shipping_notification@orders.apple.com",
+        header :comparator "i;unicode-casemap" :matches "Subject"
+            "Your shipment is on its way. Order No. *"
+    ),
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "order_change@store.apple.com",
+        header :comparator "i;unicode-casemap" :matches "Subject"
+            "Order * change confirmation."
+    ),
+    allof (
+        address :all :comparator "i;unicode-casemap" :is "From"
+            "pickup_notification@orders.apple.com",
+        header :comparator "i;unicode-casemap" :matches "Subject"
+            "Pickup Information for Order *",
+    ),
+) {
+    fileinto "Auto";
+    fileinto "Auto\\/Notif";
+
+
+} elsif allof (
+    address :all :comparator "i;unicode-casemap" :is "From" [
+        "noreply@email.apple.com",
+      # "no_reply@email.apple.com",
+      # "shipping_notification@orders.apple.com",
+      # "order_change@store.apple.com",
+      # "developer@email.apple.com",
+      # "do_not_reply@itunes.com"
+    ],
+    anyof (
+        header :comparator "i;unicode-casemap" :is "Subject" [
+            "Receipt for your Apple Cash Payment"
         ],
         header :comparator "i;unicode-casemap" :matches "Subject" [
             "A sound was played on *",
             "Find My has been disabled on *",
-            "Your shipment is on its way. Order No. *",
-            "Order * change confirmation.",
-            "Your Apple ID was used to sign in to iCloud on *",
-            "Your Season Pass for *",
+            "Your Apple ID was used to sign in to iCloud *",
             "New episode available for download - *"
         ]
     )
