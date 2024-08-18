@@ -242,6 +242,7 @@ case "$SYSTEM" in
    ;;
 esac
 
+prepend_el PATH "$HOME/.local/share/mise/shims"   #  6. < mise
 prepend_el PATH "$HOME/.bin"                      #  5. < local binaries
 prepend_el PATH "$HOME/.dotnet/tools" ONLY_IF_DIR #  4. < .NET Core SDK: tools
 prepend_el PATH "$HOME/.cargo/bin" ONLY_IF_DIR    #  3. < Cargo (Rust) binaries
