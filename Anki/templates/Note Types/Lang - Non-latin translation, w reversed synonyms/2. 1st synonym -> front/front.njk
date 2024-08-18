@@ -1,0 +1,21 @@
+<p>in {{Language (front)}}:</p>
+
+<p>
+“{{1st synonym}}”
+{{#Gender (1st synonym)}}<br>({{Gender (1st synonym)}}{{^Example (1st synonym)}}){{/Example (1st synonym)}}{{/Gender (1st synonym)}}{{#Example (1st synonym)}}{{#Gender (1st synonym)}}; as in: {{/Gender (1st synonym)}}{{^Gender (1st synonym)}}<br>({{/Gender (1st synonym)}}“{{Example (1st synonym)}}”){{/Example (1st synonym)}}
+</p>
+
+<p>
+{{#Audio (1st synonym)}}{{Audio (1st synonym)}}{{/Audio (1st synonym)}}
+{{^Audio (1st synonym)}}
+<div id='tts-russian'>
+   🤖{{tts ru_RU:1st synonym}}
+</div>
+{{/Audio (1st synonym)}}
+</p>
+
+<script>
+if ("{{Language (synonyms)}}" !== "Russian") {
+  document.getElementById('tts-russian').remove()
+}
+</script>

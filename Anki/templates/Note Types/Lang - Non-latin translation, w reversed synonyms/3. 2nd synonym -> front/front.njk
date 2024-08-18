@@ -1,0 +1,23 @@
+{{#2nd synonym}}
+<p>in {{Language (front)}}:</p>
+
+<p>
+“{{2nd synonym}}”
+{{#Gender (2nd synonym)}}<br>({{Gender (2nd synonym)}}{{^Example (2nd synonym)}}){{/Example (2nd synonym)}}{{/Gender (2nd synonym)}}{{#Example (2nd synonym)}}{{#Gender (2nd synonym)}}; as in: {{/Gender (2nd synonym)}}{{^Gender (2nd synonym)}}<br>({{/Gender (2nd synonym)}}“{{Example (2nd synonym)}}”){{/Example (2nd synonym)}}
+</p>
+
+<p>
+{{#Audio (2nd synonym)}}{{Audio (2nd synonym)}}{{/Audio (2nd synonym)}}
+{{^Audio (2nd synonym)}}
+<div id='tts-russian'>
+   🤖{{tts ru_RU:2nd synonym}}
+</div>
+{{/Audio (2nd synonym)}}
+</p>
+
+<script>
+if ("{{Language (synonyms)}}" !== "Russian") {
+  document.getElementById('tts-russian').remove()
+}
+</script>
+{{/2nd synonym}}

@@ -1,0 +1,74 @@
+{{ FrontSide }}
+
+<hr id="answer" />
+
+<div id="shuffle-container">
+   {{#1st synonym}}
+   <div class="shuffle">
+      “{{1st synonym}}” {{#Gender (1st synonym)}}<br />({{Gender (1st synonym)
+      }}{{^Example
+      (1st synonym)
+      }}){{/Example (1st synonym)}}{{/Gender (1st synonym)
+      }}{{#Example (1st
+      synonym)
+      }}{{#Gender (1st synonym)}}; as in: {{/Gender (1st synonym)
+      }}{{^Gender (1st
+      synonym)
+      }}<br />({{/Gender (1st synonym)}}“{{Example (1st synonym)}}”){{/Example (1st
+      synonym)}}
+      {{#Audio (1st synonym)}}{{Audio (1st synonym)}}{{/Audio (1st synonym)}}
+      {{^Audio (1st synonym)}}
+      <div class="tts-russian">🤖{{tts ru_RU:1st synonym}}</div>
+      {{/Audio (1st synonym)}}
+   </div>
+   {{/1st synonym}} {{#2nd synonym}}
+   <div class="shuffle">
+      “{{2nd synonym}}” {{#Gender (2nd synonym)}}<br />({{Gender (2nd synonym)
+      }}{{^Example
+      (2nd synonym)
+      }}){{/Example (2nd synonym)}}{{/Gender (2nd synonym)
+      }}{{#Example (2nd
+      synonym)
+      }}{{#Gender (2nd synonym)}}; as in: {{/Gender (2nd synonym)
+      }}{{^Gender (2nd
+      synonym)
+      }}<br />({{/Gender (2nd synonym)}}“{{Example (2nd synonym)}}”){{/Example (2nd
+      synonym)}}
+      {{#Audio (2nd synonym)}}{{Audio (2nd synonym)}}{{/Audio (2nd synonym)}}
+      {{^Audio (2nd synonym)}}
+      <div class="tts-russian">🤖{{tts ru_RU:2nd synonym}}</div>
+      {{/Audio (2nd synonym)}}
+   </div>
+   {{/2nd synonym}}
+</div>
+
+{{#Notes}}
+<p>{{ Notes }}</p>
+{{/Notes}}
+
+<script>
+   if ("{{Language (synonyms)}}" !== "Russian") {
+      const elements = document.getElementsByClassName("tts-russian")
+      while (elements.length > 0) {
+         elements[0].parentNode.removeChild(elements[0])
+      }
+   }
+</script>
+
+<script>
+   // https://stackoverflow.com/a/12646864
+   function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+         const j = Math.floor(Math.random() * (i + 1))
+         ;[array[i], array[j]] = [array[j], array[i]]
+      }
+   }
+
+   setTimeout(() => {
+      const fields = [...document.querySelectorAll(".shuffle")]
+      shuffleArray(fields)
+      fields.forEach((fld) =>
+         document.getElementById("shuffle-container").appendChild(fld),
+      )
+   }, 0)
+</script>

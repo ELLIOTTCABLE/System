@@ -1,0 +1,71 @@
+{{FrontSide}}
+
+<hr id=answer>
+
+<p>
+  “<span id='person_back'></span>{{2nd synonym}}”
+  {{#Example (2nd synonym)}}<br />“{{Example (2nd synonym)}}”{{/Example (2nd synonym)}}
+</p>
+
+<p>
+  {{#Audio (2nd synonym)}}{{Audio (2nd synonym)}}{{/Audio (2nd synonym)}}
+  {{^Audio (2nd synonym)}}
+<div id='tts-russian'>
+  🤖{{tts ru_RU:2nd synonym}}
+</div>
+{{/Audio (2nd synonym)}}
+</p>
+
+{{#Notes}}
+<hr>
+<p id=notes>{{Notes}}</p>
+{{/Notes}}
+
+<script>
+  if ("{{Language (synonyms)}}" !== "Russian") {
+    document.getElementById('tts-russian').remove()
+  }
+
+  var person_ex = undefined
+
+  if ('{{Person (2nd synonym)}}' !== '')
+    switch ('{{Person (2nd synonym)}}-{{Plurality (2nd synonym)}}') {
+      case 'first-singular':
+        person_ex = 'я'
+        break
+      case 'second-singular':
+        person_ex = 'ты'
+        break
+      case 'third-singular':
+        person_ex = 'он/она́/оно́'
+        break
+      case 'first-plural':
+        person_ex = 'мы'
+        break
+      case 'second-plural':
+        person_ex = 'вы'
+        break
+      case 'third-plural':
+        person_ex = 'они́'
+        break
+    }
+
+  else if ('{{Gender (2nd synonym)}}')
+    switch ('{{Gender (2nd synonym)}}-{{Plurality (2nd synonym)}}') {
+      case 'masculine-singular':
+        person_ex = 'я/ты/он'
+        break
+      case 'feminine-singular':
+        person_ex = 'я/ты/она́'
+        break
+      case 'neuter-singular':
+        person_ex = 'оно́'
+        break
+    }
+
+  else if ('{{Plurality (2nd synonym)}}' === 'plural')
+    person_ex = 'мы/вы/они́'
+
+  if (person_ex)
+    document.getElementById('person_back').innerHTML = '(' + person_ex + ') '
+</script>

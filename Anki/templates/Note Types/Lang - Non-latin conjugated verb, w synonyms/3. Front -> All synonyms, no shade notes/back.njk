@@ -1,0 +1,107 @@
+{{FrontSide}}
+
+<hr id=answer>
+
+<div class="shuffle">
+<p>
+“<span id='person_back'></span>{{1st synonym}}”
+{{#Example (1st synonym)}}<br/>“{{Example (1st synonym)}}”{{/Example (1st synonym)}}
+</p>
+
+<p>
+{{#Audio (1st synonym)}}{{Audio (1st synonym)}}{{/Audio (1st synonym)}}
+{{^Audio (1st synonym)}}
+<div id='tts-russian'>
+  🤖{{tts ru_RU:1st synonym}}
+</div>
+{{/Audio (1st synonym)}}
+</p>
+<div class="shuffle">
+
+{{#2nd synonym}}<div class="shuffle">
+<p>
+“<span id='person_back'></span>{{2nd synonym}}”
+{{#Example (2nd synonym)}}<br/>“{{Example (2nd synonym)}}”{{/Example (2nd synonym)}}
+</p>
+
+<p>
+{{#Audio (2nd synonym)}}{{Audio (2nd synonym)}}{{/Audio (2nd synonym)}}
+{{^Audio (2nd synonym)}}
+<div id='tts-russian'>
+  🤖{{tts ru_RU:2nd synonym}}
+</div>
+{{/Audio (2nd synonym)}}
+</p>
+</div>{{/2nd synonym}}
+
+
+{{#Notes}}
+<hr>
+<p id=notes>{{Notes}}</p>
+{{/Notes}}
+
+<script>
+  if ("{{Language (synonyms)}}" !== "Russian") {
+   const elements = document.getElementsByClassName('tts-russian');
+   while(elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+   }
+  }
+
+  var person_ex = undefined
+
+  if ('{{Person (1st synonym)}}' !== '')
+    switch ('{{Person (1st synonym)}}-{{Plurality (1st synonym)}}') {
+      case 'first-singular':
+        person_ex = 'я'
+        break
+      case 'second-singular':
+        person_ex = 'ты'
+        break
+      case 'third-singular':
+        person_ex = 'он/она́/оно́'
+        break
+      case 'first-plural':
+        person_ex = 'мы'
+        break
+      case 'second-plural':
+        person_ex = 'вы'
+        break
+      case 'third-plural':
+        person_ex = 'они́'
+        break
+    }
+
+  else if ('{{Gender (1st synonym)}}')
+    switch ('{{Gender (1st synonym)}}-{{Plurality (1st synonym)}}') {
+      case 'masculine-singular':
+        person_ex = 'я/ты/он'
+        break
+      case 'feminine-singular':
+        person_ex = 'я/ты/она́'
+        break
+      case 'neuter-singular':
+        person_ex = 'оно́'
+        break
+    }
+
+  else if ('{{Plurality (1st synonym)}}' === 'plural')
+    person_ex = 'мы/вы/они́'
+
+  if (person_ex)
+    document.getElementById('person_back').innerHTML = '(' + person_ex + ') '
+
+    // https://stackoverflow.com/a/12646864
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    setTimeout(() => {
+        const fields = [...document.querySelectorAll(".shuffle")];
+        shuffleArray(fields);
+        fields.forEach((fld) => document.getElementById("shuffle-container").appendChild(fld));
+    }, 0);
+</script>

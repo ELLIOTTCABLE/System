@@ -1,0 +1,21 @@
+<p>in {{Language (synonyms)}}, some synonyms meaning:</p>
+
+<p>
+“{{Front}}”
+{{#Example (front)}}<br/>(“{{Example (front)}}”){{/Example (front)}}
+</p>
+
+<p>
+{{#Audio (front)}}{{Audio (front)}}{{/Audio (front)}}
+{{^Audio (front)}}
+<div id='tts-russian'>
+   🤖{{tts ru_RU:Front}}
+</div>
+{{/Audio (front)}}
+</p>
+
+<script>
+if ("{{Language (front)}}" !== "Russian") {
+   document.getElementById('tts-russian').remove()
+}
+</script>

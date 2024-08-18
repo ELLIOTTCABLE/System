@@ -1,0 +1,34 @@
+{{FrontSide}}
+
+<hr id=answer>
+
+<p>{{Aspect (2nd synonym)}}, {{Tense (2nd synonym)}}-tense {{#Gender (2nd synonym)}}{{Gender (2nd synonym)}}{{/Gender (2nd synonym)}}{{#Person (2nd synonym)}} {{Person (2nd synonym)}}-person{{/Person (2nd synonym)}}{{#Plurality (2nd synonym)}} {{Plurality (2nd synonym)}}{{/Plurality (2nd synonym)}} for:</p>
+
+<p>
+  “{{Front}}”
+  {{#Example (front)}}<br />(“{{Example (front)}}”){{/Example (front)}}
+</p>
+
+{{#Shade notes (2nd synonym)}}<p>
+  Used{{#1st synonym}} (instead of “{{1st synonym}}”){{/1st synonym}}: {{Shade notes (2nd synonym)}}
+</p>{{/Shade notes (2nd synonym)}}
+
+<p>
+  {{#Audio (front)}}{{Audio (front)}}{{/Audio (front)}}
+  {{^Audio (front)}}
+<div id='tts-russian'>
+  🤖{{tts ru_RU:Front}}
+</div>
+{{/Audio (front)}}
+</p>
+
+{{#Notes}}
+<hr>
+<p id=notes>{{Notes}}</p>
+{{/Notes}}
+
+<script>
+  if ("{{Language (front)}}" !== "Russian") {
+    document.getElementById('tts-russian').remove()
+  }
+</script>
