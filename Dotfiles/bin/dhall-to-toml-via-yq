@@ -1,0 +1,9 @@
+#!/usr/bin/env dash
+. "$SYSTEM_REPO/Vendor/sh-realpath/realpath.sh"
+
+fullpath="$(realpath "$1")"
+filename="${fullpath#"$SYSTEM_REPO"}"
+
+printf "%s\n" "# GENERATED, DO NOT EDIT (Source: '${filename#/}')"
+dhall-to-json --file "$1" |
+  yq --toml-output
