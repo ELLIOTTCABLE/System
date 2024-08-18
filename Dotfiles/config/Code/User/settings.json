@@ -225,10 +225,18 @@
    "html.format.maxPreserveNewLines": 2,
    "html.format.wrapLineLength": 100,
 
-   // ### ReasonML
-   "reason.diagnostics.tools": ["merlin", "bsb"],
-   "reason.codelens.enabled": true,
-   "reason.format.width": 90,
+   "[nunjucks]": {
+      "htmlhint.options": { "doctype-first": false }
+   },
+
+   // ### OCaml
+   "ocaml.server.extraEnv": {
+      "OCAMLLSP_HOVER_IS_EXTENDED": "true"
+   },
+
+   "vsicons.associations.files": [
+      { "icon": "ocaml_intf", "extensions": ["mli"], "format": "svg" }
+   ],
 
    // ### C#, ASP.NET, etc
    "omnisharp.useGlobalMono": "always",
