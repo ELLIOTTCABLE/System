@@ -2,10 +2,18 @@
 {
    "workbench.hover.delay": 100,
    "extensions.ignoreRecommendations": true,
+
+   // Application-scope
    "telemetry.telemetryLevel": "error",
 
    "settingsSync.ignoredSettings": [],
    "settingsSync.ignoredExtensions": ["ms-vscode.mono-debug", "icrawl.discord-vscode"],
+   "window.nativeTabs": true,
+   "window.newWindowDimensions": "inherit",
+   "window.openWithoutArgumentsInNewWindow": "on",
+   "terminal.integrated.persistentSessionScrollback": 1000,
+   "security.workspace.trust.untrustedFiles": "open",
+   "window.confirmBeforeClose": "keyboardOnly",
 
    // Basics
    // ======
@@ -18,38 +26,28 @@
    "editor.suggest.shareSuggestSelections": true,
 
    "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-   "window.titleBarStyle": "native",
-   "window.nativeTabs": true,
    "editor.renderLineHighlight": "all",
    "breadcrumbs.enabled": true,
-
-   "window.closeWhenEmpty": true,
-   "window.newWindowDimensions": "inherit",
-   "window.openWithoutArgumentsInNewWindow": "on",
-
-   // "workbench.editor.closeOnFileDelete": true,
-   "workbench.editor.untitled.hint": "hidden",
 
    "files.autoSave": "onFocusChange",
    "files.insertFinalNewline": true,
    "files.trimFinalNewlines": true,
 
-   // @sync os=mac
-   "editor.fontFamily": "'Fantasque Sans Mono', monospace",
-   // @sync os=windows
-   // "editor.fontFamily": "'Iosevka'",
+   // "editor.fontFamily": "'Iosevka Nerd Font', monospace",
+   "editor.fontFamily": "'Fira Code', monospace",
+   "editor.fontLigatures": "'cv04', 'ss01', 'cv13', 'onum', 'ss04', 'ss09', 'ss06', 'calt'",
    "editor.codeLensFontFamily": "'Iosevka Nerd Font', monospace",
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
 
    "workbench.fontAliasing": "auto",
    "explorer.decorations.colors": false,
-   "editor.fontLigatures": true,
    "editor.fontSize": 14,
    "editor.cursorStyle": "underline-thin",
    "terminal.integrated.cursorBlinking": true,
 
    // Vim keybindings
    // ===============
+   // (Application-scope)
    "vim.normalModeKeyBindingsNonRecursive": [
       // See: <https://github.com/VSCodeVim/Vim/issues/8574#issuecomment-1715573738>
       {
@@ -73,6 +71,11 @@
          "commands": ["editor.action.rename"]
       },
 
+      {
+         "before": ["K"],
+         "commands": ["editor.action.showHover"]
+      },
+
       // ### Git-related maps
       {
          "before": ["]", "h"],
@@ -93,16 +96,18 @@
       {
          "before": ["<leader>", "h", "s"],
          "commands": ["git.stageSelectedRanges"]
-      },
+      }
 
       // ### Terminal-mappings
       // (See also: keybinds.json)
    ],
+
+   // (Non-appliaction-scope)
    "terminal.integrated.commandsToSkipShell": [
       "workbench.action.focusRightGroup",
       "workbench.action.focusLeftGroup",
       "workbench.action.focusAboveGroup",
-      "workbench.action.focusBelowGroup",
+      "workbench.action.focusBelowGroup"
    ],
 
    // Other vim
@@ -133,17 +138,14 @@
    },
 
    "files.watcherExclude": {
-      // OCaml
       "**/_build/**": true,
-      "**/_opam/**": true,
-      "**/esy.lock/**": true,
       "**/_esy/**": true,
+      "**/_opam/**": true,
+      "**/*.bs.js": true,
+      "**/esy.lock/**": true,
       "**/lib/bs/**": true,
       "**/lib/js/**": true,
       "**/lib/ocaml/**": true,
-      "**/*.bs.js": true,
-
-      // Rust
       "**/rust/target/**": true
    },
 
@@ -154,8 +156,10 @@
    "workbench.settings.useSplitJSON": true,
 
    // ### Terminal & debugger
-   "debug.inlineValues": "on",
+   "debug.inlineValues": "auto",
    "terminal.integrated.confirmOnExit": "hasChildProcesses",
+   "terminal.integrated.shell.windows": "cmd.exe",
+   "terminal.integrated.shellArgs.windows": ["/K", "C:\\tools\\Cmder\\vendor\\init.bat"],
 
    // ### Git
    "git.alwaysShowStagedChangesResourceGroup": true,
@@ -166,14 +170,18 @@
    "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
    "gitlens.currentLine.scrollable": false,
    "gitlens.hovers.annotations.over": "annotation",
-   "gitlens.mode.statusBar.enabled": false,
    "gitlens.advanced.messages": {
       "suppressLineUncommittedWarning": true
    },
 
    // ### Auto-formatting
-   "formattingToggle.activateFor": ["formatOnPaste", "formatOnSave", "formatOnType"],
+   "formattingToggle.affects": [
+      "editor.formatOnPaste",
+      "editor.formatOnSave",
+      "editor.formatOnType"
+   ],
    "editor.formatOnPaste": true,
+   "editor.formatOnSave": true,
    "editor.formatOnType": true,
 
    // ### Prettier
