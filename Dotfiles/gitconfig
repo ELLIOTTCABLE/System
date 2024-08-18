@@ -69,6 +69,7 @@
 	token = <SNIP>
 [diff]
 	tool = embedded-editor-proxy
+	external = ~/.opam/_globals/bin/patdiff-git-wrapper
 [difftool]
 	prompt = false
 [merge]
@@ -122,3 +123,5 @@
 
 [include]
 	path = ~/.git/config.local
+[checkout]
+	guess = true

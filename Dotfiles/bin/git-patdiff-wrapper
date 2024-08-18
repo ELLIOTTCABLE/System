@@ -1,2 +1,0 @@
-#!/usr/bin/env dash
-patdiff "$2" -alt-old "$1 $4" "$5" -alt-new "$1 $7" || true
