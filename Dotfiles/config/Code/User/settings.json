@@ -1,10 +1,11 @@
 // vim: ft=jsonc
 {
-   "workbench.hover.delay": 100,
    "extensions.ignoreRecommendations": true,
 
    // Application-scope
+   // =================
    "telemetry.telemetryLevel": "error",
+   "redhat.telemetry.enabled": false,
 
    "settingsSync.ignoredSettings": [],
    "settingsSync.ignoredExtensions": ["ms-vscode.mono-debug", "icrawl.discord-vscode"],
@@ -14,6 +15,8 @@
    "terminal.integrated.persistentSessionScrollback": 1000,
    "security.workspace.trust.untrustedFiles": "open",
    "window.confirmBeforeClose": "keyboardOnly",
+
+   "window.autoDetectColorScheme": true,
 
    // Basics
    // ======
@@ -25,28 +28,187 @@
    "editor.find.globalFindClipboard": true,
    "editor.suggest.shareSuggestSelections": true,
 
-   "workbench.startupEditor": "welcomePageInEmptyWorkbench",
-   "editor.renderLineHighlight": "all",
-   "breadcrumbs.enabled": true,
-
    "files.autoSave": "onFocusChange",
    "files.insertFinalNewline": true,
    "files.trimFinalNewlines": true,
+
+   "editor.accessibilitySupport": "off",
+
+   // Appearance
+   // ==========
+   // ### Startup
+   "workbench.startupEditor": "welcomePageInEmptyWorkbench",
+   "workbench.editor.empty.hint": "hidden",
+
+   // ### Global layout
+   "workbench.experimental.enableNewProfilesUI": true,
+
+   "workbench.activityBar.location": "top",
+   "workbench.layoutControl.enabled": true,
+   "breadcrumbs.enabled": true,
+   "window.density.editorTabHeight": "compact",
+   "workbench.editor.showTabs": "single",
+
+   "editor.minimap.maxColumn": 72,
+   "editor.minimap.showSlider": "always",
+   "editor.minimap.side": "left",
+
+   "workbench.hover.delay": 100,
+
+   // ### Explorer & side-bars
+   "workbench.tree.enableStickyScroll": true,
+   "explorer.sortOrder": "mixed",
+   // "explorer.decorations.colors": false,
+
+   "workbench.iconTheme": "vscode-icons",
+   "vsicons.dontShowNewVersionMessage": true,
+
+   "explorer.openEditors.visible": 20,
+
+   "workspaceExplorer.workspaceStorageDirectory": "/Users/ec/Library/System/Dotfiles/config/Code/User/SavedWorkspaces",
+
+   // ### Status-bar
+   "gitlens.statusBar.enabled": false,
+   "leetcode.enableStatusBar": false,
+   "liveshare.showInStatusBar": "whileCollaborating",
+   "peacock.showColorInStatusBar": false,
+
+   // ### Fonts & type
+   "editor.fontSize": 14,
+   "editor.codeLensFontSize": 9,
+   "terminal.integrated.fontSize": 14,
 
    // "editor.fontFamily": "'Iosevka Nerd Font', monospace",
    "editor.fontFamily": "'Fira Code', monospace",
    "editor.fontLigatures": "'cv04', 'ss01', 'cv13', 'onum', 'ss04', 'ss09', 'ss06', 'calt'",
    "editor.codeLensFontFamily": "'Iosevka Nerd Font', monospace",
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
-
    "workbench.fontAliasing": "auto",
-   "explorer.decorations.colors": false,
-   "editor.fontSize": 14,
+
+   "toggle.setting1Title": "editor.fontLigatures",
+   "toggle.iconEnabled": false,
+
+   // ### Cursor & editor-lines appearance
+   "editor.stickyScroll.enabled": true,
+   "notebook.stickyScroll.enabled": true,
+
+   "editor.lineNumbers": "interval",
+   "editor.renderLineHighlight": "all",
+
    "editor.cursorStyle": "underline-thin",
+
+   "vim.cursorStylePerMode.insert": "line",
+   "vim.cursorStylePerMode.normal": "block-outline",
+   "vim.cursorStylePerMode.replace": "underline",
+   "vim.cursorStylePerMode.visual": "block-outline",
+   "vim.cursorStylePerMode.visualblock": "block-outline",
+   "vim.cursorStylePerMode.visualline": "block-outline",
+
    "terminal.integrated.cursorBlinking": true,
 
-   // Vim keybindings
-   // ===============
+   // ### Misc. editor appearance
+   "editor.codeLens": true,
+   "editor.unicodeHighlight.invisibleCharacters": false,
+   "editor.inlineSuggest.enabled": true,
+   "editor.inlayHints.enabled": "onUnlessPressed",
+
+   "editor.guides.bracketPairs": "active",
+
+   // ### Indentation appearance
+   "editor.guides.indentation": false,
+   "indentRainbow.colorOnWhiteSpaceOnly": true,
+
+   "indentRainbow.ignoreErrorLanguages": [
+      "ansible",
+      "dhall",
+      "diff",
+      "dune",
+      "dune-project",
+      "dune-workspace",
+      "markdown",
+      "ocaml",
+      "ocaml.interface",
+      "puppet",
+      "reason",
+      "reasonml",
+      "yaml"
+   ],
+
+   // (Mimic Vim's trailing-whitespace behaviour)
+   "editor.renderWhitespace": "trailing",
+   "emptyIndent.removeIndent": true,
+   "emptyIndent.highlightIndent": true,
+
+   "emptyIndent.exclude": ["diff"],
+
+   // ### Search appearance
+   "vim.hlsearch": true,
+   "vim.incsearch": true,
+   "vim.highlightedyank.enable": true,
+
+   "editor.occurrencesHighlight": "multiFile",
+
+   // ### Gutter appearance
+   "vim.showMarksInGutter": true,
+
+   // ### Diffs appearance
+   "diffEditor.renderIndicators": false,
+   "diffEditor.hideUnchangedRegions.enabled": true,
+   "diffEditor.experimental.showMoves": true,
+   "diffEditor.experimental.useTrueInlineView": true,
+
+   "multiDiffEditor.experimental.enabled": true,
+
+   "diffviewer.outputFormat": "side-by-side",
+
+   // ### Settings-editor appearance
+   "workbench.settings.useSplitJSON": true,
+
+   // ### Terminal & debugger appearance
+   "debug.inlineValues": "auto",
+   "debug.showVariableTypes": true,
+   "terminal.integrated.defaultLocation": "editor",
+   "terminal.integrated.stickyScroll.enabled": true,
+
+   // ### Git & SCM appearance
+   "git.alwaysShowStagedChangesResourceGroup": true,
+   "gitlens.advanced.fileHistoryShowAllBranches": true,
+   "gitlens.currentLine.scrollable": false,
+   "gitlens.hovers.annotations.over": "annotation",
+   "gitlens.hovers.autolinks.enabled": false,
+   "gitlens.rebaseEditor.ordering": "asc",
+   "gitlens.views.commitDetails.files.layout": "list",
+
+   // ### Leetcode appearance
+   "leetcode.showDescription": "Both",
+   "leetcode.hint.configWebviewMarkdown": false,
+   "leetcode.hint.commentDescription": false,
+   "leetcode.hint.setDefaultLanguage": false,
+   "leetcode.hint.commandShortcut": false,
+   "leetcode.hideSolved": true,
+
+   // ### ErrorLens appearance
+   "errorLens.delayMode": "debounce",
+   "errorLens.delay": 750,
+   "errorLens.excludeBySource": ["cSpell"],
+   "errorLens.alignMessage": { "end": 100 },
+   "errorLens.messageBackgroundMode": "message",
+   "errorLens.borderRadius": "0.25em",
+   "errorLens.editorHoverPartsEnabled": {
+      "messageEnabled": true,
+      "sourceCodeEnabled": true,
+      "buttonsEnabled": true
+   },
+   "errorLens.followCursor": "allLinesExceptActive",
+   "errorLens.gutterIconsEnabled": true,
+   "errorLens.gutterIconSet": "squareRounded",
+   "errorLens.padding": "0.3em",
+   "errorLens.enabledInMergeConflict": false,
+
+   // Keybindings
+   // ===========
+
+   // ### Vim keybindings
    // (Application-scope)
    "vim.normalModeKeyBindingsNonRecursive": [
       // See: <https://github.com/VSCodeVim/Vim/issues/8574#issuecomment-1715573738>
@@ -110,26 +272,19 @@
       "workbench.action.focusBelowGroup"
    ],
 
-   // Other vim
-   // ==========
    "vim.easymotion": true,
-   "vim.incsearch": true,
    "vim.useSystemClipboard": true,
    "vim.useCtrlKeys": true,
-   "vim.hlsearch": true,
    "vim.leader": "<space>",
    "vim.handleKeys": {
       "<C-f>": false
    },
 
-   // Navigation & search
-   // ===================
-   "explorer.sortOrder": "mixed",
-   "search.smartCase": true,
-   "search.useGlobalIgnoreFiles": true,
+   "gitlens.keymap": "none",
 
    // Specific languages and features
    // ===============================
+
    // ### Filetypes and file-specific settings
    "files.associations": {
       "dune-project": "dune",
@@ -141,125 +296,113 @@
       "**/_build/**": true,
       "**/_esy/**": true,
       "**/_opam/**": true,
+      "**/.pytest_cache/**": true,
       "**/*.bs.js": true,
+      "**/client_bs/src/gen/**": true,
       "**/esy.lock/**": true,
       "**/lib/bs/**": true,
       "**/lib/js/**": true,
       "**/lib/ocaml/**": true,
+      "**/node_modules/**": true,
       "**/rust/target/**": true
    },
 
-   // ### Diffs
-   "diffEditor.renderIndicators": false,
+   "files.exclude": {
+      "**/_build": true,
+      "**/_esy": true,
+      "**/_opam": true,
+      "**/.pytest_cache": true,
+      "**/*.bs.js": true,
+      "**/client_bs/src/gen": true,
+      "**/lib/bs": true,
+      "**/lib/js": true,
+      "**/lib/ocaml": true,
+      "**/node_modules": true,
+      "**/route_config/**.d": true
+   },
 
-   // ### Settings-editor
-   "workbench.settings.useSplitJSON": true,
+   "search.exclude": {
+      "**/.merlin": true,
+      "**/*.bs.js": true,
+      "**/composer.lock": true,
+      "**/yarn.lock": true
+   },
 
-   // ### Terminal & debugger
-   "debug.inlineValues": "auto",
-   "terminal.integrated.confirmOnExit": "hasChildProcesses",
-   "terminal.integrated.shell.windows": "cmd.exe",
+   // ### Terminal & debugger functionality
+   "terminal.integrated.shellIntegration.enabled": true,
+   "application.shellEnvironmentResolutionTimeout": 75,
+   "terminal.integrated.defaultProfile.windows": "cmd.exe",
+   "editWithShell.shellArgs.windows": [
+      "/d",
+      "/s",
+      "/c",
+      "/K",
+      "C:\\tools\\Cmder\\vendor\\init.bat"
+   ],
    "terminal.integrated.shellArgs.windows": ["/K", "C:\\tools\\Cmder\\vendor\\init.bat"],
+   "terminal.integrated.defaultProfile.linux": "zsh",
 
-   // ### Git
-   "git.alwaysShowStagedChangesResourceGroup": true,
+   "terminal.integrated.scrollback": 100000,
+   "terminal.integrated.confirmOnExit": "hasChildProcesses",
+   "terminal.integrated.showExitAlert": false,
+
+   "terminal.integrated.suggest.runOnEnter": "exactMatchIgnoreExtension",
+
+   // ### Navigation & search functionality
+   "search.smartCase": true,
+   "search.useGlobalIgnoreFiles": true,
+   "search.searchEditor.reusePriorSearchConfiguration": true,
+
+   // ### Vim functionality
+   "vim.joinspaces": false,
+
+   "vim.camelCaseMotion.enable": true,
+   "vim.sneakReplacesF": true,
+   "vim.sneakUseIgnorecaseAndSmartcase": true,
+   "vim.targets.enable": true,
+
+   "vim.replaceWithRegister": true,
+
+   // ### Git & SCM functionality
    "git.autofetch": true,
    "git.enableCommitSigning": true,
    "git.postCommitCommand": "push",
    "gitlens.blame.ignoreWhitespace": true,
    "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
-   "gitlens.currentLine.scrollable": false,
-   "gitlens.hovers.annotations.over": "annotation",
+
    "gitlens.advanced.messages": {
       "suppressLineUncommittedWarning": true
    },
 
-   // ### Auto-formatting
-   "formattingToggle.affects": [
-      "editor.formatOnPaste",
-      "editor.formatOnSave",
-      "editor.formatOnType"
-   ],
-   "editor.formatOnPaste": true,
-   "editor.formatOnSave": true,
-   "editor.formatOnType": true,
+   // ### GitHub-specific extensions
+   "githubIssues.createInsertFormat": "url",
+   "githubIssues.issueBranchTitle": "ec/i${issueNumber}",
+   "githubIssues.workingIssueFormatScm": "${issueTitle}\n\n/fixes ${issueNumberLabel}",
+   "githubPullRequests.remotes": ["origin", "upstream", "ec"],
+   "githubPullRequests.defaultDeletionMethod.selectRemote": false,
+   "githubPullRequests.fileListLayout": "flat",
+   "githubPullRequests.focusedMode": "overview",
+   "githubPullRequests.pullBranch": "never",
+   "githubPullRequests.terminalLinksHandler": "vscode",
 
-   // ### Prettier
-   "prettier.printWidth": 90,
-   "prettier.tabWidth": 3,
-   "prettier.singleQuote": true,
-   "prettier.trailingComma": "all",
-   "prettier.bracketSpacing": true,
-   "prettier.semi": false,
-   "prettier.ignorePath": ".prettierignore",
-   "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+   // ### AI & Copilot functionality
+   "github.copilot.enable": {
+      "*": false,
+      "plaintext": true,
+      "markdown": true,
+      "scminput": false,
+      "yaml": true
    },
-   "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-   },
+   "github.copilot-labs.showTestGenerationLenses": true,
 
-   // ### ESLint
-   "eslint.lintTask.enable": true,
-
-   // ### Rewrap (comment-wrapping)
-   "rewrap.autoWrap.enabled": false,
-   "rewrap.wholeComment": false,
-
-   // Using Vim mappings, above.
-   "gitlens.keymap": "none",
-
-   // Mimic Vim's trailing-whitespace behaviour
-   "emptyIndent.removeIndent": true,
-   "emptyIndent.highlightIndent": true,
-
-   // Indent rainbow
-   "indentRainbow.ignoreErrorLanguages": ["ocaml", "ocaml.interface", "dune"],
-
-   // ### Setting Toggle
-   "toggle.setting1Title": "editor.fontLigatures",
-   "toggle.iconEnabled": false,
-
-   // ### HTML
-   "html.format.endWithNewline": true,
-   "html.format.maxPreserveNewLines": 2,
-   "html.format.wrapLineLength": 100,
-
-   "[nunjucks]": {
-      "htmlhint.options": { "doctype-first": false }
-   },
-
-   // ### OCaml
-   "ocaml.server.extraEnv": {
-      "OCAMLLSP_HOVER_IS_EXTENDED": "true"
-   },
-
-   "vsicons.associations.files": [
-      { "icon": "ocaml_intf", "extensions": ["mli"], "format": "svg" }
-   ],
-
-   // ### C#, ASP.NET, etc
-   "omnisharp.useGlobalMono": "always",
-   "omnisharp.loggingLevel": "debug",
-   "razor.languageServer.debug": true,
-
-   // Other extensions and non-language-specific features
-   // ==================================================
-   // ### Leetcode
-   "leetcode.hint.configWebviewMarkdown": false,
-   "leetcode.showDescription": "Both",
+   // ### Leetcode functionality
    "leetcode.defaultLanguage": "javascript",
-   "leetcode.enableStatusBar": false,
-   "leetcode.hint.commentDescription": false,
-   "leetcode.hint.setDefaultLanguage": false,
-   "leetcode.hint.commandShortcut": false,
-   "leetcode.hideSolved": true,
 
-   // ### TabNine
+   // ### TabNine functionality
    "tabnine.experimentalAutoImports": true,
    "tabnine.receiveBetaChannelUpdates": true,
 
-   // ### Live Share
+   // ### Live Share functionality
    "liveshare.guestApprovalRequired": true,
    "liveshare.allowGuestDebugControl": true,
    "liveshare.allowGuestTaskControl": true,
@@ -270,9 +413,94 @@
    "liveshare.notebooks.allowGuestExecuteCells": true,
    "liveshare.presence": true,
    "liveshare.publishWorkspaceInfo": true,
-   "liveshare.showInStatusBar": "whileCollaborating",
 
-   // ### Finally, don't commit changes below this line:
+   // "liveshare.diagnosticMode": true,
+   // "liveshare.diagnosticLoggingLevel": "Debug",
+   // "liveshare.diagnosticLogging": true,
+   // "liveshare.featureSet": "insiders",
 
+   // ### Remote / SSH functionality
+   "remote.SSH.path": "/Users/ec/.bin/ssh",
+
+   // Formatting
+   // ==========
+
+   // ### Global formatting
+   "formattingToggle.affects": [
+      "editor.formatOnPaste",
+      "editor.formatOnSave",
+      "editor.formatOnType"
+   ],
+   "editor.formatOnPaste": true,
+   "editor.formatOnSave": true,
+   "editor.formatOnType": true,
+
+   // ### Rewrap (comment-wrapping) formatting
+   "rewrap.autoWrap.enabled": false,
+   "rewrap.wholeComment": false,
+
+   // ### Prettier formatting
+   "prettier.printWidth": 90,
+   "prettier.tabWidth": 3,
+   "prettier.singleQuote": true,
+   "prettier.trailingComma": "all",
+   "prettier.bracketSpacing": true,
+   "prettier.semi": false,
+   "prettier.ignorePath": ".prettierignore",
+   "[css][html][javascript][json][jsonc][typescript][typescriptreact][yaml]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+   },
+
+   // ### ESLint formatting
+   "eslint.lintTask.enable": true,
+
+   // ### HTML formatting
+   "html.format.endWithNewline": true,
+   "html.format.maxPreserveNewLines": 2,
+   "html.format.wrapLineLength": 100,
+
+   "htmlhint.options": { "doctype-first": false },
+
+   // ### OCaml formatting
+   "[ocaml]": {
+      "editor.defaultFormatter": "ocamllabs.ocaml-platform"
+   },
+
+   "vsicons.associations.files": [
+      { "icon": "ocaml_intf", "extensions": ["mli"], "format": "svg" }
+   ],
+
+   // ### Shell / Bash / Zsh formatting
+   "[shellscript]": {
+      "editor.defaultFormatter": "foxundermoon.shell-format"
+   },
+
+   "shellformat.useEditorConfig": true,
+
+   // ### SQL formatting
+   "[sql]": {
+      "editor.defaultFormatter": "mtxr.sqltools"
+   },
+
+   // Language-specific functionality
+   // ===============================
+
+   // ### JavaScript functionality
+   "autoimport.showNotifications": true,
+
+   // ### OCaml functionality
+   "ocaml.server.extraEnv": {
+      "OCAMLLSP_HOVER_IS_EXTENDED": "true"
+   },
+   // "ocaml.trace.server": "verbose",
+
+   // ### C#, ASP.NET, etc functionality
+   "omnisharp.useGlobalMono": "always",
+   "omnisharp.loggingLevel": "debug",
+   "razor.languageServer.debug": true,
+
+   // --- ---- --- /!\ --- ---- ---
    // ... and anything after this, was added programmatically!
+   // --- ---- --- \!/ --- ---- ---
+
 }
