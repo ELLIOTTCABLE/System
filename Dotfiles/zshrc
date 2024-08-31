@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 PROFILE_STARTUP=false
 if [[ "$PROFILE_STARTUP" == true ]]; then
-    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
-    PS4=$'%D{%M%S%.} %N:%i> '
-    exec 3>&2 2>"$HOME/Desktop/startlog.$$"
-    setopt xtrace prompt_subst
+   # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+   PS4=$'%D{%M%S%.} %N:%i> '
+   exec 3>&2 2>"$HOME/Desktop/startlog.$$"
+   setopt xtrace prompt_subst
 fi
 
 if [[ "$DEBUG_PATH" == true ]]; then
@@ -119,11 +119,11 @@ bindkey -a '' clear-screen
 # up/down arrows
 # <https://unix.stackexchange.com/a/691482/12095>
 for direction (up down) {
-  autoload $direction-line-or-beginning-search
-  zle -N $direction-line-or-beginning-search
-  key=$terminfo[kcu$direction[1]1]
-  for key ($key ${key/O/[})
-    bindkey $key $direction-line-or-beginning-search
+   autoload $direction-line-or-beginning-search
+   zle -N $direction-line-or-beginning-search
+   key=$terminfo[kcu$direction[1]1]
+   for key ($key ${key/O/[})
+      bindkey $key $direction-line-or-beginning-search
 }
 
 # Allow `!` in command-mode to open the current command-line in a full vim:
@@ -239,8 +239,8 @@ if whence -v fzf-completion >/dev/null; then
    export FZF_TMUX=1
 
    fzf-direct-completion() {
-     FZF_COMPLETION_TRIGGER= fzf-completion
-  }; zle -N fzf-direct-completion
+      FZF_COMPLETION_TRIGGER= fzf-completion
+   }; zle -N fzf-direct-completion
 
    fzf-history-widget-accept() {
       fzf-history-widget
@@ -319,6 +319,6 @@ if [[ "$DEBUG_PATH" == true ]]; then
 fi
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
-    unsetopt xtrace
-    exec 2>&3 3>&-
+   unsetopt xtrace
+   exec 2>&3 3>&-
 fi
