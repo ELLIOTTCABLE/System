@@ -75,6 +75,13 @@ install_runtimes() {
    mise install --install-missing
 }
 
+install_system_components() {
+   if [ -n "$IS_MAC" ]; then
+      puts "Installing system components ..."
+      softwareupdate --install-rosetta --agree-to-license
+   fi
+}
+
 # ---- ---- ----
 # Begin! 🏁
 # ---- ---- ----
@@ -85,6 +92,7 @@ FIRST_PARAM_WAS_EMPTY)
    puts "(\$system_repo: '$system_repo')"
 
    sudo -v
+   install_system_components
    install_package_manager_build_deps
    install_package_manager
    install_packages_frontload
