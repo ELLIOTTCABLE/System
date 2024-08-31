@@ -4,28 +4,27 @@
 
 .mono/certs
 
+Fritzing/
 asciinema/config
 asciinema/install-id
-inkscape/
-keybase/
 com.add0n.node/
-Fritzing/
+hub
+inkscape/
 karabiner/assets
 karabiner/automatic_backups
+keybase/
 yarn/link/
-hub
 
 sow/
 
 coc/commands
-coc/mru
-coc/lists
-coc/snippets-mru
 coc/extensions/*
-coc/memos.json
 coc/history.json
 coc/list-*-history.json
-
+coc/lists
+coc/memos.json
+coc/mru
+coc/snippets-mru
 
 # Why do so many games store their info in .config!?
 AtomZombieData/
@@ -33,5 +32,5 @@ Colossal Order/Cities_Skylines/
 Full Control/SpaceHulkAscension/
 Master of Orion/
 PixelPiracy/
-UDP Software/Dwarf Therapist.ini
 RiseOfIndustry/
+UDP Software/Dwarf Therapist.ini
