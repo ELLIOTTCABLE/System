@@ -365,6 +365,7 @@
 
    // ### Git & SCM functionality
    "git.autofetch": true,
+   "git.detectSubmodulesLimit": 50,
    "git.enableCommitSigning": true,
    "git.postCommitCommand": "push",
    "gitlens.blame.ignoreWhitespace": true,
