@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #               ^^ using bash because pipefaile etc aren't available in POSIX sh/dash
 
-# TODO: Add a --zsh flag or similar, to install zplug and plugins
+# TODO: Add a --zsh flag or similar, to install Sheldon plugins
 
 cyan="$(tput setaf 6)"
 reset="$(tput sgr0)"

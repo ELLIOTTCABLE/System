@@ -156,6 +156,7 @@ brew "pv"
 brew "python-yq"
 brew "ragel"
 brew "ranger"
+brew "reattach-to-user-namespace" # required for terminal-notifier
 brew "ripgrep"
 brew "rlwrap"
 brew "selene"
@@ -169,6 +170,7 @@ brew "swig"
 brew "tealdeer"
 brew "teamookla/speedtest/speedtest"
 brew "telnet"
+brew "terminal-notifier" # used by https://github.com/marzocchi/zsh-notify
 brew "tmux"
 brew "tor" # in "services", below
 brew "tree"

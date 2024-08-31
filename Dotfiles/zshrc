@@ -67,43 +67,19 @@ setopt HIST_NO_STORE       # Don’t store the `history` command itself
 # ===========
 # = Modules =
 # ===========
-export ZPLUG_HOME="$HOME/.zsh/modules/zplug/zplug"
-
-export ZPLUG_LOADFILE="$HOME/.zsh/packages.zsh"
-export ZPLUG_REPOS="$HOME/.zsh/modules"
-
-while [ ! -f "$ZPLUG_HOME/init.zsh" ]; do
-   printf "\e[31m%s\e[m — may I install it to <\e[38;5;39m%s\e[m>? " \
-      "[zplug] zplug is missing" "$ZPLUG_HOME"
+while ! command -v sheldon 1>/dev/null; do
+   printf "\e[31m%s\e[m — may I install it via Homebrew? " \
+      "[sheldon] sheldon is missing"
    read -rq may_i\?
    if [ $may_i = n ]; then
       exit 1                                                                  ; fi
 
    printf \\n
-   git clone https://github.com/zplug/zplug "$ZPLUG_HOME"
+   brew install sheldon
+   sheldon lock
 done
 
-source "$ZPLUG_HOME/init.zsh"
-
-if ! zplug check; then
-   printf "\e[31m%s\e[m:\n" \
-      "[zplug] zsh modules missing"
-   zplug check --verbose
-   printf "\e[31m%s\e[m ... may I install them to <\e[38;5;39m%s\e[m>? " \
-      "[zplug]" "$ZPLUG_REPOS"
-   read -rq may_i\?
-   printf \\n
-
-   if [ $may_i = y ]; then
-      zplug install
-   fi
-fi
-
-# completions (from zsh-users and Homebrew)
-#zgen load zsh-users/zsh-completions
-#zgen load /usr/local/share/zsh/site-functions
-
-zplug load
+eval "$(sheldon source)"
 
 
 # ================
@@ -127,6 +103,7 @@ for direction (up down) {
 }
 
 # Allow `!` in command-mode to open the current command-line in a full vim:
+# TODO: Use VScode if within a VScode terminal
 nvim-command-line () {
    local VISUAL='nvim'
    edit-command-line
@@ -172,6 +149,7 @@ autoload -Uz copy-earlier-word && {
    bindkey -v '≤' copy-earlier-word # Alt-, on maccOS
 }
 bindkey -v '≥' insert-last-word # Alt-. on maccOS
+
 
 # ==========
 # = Prompt =
@@ -255,15 +233,6 @@ if whence -v fzf-completion >/dev/null; then
 fi
 
 
-# ### zsh-history-substring-search/zsh-history-substring-search.zsh
-#setopt HIST_FIND_NO_DUPS # ???
-#zmodload zsh/terminfo
-##bindkey "$terminfo[kcuu1]" history-substring-search-up
-##bindkey "$terminfo[kcud1]" history-substring-search-down
-#bindkey '^[[A' history-substring-search-up # 'cuz OS X. >,>
-#bindkey '^[[B' history-substring-search-down
-#bindkey -M vicmd 'k' history-substring-search-up
-#bindkey -M vicmd 'j' history-substring-search-down
 
 #ZSH_HIGHLIGHT_STYLES[root]='bg=9'                  # Orange
 #if [ "$BACKGROUND" = dark ]; then
@@ -294,23 +263,8 @@ fi
 # ### tarruda/zsh-autosuggestions
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-#zle-line-init() {
-#    zle autosuggest-start
-#}
-#zle -N zle-line-init
-
 #bindkey '^T' autosuggest-toggle
 bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
-
-# ### b4b4r07/enhancd
-#export ENHANCD_FILTER='fzf:peco'
-#export ENHANCD_DIR="$HOME/.cache/enhancd"
-
-# ### Vifon/deer
-zle -N deer
-bindkey -M viins '^n' deer
-zstyle ':deer:' height 22
-
 
 
 if [[ "$DEBUG_PATH" == true ]]; then

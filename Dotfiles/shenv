@@ -262,7 +262,7 @@ export PATH
 debug_path_dump 'after'
 
 if [ -n "$ZSH_VERSION" ]; then
-   mise_plugin_path="$HOME/.zsh/modules/wintermi/zsh-mise/zsh-mise.plugin.zsh"
+   mise_plugin_path="$HOME/.local/share/sheldon/repos/github.com/wintermi/zsh-mise/zsh-mise.plugin.zsh"
    if [ -f "$mise_plugin_path" ]; then
       . "$mise_plugin_path"
 

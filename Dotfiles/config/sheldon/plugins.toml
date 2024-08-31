@@ -1,0 +1,98 @@
+shell = 'zsh'
+
+[templates]
+noop = ':'
+defer = '''
+{{ hooks?.pre | nl }}{% for file in files %}zsh-defer -s -z source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}
+'''
+
+# These are explicitly loaded in .shenv; but I want Sheldon to install/manage them.
+[plugins.zsh-mise]
+github = 'wintermi/zsh-mise'
+apply = ['noop']
+
+[plugins.zsh-defer]
+github = 'romkatv/zsh-defer'
+
+# (This is vendored in by sindresorhus/pure!)
+#[plugins.zsh-async]
+#github = 'mafredri/zsh-async'
+
+[plugins.pure]
+github = 'sindresorhus/pure'
+use = ['{async,pure}.zsh']
+
+# Steal omz's termsupport for Apple Terminal. (Hacky as fuck.)
+[plugins.omz-termsupport]
+github = 'ohmyzsh/ohmyzsh'
+dir = 'lib'
+use = ["{functions,termsupport}.zsh"]
+apply = ['defer']
+
+[plugins.omz-plugins]
+github = 'ohmyzsh/ohmyzsh'
+dir = 'plugins'
+use = ["{colored-man-pages,extract,vagrant}/*.plugin.zsh"]
+apply = ['defer']
+
+# `fzf`'s built-in zsh support (uses star-star-tab, by default.)
+[plugins.fzf-history]
+inline = '''
+if [ -d "/opt/homebrew/opt/fzf/shell" ]; then
+   for script in /opt/homebrew/opt/fzf/shell/*.zsh; do source "$script"; done
+elif [ -d "/usr/local/opt/fzf/shell" ]; then
+   for script in /usr/local/opt/fzf/shell/*.zsh; do source "$script"; done
+fi
+'''
+
+# This currently doesn't work in the VScode integrated terminal.
+#[plugins.zsh-notify]
+#github = 'marzocchi/zsh-notify'
+
+# NOTE: I had to call OPAM's `variables.sh` from `.shenv`, instead.
+#zplug ~/.opam/opam-init,      from:local, use:init.zsh
+
+# Completions:
+# ===========
+[plugins.zsh-completions]
+github = 'zsh-users/zsh-completions'
+apply = ['defer']
+
+[plugins.homebrew-completions]
+local = '/opt/homebrew/share/zsh/site-functions/'
+use = ['*']
+apply = ['fpath']
+
+[plugins.compinit]
+inline = 'autoload -Uz compinit && compinit'
+
+# Order-sensitive:
+# ===============
+
+# fzf-tab needs to be loaded after compinit, but before plugins which will wrap
+# widgets, such as zsh-autosuggestions or fast-syntax-highlighting!
+[plugins.fzf-tab]
+github = 'aloxaf/fzf-tab'
+
+# (Without this, `bindkey "^I"` reports the basic `fzf-completion`, not `fzf-tab-complete`.)
+[plugins.fzf-tab-enable]
+inline = 'zsh-defer enable-fzf-tab'
+
+[plugins.zsh-autosuggestions]
+github = 'zsh-users/zsh-autosuggestions'
+use = ['zsh-autosuggestions.zsh']
+
+# why does this need to be disabled? stolen from:
+#    <https://github.com/wren/dotfiles/blob/fb3c07d54427746c9f2485878a2e34f50662ad2c/roles/zsh/files/plugins.toml#L64-L67>
+#[plugins.zsh-autosuggestions-config]
+#inline = '''
+#unset ZSH_AUTOSUGGEST_USE_ASYNC
+#'''
+
+[plugins.zsh-autopair]
+github = 'hlissner/zsh-autopair'
+apply = ['defer']
+
+# My understanding is that this has to be loaded _after_ compinit
+[plugins.fast-syntax-highlighting]
+github = 'zdharma-continuum/fast-syntax-highlighting'
