@@ -29,10 +29,10 @@
       "enableImportCompletion": true,
       "enableAnalyzersSupport": true,
       "LocationPaths": [
-         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/common",
-         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/analyzers",
-         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/refactorings",
-         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-3.2.2/roslyn/fixes"
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-4.0.3/roslyn/common",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-4.0.3/roslyn/analyzers",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-4.0.3/roslyn/refactorings",
+         "/Users/ec/.vscode/extensions/josefpihrt-vscode.roslynator-4.0.3/roslyn/fixes"
       ]
    },
 
