@@ -22,6 +22,8 @@ Crashpad/
 CrashpadMetrics-active.pma
 CrashpadMetrics.pma
 DawnCache/
+DawnGraphiteCache/
+DawnWebGPUCache/
 GPUCache/
 IndexedDB/
 Local State
@@ -33,7 +35,11 @@ QuotaManager
 QuotaManager-journal
 Service Worker/
 Session Storage/
+Shared Dictionary/
+SharedStorage
 TransportSecurity
+Trust Tokens
+Trust Tokens-journal
 VideoDecodeStats/
 code.lock
 databases/

@@ -8,14 +8,23 @@ Fritzing/
 asciinema/config
 asciinema/install-id
 com.add0n.node/
+grammarly-languageserver/client_*/
 hub
 inkscape/
 karabiner/assets
 karabiner/automatic_backups
 keybase/
+wireshark/
 yarn/link/
 
+# what a stupid name -_-
+software/
+
 sow/
+
+op/config
+op/plugins/used_items/
+op/plugins.sh
 
 coc/commands
 coc/extensions/*
@@ -25,6 +34,7 @@ coc/lists
 coc/memos.json
 coc/mru
 coc/snippets-mru
+coc/suggest.txt
 
 # Why do so many games store their info in .config!?
 AtomZombieData/
