@@ -4,8 +4,10 @@
 
 node_modules/
 
-Bootstrap/Brewfile.lock.json
-Bootstrap/Brewfile.frontload.lock.json
+# NB: These are not actually lockfiles; see:
+#   <https://github.com/Homebrew/homebrew-bundle/issues/1188>
+Bootstrap/rest.brewfile.lock.json
+Bootstrap/frontload.brewfile.lock.json
 
 Dotfiles/git/config.local
 
