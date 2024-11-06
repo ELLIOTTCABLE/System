@@ -324,8 +324,6 @@ else return 1; fi ;}
 
 export zsh_directory_name_functions
 
-alias diff='colordiff'
-
 # make `dig` less insanely verbose.
 alias dig='dig +nocmd +nocomments +noadditional +nostats'
 
