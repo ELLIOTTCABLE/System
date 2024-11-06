@@ -8,14 +8,13 @@ tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "nikitabobko/tap"
-tap "teamookla/speedtest"
+tap "nrlquaker/createzap"
 tap "vultr/vultr-cli"
 
 # ### Essentials
 # (See also: frontload.brewfile)
 cask "syncthing"
 cask "visual-studio-code"
-cask "homebrew/cask-versions/firefox-developer-edition"
 cask "bartender"
 cask "timing"
 cask "raycast"
@@ -111,8 +110,6 @@ brew "prettyping"
 brew "pv"
 brew "python-yq"
 brew "ragel"
-brew "ranger"
-brew "reattach-to-user-namespace" # required for terminal-notifier
 brew "ripgrep"
 brew "rlwrap"
 brew "selene"
@@ -125,7 +122,6 @@ brew "stylua"
 brew "swig"
 brew "tealdeer"
 brew "telnet"
-brew "terminal-notifier" # used by https://github.com/marzocchi/zsh-notify
 brew "tmux"
 brew "tor" # in "services", below
 brew "tree"
@@ -140,7 +136,6 @@ brew "youtube-dl"
 brew "zlib"
 brew "zsh" # in "frontload.brewfile"
 brew "felixkratz/formulae/borders"
-brew "teamookla/speedtest/speedtest", link: false
 brew "vultr/vultr-cli/vultr-cli"
 
 cask "1password-cli@beta"
@@ -161,11 +156,9 @@ cask "daisydisk" # in "overrides", above
 cask "discord"
 cask "displaperture"
 cask "dotnet-sdk"
-cask "electronmail"
 cask "element"
 cask "elgato-control-center"
 cask "elgato-stream-deck"
-cask "fig"
 cask "firefox" # in "frontload.brewfile"
 cask "firefox@developer-edition"
 cask "fldigi"
@@ -189,8 +182,6 @@ cask "loopback"
 cask "midi-monitor"
 cask "mono-mdk"
 cask "monodraw"
-cask "moom" # in "frontload.brewfile"
-cask "nightowl"
 cask "notion"
 cask "obs"
 cask "obs-ndi"
@@ -218,7 +209,6 @@ cask "swiftdefaultappsprefpane"
 cask "syncthing" # in "essentials", above
 cask "timing" # in "essentials", above
 cask "tower"
-cask "vimr" # in "frontload.brewfile"
 cask "visual-studio-code" # in "essentials", above
 cask "visual-studio-code@insiders"
 cask "vlc"
@@ -240,7 +230,6 @@ mas "1Password for Safari", id: 1569813296
 mas "Acorn", id: 1547371478
 mas "Amphetamine", id: 937984704
 mas "Banktivity", id: 1480779512
-mas "Boom 2", id: 948176063
 mas "Brother P-touch Editor", id: 1453365242
 mas "Calcbot", id: 931657367
 mas "CARROT Weather", id: 993487541
@@ -248,13 +237,11 @@ mas "Clear", id: 504544917
 mas "CocoaPacketAnalyzer", id: 418357707
 mas "Color Picker", id: 1545870783
 mas "Day One", id: 1055511498
-mas "Deliveries", id: 290986013
 mas "Droplr", id: 498672703
 mas "Fantastical", id: 975937182
 mas "Focus", id: 777233759
 mas "Forecast Bar", id: 982710545
 mas "Geofency", id: 615538630
-mas "Harvest", id: 506189836
 mas "Hex Fiend", id: 1342896380
 mas "Internet Access Policy Viewer", id: 1482630322
 mas "Pastebot", id: 1179623856

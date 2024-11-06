@@ -45,10 +45,6 @@ elif [ -d "/usr/local/opt/fzf/shell" ]; then
 fi
 '''
 
-# This currently doesn't work in the VScode integrated terminal.
-#[plugins.zsh-notify]
-#github = 'marzocchi/zsh-notify'
-
 # NOTE: I had to call OPAM's `variables.sh` from `.shenv`, instead.
 #zplug ~/.opam/opam-init,      from:local, use:init.zsh
 

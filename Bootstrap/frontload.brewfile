@@ -12,8 +12,6 @@ cask "little-snitch"
 cask "karabiner-elements"
 cask "1password@beta"
 cask "firefox"
-cask "vimr"
-cask "moom"
 
 brew "git"
 brew "zsh"
