@@ -1,16 +1,17 @@
 # vim: set ft=ruby:
 
 # Homebrew features
+tap "buo/cask-upgrade"
+tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/services"
-tap "buo/cask-upgrade"
-tap "FelixKratz/formulae" # for "borders"
-brew "mas"
-brew "whalebrew"
+tap "nikitabobko/tap"
+tap "teamookla/speedtest"
+tap "vultr/vultr-cli"
 
-# Essentials
+# ### Essentials
 # (See also: frontload.brewfile)
 cask "syncthing"
 cask "visual-studio-code"
@@ -22,58 +23,12 @@ cask "raycast"
 mas "Pastebot", id: 1179623856
 mas "Xcode", id: 497799835
 
-# Binaries for Vim plugins:
-brew "hadolint"
-brew "selene"
-brew "shellcheck"
-brew "stylua"
-brew "tidy-html5"
-brew "yamllint"
-
-# Everything else, except services
+# ### Overrides
 # (Some Casks that I want to override MAS)
 cask "daisydisk"
 
-mas "1Password for Safari", id: 1569813296
-mas "Acorn", id: 1547371478
-mas "Amphetamine", id: 937984704
-mas "Banktivity", id: 1480779512
-mas "Boom 2", id: 948176063
-mas "Brother P-touch Editor", id: 1453365242
-mas "CARROT Weather", id: 993487541
-mas "Calcbot", id: 931657367
-mas "Clear", id: 504544917
-mas "CocoaPacketAnalyzer", id: 418357707
-mas "Color Picker", id: 1545870783
-mas "Day One", id: 1055511498
-mas "Deliveries", id: 290986013
-mas "Droplr", id: 498672703
-mas "Fantastical", id: 975937182
-mas "Focus", id: 777233759
-mas "Forecast Bar", id: 982710545
-mas "Geofency", id: 615538630
-mas "Harvest", id: 506189836
-mas "Hex Fiend", id: 1342896380
-mas "Internet Access Policy Viewer", id: 1482630322
-mas "PCalc", id: 403504866
-mas "PDF Expert", id: 1055273043
-mas "Pasteboard Viewer", id: 1499215709
-mas "Pixea", id: 1507782672
-mas "Plash", id: 1494023538
-mas "Reeder", id: 1529448980
-mas "Speedtest", id: 1153157709
-mas "Synalyze It!", id: 417074533
-mas "The Archive Browser", id: 510232205
-mas "The Unarchiver", id: 425424353
-mas "Things", id: 904280696
-mas "Transmit", id: 1436522307
-mas "Tunes Notifier", id: 555731861
-mas "VBAN Receptor", id: 1462414931
-mas "VBAN Talkie Cherry", id: 1553486090
-mas "WireGuard", id: 1451685025
-mas "Xee³", id: 639764244
-mas "xScope", id: 889428659
-
+# ### Everything else
+# The rest of this should match the output of `brew bundle dump`, including duplicates of the above:
 brew "ack"
 brew "aria2"
 brew "asciidoc"
@@ -104,7 +59,6 @@ brew "dog"
 brew "dos2unix"
 brew "eza"
 brew "fd"
-brew "felixkratz/formulae/borders"
 brew "ffmpeg"
 brew "fftw"
 brew "fzf"
@@ -170,13 +124,11 @@ brew "sphinx-doc"
 brew "stylua"
 brew "swig"
 brew "tealdeer"
-brew "teamookla/speedtest/speedtest"
 brew "telnet"
 brew "terminal-notifier" # used by https://github.com/marzocchi/zsh-notify
 brew "tmux"
 brew "tor" # in "services", below
 brew "tree"
-brew "vultr/vultr-cli/vultr-cli"
 brew "watchexec"
 brew "watchman"
 brew "wget"
@@ -187,7 +139,13 @@ brew "ykman"
 brew "youtube-dl"
 brew "zlib"
 brew "zsh" # in "frontload.brewfile"
+brew "felixkratz/formulae/borders"
+brew "teamookla/speedtest/speedtest", link: false
+brew "vultr/vultr-cli/vultr-cli"
 
+cask "1password-cli@beta"
+cask "1password@beta" # in "frontload.brewfile"
+cask "aerospace", args: { no_quarantine: true }
 cask "anki"
 cask "audio-hijack"
 cask "backblaze"
@@ -209,13 +167,11 @@ cask "elgato-control-center"
 cask "elgato-stream-deck"
 cask "fig"
 cask "firefox" # in "frontload.brewfile"
+cask "firefox@developer-edition"
 cask "fldigi"
 cask "flrig"
 cask "gitify"
 cask "google-chrome"
-cask "homebrew/cask-versions/1password-beta" # in "frontload.brewfile"
-cask "homebrew/cask-versions/1password-cli-beta"
-cask "homebrew/cask-versions/firefox-developer-edition" # in "essentials", above
 cask "hookmark"
 cask "ilspy"
 cask "imageoptim"
@@ -235,7 +191,6 @@ cask "mono-mdk"
 cask "monodraw"
 cask "moom" # in "frontload.brewfile"
 cask "nightowl"
-cask "nikitabobko/tap/aerospace", args: { no_quarantine: true }
 cask "notion"
 cask "obs"
 cask "obs-ndi"
@@ -265,7 +220,7 @@ cask "timing" # in "essentials", above
 cask "tower"
 cask "vimr" # in "frontload.brewfile"
 cask "visual-studio-code" # in "essentials", above
-cask "visual-studio-code-insiders"
+cask "visual-studio-code@insiders"
 cask "vlc"
 cask "vmware-fusion"
 cask "wireshark"
@@ -280,3 +235,45 @@ cask "zoom"
 # Services
 brew "unbound"
 brew "tor"
+
+mas "1Password for Safari", id: 1569813296
+mas "Acorn", id: 1547371478
+mas "Amphetamine", id: 937984704
+mas "Banktivity", id: 1480779512
+mas "Boom 2", id: 948176063
+mas "Brother P-touch Editor", id: 1453365242
+mas "Calcbot", id: 931657367
+mas "CARROT Weather", id: 993487541
+mas "Clear", id: 504544917
+mas "CocoaPacketAnalyzer", id: 418357707
+mas "Color Picker", id: 1545870783
+mas "Day One", id: 1055511498
+mas "Deliveries", id: 290986013
+mas "Droplr", id: 498672703
+mas "Fantastical", id: 975937182
+mas "Focus", id: 777233759
+mas "Forecast Bar", id: 982710545
+mas "Geofency", id: 615538630
+mas "Harvest", id: 506189836
+mas "Hex Fiend", id: 1342896380
+mas "Internet Access Policy Viewer", id: 1482630322
+mas "Pastebot", id: 1179623856
+mas "PCalc", id: 403504866
+mas "PDF Expert", id: 1055273043
+mas "Pasteboard Viewer", id: 1499215709
+mas "Pixea", id: 1507782672
+mas "Plash", id: 1494023538
+mas "Reeder", id: 1529448980
+mas "Speedtest", id: 1153157709
+mas "Synalyze It!", id: 417074533
+mas "The Archive Browser", id: 510232205
+mas "The Unarchiver", id: 425424353
+mas "Things", id: 904280696
+mas "Transmit", id: 1436522307
+mas "Tunes Notifier", id: 555731861
+mas "VBAN Receptor", id: 1462414931
+mas "VBAN Talkie Cherry", id: 1553486090
+mas "WireGuard", id: 1451685025
+mas "Xcode", id: 497799835
+mas "Xee³", id: 639764244
+mas "xScope", id: 889428659

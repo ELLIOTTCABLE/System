@@ -10,7 +10,7 @@ brew "whalebrew"
 
 cask "little-snitch"
 cask "karabiner-elements"
-cask "homebrew/cask-versions/1password-beta"
+cask "1password@beta"
 cask "firefox"
 cask "vimr"
 cask "moom"
