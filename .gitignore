@@ -23,8 +23,6 @@ Dotfiles/ssh/identities/*/identity*
 Dotfiles/ssh/controls/
 Dotfiles/ssh/agents/
 
-Dotfiles/zsh/modules
-
 Dotfiles/ocp/ocp-build.prefs
 
 Dotfiles/opam/config
