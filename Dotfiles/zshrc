@@ -79,8 +79,14 @@ while ! command -v sheldon 1>/dev/null; do
    sheldon lock
 done
 
-eval "$(sheldon source)"
+# '/opt/homebrew/share/zsh/site-functions/'
+if [ -d "/opt/homebrew" ]; then
+   eval "$(sheldon --profile arm64 source)"
 
+elif [ -d "/usr/local" ]; then
+   eval "$(sheldon --profile x86_64 source)"
+
+fi
 
 # ================
 # = Key bindings =

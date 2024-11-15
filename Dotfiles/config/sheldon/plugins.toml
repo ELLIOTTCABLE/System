@@ -54,7 +54,14 @@ fi
 github = 'zsh-users/zsh-completions'
 apply = ['defer']
 
+[plugins.homebrew-completions-x86]
+profiles = ['x86_64']
+local = '/usr/local/share/zsh/site-functions'
+use = ['*']
+apply = ['fpath']
+
 [plugins.homebrew-completions]
+profiles = ['arm64']
 local = '/opt/homebrew/share/zsh/site-functions/'
 use = ['*']
 apply = ['fpath']
