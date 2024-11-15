@@ -54,16 +54,16 @@ alt-comma = 'layout accordion horizontal vertical'
 alt-slash = 'layout tiles horizontal vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#focus
-alt-h = 'focus --boundaries all-monitors-outer-frame left'
-alt-y = 'focus --boundaries all-monitors-outer-frame down'
-alt-n = 'focus --boundaries all-monitors-outer-frame up'
-alt-u = 'focus --boundaries all-monitors-outer-frame right'
+alt-h = 'focus --boundaries all-monitors-outer-frame left'  # H
+alt-y = 'focus --boundaries all-monitors-outer-frame down'  # J
+alt-n = 'focus --boundaries all-monitors-outer-frame up'    # K
+alt-u = 'focus --boundaries all-monitors-outer-frame right' # L
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#move
-alt-shift-h = 'move left'
-alt-shift-y = 'move down'
-alt-shift-n = 'move up'
-alt-shift-u = 'move right'
+alt-shift-h = 'move left'  # H
+alt-shift-y = 'move down'  # J
+alt-shift-n = 'move up'    # K
+alt-shift-u = 'move right' # L
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#resize
 alt-shift-minus = 'resize smart -100'
@@ -71,16 +71,16 @@ alt-equal = 'resize smart +100'
 alt-shift-equal = 'resize smart +100'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus-monitor
-alt-f = 'focus-monitor left'
-alt-t = 'focus-monitor down'
-alt-g = 'focus-monitor right'
-alt-b = 'focus-monitor up'
+alt-f = 'focus-monitor left'  # T
+alt-t = 'focus-monitor down'  # G
+alt-g = 'focus-monitor right' # D
+alt-b = 'focus-monitor up'    # B
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-monitor
-alt-shift-f = ['move-node-to-monitor left', 'focus-monitor left']
-alt-shift-t = ['move-node-to-monitor down', 'focus-monitor down']
-alt-shift-g = ['move-node-to-monitor right', 'focus-monitor right']
-alt-shift-b = ['move-node-to-monitor up', 'focus-monitor up']
+alt-shift-f = ['move-node-to-monitor left', 'focus-monitor left']   # T
+alt-shift-t = ['move-node-to-monitor down', 'focus-monitor down']   # G
+alt-shift-g = ['move-node-to-monitor right', 'focus-monitor right'] # D
+alt-shift-b = ['move-node-to-monitor up', 'focus-monitor up']       # B
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace
 alt-shift-0 = 'workspace 0'
@@ -99,21 +99,6 @@ alt-q = 'workspace Q'
 alt-w = 'workspace W'
 alt-e = 'workspace F'
 alt-r = 'workspace P'
-
-# alt-a = 'workspace A'
-# alt-b = 'workspace B'
-# alt-c = 'workspace C'
-# alt-g = 'workspace D'
-# alt-k = 'workspace E'
-# alt-l = 'workspace I'
-# alt-m = 'workspace M'
-# alt-j = 'workspace N'
-# alt-s = 'workspace R'
-# alt-d = 'workspace S'
-# alt-f = 'workspace T'
-# alt-v = 'workspace V'
-# alt-x = 'workspace X'
-# alt-z = 'workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#move-node-to-workspace
 alt-0 = 'move-node-to-workspace 0'
@@ -160,21 +145,21 @@ alt-shift-slash = 'mode join'
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.service.binding]
-z = ['flatten-workspace-tree', 'mode main'] # reset layout
+z = ['flatten-workspace-tree', 'mode main'] # Z - reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 e = [
    'layout floating tiling',
    'mode main',
-] # Toggle between floating and tiling layout
+] # F - Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
-s = ['reload-config', 'mode main']
-x = ['fullscreen', 'mode main']
+s = ['reload-config', 'mode main'] # R
+x = ['fullscreen', 'mode main'] # X
 
 # 'join' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.join.binding]
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-y = ['join-with down', 'mode main']
-alt-shift-n = ['join-with up', 'mode main']
-alt-shift-u = ['join-with right', 'mode main']
+alt-shift-h = ['join-with left', 'mode main']  # H
+alt-shift-y = ['join-with down', 'mode main']  # J
+alt-shift-n = ['join-with up', 'mode main']    # K
+alt-shift-u = ['join-with right', 'mode main'] # L
 esc = 'mode main'
