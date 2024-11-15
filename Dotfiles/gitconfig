@@ -25,7 +25,8 @@
 	ignored = "!git ls-files -v | grep --colour '^[a-z]'"
 	labels = "!git show Master:.gitlabels | less -RS"
 [diff]
-  mnemonicprefix = true
+	mnemonicprefix = true
+	tool = Kaleidoscope
 [format]
 	numbered = auto
 [core]
@@ -72,8 +73,9 @@
 	external = ~/.opam/_globals/bin/patdiff-git-wrapper
 [difftool]
 	prompt = false
+	trustExitCode = true
 [merge]
-	tool = embedded-editor-proxy
+	tool = Kaleidoscope
 	defaultToUpstream = true
 	conflictstyle = diff3
 [mergetool]
@@ -109,6 +111,7 @@
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
 [difftool "embedded-editor-proxy"]
 	cmd = ~/.bin/embedded-editor-proxy.sh --wait --diff \"$LOCAL\" \"$REMOTE\"
 [mergetool "embedded-editor-proxy"]
