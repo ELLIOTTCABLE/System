@@ -163,3 +163,12 @@ alt-shift-y = ['join-with down', 'mode main']  # J
 alt-shift-n = ['join-with up', 'mode main']    # K
 alt-shift-u = ['join-with right', 'mode main'] # L
 esc = 'mode main'
+
+[[on-window-detected]]
+if.app-id = 'com.culturedcode.ThingsMac'
+if.window-title-regex-substring = 'tags'
+run = 'layout tiling'
+
+[[on-window-detected]]
+if.app-id = 'com.valvesoftware.steam.helper'
+run = 'layout tiling'
