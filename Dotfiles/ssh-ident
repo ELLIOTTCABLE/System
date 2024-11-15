@@ -7,13 +7,15 @@ MATCH_ARGV = [
   [r"nspawn", "ahrefs"],
   [r"sandbox-eu", "ahrefs"],
   [r"statmaster", "ahrefs"],
-  [r"durian", "ahrefs"],
+  [r"durian\d*", "ahrefs"],
+  [r"logs-*", "ahrefs"],
   [r"\s(git@)?github\.com\s.*'ahrefs\/.+\.git'", "ahrefs"],
   [r"^(git@)?git\.ahrefs\.com$", "ahrefs"],
+
   [r"\s(git@)?github\.com\s.*'ELLIOTTCABLE\/.+\.git'", "personal"],
   [r"^(git@)?(gist\.)?github\.com$", "personal"],
   [r".*ell\.io$", "personal"],
-  [r".*with\.ec$", "personal"],
+  [r".*with\.ec$", "personal"]
 ]
 
 DEFAULT_IDENTITY = "MISSING_IDENTITY"

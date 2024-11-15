@@ -11,9 +11,9 @@ ControlPath ~/.ssh/controls/%r@%h:%p.sock
 ControlPersist 30
 
 Host *
-  UseKeychain yes
-  AddKeysToAgent ask
-  # IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+   UseKeychain yes
+   AddKeysToAgent ask
+   # IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 #Host ell.io *.ell.io Kim.local
 #   User elliottcable
