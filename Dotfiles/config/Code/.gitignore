@@ -37,10 +37,12 @@ Service Worker/
 Session Storage/
 Shared Dictionary/
 SharedStorage
+SharedStorage-wal
 TransportSecurity
 Trust Tokens
 Trust Tokens-journal
 VideoDecodeStats/
+WebStorage/
 code.lock
 databases/
 languagepacks.json
