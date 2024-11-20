@@ -35,8 +35,9 @@
         login_host: "{{ db_host }}"
         login_port: "{{ db_port }}"
         db: "{{ db_name }}"
+     # staging letsencrypt server:
+     #  caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
      caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
-     caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
   module_defaults:
      community.postgresql.postgresql_ping: "{{ db_params }}"
