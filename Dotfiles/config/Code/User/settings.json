@@ -96,20 +96,19 @@
       },
       ".mac.nosidebar.monaco-workbench .part.editor .split-view-view.visible ~ .split-view-view.visible .title .title-label": {
          "padding-left": "20px !important"
+      },
+
+      // Custom fonts for various highlight-groups
+      /* test */
+      ".mtk5": {
+         // Comments
+         "font-family": "'MonaspiceRn Nerd Font Propo', Arial"
+      },
+
+      ".ghost-text-decoration, .ghost-text-decoration-preview": {
+         "font-family": "'MonaspiceKr Nerd Font Propo', Arial",
+         "font-weight": "200"
       }
-
-      // ".mac.monaco-workbench .part.sidebar > .title > .title-label > h2": {
-      //    "font-size": "14px !important",
-      //    "line-height": "29px !important"
-      // }
-
-      // .editor .split-view-view.visible .title {
-      //     background: red !important;
-      // }
-
-      // .editor .split-view-view.visible ~ .split-view-view.visible .title {
-      //     background: green !important;
-      // }
    },
 
    // ### Explorer & side-bars
@@ -135,15 +134,22 @@
    "editor.codeLensFontSize": 9,
    "terminal.integrated.fontSize": 14,
 
-   // "editor.fontFamily": "'Iosevka Nerd Font', monospace",
-   "editor.fontFamily": "'Fira Code', monospace",
-   "editor.fontLigatures": "'cv04', 'ss01', 'cv13', 'onum', 'ss04', 'ss09', 'ss06', 'calt'",
-   "editor.codeLensFontFamily": "'Iosevka Nerd Font', monospace",
+   // "editor.fontFamily": "'Fira Code', Arial",
+   // "editor.fontLigatures": "'cv04', 'ss01', 'cv13', 'onum', 'ss04', 'ss09', 'ss06', 'calt'",
+   "editor.fontFamily": "'MonaspiceNe Nerd Font', Arial",
+   "editor.fontVariations": "'wght' 150",
+
+   "editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'liga'",
+
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
    "workbench.fontAliasing": "auto",
 
-   "toggle.setting1Title": "editor.fontLigatures",
-   "toggle.iconEnabled": false,
+   "editor.codeLensFontFamily": "'Iosevka Nerd Font', Arial",
+   "editor.inlayHints.fontFamily": "'MonaspiceKr Nerd Font', Arial",
+   "editor.inlineSuggest.fontFamily": "'MonaspiceKr Nerd Font', Arial",
+   "errorLens.fontFamily": "'MonaspiceKr Nerd Font', Arial",
+
+   "disableLigatures.mode": "Line",
 
    // ### Cursor & editor-lines appearance
    "editor.stickyScroll.enabled": true,
