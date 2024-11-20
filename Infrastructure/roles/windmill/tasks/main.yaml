@@ -1,18 +1,18 @@
 # :vim: set ft=ansible :
 
-- name: Check for DATABASE_URL
+- name: Check for database variables
   ansible.builtin.fail:
-     msg: "DATABASE_URL is required"
-  when: database_url is not defined or database_url == ""
+     msg: "DB_USER, etc are not defined."
+  when: db_url is not defined or db_url == ""
 
   tags:
      - windmill.server
      - windmill.worker
      - windmill.config
 
-- name: Print DATABASE_URL
+- name: Print db_url
   ansible.builtin.debug:
-     msg: "DATABASE_URL: {{ database_url }}"
+     msg: "db_url: {{ db_url }}"
 
   tags:
      - windmill.server
@@ -47,6 +47,61 @@
           - windmill.worker
           - windmill.deno
           - windmill.prerequesites
+
+# TODO: Check if postgres is already configured properly
+
+- name: Download init-db-as-superuser.sql
+  ansible.builtin.get_url:
+     url: https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql
+     dest: /tmp/init-db-as-superuser.sql
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.database
+
+- name: Add random password for windmill_user for Neon
+  ansible.builtin.lineinfile:
+     path: /tmp/init-db-as-superuser.sql
+     search_string: "CREATE ROLE windmill_user;"
+     line: "CREATE ROLE windmill_user WITH PASSWORD '{{ lookup('community.general.random_string', length=18) }}';"
+     state: present
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.database
+
+- name: Remove windmill_admin user-creation for Neon
+  ansible.builtin.lineinfile:
+     path: /tmp/init-db-as-superuser.sql
+     search_string: "CREATE ROLE windmill_admin WITH BYPASSRLS;"
+     state: absent
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.database
+
+- name: install psycopg2-binary
+  pip:
+     name: psycopg2-binary
+  become: yes
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.database
+
+- name: Apply init-db-as-superuser.sql
+  community.postgresql.postgresql_script:
+     login_user: "windmill_admin"
+     login_password: "{{ db_pass }}"
+     login_host: "{{ db_host }}"
+     login_db: "{{ db_name }}"
+     path: /tmp/init-db-as-superuser.sql
+     positional_args:
+        - 1
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.database
 
 - name: Check if the nginx proxy is enabled
   ansible.builtin.command: /lib/systemd/systemd-sysv-install is-enabled nginx
@@ -182,8 +237,8 @@
   dokku_config:
      app: *server_name
      config:
-        DATABASE_URL: "{{ database_url }}"
-  when: database_url is defined
+        db_url: "{{ db_url }}"
+  when: db_url is defined
 
   tags:
      - windmill.server
@@ -355,8 +410,8 @@
   dokku_config:
      app: *worker_name
      config:
-        DATABASE_URL: "{{ database_url }}"
-  when: database_url is defined
+        db_url: "{{ db_url }}"
+  when: db_url is defined
 
   tags:
      - windmill.worker
