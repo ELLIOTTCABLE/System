@@ -142,6 +142,9 @@
         DISABLE_SERVER: "false"
         METRICS_ADDR: "false"
 
+        DENO_PATH: "{{ deno_root }}/bin/deno"
+        PYTHON_PATH: "{{ python_path }}"
+
   tags:
      - windmill.server
      - windmill.config
