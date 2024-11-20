@@ -63,6 +63,30 @@
   tags:
      - windmill.server
      - windmill.worker
+     - windmill.config
+     - windmill.proxy
+     - dokku.proxy
+
+- name: Check the proxy-selection configuration
+  ansible.builtin.command: dokku proxy:report
+  register: proxy_report
+  changed_when: false
+
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.config
+     - windmill.proxy
+     - dokku.proxy
+
+- name: Select Caddy as the global proxy
+  ansible.builtin.command: dokku proxy:set --global caddy
+  when: "'Proxy computed type:           caddy' not in proxy_report.stdout"
+
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -73,6 +97,7 @@
 
   tags:
      - windmill.certs
+     - windmill.config
      - windmill.proxy
      - dokku.certs
      - dokku.proxy
@@ -83,6 +108,7 @@
 
   tags:
      - windmill.certs
+     - windmill.config
      - windmill.proxy
      - dokku.certs
      - dokku.proxy
@@ -93,6 +119,7 @@
 
   tags:
      - windmill.certs
+     - windmill.config
      - windmill.proxy
      - dokku.certs
      - dokku.proxy
@@ -129,6 +156,7 @@
   tags:
      - windmill.server
      - windmill.domains
+     - windmill.config
      - dokku.domains
 
 - name: Configure environment for {{ server_name }}
@@ -262,9 +290,11 @@
      option: >-
         --label=caddy='{{ server_domain }}'
         --label=caddy.2_reverse_proxy={%raw%}'/* {{upstreams http 8000}}'{%endraw%}
+     state: present
 
   tags:
      - windmill.server
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -369,6 +399,7 @@
 
   tags:
      - windmill.worker
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -413,6 +444,7 @@
 
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.domains
      - dokku.domains
 
@@ -424,6 +456,7 @@
      state: absent
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -434,6 +467,7 @@
         - http:3001:3001
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -445,6 +479,7 @@
 
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -454,6 +489,7 @@
 
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
@@ -464,9 +500,11 @@
      option: >-
         --label=caddy='{{ server_domain }}'
         --label=caddy.1_reverse_proxy={%raw%}'/ws/* {{upstreams http 3001}}'{%endraw%}
+     state: present
 
   tags:
      - windmill.lsp
+     - windmill.config
      - windmill.proxy
      - dokku.proxy
 
