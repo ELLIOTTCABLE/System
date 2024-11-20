@@ -50,64 +50,98 @@
 
 # TODO: Check if postgres is already configured properly
 
-- name: Download init-db-as-superuser.sql
-  ansible.builtin.get_url:
-     url: https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql
-     dest: /tmp/init-db-as-superuser.sql
+- name: Check connection to database
+  community.postgresql.postgresql_ping:
   tags:
      - windmill.server
      - windmill.worker
      - windmill.database
 
-- name: Add random password for windmill_user for Neon
-  ansible.builtin.lineinfile:
-     path: /tmp/init-db-as-superuser.sql
-     search_string: "CREATE ROLE windmill_user;"
-     line: "CREATE ROLE windmill_user WITH PASSWORD '{{ lookup('community.general.random_string', length=18) }}';"
-     state: present
+- name: Check user-roles in database
+  community.postgresql.postgresql_info:
+     filter: roles
+  register: db_info
   tags:
      - windmill.server
      - windmill.worker
      - windmill.database
 
-- name: Remove windmill_admin user-creation for Neon
-  ansible.builtin.lineinfile:
-     path: /tmp/init-db-as-superuser.sql
-     search_string: "CREATE ROLE windmill_admin WITH BYPASSRLS;"
-     state: absent
+- debug:
+     var: db_info
+     verbosity: 1
   tags:
      - windmill.server
      - windmill.worker
      - windmill.database
 
-- name: install psycopg2-binary
-  pip:
-     name: psycopg2-binary
-  become: yes
-  tags:
-     - windmill.server
-     - windmill.worker
-     - windmill.database
+- when: db_info.roles.windmill_user is not defined
+  block:
+     - name: Postgres user windmill_admin was created by hand
+       ansible.builtin.assert:
+          that:
+             - db_info.roles.windmill_admin is defined
 
-- name: Apply init-db-as-superuser.sql
-  community.postgresql.postgresql_script:
-     login_user: "windmill_admin"
-     login_password: "{{ db_pass }}"
-     login_host: "{{ db_host }}"
-     login_db: "{{ db_name }}"
-     path: /tmp/init-db-as-superuser.sql
-     positional_args:
-        - 1
-  tags:
-     - windmill.server
-     - windmill.worker
-     - windmill.database
+     - name: Download init-db-as-superuser.sql
+       ansible.builtin.get_url:
+          url: https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql
+          dest: /tmp/init-db-as-superuser.sql
+       tags:
+          - windmill.server
+          - windmill.worker
+          - windmill.database
+
+     - name: Add random password for windmill_user for Neon
+       ansible.builtin.lineinfile:
+          path: /tmp/init-db-as-superuser.sql
+          search_string: "CREATE ROLE windmill_user;"
+          line: "CREATE ROLE windmill_user WITH PASSWORD '{{ lookup('community.general.random_string', length=18, special=false) }}';"
+          state: present
+       tags:
+          - windmill.server
+          - windmill.worker
+          - windmill.database
+
+     - name: Remove windmill_admin user-creation for Neon
+       ansible.builtin.lineinfile:
+          path: /tmp/init-db-as-superuser.sql
+          search_string: "CREATE ROLE windmill_admin WITH BYPASSRLS;"
+          state: absent
+       tags:
+          - windmill.server
+          - windmill.worker
+          - windmill.database
+
+     - name: install psycopg2-binary
+       pip:
+          name: psycopg2-binary
+       become: yes
+       tags:
+          - windmill.server
+          - windmill.worker
+          - windmill.database
+
+     - name: Apply init-db-as-superuser.sql
+       community.postgresql.postgresql_script:
+          path: /tmp/init-db-as-superuser.sql
+          positional_args:
+             - 1
+       tags:
+          - windmill.server
+          - windmill.worker
+          - windmill.database
 
 - name: Check if the nginx proxy is enabled
   ansible.builtin.command: /lib/systemd/systemd-sysv-install is-enabled nginx
   register: nginx_enabled
   failed_when: false
   changed_when: false
+
+  tags:
+     - windmill.server
+     - windmill.worker
+     - windmill.config
+     - windmill.proxy
+     - dokku.proxy
 
 # TODO: Define changed/success using:
 #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
@@ -237,12 +271,12 @@
   dokku_config:
      app: *server_name
      config:
-        db_url: "{{ db_url }}"
-  when: db_url is defined
+        DATABASE_URL: "{{ db_url }}"
 
   tags:
      - windmill.server
      - windmill.config
+     - windmill.database
      - dokku.config
 
 - name: Create a persistent-storage for server config {{ server_name }}
@@ -410,12 +444,12 @@
   dokku_config:
      app: *worker_name
      config:
-        db_url: "{{ db_url }}"
-  when: db_url is defined
+        DATABASE_URL: "{{ db_url }}"
 
   tags:
      - windmill.worker
      - windmill.config
+     - windmill.database
      - dokku.config
 
 - name: Create a dependency-cache for {{ worker_name }}
