@@ -17,7 +17,6 @@
        become: true
      - role: dokku_bot.ansible_dokku
        become: true
-     - deno
      - windmill
 
   vars:
@@ -38,8 +37,6 @@
         db: "{{ db_name }}"
      caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
      caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
-     deno_root: /usr/local
-     python_path: /usr/bin/python3
 
   module_defaults:
      community.postgresql.postgresql_ping: "{{ db_params }}"

@@ -19,37 +19,6 @@
      - windmill.worker
      - windmill.config
 
-- name: Check for deno
-  ansible.builtin.stat:
-     path: "{{ deno_root }}/bin/deno"
-  register: deno_stat
-
-  tags:
-     - windmill.worker
-     - windmill.deno
-     - windmill.prerequesites
-
-- when: not deno_stat.stat.exists
-  block:
-     - name: Download deno-install.sh
-       ansible.builtin.get_url:
-          url: https://deno.land/x/install/install.sh
-          dest: /tmp/deno-install.sh
-          mode: 0500
-
-     - name: Install deno with install.sh
-       ansible.builtin.shell: /tmp/deno-install.sh
-       environment:
-          DENO_INSTALL: "{{ deno_root }}"
-       become: true
-
-       tags:
-          - windmill.worker
-          - windmill.deno
-          - windmill.prerequesites
-
-# TODO: Check if postgres is already configured properly
-
 - name: Check connection to database
   community.postgresql.postgresql_ping:
   tags:
@@ -259,9 +228,6 @@
         DISABLE_SERVER: "false"
         METRICS_ADDR: "false"
 
-        DENO_PATH: "{{ deno_root }}/bin/deno"
-        PYTHON_PATH: "{{ python_path }}"
-
   tags:
      - windmill.server
      - windmill.config
@@ -431,9 +397,6 @@
         DISABLE_SERVER: "true"
         KEEP_JOB_DIR: "false"
         METRICS_ADDR: "false"
-
-        DENO_PATH: "{{ deno_root }}/bin/deno"
-        PYTHON_PATH: "{{ python_path }}"
 
   tags:
      - windmill.worker
