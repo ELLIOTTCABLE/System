@@ -13,7 +13,7 @@ users:
      groups: users, wheel
      lock_passwd: false
      ssh_authorized_keys:
-        - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtkdnrOwxefxtPs3npgOaqX5fUD8DlpvJPVCGK5PKcp ec@Caesar-the-MacBookPro181.local"
+        - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtkdnrOwxefxtPs3npgOaqX5fUD8DlpvJPVCGK5PKcp Elliott Cable <me@ell.io> (19 765 ſ, insecure)"
 
 runcmd:
    - [sed, -i, "s/^PermitRootLogin.*/PermitRootLogin no/", /etc/ssh/sshd_config]
