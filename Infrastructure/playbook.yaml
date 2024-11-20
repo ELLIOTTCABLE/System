@@ -25,7 +25,7 @@
      dokku_hostname: with.ec
      dokku_manage_nginx: false
      server_domain: windmill.with.ec
-     database_url: "postgres://{{ lookup('env', 'DATABASE_URL') }}/windmilldb"
+     database_url: "{{ lookup('env', 'DATABASE_URL') }}"
      caddy_letsencrypt_email: "letsencrypt-automated@elliottcable.com"
      caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
      deno_root: /usr/local
