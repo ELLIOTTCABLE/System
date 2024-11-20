@@ -43,10 +43,10 @@
    // ### Global layout
    "workbench.experimental.enableNewProfilesUI": true,
 
-   "workbench.activityBar.location": "top",
+   "workbench.activityBar.location": "bottom",
    "workbench.layoutControl.enabled": true,
+
    "breadcrumbs.enabled": true,
-   "window.density.editorTabHeight": "compact",
    "workbench.editor.showTabs": "single",
 
    "editor.minimap.maxColumn": 72,
@@ -54,6 +54,63 @@
    "editor.minimap.side": "left",
 
    "workbench.hover.delay": 100,
+
+   "window.customTitleBarVisibility": "never",
+   "window.titleBarStyle": "native",
+
+   "custom-ui-style.electron": {
+      // Make the window titlebar-less on macOS
+      "frame": false,
+      "titleBarStyle": "hiddenInset",
+      "trafficLightPosition": {
+         "x": 7,
+         "y": 8
+      }
+   },
+
+   "custom-ui-style.stylesheet": {
+      // Lowers command-palette etc to be more centered
+      ".quick-input-widget": {
+         "top": "25vh !important"
+      },
+
+      // Adjust titlebar sizes to match macOS traffic-lights. (Not working.)
+      // ".mac.monaco-workbench .title": {
+      //    "height": "25px !important",
+      //    "font-size": "14px !important"
+      // },
+      // ".mac.monaco-workbench .part.sidebar .title .title-label": {
+      //    "line-height": "29px !important"
+      // },
+
+      // Shift over the sidebar title to make room for the macOS traffic-lights
+      ".mac.monaco-workbench .part.sidebar > .title": {
+         "padding-left": "0px !important"
+      },
+      ".mac.monaco-workbench .part.sidebar > .title > .title-label": {
+         // Yes, a slightly different number seems to work better here.
+         "padding-left": "67px !important"
+      },
+      ".mac.nosidebar.monaco-workbench .part.editor .split-view-view.visible .title .title-label": {
+         "padding-left": "66px !important"
+      },
+      ".mac.nosidebar.monaco-workbench .part.editor .split-view-view.visible ~ .split-view-view.visible .title .title-label": {
+         "padding-left": "20px !important"
+      }
+
+      // ".mac.monaco-workbench .part.sidebar > .title > .title-label > h2": {
+      //    "font-size": "14px !important",
+      //    "line-height": "29px !important"
+      // }
+
+      // .editor .split-view-view.visible .title {
+      //     background: red !important;
+      // }
+
+      // .editor .split-view-view.visible ~ .split-view-view.visible .title {
+      //     background: green !important;
+      // }
+   },
 
    // ### Explorer & side-bars
    "workbench.tree.enableStickyScroll": true,
