@@ -21,5 +21,6 @@ prettier-plugin-sql-cst
 semver
 tern
 vim-language-server
+windmill-cli
 yarn
 zx
