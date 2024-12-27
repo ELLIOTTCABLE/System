@@ -1,0 +1,11 @@
+{
+  "extra_perms": {
+    "g/all": true,
+    "u/ELLIOTTCABLE": true
+  },
+  "summary": null,
+  "display_name": "shared",
+  "owners": [
+    "u/ELLIOTTCABLE"
+  ]
+}

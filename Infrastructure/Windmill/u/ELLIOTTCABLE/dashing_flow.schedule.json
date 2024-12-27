@@ -1,0 +1,12 @@
+{
+  "summary": "Check for new entries every 30 minutes",
+  "no_flow_overlap": false,
+  "email": "windmill.with.ec@from.ec",
+  "ws_error_handler_muted": false,
+  "schedule": "0 */30 * * * *",
+  "timezone": "America/Chicago",
+  "enabled": true,
+  "script_path": "u/ELLIOTTCABLE/dashing_flow",
+  "is_flow": true,
+  "args": {}
+}

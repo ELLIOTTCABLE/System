@@ -1,0 +1,33 @@
+{
+  "summary": "Fetch new entries from a Notion database",
+  "description": "",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "notion": {
+        "default": null,
+        "description": "",
+        "format": "resource-notion",
+        "type": "object"
+      },
+      "database_id": {
+        "default": null,
+        "description": "",
+        "originalType": "string",
+        "type": "string"
+      }
+    },
+    "required": [
+      "notion",
+      "database_id"
+    ],
+    "type": "object",
+    "order": [
+      "notion",
+      "database_id"
+    ]
+  },
+  "lock": "!inline f/notion/fetch_new_db_entries.script.lock",
+  "kind": "trigger",
+  "concurrency_time_window_s": 0
+}
