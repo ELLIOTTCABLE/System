@@ -1,0 +1,19 @@
+# spec: https://github.com/windmill-labs/windmill/blob/main/cli/conf.ts
+
+json: true
+stateful: true
+failConflicts: true
+
+defaultTs: bun
+includes:
+   - f/**
+   - u/ELLIOTTCABLE/**
+excludes: []
+codebases: []
+skipVariables: true
+skipResources: true
+skipSecrets: true
+includeSchedules: true
+includeUsers: true
+includeGroups: true
+includeSettings: true

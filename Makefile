@@ -13,3 +13,7 @@ dhall: $(ALL_TOML)
 
 $(ALL_TOML): %.toml: %.dhall
 	$(DHALL_TO_TOML) $< > $@
+
+wmill:
+	cd $(makeFileDir)/Infrastructure/Windmill && \
+	wmill sync pull --show-diffs
