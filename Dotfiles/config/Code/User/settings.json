@@ -113,8 +113,8 @@
 
    // ### Explorer & side-bars
    "workbench.tree.enableStickyScroll": true,
-   "explorer.sortOrder": "mixed",
-   // "explorer.decorations.colors": false,
+   "explorer.sortOrder": "modified",
+   "explorer.decorations.colors": false,
 
    "workbench.iconTheme": "vscode-icons",
    "vsicons.dontShowNewVersionMessage": true,
@@ -584,9 +584,11 @@
    // "ocaml.trace.server": "verbose",
 
    // ### C#, ASP.NET, etc functionality
+   "[csharp]": {
+      "editor.defaultFormatter": "csharpier.csharpier-vscode"
+   },
    "omnisharp.useGlobalMono": "always",
-   "omnisharp.loggingLevel": "debug",
-   "razor.languageServer.debug": true,
+   "FSharp.showProjectExplorerIn": "explorer"
 
    // --- ---- --- /!\ --- ---- ---
    // ... and anything after this, was added programmatically!
