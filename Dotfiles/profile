@@ -311,6 +311,15 @@ alias sci='svn ci -m'
 saa() { svn status | grep "^\?" | awk "{print \$2}" | xargs svn add ;}
 
 # git
+# use Windows' git when working under C:\ drive
+function git() {
+   if pwd -P | grep -q "^\/mnt\/c\/*"; then
+      git.exe "$@"
+   else
+      command git "$@"
+   fi
+}
+
 alias g='git'
 alias gull='g pull'
 alias gush='g push'
