@@ -20,32 +20,50 @@ debug_path_dump 'before'
 source "$HOME/.shenv"
 source "$HOME/.shell_colours"
 
-while [[ -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
-   printf '%s\n' "\$SYSTEM \033[0;91mis not set!\033[m Opening nano so you can configure it ..."
+while [[ -n "$system_was_unset" || -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
+   unset system_was_unset
+   printf '%b\n' "\$SYSTEM ${ALERT_COLOUR}is not set!${CLEAR_COLOUR}"
 
-   if [[ -d "$HOME/Library/System" ]]; then
+   if [[ -d "$SYSTEM_REPO" ]]; then
+      true
+   elif [[ -d "$HOME/Library/System" ]]; then
       SYSTEM_REPO="$HOME/Library/System"
-   elif [[ -d "$HOME/.files" ]]; then
-      SYSTEM_REPO="$HOME/.files"
+   elif [[ -d "$HOME/.system" ]]; then
+      SYSTEM_REPO="$HOME/.system"
    else
-      printf '%s\n' '\033[0;91mCannot locate dotfiles!\033[m Please paste the path to your System.git clone:'
-      read -rp "\$SYSTEM_REPO: " SYSTEM_REPO
+      printf '%b\n' "${ALERT_COLOUR}Cannot locate dotfiles!${CLEAR_COLOUR} Please paste the path to your System.git clone:"
+      prinft "\$SYSTEM_REPO: "
+      read -r SYSTEM_REPO
    fi
 
    template="$SYSTEM_REPO/Dotfiles/shenv.local.template"
    if [[ ! -f "$template" ]]; then
-      printf '%s\n' '\033[0;91mStill cannot locate shenv.local template!\033[m Crashing.'
+      printf '%s\n' "${ALERT_COLOUR}Still cannot locate shenv.local template!${CLEAR_COLOUR} Crashing."
       printf '%s\n' "Tried: '$template'"
       sleep 10
       exit 1
    fi
 
+   printf "Open nano so you can configure it? [yN, ^C for shell] "
+   read -r yn
+   case $yn in
+      [Yy]*) ;;
+          *) exit 1;;
+   esac
+
+   echo "\$SYSTEM_REPO: $SYSTEM_REPO"
+   echo "\$SYSTEM: $SYSTEM"
+   rm --verbose -fI "$HOME/.shenv.local"
+   sed "$SYSTEM_REPO/Dotfiles/shenv.local.template" \
+      -e "/SYSTEM_REPO=/s|=''|='$SYSTEM_REPO'|" \
+      -e "/SYSTEM=/s|='Unknown'|='$SYSTEM'|" \
+      > "$HOME/.shenv.local"
 
    sleep 3
-   rm "$HOME/.shenv.local"
-   cp "$SYSTEM_REPO/Dotfiles/shenv.local.template" "$HOME/.shenv.local"
-   echo 'export SYSTEM_REPO="'"$SYSTEM_REPO"'"' >> "$HOME/.shenv.local"
+   mkdir -p "$HOME/.local/share/nano/"
    nano "$HOME/.shenv.local"
+
+   printf \\n
    source "$HOME/.shenv.local"
 done
 

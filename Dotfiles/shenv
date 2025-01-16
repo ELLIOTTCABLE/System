@@ -38,26 +38,43 @@ export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
 export SYSTEM_LION='Mac OS X 10.7'
 export SYSTEM_MOUNTAIN_LION='Mac OS X 10.8'
 export SYSTEM_MAVERICKS='Mac OS X 10.9'
+export SYSTEM_MINGW='Windows (MinGW)'
+export SYSTEM_WSL='WSL'
 export SYSTEM_NIX='Linux'
 export SYSTEM_CENTOS='Centos'
 export SYSTEM_CENTOS5='Centos 5'
 export SYSTEM_FEDORA='Fedora Core'
 export SYSTEM_FEDORA4='Fedora Core 4'
 export SYSTEM_ARCH='Arch Linux'
+export SYSTEM_UBUNTU='Ubuntu'
 export SYSTEM_UNKNOWN='Unknown'
 
 kernel="$(uname -s)"
 case "$kernel" in
-*Microsoft* | *microsoft*)
-   export IS_WSL='true'
-   ;;
 Darwin*)
    export IS_MAC='true'
    ;;
+MINGW*)
+   export IS_MINGW='true'
+   ;;
+Linux*)
+   export IS_LINUX='true'
+   ;;
 esac
 
+if [ -e '/proc/sys/fs/binfmt_misc/WSLInterop' ]; then
+   export IS_WSL='true'
+fi
+
 if [ -z "$SYSTEM" ]; then
-   if [ -n "$IS_MAC" ]; then
+   export system_was_unset='true'
+   export SYSTEM="$kernel"
+
+   # Come up with a halfway-decent starting point to fill `$SYSTEM` in .shenv.local
+   if [ -n "$IS_MINGW" ]; then
+      export SYSTEM="$SYSTEM_MINGW"
+
+   elif [ -n "$IS_MAC" ]; then
       case "$(sw_vers -productVersion)" in
       10.4*)
          export SYSTEM="$SYSTEM_TIGER"
@@ -105,6 +122,35 @@ if [ -z "$SYSTEM" ]; then
          export SYSTEM="$SYSTEM_VENTURA"
          ;;
       esac
+
+   elif [ -n "$IS_LINUX" ]; then
+      # Identify many Linux distros; from:
+      #    <https://unix.stackexchange.com/a/6348>
+      if [ -f /etc/os-release ]; then
+         # freedesktop.org and systemd
+         . /etc/os-release
+         ver="$NAME $VERSION_ID"
+      elif type lsb_release >/dev/null 2>&1; then
+         # linuxbase.org
+         ver="$(lsb_release -si) $(lsb_release -sr)"
+      elif [ -f /etc/lsb-release ]; then
+         # For some versions of Debian/Ubuntu without lsb_release command
+         . /etc/lsb-release
+         ver="$DISTRIB_ID $DISTRIB_RELEASE"
+      elif [ -f /etc/debian_version ]; then
+         # Older Debian/Ubuntu/etc.
+         ver="Debian $(cat /etc/debian_version)"
+      elif [ -z "$IS_WSL" ]; then
+         # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+         ver=$(uname -r)
+      fi
+
+      export SYSTEM="$SYSTEM ($ver)"
+
+      if [ -n "$IS_WSL" ]; then
+         ver="$(cmd.exe /c wmic os get Caption,CSDVersion /value | tr -d '\r' | sed -e 's|\w\+=||g' | xargs)"
+         export SYSTEM="$SYSTEM (WSL, $ver)"
+      fi
    fi
 fi
 

@@ -1,3 +1,0 @@
-export SYSTEM='Unknown'
-export COLOURIZE_AS='white'
-export SYSTEM_REPO="$HOME/.files"

@@ -1,2 +1,3 @@
+export SYSTEM_REPO=''
 export SYSTEM='Unknown'
 export COLOURIZE_AS='white'
