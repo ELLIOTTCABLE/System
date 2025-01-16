@@ -57,7 +57,7 @@ task :symlink do
 
     to = File.join(File.expand_path('~/'), '.' + File.basename(from))
 
-    if File.exists?(to)
+    if File.exist?(to)
       print "   ! #{to} exists... "
       if File.symlink? to
         FileUtils.rm to
