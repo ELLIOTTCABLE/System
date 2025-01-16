@@ -69,11 +69,42 @@ done
 
 stty -ixon
 
-# FIXME: These leave Bash out in the cold.
-if [ -z "$MISE_SHELL" ]; then
-   printf "\e[31m%s\e[m — you'll need to install it with Homebrew or via git-clone ...\n" \
-      "[mise] The mise version-manager is missing"
-fi
+while [ -z "$MISE_SHELL" ]; do
+   printf "[profile:mise] ${ALERT_COLOUR}%s${CLEAR_COLOUR}\n" \
+      "mise hasn't initialized!"
+
+   if [ -n "$IS_MAC" ]; then
+      printf "[profile:mise] May I install it via Homebrew? [yN, ^C for minimal shell] "
+      read -r yn
+      case $yn in
+         [Yy]*) ;;
+            *) exit 1;;
+      esac
+
+      brew install mise
+
+      mise trust "$HOME/.config/mise/config.toml"
+      eval "$(mise activate)"
+   else
+      printf "[profile:mise] May I install it via their curl-script? [yN, ^C for minimal shell] "
+      read -r yn
+      case $yn in
+         [Yy]*) ;;
+            *) exit 1;;
+      esac
+
+      curl --proto '=https' -fLsS https://mise.run \
+         | MISE_INSTALL_PATH="$HOME/.local/bin/mise" MISE_INSTALL_HELP=0 sh
+
+      "$HOME/.local/bin/mise" trust "$HOME/.config/mise/config.toml"
+      if [ -n "$IS_WSL" ]; then
+         "$HOME/.local/bin/mise" trust "/mnt/c/Users/ec/.config/mise/config.toml"
+      fi
+      eval "$("$HOME/.local/bin/mise" activate)"
+   fi
+
+   printf \\n
+done
 
 export HISTIGNORE="fg"
 

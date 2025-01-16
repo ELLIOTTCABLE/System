@@ -295,7 +295,7 @@ prepend_el PATH "$HOME/.cargo/bin" ONLY_IF_DIR    #  3. < Cargo (Rust) binaries
 prepend_el PATH "$OPAM_SWITCH_PREFIX/bin"         #  2. < OPAM local bin
 prepend_el PATH "./node_modules/.bin"             #  1. < npm (local)
 
-append_el PATH "$HOME/.local/bin" ONLY_IF_DIR         # -4. > haskell-ide-engine installs itself here
+append_el PATH "$HOME/.local/bin"                     # -4. > $XDG_BIN_HOME, mostly mise and sheldon
 append_el PATH "$HOME/.opam/_globals/bin" ONLY_IF_DIR # -3. < OPAM global bin (see Bootstrap/ocaml.sh)
 append_el PATH "/usr/local/cuda/bin" ONLY_IF_DIR      # -2. > CUDA
 

@@ -67,26 +67,47 @@ setopt HIST_NO_STORE       # Don’t store the `history` command itself
 # ===========
 # = Modules =
 # ===========
+# '/opt/homebrew/share/zsh/site-functions/'
+if [ -n "$IS_MAC" ] && [ -d '/opt/homebrew' ]; then
+   sheldon_profile='macos-arm64'
+elif [ -n "$IS_MAC" ] && [ -d '/usr/local' ]; then
+   sheldon_profile='macos-x86_64'
+else
+   sheldon_profile='unknown'
+fi
+
+
 while ! command -v sheldon 1>/dev/null; do
-   printf "\e[31m%s\e[m — may I install it via Homebrew? " \
-      "[sheldon] sheldon is missing"
-   read -rq may_i\?
-   if [ $may_i = n ]; then
-      exit 1                                                                  ; fi
+   printf "[zshrc:sheldon] ${ALERT_COLOUR}%s${CLEAR_COLOUR}\n" \
+      "sheldon is missing!"
+
+   if [ -n "$IS_MAC" ]; then
+      printf "[zshrc:sheldon] May I install it via Homebrew? [yN, ^C for minimal shell] "
+      read -r yn
+      case $yn in
+         [Yy]*) ;;
+            *) exit 1;;
+      esac
+
+      brew install sheldon
+   else
+      printf "[zshrc:sheldon] May I install it via their curl-script? [yN, ^C for minimal shell] "
+      read -r yn
+      case $yn in
+         [Yy]*) ;;
+            *) exit 1;;
+      esac
+
+      curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh \
+         | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin
+   fi
+
+   sheldon --profile "$sheldon_profile" lock
 
    printf \\n
-   brew install sheldon
-   sheldon lock
 done
 
-# '/opt/homebrew/share/zsh/site-functions/'
-if [ -d "/opt/homebrew" ]; then
-   eval "$(sheldon --profile arm64 source)"
-
-elif [ -d "/usr/local" ]; then
-   eval "$(sheldon --profile x86_64 source)"
-
-fi
+eval "$(sheldon --profile "$sheldon_profile" source)"
 
 # ================
 # = Key bindings =
