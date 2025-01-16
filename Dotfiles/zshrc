@@ -223,6 +223,11 @@ reset-vi-mode-terminal-cursor () {
 #       ZSH_THEME_TERM_TAB_TITLE_IDLE=''
 export DISABLE_AUTO_TITLE='true'
 
+# =============================
+# = "Named directory" aliases =
+# =============================
+hash -d WSL-HOME=/mnt/c/Users/ec
+hash -d WSL=/mnt/c
 
 # ==============================
 # = Other module configuration =
