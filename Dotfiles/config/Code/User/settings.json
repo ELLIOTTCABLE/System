@@ -337,15 +337,27 @@
       "workbench.action.focusBelowGroup"
    ],
 
-   "vim.easymotion": true,
-   "vim.useSystemClipboard": true,
-   "vim.useCtrlKeys": true,
    "vim.leader": "<space>",
+   "vim.useCtrlKeys": true,
    "vim.handleKeys": {
-      "<C-f>": false
+      // This resource is a godsend:
+      //    <https://www.dreesnotes.com/software/2021/10/11/vim-ctrl-keys-on-vscode.html>
+      // Can find available disables by searching this file for "use<":
+      //    <https://github.com/VSCodeVim/Vim/blob/master/package.json>
+      "<C-k>": false, // VScode's "leader"
+      "<C-q>": false, // Quick navigation
+      "<C-t>": false, // Goto symbol
+      "<C-b>": false, // Toggle sidebar
+      "<C-j>": false, // Toggle panel
+      "<C-n>": false, // New file
+      "<C-f>": false // Find
    },
 
    "gitlens.keymap": "none",
+
+   "vim.easymotion": true,
+   "vim.useSystemClipboard": true,
+
 
    // Specific languages and features
    // ===============================
