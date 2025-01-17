@@ -123,6 +123,18 @@ window_rules:
   - command: "resize borders 0px -7px -7px -7px"
     match_process_name: "steam"
 
+  # Other floating dialogs
+  - command: "set floating"
+    match_title: "Window Spy for AHKv2"
+
+  - command: "set floating"
+    match_process_name: "RimPy"
+    match_title: "Unresolved missing dependencies"
+
+  - command: "set floating"
+    match_process_name: "RimPy"
+    match_title: "Please wait"
+
 binding_modes:
   - name: "service"
     keybindings:
@@ -136,7 +148,7 @@ binding_modes:
 
       # Re-evaluate configuration file.
       - commands: ["reload config", "binding mode none"]
-        binding: "C"
+        binding: "R"
 
       # Change the focused window to be maximized / unmaximized.
       - commands: ["toggle maximized", "binding mode none"]
@@ -148,6 +160,9 @@ binding_modes:
 
 
 keybindings:
+  - command: "binding mode service"
+    binding: "Alt+Shift+O"
+
   # Shift focus in a given direction.
   - command: "focus left"
     binding: "Alt+H"
@@ -190,10 +205,6 @@ keybindings:
   # to start Windows Terminal and Git Bash respectively.
   - command: "exec wt"
     binding: "Alt+Enter"
-
-  # Focus the workspace that last had focus.
-  - command: "focus workspace recent"
-    binding: "Alt+Y"
 
   # Focus the next/previous workspace defined in `workspaces` config.
   - command: "focus workspace next"
@@ -284,6 +295,3 @@ keybindings:
     binding: "Alt+Shift+P"
   - commands: ["move to workspace 16", "focus workspace 16"]
     binding: "Alt+Shift+G"
-
-  - command: "binding mode service"
-    binding: "Alt+Shift+O"
