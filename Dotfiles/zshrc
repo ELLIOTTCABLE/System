@@ -298,6 +298,13 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 #bindkey '^T' autosuggest-toggle
 bindkey -M viins '^f' vi-forward-word # Equivalent to `w` in command-mode
 
+if [ -n "$IS_MAC" ]; then
+   # Quicklook from the CLI
+   +() {
+      qlmanage -p "$@" 2>/dev/null
+   }
+fi
+
 
 if [[ "$DEBUG_PATH" == true ]]; then
    echo '~/.zshrc (after): $PATH = '

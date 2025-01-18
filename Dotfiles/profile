@@ -69,7 +69,16 @@ done
 
 stty -ixon
 
-while [ -z "$MISE_SHELL" ]; do
+export HISTIGNORE="fg"
+
+# mise / asdf, runtime version manager
+export MISE_CONFIG_FILE="$XDG_CONFIG_HOME/mise/config.toml"
+export MISE_NODE_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/mise/default-npm-packages"
+
+if command -v mise >/dev/null; then
+   eval "$(~/.local/bin/mise activate)"
+
+else
    printf "[profile:mise] ${ALERT_COLOUR}%s${CLEAR_COLOUR}\n" \
       "mise hasn't initialized!"
 
@@ -104,13 +113,7 @@ while [ -z "$MISE_SHELL" ]; do
    fi
 
    printf \\n
-done
-
-export HISTIGNORE="fg"
-
-# mise / asdf, runtime version manager
-export MISE_CONFIG_FILE="$XDG_CONFIG_HOME/mise/config.toml"
-export MISE_NODE_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/mise/default-npm-packages"
+fi
 
 # Haskell, Cabal, and GHCup
 export GHCUP_USE_XDG_DIRS='true'
@@ -148,8 +151,6 @@ if [ -n "$IS_MAC" ]; then
   alias pping='prettyping --nolegend'
 
   alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
-
-  +() { qlmanage -p "$@" 2>/dev/null ;}
 
   # "intel brew"
   alias ibrew='arch -x86_64 brew'
@@ -393,7 +394,7 @@ C99() { eval local last="\$$#"; last=${last##*/}; $CC -std=c99 -pedantic-errors 
 
 # C++
 export CXX="g++"
-C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
+# C++() { eval local last="\$$#"; last=${last##*/}; $CXX -o "${last%.*}.o" "$@" ;}
 
 if [ -n "$IS_MAC" ]; then
   alias eve="/Applications/EVE\ Online.app/Contents/MacOS/cider"

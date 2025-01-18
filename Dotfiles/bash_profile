@@ -1,7 +1,9 @@
-source $HOME/.shenv
-source $HOME/.profile
+#!/usr/bin/env bash
 
-source $HOME/.bash_prompt
+source "$HOME/.shenv"
+source "$HOME/.profile"
+
+source "$HOME/.bash_prompt"
 
 export HISTIGNORE=''
 export HISTSIZE=10000
@@ -12,7 +14,9 @@ if [ -f /opt/local/etc/bash_completion ]; then
   source /opt/local/etc/bash_completion
 fi
 
-complete -W "$(cat $HOME/.cheats)" cheat
+if [ -d "$HOME/.cheats" ]; then
+  complete -W "$(cat "$HOME/.cheats")" cheat
+fi
 
 if [ -f /usr/local/bin/rake_completion ]; then
   complete -C /usr/local/bin/rake_completion -o default rake
@@ -38,6 +42,6 @@ set -o ignoreeof
 #Treat undefined variables as errors
 set -o nounset
 
-if [ -f $HOME/.bash_profile.unprintable ]; then
-  source $HOME/.bash_profile.unprintable
+if [ -f "$HOME/.bash_profile.unprintable" ]; then
+  source "$HOME/.bash_profile.unprintable"
 fi
