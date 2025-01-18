@@ -141,7 +141,7 @@
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
    "terminal.integrated.fontLigatures": true,
 
-   "editor.codeLensFontFamily": "'Iosevka Nerd Font', Arial",
+   "editor.codeLensFontFamily": "'Input Nerd Font', Arial",
    "editor.inlayHints.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
    "editor.inlineSuggest.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
    "errorLens.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
@@ -154,6 +154,7 @@
 
    "editor.lineNumbers": "interval",
    "editor.renderLineHighlight": "all",
+   "editor.renderFinalNewline": "dimmed",
 
    "editor.cursorStyle": "underline-thin",
 
@@ -219,14 +220,15 @@
 
    "multiDiffEditor.experimental.enabled": true,
 
-   // ### Settings-editor appearance
-   "workbench.settings.useSplitJSON": true,
-
    // ### Terminal & debugger appearance
    "debug.inlineValues": "auto",
    "debug.showVariableTypes": true,
    "terminal.integrated.defaultLocation": "editor",
    "terminal.integrated.stickyScroll.enabled": true,
+
+   "terminal.integrated.gpuAcceleration": "on",
+   "terminal.integrated.enableImages": true,
+   "terminal.integrated.experimental.windowsUseConptyDll": true,
 
    // ### Git & SCM appearance
    "git.alwaysShowStagedChangesResourceGroup": true,
@@ -343,6 +345,7 @@
       "<C-b>": false, // Toggle sidebar
       "<C-j>": false, // Toggle panel
       "<C-n>": false, // New file
+      "<C-w>": false, // Close window
       "<C-f>": false // Find
    },
 
@@ -400,6 +403,9 @@
    // ### Terminal & debugger functionality
    "terminal.integrated.shellIntegration.enabled": true,
    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+
+   // (seems to fix issues pasting into zsh-inside-WSL on Windows)
+   "terminal.integrated.ignoreBracketedPasteMode": true,
 
    "terminal.integrated.scrollback": 100000,
    "terminal.integrated.confirmOnExit": "hasChildProcesses",
@@ -463,7 +469,7 @@
    "githubPullRequests.remotes": ["origin", "upstream", "ec"],
    "githubPullRequests.defaultDeletionMethod.selectRemote": false,
    "githubPullRequests.fileListLayout": "flat",
-   "githubPullRequests.focusedMode": "overview",
+   "githubPullRequests.focusedMode": "multiDiff",
    "githubPullRequests.pullBranch": "never",
    "githubPullRequests.terminalLinksHandler": "vscode",
 
