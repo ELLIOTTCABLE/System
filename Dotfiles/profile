@@ -20,7 +20,7 @@ debug_path_dump 'before'
 source "$HOME/.shenv"
 source "$HOME/.shell_colours"
 
-while [[ -n "$system_was_unset" || -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
+while [[ -n "$system_was_unset" ]] || [[ -z $SYSTEM ]] || [[ $SYSTEM =~ $SYSTEM_UNKNOWN ]]; do
    unset system_was_unset
    printf '%b\n' "\$SYSTEM ${ALERT_COLOUR}is not set!${CLEAR_COLOUR}"
 
@@ -51,12 +51,13 @@ while [[ -n "$system_was_unset" || -z $SYSTEM || $SYSTEM =~ $SYSTEM_UNKNOWN ]]; 
           *) exit 1;;
    esac
 
-   echo "\$SYSTEM_REPO: $SYSTEM_REPO"
-   echo "\$SYSTEM: $SYSTEM"
-   rm --verbose -fI "$HOME/.shenv.local"
-   sed "$SYSTEM_REPO/Dotfiles/shenv.local.template" \
+   echo "Pre-filling \$SYSTEM_REPO: $SYSTEM_REPO"
+   echo "Pre-filling \$SYSTEM: $SYSTEM"
+   rm -fvI "$HOME/.shenv.local"
+   sed \
       -e "/SYSTEM_REPO=/s|=''|='$SYSTEM_REPO'|" \
       -e "/SYSTEM=/s|='Unknown'|='$SYSTEM'|" \
+      "$SYSTEM_REPO/Dotfiles/shenv.local.template" \
       > "$HOME/.shenv.local"
 
    sleep 3
@@ -76,7 +77,7 @@ export MISE_CONFIG_FILE="$XDG_CONFIG_HOME/mise/config.toml"
 export MISE_NODE_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/mise/default-npm-packages"
 
 if command -v mise >/dev/null; then
-   eval "$(~/.local/bin/mise activate)"
+   eval "$(mise activate)"
 
 else
    printf "[profile:mise] ${ALERT_COLOUR}%s${CLEAR_COLOUR}\n" \

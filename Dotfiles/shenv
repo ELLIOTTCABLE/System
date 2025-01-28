@@ -38,6 +38,17 @@ export SYSTEM_SNOW_LEOPARD='Mac OS X 10.6'
 export SYSTEM_LION='Mac OS X 10.7'
 export SYSTEM_MOUNTAIN_LION='Mac OS X 10.8'
 export SYSTEM_MAVERICKS='Mac OS X 10.9'
+export SYSTEM_YOSEMITE='Mac OS X 10.10 "Yosemite"'
+export SYSTEM_EL_CAPITAN='Mac OS X 10.11 "El Capitan"'
+export SYSTEM_SIERRA='Mac OS X 10.12 "Sierra"'
+export SYSTEM_HIGH_SIERRA='Mac OS X 10.13 "High Sierra"'
+export SYSTEM_MOJAVE='Mac OS X 10.14 "Mojave"'
+export SYSTEM_CATALINA='Mac OS X 10.15 "Catalina"'
+export SYSTEM_BIG_SUR='macOS 11 "Big Sur"'
+export SYSTEM_MONTEREY='macOS 12 "Monterey"'
+export SYSTEM_VENTURA='macOS 13 "Ventura"'
+export SYSTEM_SONOMA='macOS 14 "Sonoma"'
+export SYSTEM_SEQUOIA='macOS 15 "Sequoia"'
 export SYSTEM_MINGW='Windows (MinGW)'
 export SYSTEM_WSL='WSL'
 export SYSTEM_NIX='Linux'
@@ -120,6 +131,12 @@ if [ -z "$SYSTEM" ]; then
          ;;
       13.*)
          export SYSTEM="$SYSTEM_VENTURA"
+         ;;
+      14.*)
+         export SYSTEM="$SYSTEM_SONOMA"
+         ;;
+      15.*)
+         export SYSTEM="$SYSTEM_SEQUOIA"
          ;;
       esac
 
