@@ -1,0 +1,6 @@
+[project]
+name = "system"
+version = "0.0.1"
+
+[dependency-groups]
+dev = ["ansible-dev-tools>=25.1.0"]
