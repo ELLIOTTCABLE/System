@@ -74,7 +74,6 @@ export HISTIGNORE="fg"
 
 # mise / asdf, runtime version manager
 export MISE_CONFIG_FILE="$XDG_CONFIG_HOME/mise/config.toml"
-export MISE_NODE_DEFAULT_PACKAGES_FILE="$XDG_CONFIG_HOME/mise/default-npm-packages"
 
 if command -v mise >/dev/null; then
    eval "$(mise activate)"
@@ -94,6 +93,7 @@ else
       brew install mise
 
       mise trust "$HOME/.config/mise/config.toml"
+      mise trust "$SYSTEM_REPO/.config/mie.toml"
       eval "$(mise activate)"
    else
       printf "[profile:mise] May I install it via their curl-script? [yN, ^C for minimal shell] "

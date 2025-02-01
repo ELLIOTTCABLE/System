@@ -1,0 +1,9 @@
+min_version = "2024.11.3"
+
+[env]
+# Automatic virtualenv activation
+_.python.venv = { path = ".venv", create = true }
+
+[tools]
+python = "3"
+uv = "latest"

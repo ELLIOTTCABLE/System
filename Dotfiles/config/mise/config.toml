@@ -1,4 +1,3 @@
-# GENERATED, DO NOT EDIT (Source: 'Dotfiles/config/mise/config.dhall')
 [plugins]
 cabal = "https://github.com/sestrella/asdf-ghcup.git"
 hls = "https://github.com/sestrella/asdf-ghcup.git"
@@ -17,3 +16,10 @@ racket = "latest"
 ruby = "latest"
 rust = "latest"
 usage = "latest"
+
+[env]
+MISE_NODE_DEFAULT_PACKAGES_FILE = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-npm-packages"
+
+[settings.python]
+default_packages_file = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-pip-packages"
+compile = true
