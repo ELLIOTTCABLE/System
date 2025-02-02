@@ -214,7 +214,7 @@ if [ -n "$IS_MAC" ]; then
    alias beeper="open -a Beeper"
    alias bb-start="launchctl load -w ~/Library/LaunchAgents/com.beeper.bbctl.bluebubbles-imessage.plist"
    alias bb-stop="launchctl unload -w ~/Library/LaunchAgents/com.beeper.bbctl.bluebubbles-imessage.plist"
-   alias bb-log="tail -f /Users/ec/.local/state/bbctl/bluebubbles-imessage*.log"
+   alias bb-log="lessf '$XDG_STATE_HOME/bbctl/'sh-imessage*.log '$HOME/Library/Logs/bluebubbles-server/main.log'"
    alias bb-server-restart="killall BlueBubbles ; sleep 10 && open -a BlueBubbles"
 fi
 

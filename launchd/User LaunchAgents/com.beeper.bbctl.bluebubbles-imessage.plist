@@ -9,7 +9,7 @@
          <true/>
       </dict>
       <key>Label</key>
-      <string>bbctl-bluebubbles</string>
+      <string>bbctl-sh-imessage</string>
       <key>ProgramArguments</key>
       <array>
          <string>sh</string>
@@ -20,9 +20,9 @@
       <key>RunAtLoad</key>
       <true/>
       <key>StandardErrorPath</key>
-      <string>/Users/ec/.local/state/bbctl/bluebubbles-imessage.stderr.log</string>
+      <string>/Users/ec/.local/state/bbctl/sh-imessage.stderr.log</string>
       <key>StandardOutPath</key>
-      <string>/Users/ec/.local/state/bbctl/bluebubbles-imessage.log</string>
+      <string>/Users/ec/.local/state/bbctl/sh-imessage.log</string>
       <key>WorkingDirectory</key>
       <string>/Users/ec/Library/Application Support/bbctl/prod/sh-imessage</string>
       <key>EnvironmentVariables</key>
