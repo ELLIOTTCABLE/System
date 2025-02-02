@@ -134,6 +134,59 @@ fi
 export PAGER='less'
 source "$XDG_CONFIG_HOME/less.temp.sh"
 
+# `less +F` for multiple files, ala `tail -f`
+# Usage:
+#    lessf file1.log file2.log ...
+# https://gist.github.com/ELLIOTTCABLE/1c5afda811c1c4b822cf75361e8ded2f
+lessf() (
+   if ! command -v unbuffer >&/dev/null; then
+      if unb_bin="$(command -v stdbuf)"; then
+         unbuffer() { "$unb_bin" -o0 "$@" ;}
+
+      else
+         printf "WARN: You probably want \`unbuffer\` from the 'expect' package or \`stdbuf\` from 'coreutils'.\n" >&2
+         printf "WARN: Without them, output is buffered, and loglines may not appear immediately!\n" >&2
+         sleep 5
+      fi
+   fi
+
+   pad="7"
+   for arg in "$@"; do
+      fname="${arg##*/}"
+      fname="${fname%.log}"
+      if [ ${#fname} -gt "${pad}" ]; then
+         pad="${#fname}"
+      fi
+   done
+
+   tmpfile="$(mktemp "$TMPDIR/lessf.XXXXXX")"
+   # shellcheck disable=SC2064
+   trap "rm -f '$tmpfile'; trap - EXIT" EXIT INT HUP QUIT TERM
+
+   printf "Following" >"$tmpfile"
+   printf " '%s'," "$@" >>"$tmpfile"
+   unbuffer tail -n10 -f "$@" \
+      | awk "$(cat <<AWK
+         # Drop blank lines
+         /^$/ {next};
+
+         # If the line starts with '==>', split the path and store the components in 'cmp'
+         /^==> / {
+            n = split(substr(\$0, 5, length - 8), cmp, "/")
+            sub(/\.log\$/, "", cmp[n])
+            next
+         }
+
+         # Print the last component of the path prepended to the logline
+         {
+            printf "%${pad}s: %s\n", cmp[n], \$0
+         }
+AWK
+   )" >>"$tmpfile" &
+
+   less -SRX +F "$tmpfile"
+)
+
 # OS X-specific commands
 if [ -n "$IS_MAC" ]; then
   alias espresso='open -a Espresso'
