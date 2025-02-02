@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <!-- Needs some prep, see: https://www.notion.so/troe/Beeper-Matrix-iMessage-bridges-18ef99b3151d8033acdcdbb72d2df168?pvs=4 -->
+   <dict>
+      <key>KeepAlive</key>
+      <dict>
+         <key>Crashed</key>
+         <true/>
+      </dict>
+      <key>Label</key>
+      <string>bbctl-bluebubbles</string>
+      <key>ProgramArguments</key>
+      <array>
+         <string>sh</string>
+         <string>-c</string>
+         <!-- FIXME: Hardcoded path to $SYSTEM_REPO, but launchd's environment is always a pain ... -->
+         <string>/Users/ec/Library/System/Scripts/install-bbctl.sh --upgrade; bbctl whoami; printf '\nStarting bridge:\n'; bbctl run --no-override-config sh-imessage</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StandardErrorPath</key>
+      <string>/Users/ec/.local/state/bbctl/bluebubbles-imessage.stderr.log</string>
+      <key>StandardOutPath</key>
+      <string>/Users/ec/.local/state/bbctl/bluebubbles-imessage.log</string>
+      <key>WorkingDirectory</key>
+      <string>/Users/ec/Library/Application Support/bbctl/prod/sh-imessage</string>
+      <key>EnvironmentVariables</key>
+      <dict>
+         <key>PATH</key>
+         <string>/Users/ec/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+      </dict>
+   </dict>
+</plist>

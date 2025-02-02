@@ -151,6 +151,7 @@ cask "anki"
 cask "audio-hijack"
 cask "backblaze"
 cask "bartender" # in "essentials", above
+cask "beeper"
 cask "betterdiscord-installer", args: { no_quarantine: true }
 cask "betterdisplay"
 cask "bluesnooze"
