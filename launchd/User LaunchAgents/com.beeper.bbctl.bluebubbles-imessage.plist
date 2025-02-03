@@ -9,7 +9,7 @@
          <true/>
       </dict>
       <key>Label</key>
-      <string>bbctl-sh-imessage</string>
+      <string>com.beeper.bbctl.bluebubbles-imessage</string>
       <key>ProgramArguments</key>
       <array>
          <string>sh</string>
