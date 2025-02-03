@@ -1,0 +1,7 @@
+{
+   "label": "berit",
+   "hostname": "berit-the-vc2-4c-8gb",
+   "region": "mia",
+   "plan": "vc2-4c-8gb",
+   "os_id": 2136, // Debian 12 x64 (bookworm)
+}

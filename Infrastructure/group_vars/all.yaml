@@ -1,0 +1,12 @@
+sshpub_location: "{{ lookup('env', 'HOME') }}/.ssh/identities/personal/identity.pub"
+ssh_port: 58266
+root_pw: "!" # disables root password, same as `passwd -L`
+
+user_name: ec
+user_pw: "{{ lookup('env', 'USER_PW') | password_hash('sha512', 'lilysalt') }}"
+
+mail_to: admin@from.ec
+mail_from: admin@from.ec
+mail_smtp_server: smtp.protonmail.ch
+mail_pw: "{{ lookup('env', 'MAIL_PW') }}"
+mail_port: 587

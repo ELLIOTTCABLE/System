@@ -1,0 +1,7 @@
+- include_tasks:
+     file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
+     apply:
+        become: yes
+
+# In a separate file so `when:` clauses work
+- include_tasks: reset_connection.yaml

@@ -107,3 +107,6 @@
 	path = Vendor/ssh-ident
 	url = https://github.com/ssh-ident/ssh-ident1
 	branch = dev
+[submodule "Infrastructure/Vendor/HTSALSWA"]
+	path = Infrastructure/Vendor/HTSALSWA
+	url = https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible.git
