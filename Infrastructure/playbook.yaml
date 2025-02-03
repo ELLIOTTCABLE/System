@@ -1,34 +1,10 @@
+# code: language=ansible
 - name: Ensure non-root user and SSH are configured
   hosts: berit.ell
-  remote_user: root
 
   # For newly-provisioned hosts, need to wait for sshd to come up
   gather_facts: false
   pre_tasks:
-  - name: Check for sshpass on local machine
-    delegate_to: localhost
-    register: sshpass_present
-    ansible.builtin.raw: which sshpass
-    check_mode: false
-    changed_when: false
-    failed_when: sshpass_present.rc > 0
-  - debug:
-        msg: "sshpass is not installed on the local machine. Please install it before continuing."
-    when: sshpass_present.failed
-  - name: Ensure passlib is installed
-    delegate_to: localhost
-    register: passlib_present
-    pip:
-        name: passlib
-        state: present
-  - debug:
-        msg: "sshpass is not installed on the local machine. Please install it before continuing."
-    when: sshpass_present.failed
-  - name: Wait for sshd on remote host to come up
-    ansible.builtin.wait_for_connection:
-        timeout: 60
-  - name: Gather facts for the first time
-    ansible.builtin.setup:
 
   roles:
   - role: preroll

@@ -1,0 +1,58 @@
+# code: language=ansible
+- name: Check for sshpass on local machine
+  delegate_to: localhost
+  register: sshpass_present
+  ansible.builtin.raw: which sshpass
+  check_mode: false
+  changed_when: false
+  failed_when: sshpass_present.rc > 0
+- debug:
+    msg: "sshpass is not installed on the local machine. Please install it before continuing."
+  when: sshpass_present.failed
+- name: Ensure passlib is installed
+  delegate_to: localhost
+  register: passlib_present
+  pip:
+    name: passlib
+    state: present
+- debug:
+    msg: "sshpass is not installed on the local machine. Please install it before continuing."
+  when: sshpass_present.failed
+
+- name: save previous user for later restoration
+  set_fact:
+    ansible_user_to_restore: "{{ ansible_user |  d(lookup('env', 'USER')) }}"
+
+- name: reauthenticate as root
+  set_fact:
+    ansible_user: root
+    ansible_ssh_pass: "{{ bootstrap_pw }}"
+
+- include_tasks: reset_connection.yaml
+
+- debug:
+    msg: |
+        ansible_user: {{ ansible_user | d('unset') }};
+        remote_user: {{ remote_user | d('unset') }}
+
+- name: Wait for sshd on remote host to come up
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Gather facts for the first time
+  ansible.builtin.setup:
+
+- include_tasks:
+    file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
+
+- name: reauthenticate as normal admin user
+  set_fact:
+    ansible_user: "{{ ansible_user_to_restore }}"
+    ansible_ssh_pass:
+
+- include_tasks: reset_connection.yaml
+
+- debug:
+    msg: |-
+        ansible_user: {{ ansible_user | d('unset') }};
+        remote_user: {{ remote_user | d('unset') }}

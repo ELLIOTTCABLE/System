@@ -1,7 +1,16 @@
-- include_tasks:
-    file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
-    apply:
-        become: yes
+# code: language=ansible
+- debug:
+    msg: |
+        ansible_user: {{ ansible_user | d('unset') }};
+        remote_user: {{ remote_user | d('unset') }}
 
-# In a separate file so `when:` clauses work
-- include_tasks: reset_connection.yaml
+- action: ping
+  ignore_unreachable: true
+  ignore_errors: yes
+  register: pingtest
+
+- meta: clear_host_errors
+
+- name: proceed to reauthenticate as root and setup user if ssh failed
+  include_tasks: setup_user.yaml
+  when: pingtest.failed | d(pingtest.unreachable) | d(false)
