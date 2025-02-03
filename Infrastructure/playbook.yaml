@@ -13,20 +13,20 @@
     changed_when: false
     failed_when: sshpass_present.rc > 0
   - debug:
-      msg: "sshpass is not installed on the local machine. Please install it before continuing."
+        msg: "sshpass is not installed on the local machine. Please install it before continuing."
     when: sshpass_present.failed
   - name: Ensure passlib is installed
     delegate_to: localhost
     register: passlib_present
     pip:
-      name: passlib
-      state: present
+        name: passlib
+        state: present
   - debug:
-      msg: "sshpass is not installed on the local machine. Please install it before continuing."
+        msg: "sshpass is not installed on the local machine. Please install it before continuing."
     when: sshpass_present.failed
   - name: Wait for sshd on remote host to come up
     ansible.builtin.wait_for_connection:
-      timeout: 60
+        timeout: 60
   - name: Gather facts for the first time
     ansible.builtin.setup:
 
@@ -40,8 +40,8 @@
   pre_tasks:
   - name: Wait for sshd on remote host to come up
     ansible.builtin.wait_for_connection:
-      delay: 5
-      timeout: 1800
+        delay: 5
+        timeout: 1800
   - name: Gather facts for the first time
     ansible.builtin.setup:
 
@@ -56,26 +56,26 @@
   - windmill
 
   vars:
-   dokku_packages_state: latest
-   dokku_hostname: with.ec
-   dokku_manage_nginx: false
-   server_domain: windmill.with.ec
-   db_pass: "{{ lookup('env', 'DB_PASS') }}"
-   db_host: "{{ lookup('env', 'DB_HOST') }}"
-   db_port: "{{ lookup('env', 'DB_PORT') }}"
-   db_name: "{{ lookup('env', 'DB_NAME') }}"
-   db_url: "postgres://windmill_admin:{{ db_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}"
-   db_params:
-      login_user: windmill_admin
-      login_password: "{{ db_pass }}"
-      login_host: "{{ db_host }}"
-      login_port: "{{ db_port }}"
-      db: "{{ db_name }}"
-   # staging letsencrypt server:
-   #  caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
-   caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
+    dokku_packages_state: latest
+    dokku_hostname: with.ec
+    dokku_manage_nginx: false
+    server_domain: windmill.with.ec
+    db_pass: "{{ lookup('env', 'DB_PASS') }}"
+    db_host: "{{ lookup('env', 'DB_HOST') }}"
+    db_port: "{{ lookup('env', 'DB_PORT') }}"
+    db_name: "{{ lookup('env', 'DB_NAME') }}"
+    db_url: "postgres://windmill_admin:{{ db_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}"
+    db_params:
+        login_user: windmill_admin
+        login_password: "{{ db_pass }}"
+        login_host: "{{ db_host }}"
+        login_port: "{{ db_port }}"
+        db: "{{ db_name }}"
+    # staging letsencrypt server:
+    #  caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
   module_defaults:
-   community.postgresql.postgresql_ping: "{{ db_params }}"
-   community.postgresql.postgresql_info: "{{ db_params }}"
-   community.postgresql.postgresql_script: "{{ db_params }}"
+    community.postgresql.postgresql_ping: "{{ db_params }}"
+    community.postgresql.postgresql_info: "{{ db_params }}"
+    community.postgresql.postgresql_script: "{{ db_params }}"

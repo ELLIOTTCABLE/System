@@ -1,4 +1,3 @@
----
 :directories:
 - ~/Downloads/News
 - /Volumes/Drobo/Downloads
@@ -8,7 +7,7 @@
 - /Volumes/Drobo/Badly Formatted/Television
 
 :extensions:
-  - mkv
+- mkv
 
 :player: /usr/local/mplayer-mt/bin/mplayer
 :padding_bottom: 350

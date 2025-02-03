@@ -23,4 +23,4 @@ runcmd:
 - [systemctl, restart, --no-block, sshd.service]
 
 power_state:
-   mode: reboot
+    mode: reboot
