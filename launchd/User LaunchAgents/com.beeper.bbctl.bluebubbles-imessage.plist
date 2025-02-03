@@ -4,10 +4,7 @@
    <!-- Needs some prep, see: https://www.notion.so/troe/Beeper-Matrix-iMessage-bridges-18ef99b3151d8033acdcdbb72d2df168?pvs=4 -->
    <dict>
       <key>KeepAlive</key>
-      <dict>
-         <key>Crashed</key>
-         <true/>
-      </dict>
+      <true/>
       <key>Label</key>
       <string>com.beeper.bbctl.bluebubbles-imessage</string>
       <key>ProgramArguments</key>
@@ -15,7 +12,7 @@
          <string>sh</string>
          <string>-c</string>
          <!-- FIXME: Hardcoded path to $SYSTEM_REPO, but launchd's environment is always a pain ... -->
-         <string>/Users/ec/Library/System/Scripts/install-bbctl.sh --upgrade; bbctl whoami; printf '\nStarting bridge:\n'; bbctl run --no-override-config sh-imessage</string>
+         <string>/Users/ec/Library/System/Scripts/install-bbctl.sh --upgrade; bbctl whoami; printf '\nStarting bridge:\n'; exec bbctl run --no-override-config sh-imessage</string>
       </array>
       <key>RunAtLoad</key>
       <true/>
