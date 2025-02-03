@@ -529,7 +529,7 @@
    "prettier.bracketSpacing": true,
    "prettier.semi": false,
    "prettier.ignorePath": ".prettierignore",
-   "[css][html][javascript][json][jsonc][typescript][typescriptreact][yaml]": {
+   "[css][html][javascript][json][jsonc][typescript][typescriptreact]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
    },
 
@@ -561,6 +561,11 @@
    // ### SQL formatting
    "[sql]": {
       "editor.defaultFormatter": "mtxr.sqltools"
+   },
+
+   // ### YAML formatting
+   "[yaml][ansible]": {
+      "editor.defaultFormatter": "bluebrown.yamlfmt"
    },
 
    // Language-specific functionality

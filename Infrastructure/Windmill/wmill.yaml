@@ -6,8 +6,8 @@ failConflicts: true
 
 defaultTs: bun
 includes:
-   - f/**
-   - u/ELLIOTTCABLE/**
+- f/**
+- u/ELLIOTTCABLE/**
 excludes: []
 codebases: []
 skipVariables: true

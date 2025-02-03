@@ -1,3 +1,4 @@
+# code: language=ansible
 all:
    hosts:
       eurydice.ell.io: # 45.76.230.26

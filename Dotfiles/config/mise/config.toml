@@ -16,6 +16,7 @@ racket = "latest"
 ruby = "latest"
 rust = "latest"
 usage = "latest"
+yamlfmt = "latest"
 
 [env]
 MISE_NODE_DEFAULT_PACKAGES_FILE = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-npm-packages"

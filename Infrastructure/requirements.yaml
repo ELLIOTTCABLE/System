@@ -1,7 +1,8 @@
-roles:
-   - aisbergg.acl
-   - dokku_bot.ansible_dokku
+# code: language=ansible
 
+roles:
+- aisbergg.acl
+- dokku_bot.ansible_dokku
 collections:
-   - community.postgresql
-   - ansible.posix
+- community.postgresql
+- ansible.posix

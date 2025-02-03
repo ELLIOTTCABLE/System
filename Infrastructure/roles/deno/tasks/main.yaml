@@ -1,7 +1,6 @@
----
 # @action Installs Deno
 # Ensures Deno is installed on macOS, Linux, and Windows systems
 - name: Include tasks based on the operating system
   become: true
   block:
-     - include_tasks: "install.yaml"
+  - include_tasks: "install.yaml"

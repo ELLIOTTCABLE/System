@@ -1,0 +1,11 @@
+exclude: 
+- Infrastructure/Vendor/
+- Infrastructure/Windmill/wmill-lock.yaml
+
+formatter:
+  indent: 3
+  max_line_length: 120
+  retain_line_breaks_single: true
+  indentless_arrays: true
+  trim_trailing_whitespace: true
+  eof_newline: true
