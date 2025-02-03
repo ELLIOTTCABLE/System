@@ -3,6 +3,7 @@
 #   Dotfiles/config/Code/.gitignore
 
 .mono/certs
+.mono/keypairs
 
 Fritzing/
 asciinema/config
@@ -21,6 +22,8 @@ yarn/link/
 
 # what a stupid name -_-
 software/
+
+semgrep/
 
 sow/
 
