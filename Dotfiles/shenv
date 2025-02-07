@@ -305,6 +305,14 @@ case "$SYSTEM" in
    ;;
 esac
 
+vscode_server_path="${HOME}/.vscode-server/bin"
+if [ -z "${BASH_VERSINFO+x}" ] && [ -d "$vscode_server_path" ]; then
+   # VScode w/ non-bash terminals under WSL doesn't correctly configure the environment.
+   # See: microsoft/vscode#236401
+   code_latest_version=$(ls -tral -1 "$vscode_server_path" | sed -n '2p' | rev | cut -d' ' -f1 | rev)
+   prepend_el PATH "$vscode_server_path/$code_latest_version/bin/remote-cli" # 7.
+fi
+
 prepend_el PATH "$HOME/.local/share/mise/shims"   #  6. < mise
 prepend_el PATH "$HOME/.bin"                      #  5. < local binaries
 prepend_el PATH "$HOME/.dotnet/tools" ONLY_IF_DIR #  4. < .NET Core SDK: tools

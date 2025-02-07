@@ -187,6 +187,13 @@ AWK
    less -SRX +F "$tmpfile"
 )
 
+# vscode
+# https://github.com/ELLIOTTCABLE/code-connect
+if [ -x "$HOME/.code-connect/shell/code.sh" ]; then
+   alias code='/home/ec/.code-connect/shell/code.sh'
+   alias code-connect='/home/ec/.code-connect/shell/code-connect.sh'
+fi
+
 # OS X-specific commands
 if [ -n "$IS_MAC" ]; then
   alias espresso='open -a Espresso'
