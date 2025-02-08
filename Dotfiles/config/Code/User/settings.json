@@ -22,7 +22,7 @@
    "editor.tabSize": 3,
    "editor.wrappingIndent": "deepIndent",
    "editor.wordWrapColumn": 120,
-   "editor.rulers": [90, 70, 80, 100],
+   "editor.rulers": [72, 80, 100, 120],
    "editor.copyWithSyntaxHighlighting": false,
    "editor.suggest.shareSuggestSelections": true,
 
@@ -347,8 +347,13 @@
       "<C-b>": false, // Toggle sidebar
       "<C-j>": false, // Toggle panel
       "<C-n>": false, // New file
-      "<C-w>": false, // Close window
-      "<C-f>": false // Find
+      "<C-f>": false, // Find
+
+      // Just noting these for my own sanity:
+      // <C-q> Would be "close" on Windows, but column-select in vim would otherwise be <Ctrl-V> which is way more
+      // disruptive on Windows
+      "<C-q>": true,
+      "<C-w>": true // Close window
    },
 
    "gitlens.keymap": "none",
