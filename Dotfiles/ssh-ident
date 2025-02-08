@@ -1,6 +1,8 @@
 # vim: set ft=bash :
 # shellcheck disable=all
 
+VERBOSITY = LOG_WARN
+
 MATCH_ARGV = [
   [r"febox.*", "ahrefs"],
   [r"macpro\d", "ahrefs"],
