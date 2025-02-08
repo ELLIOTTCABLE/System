@@ -391,20 +391,11 @@ function git() {
 }
 
 alias g='git'
-alias gull='g pull'
 alias gush='g push'
-alias gad='g add'
-alias germ='g rm'
-alias glean='g clean'
-alias go='g co'
-alias gin='g ci'
 alias grain='g rain'
 alias ganch='g branch'
 clanch() { git symbolic-ref HEAD "refs/heads/$1" && rm -f ".git/index" && git clean -fdx ;}
-alias gash='g stash'
 alias giff='g diff --patch-with-stat -M -C --find-copies-harder -l64'
-alias gifft='g difftool'
-alias gerget='g mergetool'
 
 glog()   { elliolog "$@" | less -SRXF ;}
 # shellcheck disable=SC2046
