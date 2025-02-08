@@ -5,6 +5,7 @@
 .mono/certs
 .mono/keypairs
 
+.semgrep/
 Fritzing/
 asciinema/config
 asciinema/install-id
@@ -20,10 +21,9 @@ raycast/extensions
 wireshark/
 yarn/link/
 
+
 # what a stupid name -_-
 software/
-
-semgrep/
 
 sow/
 
