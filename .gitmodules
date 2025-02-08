@@ -105,7 +105,7 @@
 	url = https://github.com/Valloric/ListToggle.git
 [submodule "Vendor/ssh-ident"]
 	path = Vendor/ssh-ident
-	url = https://github.com/ssh-ident/ssh-ident1
+	url = https://github.com/ELLIOTTCABLE/ssh-ident1.git
 	branch = dev
 [submodule "Infrastructure/Vendor/HTSALSWA"]
 	path = Infrastructure/Vendor/HTSALSWA
