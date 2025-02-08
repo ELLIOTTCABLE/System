@@ -1,0 +1,24 @@
+# code: language=ssh_config
+
+# Don't forget to update ~/.ssh-ident!
+
+# https://www.notion.so/troe/eurydice-the-vhp-2c-4gb-intel-ell-io-2f878bb047be46c19e0b0ea2b5883f54
+Host eurydice-the-vhp-2c-4gb-intel.ell.io eurydice.ell.io
+   User ec
+   IdentityFile ~/.ssh/identities/personal/identity
+
+# https://www.notion.so/troe/euphemios-the-xeon-e3-1240-ell-io-18cf99b3151d80b8bca9f3d5f685404d
+Host euphemios-the-xeon-e3-1240.ell.io euphemios.ell.io
+   User ec
+   IdentityFile ~/.ssh/identities/personal/identity
+
+# https://www.notion.so/troe/sarah-the-linode-g6-standard-4-s-ell-io-efa9e273c3c14ae19349fa11c34dbca8
+Host sarah-the-linode-g6-standard-4-s.ell.io sarah.ell.io ell.io Kim.local
+   User elliottcable
+   IdentitiesOnly yes
+   IdentityFile ~/.ssh/identities/personal/identity
+
+Host Redshirt.local
+   User elliottcable
+   IdentitiesOnly yes
+   IdentityFile ~/.identity.insecure
