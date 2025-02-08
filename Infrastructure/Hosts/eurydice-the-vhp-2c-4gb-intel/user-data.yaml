@@ -6,21 +6,21 @@ fqdn: eurydice.ell.io
 prefer_fqdn_over_hostname: true
 
 users:
-- default
-- name: ec
-  sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-  shell: /bin/bash
-  groups: users, wheel
-  lock_passwd: false
-  ssh_authorized_keys:
-  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtkdnrOwxefxtPs3npgOaqX5fUD8DlpvJPVCGK5PKcp Elliott Cable <me@ell.io> (19 765 ſ,
-    insecure)"
+ - default
+ - name: ec
+   sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+   shell: /bin/bash
+   groups: users, wheel
+   lock_passwd: false
+   ssh_authorized_keys:
+    - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtkdnrOwxefxtPs3npgOaqX5fUD8DlpvJPVCGK5PKcp Elliott Cable <me@ell.io> (19 765
+      ſ, insecure)"
 
 runcmd:
-- [sed, -i, "s/^PermitRootLogin.*/PermitRootLogin no/", /etc/ssh/sshd_config]
-- [sed, -i, "s/^PermitTunnel.*/PermitTunnel yes/", /etc/ssh/sshd_config]
-- [systemctl, daemon-reload]
-- [systemctl, restart, --no-block, sshd.service]
+ - [sed, -i, "s/^PermitRootLogin.*/PermitRootLogin no/", /etc/ssh/sshd_config]
+ - [sed, -i, "s/^PermitTunnel.*/PermitTunnel yes/", /etc/ssh/sshd_config]
+ - [systemctl, daemon-reload]
+ - [systemctl, restart, --no-block, sshd.service]
 
 power_state:
-    mode: reboot
+   mode: reboot
