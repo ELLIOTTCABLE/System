@@ -5,6 +5,7 @@ hls = "https://github.com/sestrella/asdf-ghcup.git"
 [tools]
 deno = "latest"
 dotnet = "latest"
+go = "latest"
 golang = "latest"
 lua = "latest"
 nodejs = "latest"
