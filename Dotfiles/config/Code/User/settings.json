@@ -139,7 +139,8 @@
    "editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'liga'",
 
    "terminal.integrated.fontFamily": "Fantasque Sans Mono",
-   "terminal.integrated.fontLigatures": true,
+   "terminal.integrated.fontLigatures.enabled": true,
+   // "terminal.integrated.fontLigatures.featureSettings": "'calt' 'ss03' fixme' on",
 
    "editor.codeLensFontFamily": "'Input Nerd Font', Arial",
    "editor.inlayHints.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
@@ -230,10 +231,11 @@
    "terminal.integrated.enableImages": true,
    "terminal.integrated.experimental.windowsUseConptyDll": true,
 
+   "terminal.integrated.suggest.enabled": true,
+
    // ### Git & SCM appearance
    "git.alwaysShowStagedChangesResourceGroup": true,
    "gitlens.advanced.fileHistoryShowAllBranches": true,
-   "gitlens.currentLine.scrollable": false,
    "gitlens.hovers.annotations.over": "annotation",
    "gitlens.hovers.autolinks.enabled": false,
    "gitlens.rebaseEditor.ordering": "asc",
@@ -455,7 +457,11 @@
    "git.detectSubmodulesLimit": 50,
    "git.enableCommitSigning": true,
    "git.postCommitCommand": "push",
-   "gitlens.blame.ignoreWhitespace": true,
+   "git.blame.editorDecoration.enabled": true,
+   "git.blame.statusBarItem.template": "${authorName} (${hashShort} ${authorDateAgo})",
+   "git.blame.editorDecoration.template": "// ${subject} ⁓ ${authorName} (${authorDateAgo})",
+   "gitlens.currentLine.enabled": false,
+   "gitlens.currentLine.pullRequests.enabled": false,
    "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
 
    "gitlens.advanced.messages": {
