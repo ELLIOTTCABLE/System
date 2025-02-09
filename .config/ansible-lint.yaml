@@ -1,0 +1,7 @@
+exclude_paths:
+ - Infrastructure/Vendor/HTSALSW/
+ - Infrastructure/Hosts/
+
+skip_list:
+ - yaml[line-length]
+ - yaml[indentation]

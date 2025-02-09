@@ -1,4 +1,24 @@
+# code: language=yaml
 extends: default
 
 rules:
-  document-start: disable
+   document-start: disable
+
+   empty-lines: enable
+   line-length:
+      max: 100
+      level: warning
+
+   # Required for ansible-lint compatibility:
+   comments:
+      require-starting-space: true
+      ignore-shebangs: true
+      min-spaces-from-content: 1
+   comments-indentation: disable
+
+   braces:
+      max-spaces-inside: 1
+
+   octal-values:
+      forbid-implicit-octal: true
+      forbid-explicit-octal: true
