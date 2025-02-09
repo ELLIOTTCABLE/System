@@ -109,4 +109,4 @@
 	branch = dev
 [submodule "Infrastructure/Vendor/HTSALSWA"]
 	path = Infrastructure/Vendor/HTSALSWA
-	url = https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible.git
+	url = https://github.com/ELLIOTTCABLE/How-To-Secure-A-Linux-Server-With-Ansible.git
