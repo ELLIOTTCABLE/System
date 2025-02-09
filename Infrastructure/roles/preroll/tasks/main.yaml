@@ -16,8 +16,8 @@
 
  - name: Proceed to reauthenticate as root and setup user if SSH failed
    ansible.builtin.include_tasks: setup_user.yaml
-   when: pingtest.failed | d(pingtest.unreachable) | d(false)
+   when: pingtest is failed | d(pingtest.unreachable) | d(false)
 
  - name: Gather facts for the first time
    ansible.builtin.setup:
-   when: pingtest.succeeded
+   when: pingtest is succeeded
