@@ -35,7 +35,8 @@
     - windmill.worker
     - windmill.database
 
- - debug:
+ - name: Print db_info
+   ansible.builtin.debug:
       var: db_info
       verbosity: 1
    tags:
@@ -43,7 +44,8 @@
     - windmill.worker
     - windmill.database
 
- - when: db_info.roles.windmill_user is not defined
+ - name: Bootstrap windmill tables
+   when: db_info.roles.windmill_user is not defined
    block:
     - name: Postgres user windmill_admin was created by hand
       ansible.builtin.assert:
@@ -54,6 +56,7 @@
       ansible.builtin.get_url:
          url: https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql
          dest: /tmp/init-db-as-superuser.sql
+         mode: "0600"
       tags:
        - windmill.server
        - windmill.worker
@@ -81,10 +84,10 @@
        - windmill.worker
        - windmill.database
 
-    - name: install psycopg2-binary
-      pip:
+    - name: Install psycopg2-binary
+      ansible.builtin.pip:
          name: psycopg2-binary
-      become: yes
+      become: true
       tags:
        - windmill.server
        - windmill.worker
@@ -113,9 +116,9 @@
     - windmill.proxy
     - dokku.proxy
 
- # TODO: Define changed/success using:
- #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
  - name: Deactivate the nginx proxy
+   # TODO: Define changed/success using:
+   #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
    ansible.builtin.command: dokku nginx:stop
    when: nginx_enabled.rc == 0
 
@@ -162,7 +165,7 @@
     - dokku.proxy
 
  - name: Configure caddy's letsencrypt e-mail settings
-   ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email|quote }}
+   ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email | quote }}
    when: caddy_letsencrypt_email not in caddy_config_report.stdout
 
    tags:
@@ -173,7 +176,7 @@
     - dokku.proxy
 
  - name: Configure caddy's letsencrypt server-address settings
-   ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server|quote }}
+   ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
    when: caddy_letsencrypt_server not in caddy_config_report.stdout
 
    tags:
@@ -183,9 +186,9 @@
     - dokku.certs
     - dokku.proxy
 
- - name: Create network {{ network_name }}
+ - name: Create network {{ windmill_network_name }}
    dokku_network:
-      name: "{{ network_name }}"
+      name: "{{ windmill_network_name }}"
 
    tags:
     - windmill.server
@@ -193,20 +196,20 @@
     - windmill.network
     - dokku.network
 
- - name: Create app {{ server_name }}
+ - name: Create app {{ windmill_server_name }}
    dokku_app:
-      app: &server_name "{{ server_name }}"
+      app: &server_name "{{ windmill_server_name }}"
 
    tags:
     - windmill.server
     - windmill.app
     - dokku.app
 
- - name: Disable VHOST domain for {{ server_name }}
+ - name: Disable VHOST domain for {{ windmill_server_name }}
    dokku_domains:
       app: *server_name
       domains:
-       - "{{ server_name }}.{{ dokku_hostname }}"
+       - "{{ windmill_server_name }}.{{ dokku_hostname }}"
       state: disable
    #  state: absent
    # TODO: Contribute 'changed_when' support upstream
@@ -218,11 +221,11 @@
     - windmill.config
     - dokku.domains
 
- - name: Configure environment for {{ server_name }}
+ - name: Configure environment for {{ windmill_server_name }}
    dokku_config:
       app: *server_name
       config:
-         BASE_URL: "{{ base_url }}"
+         BASE_URL: "{{ windmill_base_url }}"
          RUST_LOG: info
 
          NUM_WORKERS: "0"
@@ -234,7 +237,7 @@
     - windmill.config
     - dokku.config
 
- - name: Configure database environment for {{ server_name }}
+ - name: Configure database environment for {{ windmill_server_name }}
    dokku_config:
       app: *server_name
       config:
@@ -246,11 +249,11 @@
     - windmill.database
     - dokku.config
 
- - name: Create a persistent-storage for server config {{ server_name }}
-   file:
-      path: "/var/lib/dokku/data/storage/{{ server_name }}"
+ - name: Create a persistent-storage for server config {{ windmill_server_name }}
+   ansible.builtin.file:
+      path: "/var/lib/dokku/data/storage/{{ windmill_server_name }}"
       state: directory
-      mode: 0700
+      mode: "0700"
    become: true
    become_user: dokku
 
@@ -260,12 +263,12 @@
     - windmill.storage
     - dokku.storage
 
- - name: Create oauth.json for {{ server_name }}
-   copy:
+ - name: Create oauth.json for {{ windmill_server_name }}
+   ansible.builtin.copy:
       force: false
       content: "{}"
-      dest: "/var/lib/dokku/data/storage/{{ server_name }}/oauth.json"
-      mode: 0700
+      dest: "/var/lib/dokku/data/storage/{{ windmill_server_name }}/oauth.json"
+      mode: "0700"
    become: true
    become_user: dokku
 
@@ -277,17 +280,17 @@
 
  # - name: Load existing oauth.json into a variable
  #   ansible.builtin.include_vars:
- #      file: "/var/lib/dokku/data/storage/{{ server_name }}/oauth.json"
+ #      file: "/var/lib/dokku/data/storage/{{ windmill_server_name }}/oauth.json"
  #      name: oauth_json
  #      remote_src: true
  #   become: true
  #   become_user: dokku
 
- - name: Configure bind-mount for oauth.json for {{ server_name }}
+ - name: Configure bind-mount for oauth.json for {{ windmill_server_name }}
    dokku_docker_options:
       app: *server_name
       phase: deploy
-      option: "--mount type=bind,source=/var/lib/dokku/data/storage/{{ server_name }}/oauth.json,target=/usr/src/app/oauth.json,readonly"
+      option: "--mount type=bind,source=/var/lib/dokku/data/storage/{{ windmill_server_name }}/oauth.json,target=/usr/src/app/oauth.json,readonly"
 
    tags:
     - windmill.server
@@ -298,7 +301,7 @@
  #   dokku_storage:
  #      app: *server_name
  #      mounts:
- #         - "/var/lib/dokku/data/storage/{{ server_name }}:/tmp/windmill/cache"
+ #         - "/var/lib/dokku/data/storage/{{ windmill_server_name }}:/tmp/windmill/cache"
  #      create_host_dir: true
 
  #      # TODO: This needs its permissions fixed, probably?
@@ -306,20 +309,20 @@
  #      user: 1001
  #      group: 1001
 
- # TODO: Contribute 'changed_when' support upstream
- - name: Attach server to network {{ network_name }}
+   # TODO: Contribute 'changed_when' support upstream
+ - name: Attach server to network {{ windmill_network_name }}
    dokku_network_property:
-      app: "{{ server_name }}"
+      app: "{{ windmill_server_name }}"
       property: attach-post-deploy
-      value: "{{ network_name }}"
+      value: "{{ windmill_network_name }}"
 
    tags:
     - windmill.server
     - windmill.network
     - dokku.network
 
- - name: Check the proxy configuration for {{ server_name }}
-   ansible.builtin.command: dokku proxy:report {{ server_name|quote }}
+ - name: Check the proxy configuration for {{ windmill_server_name }}
+   ansible.builtin.command: dokku proxy:report {{ windmill_server_name | quote }}
    register: server_proxy_report
    failed_when: "'proxy information' not in server_proxy_report.stdout"
    changed_when: false
@@ -329,8 +332,8 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Configure caddy as the proxy for {{ server_name }}
-   ansible.builtin.command: dokku proxy:set {{ server_name|quote }} caddy
+ - name: Configure caddy as the proxy for {{ windmill_server_name }}
+   ansible.builtin.command: dokku proxy:set {{ windmill_server_name | quote }} caddy
    when: "'caddy' not in server_proxy_report.stdout"
 
    tags:
@@ -338,8 +341,8 @@
     - windmill.proxy
     - dokku.proxy
 
- # `reverse_proxy /* http://windmill_server:8000`
- - name: Configure caddy-docker-proxy labels for {{ server_name }}
+ - name: Configure caddy-docker-proxy labels for {{ windmill_server_name }}
+   # `reverse_proxy /* http://windmill_server:8000`
    dokku_docker_options:
       app: *server_name
       phase: deploy
@@ -353,7 +356,7 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Pull and deploy {{ server_name }}
+ - name: Pull and deploy {{ windmill_server_name }}
    dokku_image:
       app: *server_name
       image: ghcr.io/windmill-labs/windmill:main
@@ -363,20 +366,20 @@
     - windmill.image
     - dokku.image
 
- - name: Create app {{ worker_name }}
+ - name: Create app {{ windmill_worker_name }}
    dokku_app:
-      app: &worker_name "{{ worker_name }}"
+      app: &worker_name "{{ windmill_worker_name }}"
 
    tags:
     - windmill.worker
     - windmill.app
     - dokku.app
 
- - name: Disable VHOST domain for {{ worker_name }}
+ - name: Disable VHOST domain for {{ windmill_worker_name }}
    dokku_domains:
       app: *worker_name
       domains:
-       - "{{ worker_name }}.{{ dokku_hostname }}"
+       - "{{ windmill_worker_name }}.{{ dokku_hostname }}"
       state: disable
    # TODO: Contribute 'changed_when' support upstream
    changed_when: false
@@ -386,11 +389,11 @@
     - windmill.domains
     - dokku.domains
 
- - name: Configure environment for {{ worker_name }}
+ - name: Configure environment for {{ windmill_worker_name }}
    dokku_config:
       app: *worker_name
       config:
-         BASE_URL: "{{ base_url }}"
+         BASE_URL: "{{ windmill_base_url }}"
          RUST_LOG: info
 
          NUM_WORKERS: "1"
@@ -403,7 +406,7 @@
     - windmill.config
     - dokku.config
 
- - name: Configure database environment for {{ worker_name }}
+ - name: Configure database environment for {{ windmill_worker_name }}
    dokku_config:
       app: *worker_name
       config:
@@ -415,11 +418,11 @@
     - windmill.database
     - dokku.config
 
- - name: Create a dependency-cache for {{ worker_name }}
+ - name: Create a dependency-cache for {{ windmill_worker_name }}
    dokku_storage:
       app: *worker_name
       mounts:
-       - "/var/lib/dokku/data/storage/{{ worker_name }}-dependency-cache:/tmp/windmill/cache"
+       - "/var/lib/dokku/data/storage/{{ windmill_worker_name }}-dependency-cache:/tmp/windmill/cache"
       create_host_dir: true
 
       # TODO: This needs its permissions fixed, probably?
@@ -434,20 +437,20 @@
     - windmill.storage
     - dokku.storage
 
- # TODO: Contribute 'changed_when' support upstream
- - name: Attach worker to network {{ network_name }}
+ - name: Attach worker to network {{ windmill_network_name }}
+   # TODO: Contribute 'changed_when' support upstream
    dokku_network_property:
-      app: "{{ worker_name }}"
+      app: "{{ windmill_worker_name }}"
       property: attach-post-create
-      value: "{{ network_name }}"
+      value: "{{ windmill_network_name }}"
 
    tags:
     - windmill.worker
     - windmill.network
     - dokku.network
 
- - name: Disable the proxy for {{ worker_name }}
-   ansible.builtin.command: dokku proxy:disable {{ worker_name|quote }}
+ - name: Disable the proxy for {{ windmill_worker_name }}
+   ansible.builtin.command: dokku proxy:disable {{ windmill_worker_name | quote }}
 
    tags:
     - windmill.worker
@@ -455,7 +458,7 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Pull and deploy {{ worker_name }}
+ - name: Pull and deploy {{ windmill_worker_name }}
    dokku_image:
       app: *worker_name
       image: ghcr.io/windmill-labs/windmill:main
@@ -465,31 +468,31 @@
     - windmill.image
     - dokku.image
 
- - name: Scale {{ worker_name }}
+ - name: Scale {{ windmill_worker_name }}
    dokku_ps_scale:
-      app: "{{ worker_name }}"
+      app: "{{ windmill_worker_name }}"
       scale:
-         web: "{{ worker_count }}"
+         web: "{{ windmill_worker_count }}"
 
    tags:
     - windmill.worker
     - windmill.scale
     - dokku.scale
 
- - name: Create app {{ lsp_name }}
+ - name: Create app {{ windmill_lsp_name }}
    dokku_app:
-      app: &lsp_name "{{ lsp_name }}"
+      app: &lsp_name "{{ windmill_lsp_name }}"
 
    tags:
     - windmill.lsp
     - windmill.app
     - dokku.app
 
- - name: Disable VHOST domain for {{ lsp_name }}
+ - name: Disable VHOST domain for {{ windmill_lsp_name }}
    dokku_domains:
       app: *lsp_name
       domains:
-       - "{{ lsp_name }}.{{ dokku_hostname }}"
+       - "{{ windmill_lsp_name }}.{{ dokku_hostname }}"
       state: disable
    # TODO: Contribute 'changed_when' support upstream
    changed_when: false
@@ -500,9 +503,9 @@
     - windmill.domains
     - dokku.domains
 
- - name: Ensure default port mapping doesn't exist for {{ lsp_name }}
+ - name: Ensure default port mapping doesn't exist for {{ windmill_lsp_name }}
    dokku_ports:
-      app: "{{ lsp_name }}"
+      app: "{{ windmill_lsp_name }}"
       mappings:
        - http:80:5000
       state: absent
@@ -512,9 +515,9 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Proxy ports for {{ lsp_name }}
+ - name: Proxy ports for {{ windmill_lsp_name }}
    dokku_ports:
-      app: "{{ lsp_name }}"
+      app: "{{ windmill_lsp_name }}"
       mappings:
        - http:3001:3001
    tags:
@@ -523,8 +526,8 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Check the proxy configuration for {{ lsp_name }}
-   ansible.builtin.command: dokku proxy:report {{ lsp_name|quote }}
+ - name: Check the proxy configuration for {{ windmill_lsp_name }}
+   ansible.builtin.command: dokku proxy:report {{ windmill_lsp_name | quote }}
    register: lsp_proxy_report
    failed_when: "'proxy information' not in lsp_proxy_report.stdout"
    changed_when: false
@@ -535,8 +538,8 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Configure caddy as the proxy for {{ lsp_name }}
-   ansible.builtin.command: dokku proxy:set {{ lsp_name|quote }} caddy
+ - name: Configure caddy as the proxy for {{ windmill_lsp_name }}
+   ansible.builtin.command: dokku proxy:set {{ windmill_lsp_name | quote }} caddy
    when: "'caddy' not in lsp_proxy_report.stdout"
 
    tags:
@@ -545,7 +548,7 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Configure caddy-docker-proxy labels for {{ lsp_name }}
+ - name: Configure caddy-docker-proxy labels for {{ windmill_lsp_name }}
    dokku_docker_options:
       app: *lsp_name
       phase: deploy
@@ -559,7 +562,7 @@
     - windmill.proxy
     - dokku.proxy
 
- - name: Pull and deploy {{ lsp_name }}
+ - name: Pull and deploy {{ windmill_lsp_name }}
    dokku_image:
       app: *lsp_name
       image: ghcr.io/windmill-labs/windmill-lsp:latest

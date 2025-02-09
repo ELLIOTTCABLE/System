@@ -2,38 +2,38 @@
  # <https://github.com/megabyte-labs/ansible-deno/blob/3a0f96ed5049f145c3e45c8e336cf9e536af771a/tasks/install-Linux.yml>
 
  - name: Ensure custom facts directory exists
-   file:
-      mode: 0755
+   ansible.builtin.file:
+      mode: "0755"
       path: /etc/ansible/facts.d
       state: directory
 
- - name: "Detect the latest {{ app_name }} version"
-   uri:
+ - name: "Detect the latest version - {{ deno_app_name }}"
+   ansible.builtin.uri:
       url: https://api.github.com/repos/denoland/deno/releases/latest
    register: deno_latest_release_tag
 
- - name: "Determine whether or not the latest version of {{ app_name }} is already installed"
-   set_fact:
+ - name: "Determine whether or not the latest version is already installed - {{ deno_app_name }}"
+   ansible.builtin.set_fact:
       install_deno: "{{ (ansible_local.deno is not defined) or ((ansible_local.deno is defined) and (ansible_local['deno']['settings']['version']
-         != deno_latest_release_tag.json.tag_name | replace('v',''))) }}"
+         != deno_latest_release_tag.json.tag_name | replace('v', ''))) }}"
 
- - name: "Ensure {{ app_name }} is installed"
-   unarchive:
+ - name: "Ensure installed - {{ deno_app_name }}"
+   ansible.builtin.unarchive:
       src: "https://github.com/denoland/deno/releases/download/{{ deno_latest_release_tag.json.tag_name }}/deno-x86_64-unknown-linux-gnu.zip"
       dest: /usr/local/bin
-      mode: 0755
+      mode: "0755"
       remote_src: true
       extra_opts:
        - -j
    when: install_deno
 
- - name: "Save meta information about the version of {{ app_name }} that was installed"
+ - name: "Save meta information about the version that was installed - {{ deno_app_name }}"
    community.general.ini_file:
       path: /etc/ansible/facts.d/deno.fact
-      mode: 0644
+      mode: "0644"
       section: settings
       option: version
-      value: "{{ deno_latest_release_tag.json.tag_name | replace('v','') }}"
+      value: "{{ deno_latest_release_tag.json.tag_name | replace('v', '') }}"
       backup: true
       no_extra_spaces: true
    when: install_deno

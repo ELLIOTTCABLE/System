@@ -3,4 +3,5 @@
  - name: Include tasks based on the operating system
    become: true
    block:
-    - include_tasks: "install.yaml"
+    - name: Include install tasks
+      ansible.builtin.include_tasks: "install.yaml"

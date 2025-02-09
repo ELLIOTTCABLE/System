@@ -6,31 +6,38 @@
    check_mode: false
    changed_when: false
    failed_when: sshpass_present.rc > 0
- - debug:
+
+ - name: Report if sshpass is not installed
+   ansible.builtin.debug:
       msg: "sshpass is not installed on the local machine. Please install it before continuing."
    when: sshpass_present.failed
+
  - name: Ensure passlib is installed
    delegate_to: localhost
    register: passlib_present
-   pip:
+   ansible.builtin.pip:
       name: passlib
       state: present
- - debug:
-      msg: "sshpass is not installed on the local machine. Please install it before continuing."
-   when: sshpass_present.failed
 
- - name: save previous user for later restoration
-   set_fact:
-      ansible_user_to_restore: "{{ ansible_user |  d(lookup('env', 'USER')) }}"
+ - name: Report if passlib is not installed
+   ansible.builtin.debug:
+      msg: "passlib is not installed on the local machine. Please install it before continuing."
+   when: passlib_present.failed
 
- - name: reauthenticate as root
-   set_fact:
+ - name: Save previous user for later restoration
+   ansible.builtin.set_fact:
+      ansible_user_to_restore: "{{ ansible_user | d(lookup('env', 'USER')) }}"
+
+ - name: Reauthenticate as root
+   ansible.builtin.set_fact:
       ansible_user: root
       ansible_ssh_pass: "{{ bootstrap_pw }}"
 
- - include_tasks: reset_connection.yaml
+ - name: Reset connection
+   ansible.builtin.include_tasks: reset_connection.yaml
 
- - debug:
+ - name: Print user IDs again
+   ansible.builtin.debug:
       msg: |
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}
@@ -42,17 +49,20 @@
  - name: Gather facts for the first time
    ansible.builtin.setup:
 
- - include_tasks:
+ - name: Run HTSALSWA 'requirements' role for actual setup
+   ansible.builtin.include_tasks:
       file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
 
- - name: reauthenticate as normal admin user
-   set_fact:
+ - name: Reauthenticate as normal admin user
+   ansible.builtin.set_fact:
       ansible_user: "{{ ansible_user_to_restore }}"
-      ansible_ssh_pass:
+      ansible_ssh_pass: aarstarstarstarstarstarstarst FIXME
 
- - include_tasks: reset_connection.yaml
+ - name: Reset connection
+   ansible.builtin.include_tasks: reset_connection.yaml
 
- - debug:
+ - name: Print 'after' values for user IDs
+   ansible.builtin.debug:
       msg: |-
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}

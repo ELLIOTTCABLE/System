@@ -1,10 +1,10 @@
-base_url: "https://{{ server_domain }}"
+windmill_base_url: "https://{{ server_domain }}"
 
-network_name: windmill-network
+windmill_network_name: windmill-network
 
-server_name: windmill-server
+windmill_server_name: windmill-server
 
-worker_name: windmill-worker
-worker_count: 3
+windmill_worker_name: windmill-worker
+windmill_worker_count: 3
 
-lsp_name: windmill-lsp
+windmill_lsp_name: windmill-lsp

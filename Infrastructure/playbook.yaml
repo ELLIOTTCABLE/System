@@ -1,11 +1,11 @@
  # code: language=ansible
+
  - name: Ensure non-root user and SSH are configured
    hosts: berit.ell
 
    # For newly-provisioned hosts, need to wait for sshd to come up
    gather_facts: false
    pre_tasks:
-
    roles:
     - role: preroll
 
@@ -16,6 +16,7 @@
    pre_tasks:
     - name: Wait for sshd on remote host to come up
       ansible.builtin.wait_for_connection:
+
          delay: 5
          timeout: 1800
     - name: Gather facts for the first time
@@ -47,8 +48,8 @@
          login_host: "{{ db_host }}"
          login_port: "{{ db_port }}"
          db: "{{ db_name }}"
-      # staging letsencrypt server:
-      #  caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+         # staging letsencrypt server:
+         # caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
       caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
    module_defaults:
