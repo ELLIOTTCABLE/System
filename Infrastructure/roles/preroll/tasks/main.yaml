@@ -10,6 +10,9 @@
    ignore_unreachable: true
    ignore_errors: true
    register: pingtest
+   tags:
+    - always
+    - ping-gather
 
  - name: Ignore errors from the intentional ping-test
    ansible.builtin.meta: clear_host_errors
@@ -21,3 +24,6 @@
  - name: Gather facts for the first time
    ansible.builtin.setup:
    when: pingtest is succeeded
+   tags:
+    - always
+    - ping-gather

@@ -5,9 +5,18 @@
 
    # For newly-provisioned hosts, need to wait for sshd to come up
    gather_facts: false
-   pre_tasks:
    roles:
     - role: preroll
+    - role: packages
+    - role: ssh
+    - role: password-quality
+    - role: unattended-upgrades
+    - role: firewall-tweaks
+    - role: mail
+    - role: clamav
+    - role: rkhunter
+    - role: auditd
+    - role: lynis
 
  - name: Setup windmill
    hosts: eurydice.ell.io
