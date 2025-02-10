@@ -51,17 +51,19 @@
  - name: Reset connection
    ansible.builtin.include_tasks: reset_connection.yaml
 
- - name: Print user IDs again
+ - name: Print user IDs again before waiting for SSH comeup
    ansible.builtin.debug:
+      verbosity: 1
       msg: |
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}
 
  - name: Wait for sshd on remote host to come up
    ansible.builtin.wait_for_connection:
-      timeout: 60
+      sleep: 10
+      timeout: 360
 
- - name: Gather facts for the first time
+ - name: Gather facts over root-SSH
    ansible.builtin.setup:
 
  - name: Run HTSALSWA 'requirements' role for actual setup
@@ -78,6 +80,7 @@
 
  - name: Print 'after' values for user IDs
    ansible.builtin.debug:
+      verbosity: 1
       msg: |-
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}

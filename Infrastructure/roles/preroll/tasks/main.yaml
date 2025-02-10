@@ -1,6 +1,7 @@
  # code: language=ansible
  - name: Print 'before' values for user IDs
    ansible.builtin.debug:
+      verbosity: 1
       msg: |
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}
@@ -14,16 +15,24 @@
     - always
     - ping-gather
 
+ - name: Print pingtest results
+   ansible.builtin.debug:
+      verbosity: 1
+      var: pingtest
+
  - name: Ignore errors from the intentional ping-test
    ansible.builtin.meta: clear_host_errors
+   tags:
+    - always
+    - ping-gather
 
  - name: Proceed to reauthenticate as root and setup user if SSH failed
    ansible.builtin.include_tasks: setup_user.yaml
-   when: pingtest is failed | d(pingtest.unreachable) | d(false)
+   when: pingtest.unreachable is defined or pingtest.rc != 0
 
- - name: Gather facts for the first time
+ - name: Gather facts over user-SSH
    ansible.builtin.setup:
-   when: pingtest is succeeded
+   when: not (pingtest.unreachable is defined or pingtest.rc != 0)
    tags:
     - always
     - ping-gather
