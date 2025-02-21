@@ -168,19 +168,6 @@ l = ['move-workspace-to-monitor next', 'mode main']
 alt-shift-l = ['move-workspace-to-monitor next', 'mode main']
 esc = 'mode main'
 
-[[on-window-detected]]
-if.app-id = 'com.culturedcode.ThingsMac'
-if.window-title-regex-substring = 'tags'
-run = 'layout tiling'
-
-[[on-window-detected]]
-if.app-id = 'com.valvesoftware.steam.helper'
-run = 'layout tiling'
-
-[[on-window-detected]]
-if.app-id = 'com.cub-and-pup.Bluebird'
-run = 'layout floating'
-
 # Colemak mapping
 [key-mapping.key-notation-to-key-code]
 f = 'e'
@@ -205,3 +192,16 @@ o = 'semicolon'
 
 k = 'n'
 m = 'm'
+
+[[on-window-detected]]
+if.app-id = 'com.culturedcode.ThingsMac'
+if.window-title-regex-substring = 'tags'
+run = 'layout tiling'
+
+[[on-window-detected]]
+if.app-id = 'com.valvesoftware.steam.helper'
+run = 'layout tiling'
+
+[[on-window-detected]]
+if.app-id = 'com.cub-and-pup.Bluebird'
+run = 'layout floating'
