@@ -177,6 +177,10 @@ run = 'layout tiling'
 if.app-id = 'com.valvesoftware.steam.helper'
 run = 'layout tiling'
 
+[[on-window-detected]]
+if.app-id = 'com.cub-and-pup.Bluebird'
+run = 'layout floating'
+
 # Colemak mapping
 [key-mapping.key-notation-to-key-code]
 f = 'e'
