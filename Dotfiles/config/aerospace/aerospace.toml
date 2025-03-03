@@ -98,7 +98,6 @@ alt-y = 'workspace Y'
 alt-q = 'workspace Q'
 alt-w = 'workspace W'
 alt-f = 'workspace F'
-alt-p = 'workspace P'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#move-node-to-workspace
 alt-0 = 'move-node-to-workspace 0'
@@ -116,7 +115,6 @@ alt-shift-y = 'move-node-to-workspace Y'
 alt-shift-q = 'move-node-to-workspace Q'
 alt-shift-w = 'move-node-to-workspace W'
 alt-shift-f = 'move-node-to-workspace F'
-alt-shift-p = 'move-node-to-workspace P'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
