@@ -19,6 +19,11 @@ cask "bartender"
 cask "timing"
 cask "raycast"
 
+cask "font-fantasque-sans-mono-nerd-font"
+cask "font-monaspace"
+cask "font-monaspace-nerd-font"
+cask "font-symbols-only-nerd-font"
+
 mas "Pastebot", id: 1179623856
 mas "Xcode", id: 497799835
 
