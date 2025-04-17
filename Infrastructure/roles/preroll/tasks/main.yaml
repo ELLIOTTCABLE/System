@@ -1,4 +1,5 @@
- # code: language=ansible
+# code: language=ansible
+
  - name: Test SSH connection to remote host
    ansible.builtin.ping:
    ignore_unreachable: true

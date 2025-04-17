@@ -1,4 +1,4 @@
- # code: language=ansible
+# code: language=ansible
 
  - name: Ensure non-root user and SSH are configured
    hosts: berit.ell

@@ -1,4 +1,5 @@
- # code: language=ansible
+# code: language=ansible
+
  - name: Wait for sshd on remote host to come up
    ansible.builtin.wait_for_connection:
       sleep: 10
