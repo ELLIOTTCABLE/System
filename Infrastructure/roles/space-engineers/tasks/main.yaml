@@ -1,0 +1,37 @@
+ - name: Open ports for Space Engineers dedicated server
+   become: true
+   community.general.ufw:
+      rule: allow
+      direction: in
+      to_port: "{{ se_ds_external_port }}"
+      proto: udp
+   notify: "firewall : restart ufw service"
+
+ - name: Install Space Engineers dedicated server image
+   community.docker.docker_compose_v2:
+      project_name: space_engineers_ds
+      # From:
+      # <https://github.com/Devidian/docker-spaceengineers>
+      definition:
+         services:
+            se-server:
+               image: "devidian/spaceengineers:{{ se_ds_version }}"
+               container_name: "{{ se_ds_container_name }}"
+               restart: unless-stopped
+               volumes:
+                # left side: your docker-host machine
+                # right side: the paths in the image (!!do not change!!)
+                - "{{ se_ds_host_path }}/plugins:/appdata/space-engineers/plugins"
+                - "{{ se_ds_host_path }}/instances:/appdata/space-engineers/instances"
+                - "{{ se_ds_host_path }}/SpaceEngineersDedicated:/appdata/space-engineers/SpaceEngineersDedicated"
+                - "{{ se_ds_host_path }}/steamcmd:/root/.steam"
+               ports:
+                - target: "{{ se_ds_external_port }}"
+                  published: "{{ se_ds_external_port }}"
+                  protocol: udp
+                  mode: host
+               environment:
+                # public ip required for healthcheck
+                - PUBLIC_IP="{{ ansible_hostname }}"
+                - WINEDEBUG=-all
+                - INSTANCE_NAME="{{ se_ds_instance_name }}"

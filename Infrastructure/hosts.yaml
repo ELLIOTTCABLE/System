@@ -2,3 +2,10 @@
 all:
    hosts:
       eurydice.ell.io: # 45.76.230.26
+
+unified:
+   hosts:
+      # used for testing
+      berit.ell:
+         ansible_host:
+         ansible_port:

@@ -7,6 +7,7 @@
    gather_facts: false
    roles:
     - role: preroll
+      tags: [always, preroll]
     - role: packages
     - role: ssh
     - role: password-quality
@@ -17,6 +18,19 @@
     - role: rkhunter
     - role: auditd
     - role: lynis
+
+ - name: Setup gaming servers
+   tags: gaming
+   hosts: berit.ell
+
+   roles:
+    - role: geerlingguy.docker
+      become: true
+    - role: space-engineers
+
+   vars:
+      docker_users:
+       - "{{ user_name }}"
 
  - name: Setup windmill
    hosts: eurydice.ell.io

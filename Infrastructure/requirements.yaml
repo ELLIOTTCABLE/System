@@ -5,4 +5,5 @@ roles:
  - name: dokku_bot.ansible_dokku
 collections:
  - community.postgresql
+ - community.docker
  - ansible.posix

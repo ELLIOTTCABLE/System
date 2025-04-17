@@ -1,0 +1,5 @@
+se_ds_version: "winestaging"
+se_ds_container_name: "space-engineers-ds"
+se_ds_host_path: "/appdata/space-engineers"
+se_ds_instance_name: "MySpaceEngineersServer"
+se_ds_external_port: 27016

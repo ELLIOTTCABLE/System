@@ -1,11 +1,4 @@
  # code: language=ansible
- - name: Print 'before' values for user IDs
-   ansible.builtin.debug:
-      verbosity: 1
-      msg: |
-         ansible_user: {{ ansible_user | d('unset') }};
-         remote_user: {{ remote_user | d('unset') }}
-
  - name: Test SSH connection to remote host
    ansible.builtin.ping:
    ignore_unreachable: true
@@ -25,6 +18,17 @@
    tags:
     - always
     - ping-gather
+
+ - name: Handle connection failure
+   until: not (pingtest.unreachable is defined or pingtest.rc != 0)
+   block:
+    - name: Test for configured SSH port availability w/ netcat
+      delegate_to: localhost
+      ansible.builtin.command: nc -z -w5 {{ inventory_hostname }} {{ ansible_port }}
+      register: nctest
+      failed_when: nctest.stdout.find('failed') != -1
+      changed_when: never
+      ignore_errors: true
 
  - name: Proceed to reauthenticate as root and setup user if SSH failed
    ansible.builtin.include_tasks: setup_user.yaml
