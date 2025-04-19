@@ -15,7 +15,6 @@
  - name: Fallback to default SSH port
    ansible.builtin.set_fact:
       ansible_port: 22
-   when: nctest.failed
 
  - name: Print user IDs and port after port-fallback
    ansible.builtin.debug:

@@ -4,40 +4,48 @@
    ansible.builtin.ping:
    ignore_unreachable: true
    ignore_errors: true
-   register: pingtest
+   register: initial_pingtest
    tags:
     - always
     - ping-gather
 
- - name: Print pingtest results
-   ansible.builtin.debug:
+ - ansible.builtin.debug:
       verbosity: 1
-      var: pingtest
-
- - name: Ignore errors from the intentional ping-test
-   ansible.builtin.meta: clear_host_errors
+      var: initial_pingtest
    tags:
     - always
     - ping-gather
 
  - name: Handle connection failure
-   until: not (pingtest.unreachable is defined or pingtest.rc != 0)
+   when: initial_pingtest.unreachable is defined or initial_pingtest.rc != 0
    block:
-    - name: Test for configured SSH port availability w/ netcat
-      delegate_to: localhost
-      ansible.builtin.command: nc -z -w5 {{ inventory_hostname }} {{ ansible_port }}
-      register: nctest
-      failed_when: nctest.stdout.find('failed') != -1
-      changed_when: never
-      ignore_errors: true
 
- - name: Proceed to reauthenticate as root and setup user if SSH failed
-   ansible.builtin.include_tasks: setup_user.yaml
-   when: pingtest.unreachable is defined or pingtest.rc != 0
+    - name: Wait for either SSH port (configured or default) to become available
+      ansible.builtin.include_tasks: 1_wait_for_ssh_port.yaml
+
+    - name: "Test for (configured) SSH user availability w/ builtin.ping: ({{ ansible_user }}) on port ({{ ansible_port }})"
+      ansible.builtin.ping:
+      ignore_unreachable: true
+      ignore_errors: true
+      register: known_port_pingtest
+
+    - ansible.builtin.debug:
+         verbosity: 1
+         var: known_port_pingtest
+
+    - name: Fallback to root SSH user
+      when: known_port_pingtest.unreachable is defined or known_port_pingtest.rc != 0
+      ansible.builtin.include_tasks: 3_fallback_to_root_ssh_user.yaml
+
+    - ansible.builtin.meta: clear_host_errors
+
+# --- --- ---
 
  - name: Gather facts over user-SSH
    ansible.builtin.setup:
-   when: not (pingtest.unreachable is defined or pingtest.rc != 0)
    tags:
     - always
     - ping-gather
+
+ - name: Setup user
+   ansible.builtin.include_tasks: 4_setup_admin_user.yaml
