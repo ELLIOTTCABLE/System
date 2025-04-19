@@ -1,7 +1,7 @@
 # code: language=ansible
 
  - name: Ensure non-root user and SSH are configured
-   hosts: berit.ell
+   hosts: berit.ell.io
 
    # For newly-provisioned hosts, need to wait for sshd to come up
    gather_facts: false
@@ -21,7 +21,7 @@
 
  - name: Setup gaming servers
    tags: gaming
-   hosts: berit.ell
+   hosts: berit.ell.io
 
    roles:
     - role: geerlingguy.docker
