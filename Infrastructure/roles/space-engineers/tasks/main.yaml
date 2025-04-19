@@ -32,6 +32,6 @@
                   mode: host
                environment:
                 # public ip required for healthcheck
-                - PUBLIC_IP="{{ ansible_hostname }}"
+                - PUBLIC_IP="{{ ansible_host }}"
                 - WINEDEBUG=-all
                 - INSTANCE_NAME="{{ se_ds_instance_name }}"
