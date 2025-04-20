@@ -8,9 +8,9 @@
       ansible.builtin.import_role:
          name: firewall
 
-   # FIXME: This won't work if there's NAT in both directions, or if there's multiple public IPs. See
-   # <https://stackoverflow.com/a/47070138/31897>
     - name: Get control-node's public IP
+      # FIXME: This won't work if there's NAT in both directions, or if there's multiple public IPs. See
+      # <https://stackoverflow.com/a/47070138/31897>
       become: false
       ansible.builtin.set_fact:
          control_node_ip: "{{ ansible_env['SSH_CLIENT'].split() | first }}"
@@ -18,9 +18,9 @@
     - ansible.builtin.debug:
          msg: "Control-node's public IP: {{ control_node_ip }}"
 
-   # FIXME: This is likely to break if the file has other content than the upstream-added managed-block; I'm not sure
-   #        how best to ensure it ends up in the "[GENERAL]" section ...
     - name: Exclude current control-node from fail2ban
+      # FIXME: This is likely to break if the file has other content than the upstream-added managed-block; I'm not sure
+      #        how best to ensure it ends up in the "[GENERAL]" section ...
       become: true
       ansible.builtin.blockinfile:
          dest: /etc/fail2ban/jail.local
@@ -37,12 +37,12 @@
          regexp: "{{ item.regexp }}"
          line: "{{ item.line }}"
       loop:
-      # Give back to the community;
-      - {regexp: '^ENABLE_DSHIELD_ALERTS', line: 'ENABLE_DSHIELD_ALERTS Y;'}
-      # Don't e-mail for trivial alerts;
-      - {regexp: '^EMAIL_ALERT_DANGER_LEVEL', line: 'EMAIL_ALERT_DANGER_LEVEL 3;'}
-      # And use an increasing scale of auto-blocks for more severe alerts
-      - {regexp: '^AUTO_BLOCK_DL4_TIMEOUT', line: 'AUTO_BLOCK_DL4_TIMEOUT 86400;'}
-      - {regexp: '^AUTO_BLOCK_DL3_TIMEOUT', line: 'AUTO_BLOCK_DL3_TIMEOUT 21600;'}
-      - {regexp: '^AUTO_BLOCK_DL2_TIMEOUT', line: 'AUTO_BLOCK_DL2_TIMEOUT 300;'}
+       # Give back to the community;
+       - {regexp: '^ENABLE_DSHIELD_ALERTS', line: 'ENABLE_DSHIELD_ALERTS Y;'}
+       # Don't e-mail for trivial alerts;
+       - {regexp: '^EMAIL_ALERT_DANGER_LEVEL', line: 'EMAIL_ALERT_DANGER_LEVEL 3;'}
+       # And use an increasing scale of auto-blocks for more severe alerts
+       - {regexp: '^AUTO_BLOCK_DL4_TIMEOUT', line: 'AUTO_BLOCK_DL4_TIMEOUT 86400;'}
+       - {regexp: '^AUTO_BLOCK_DL3_TIMEOUT', line: 'AUTO_BLOCK_DL3_TIMEOUT 21600;'}
+       - {regexp: '^AUTO_BLOCK_DL2_TIMEOUT', line: 'AUTO_BLOCK_DL2_TIMEOUT 300;'}
       notify: "firewall : restart psad service"

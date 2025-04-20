@@ -48,8 +48,6 @@
 
     - ansible.builtin.meta: clear_host_errors
 
-# --- --- ---
-
  - name: Finally gather facts
    ansible.builtin.setup:
    tags:
