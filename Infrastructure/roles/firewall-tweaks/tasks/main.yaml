@@ -18,12 +18,16 @@
     - ansible.builtin.debug:
          msg: "Control-node's public IP: {{ control_node_ip }}"
 
+   # FIXME: This is likely to break if the file has other content than the upstream-added managed-block; I'm not sure
+   #        how best to ensure it ends up in the "[GENERAL]" section ...
     - name: Exclude current control-node from fail2ban
       become: true
-      ansible.builtin.lineinfile:
+      ansible.builtin.blockinfile:
          dest: /etc/fail2ban/jail.local
-         regexp: "^ignoreip ="
-         line: "ignoreip = {{ control_node_ip }}"
+         block: |
+            ignoreip = {{ control_node_ip }}
+         marker: "# {mark} ANSIBLE MANAGED BLOCK: control-node IP"
+         state: present
       notify: "firewall : restart fail2ban service"
 
     - name: Tweak psad config to be less e-mail noisy
