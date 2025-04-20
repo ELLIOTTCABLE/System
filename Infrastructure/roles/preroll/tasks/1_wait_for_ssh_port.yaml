@@ -16,10 +16,6 @@
       changed_when: false
       ignore_errors: true
 
-    - ansible.builtin.debug:
-         verbosity: 1
-         var: ssh_port_nctest
-
     - name: Test default SSH port instead
       when: ssh_port_nctest.failed
       block:
@@ -30,13 +26,6 @@
          register: default_port_nctest
          changed_when: false
          ignore_errors: true
-
-       - ansible.builtin.debug:
-          verbosity: 1
-          var: default_port_nctest
-
-       - ansible.builtin.debug:
-          msg: "not (default_port_nctest.failed): {{ not (default_port_nctest.failed) }}"
 
        - name: Fallback to default SSH port
          when: not (default_port_nctest.failed)
