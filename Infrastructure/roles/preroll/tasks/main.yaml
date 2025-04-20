@@ -29,23 +29,40 @@
       ignore_errors: true
       register: known_port_pingtest
 
-    - ansible.builtin.debug:
-         verbosity: 1
-         var: known_port_pingtest
-
     - name: Fallback to root SSH user
-      when: known_port_pingtest.unreachable is defined or known_port_pingtest.rc != 0
+      when: known_port_pingtest.unreachable is defined or known_port_pingtest.failed
       ansible.builtin.include_tasks: 3_fallback_to_root_ssh_user.yaml
 
     - ansible.builtin.meta: clear_host_errors
 
 # --- --- ---
 
- - name: Gather facts over user-SSH
+ - name: Finally gather facts
    ansible.builtin.setup:
    tags:
     - always
     - ping-gather
 
- - name: Setup user
-   ansible.builtin.include_tasks: 4_setup_admin_user.yaml
+ - name: Run HTSALSWA 'requirements' role for actual setup
+   ansible.builtin.include_tasks:
+      file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
+      apply:
+         become: true
+
+ - when: ansible_user_to_restore is defined
+   block:
+
+    - name: Reauthenticate as normal admin user
+      ansible.builtin.set_fact:
+         ansible_user: "{{ ansible_user_to_restore }}"
+         ansible_ssh_pass: "" # unset password
+
+    - name: Reset connection
+      ansible.builtin.include_tasks: reset_connection.yaml
+
+ - name: Print 'after' values for user IDs
+   ansible.builtin.debug:
+      verbosity: 1
+      msg: |-
+         ansible_user: {{ ansible_user | d('unset') }};
+         remote_user: {{ remote_user | d('unset') }}
