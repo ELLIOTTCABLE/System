@@ -1,6 +1,26 @@
+# code: language=ansible
+
  - name: Run HTSALSWA 'firewall' role for actual setup
    ansible.builtin.import_role:
       name: firewall
+
+ # FIXME: This won't work if there's NAT in both directions, or if there's multiple public IPs. See
+ # <https://stackoverflow.com/a/47070138/31897>
+ - name: Get control-node's public IP
+   become: false
+   ansible.builtin.set_fact:
+      control_node_ip: "{{ ansible_env['SSH_CLIENT'].split() | first }}"
+
+ - ansible.builtin.debug:
+      msg: "Control-node's public IP: {{ control_node_ip }}"
+
+ - name: Exclude current control-node from fail2ban
+   become: true
+   ansible.builtin.lineinfile:
+      dest: /etc/fail2ban/jail.local
+      regexp: "^ignoreip ="
+      line: "ignoreip = {{ control_node_ip }}"
+   notify: "firewall : restart fail2ban service"
 
  - name: Tweak psad config to be less e-mail noisy
    become: true
