@@ -17,11 +17,19 @@
     - ping-gather
 
  - name: Handle connection failure
-   when: initial_pingtest.unreachable is defined or initial_pingtest.rc != 0
+   when: initial_pingtest.unreachable is defined or initial_pingtest.failed
+   tags:
+    - always
+    - connection-fallback
    block:
 
     - name: Wait for either SSH port (configured or default) to become available
-      ansible.builtin.include_tasks: 1_wait_for_ssh_port.yaml
+      ansible.builtin.include_tasks:
+         file: 1_wait_for_ssh_port.yaml
+         apply:
+            tags:
+             - always
+             - connection-fallback
 
     - name: "Test for (configured) SSH user availability w/ builtin.ping: ({{ ansible_user }}) on port ({{ ansible_port }})"
       ansible.builtin.ping:
@@ -31,7 +39,12 @@
 
     - name: Fallback to root SSH user
       when: known_port_pingtest.unreachable is defined or known_port_pingtest.failed
-      ansible.builtin.include_tasks: 3_fallback_to_root_ssh_user.yaml
+      ansible.builtin.include_tasks:
+         file: 3_fallback_to_root_ssh_user.yaml
+         apply:
+            tags:
+             - always
+             - connection-fallback
 
     - ansible.builtin.meta: clear_host_errors
 
@@ -48,8 +61,13 @@
       file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
       apply:
          become: true
+         tags:
+          - admin-user-setup
 
  - when: ansible_user_to_restore is defined
+   tags:
+    - always
+    - connection-fallback
    block:
 
     - name: Reauthenticate as normal admin user
@@ -58,7 +76,12 @@
          ansible_ssh_pass: "" # unset password
 
     - name: Reset connection
-      ansible.builtin.include_tasks: reset_connection.yaml
+      ansible.builtin.include_tasks:
+         file: reset_connection.yaml
+         apply:
+            tags:
+             - always
+             - connection-fallback
 
  - name: Print 'after' values for user IDs
    ansible.builtin.debug:
@@ -66,3 +89,7 @@
       msg: |-
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}
+   tags:
+    - always
+    - ping-gather
+    - connection-fallback

@@ -7,7 +7,7 @@
    gather_facts: false
    roles:
     - role: preroll
-      tags: [always, preroll]
+      tags: [preroll]
     - role: packages
     - role: ssh
     - role: password-quality

@@ -1,6 +1,9 @@
 # code: language=ansible
 
- - block:
+ - tags:
+    - always
+    - connection-fallback
+   block:
 
     - ansible.builtin.debug:
         verbosity: 1
@@ -18,6 +21,9 @@
 
     - name: Test default SSH port instead
       when: ssh_port_nctest.failed
+      tags:
+       - always
+       - connection-fallback
       block:
 
        - name: "Test for (default) SSH port availability w/ netcat (22)"
@@ -29,7 +35,12 @@
 
        - name: Fallback to default SSH port
          when: not (default_port_nctest.failed)
-         ansible.builtin.include_tasks: 2_fallback_to_default_ssh_port.yaml
+         ansible.builtin.include_tasks:
+            file: 2_fallback_to_default_ssh_port.yaml
+            apply:
+               tags:
+                - always
+                - connection-fallback
 
    rescue:
     - when: ssh_port_retry_count|int > 10
