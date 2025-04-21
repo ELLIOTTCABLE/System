@@ -1,10 +1,11 @@
 # code: language=ansible
 
- - name: Ensure non-root user and SSH are configured
+ - name: Initialize and harden
    hosts: berit.ell.io
 
    # For newly-provisioned hosts, need to wait for sshd to come up
    gather_facts: false
+   tags: new-machine
    roles:
     - role: preroll
       tags: [preroll]
@@ -19,10 +20,31 @@
     - role: auditd
     - role: lynis
 
- - name: Setup gaming servers
-   tags: gaming
-   hosts: berit.ell.io
+ - name: Setup dokku
+   hosts: [berit.ell.io, eurydice.ell.io]
+   roles:
+    - role: aisbergg.acl
+      become: true
+      tags: dokku-machine
+    - role: geerlingguy.docker
+      become: true
+      tags: dokku-machine
+    - role: nginxinc.nginx
+      tags: [never, nginx]
+    - role: dokku_bot.ansible_dokku
+      become: true
+      tags: dokku-machine
+   vars:
+      dokku_packages_state: latest
+      dokku_hostname: with.ec
+      dokku_manage_nginx: false
+      # staging letsencrypt server:
+      # caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
+ - name: Setup gaming servers
+   hosts: berit.ell.io
+   tags: gaming-machine
    roles:
     - role: geerlingguy.docker
       become: true
@@ -34,24 +56,10 @@
 
  - name: Setup windmill
    hosts: eurydice.ell.io
-
-   gather_facts: false
-   pre_tasks:
-    - name: Wait for sshd on remote host to come up
-      ansible.builtin.wait_for_connection:
-         delay: 5
-         timeout: 1800
-    - name: Gather facts for the first time
-      ansible.builtin.setup:
-
+   tags: windmill-machine
    roles:
     - role: preroll
-    - role: aisbergg.acl
-      become: true
-    - role: geerlingguy.docker
-      become: true
-    - role: dokku_bot.ansible_dokku
-      become: true
+      tags: [preroll]
     - windmill
 
    vars:
