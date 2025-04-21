@@ -23,17 +23,14 @@
 
  - name: Setup dokku
    hosts: [berit.ell.io, eurydice.ell.io]
+   tags: dokku-machine
 
    roles:
     - role: aisbergg.acl
       become: true
-      tags: dokku-machine
     - role: geerlingguy.docker
       become: true
-      tags: dokku-machine
-    - role: dokku_bot.ansible_dokku
-      become: true
-      tags: dokku-machine
+    - dokku-tweaks
 
    vars:
       dokku_packages_state: latest

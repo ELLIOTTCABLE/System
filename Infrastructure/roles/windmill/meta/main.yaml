@@ -1,3 +1,2 @@
 dependencies:
- - name: dokku_bot.ansible_dokku
-   become: true
+ - dokku-tweaks

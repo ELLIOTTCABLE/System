@@ -1,0 +1,59 @@
+# :vim: set ft=ansible :
+
+ - name: Check if the nginx proxy is enabled
+   ansible.builtin.command: /lib/systemd/systemd-sysv-install is-enabled nginx
+   register: nginx_enabled
+   failed_when: false
+   changed_when: false
+
+   tags:
+    - dokku.proxy
+
+ - name: Deactivate the nginx proxy
+   # TODO: Define changed/success using:
+   #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
+   ansible.builtin.command: dokku nginx:stop
+   when: nginx_enabled.rc == 0
+
+   tags:
+    - dokku.proxy
+
+ - name: Check the proxy-selection configuration
+   ansible.builtin.command: dokku proxy:report
+   register: proxy_report
+   changed_when: false
+
+   tags:
+    - dokku.proxy
+
+ - name: Select Caddy as the global proxy
+   ansible.builtin.command: dokku proxy:set --global caddy
+   when: "'Proxy computed type:           caddy' not in proxy_report.stdout"
+
+   tags:
+    - dokku.proxy
+
+ - name: Check the caddy configuration
+   ansible.builtin.command: dokku caddy:show-config
+   register: caddy_config_report
+   changed_when: false
+
+   tags:
+    - dokku.certs
+    - dokku.proxy
+
+ - name: Configure caddy's letsencrypt e-mail settings
+   ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email | quote }}
+   when: caddy_letsencrypt_email not in caddy_config_report.stdout
+
+   tags:
+    - dokku.certs
+    - dokku.proxy
+
+ - name: Configure caddy's letsencrypt server-address settings
+   ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
+   when: caddy_letsencrypt_server not in caddy_config_report.stdout
+
+   tags:
+    - dokku.certs
+    - dokku.proxy
