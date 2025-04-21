@@ -1,3 +1,5 @@
+# code: language=ansible
+
  - name: Open ports for Space Engineers dedicated server
    become: true
    community.general.ufw:
@@ -6,6 +8,7 @@
       to_port: "{{ se_ds_external_port }}"
       proto: udp
    notify: "firewall : restart ufw service"
+   tags: [space-engineers]
 
  - name: Install Space Engineers dedicated server image
    community.docker.docker_compose_v2:
@@ -35,3 +38,4 @@
                 - PUBLIC_IP="{{ ansible_host }}"
                 - WINEDEBUG=-all
                 - INSTANCE_NAME="{{ se_ds_instance_name }}"
+   tags: [space-engineers]
