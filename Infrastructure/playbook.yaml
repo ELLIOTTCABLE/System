@@ -2,10 +2,11 @@
 
  - name: Initialize and harden
    hosts: berit.ell.io
+   tags: new-machine
 
    # For newly-provisioned hosts, need to wait for sshd to come up
    gather_facts: false
-   tags: new-machine
+
    roles:
     - role: preroll
       tags: [preroll]
@@ -22,6 +23,7 @@
 
  - name: Setup dokku
    hosts: [berit.ell.io, eurydice.ell.io]
+
    roles:
     - role: aisbergg.acl
       become: true
@@ -32,6 +34,7 @@
     - role: dokku_bot.ansible_dokku
       become: true
       tags: dokku-machine
+
    vars:
       dokku_packages_state: latest
       dokku_hostname: with.ec
@@ -43,6 +46,7 @@
  - name: Setup gaming servers
    hosts: berit.ell.io
    tags: gaming-machine
+
    roles:
     - role: geerlingguy.docker
       become: true
@@ -55,6 +59,7 @@
  - name: Setup windmill
    hosts: eurydice.ell.io
    tags: windmill-machine
+
    roles:
     - role: preroll
       tags: [preroll]
