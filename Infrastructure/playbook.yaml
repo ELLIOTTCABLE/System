@@ -29,8 +29,6 @@
     - role: geerlingguy.docker
       become: true
       tags: dokku-machine
-    - role: nginxinc.nginx
-      tags: [never, nginx]
     - role: dokku_bot.ansible_dokku
       become: true
       tags: dokku-machine
@@ -63,9 +61,6 @@
     - windmill
 
    vars:
-      dokku_packages_state: latest
-      dokku_hostname: with.ec
-      dokku_manage_nginx: false
       server_domain: windmill.with.ec
       db_pass: "{{ lookup('env', 'DB_PASS') }}"
       db_host: "{{ lookup('env', 'DB_HOST') }}"
