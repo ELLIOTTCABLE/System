@@ -40,6 +40,14 @@
       # caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
       caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
+ - name: Setup static sites
+   hosts: berit.ell.io
+   tags: static-host
+
+   roles:
+    - dokku-tweaks
+    - elliottcable-name
+
  - name: Setup gaming servers
    hosts: berit.ell.io
    tags: gaming-machine

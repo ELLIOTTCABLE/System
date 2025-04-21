@@ -21,7 +21,7 @@
       changed_when: false
 
     - name: Select Caddy as the global proxy
-      when: "'Proxy computed type:           caddy' not in proxy_report.stdout"
+      when: proxy_report.stdout | match('.*Proxy computed type:\s+caddy.*')
       ansible.builtin.command: dokku proxy:set --global caddy
       notify: Restart caddy proxy
 

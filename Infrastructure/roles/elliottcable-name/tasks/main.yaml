@@ -1,0 +1,20 @@
+# :vim: set ft=ansible :
+
+ - tags: elliottcable.name
+   block:
+
+    - name: Create an elliottcable.name app
+      dokku_app:
+         app: elliottcable.name
+
+    - name: Clone elliottcable.name repo
+      dokku_clone:
+         app: elliottcable.name
+         repository: https://github.com/ELLIOTTCABLE/elliottcable.name.git
+         version: main
+
+    - name: Set elliottcable.name domain
+      dokku_domains:
+         app: elliottcable.name
+         domains: elliottcable.name
+         state: set
