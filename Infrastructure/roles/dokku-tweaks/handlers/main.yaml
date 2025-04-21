@@ -1,0 +1,6 @@
+# :vim: set ft=ansible :
+
+ - name: Restart caddy proxy
+   ansible.builtin.command: "dokku caddy:{{ item }}"
+   with_items: ['stop', 'start']
+   changed_when: true

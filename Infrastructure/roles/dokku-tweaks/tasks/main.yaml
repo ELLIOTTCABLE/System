@@ -1,7 +1,7 @@
 # :vim: set ft=ansible :
 
  - tags: dokku.proxy
-   tasks:
+   block:
 
     - name: Check if the nginx proxy is enabled
       ansible.builtin.command: /lib/systemd/systemd-sysv-install is-enabled nginx
@@ -23,6 +23,7 @@
     - name: Select Caddy as the global proxy
       ansible.builtin.command: dokku proxy:set --global caddy
       when: "'Proxy computed type:           caddy' not in proxy_report.stdout"
+      notify: restart caddy proxy
 
     - name: Check the caddy configuration
       tags: dokku.certs
@@ -34,8 +35,10 @@
       tags: dokku.certs
       ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email | quote }}
       when: caddy_letsencrypt_email not in caddy_config_report.stdout
+      notify: restart caddy proxy
 
     - name: Configure caddy's letsencrypt server-address settings
       tags: dokku.certs
       ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
       when: caddy_letsencrypt_server not in caddy_config_report.stdout
+      notify: restart caddy proxy
