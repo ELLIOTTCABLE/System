@@ -266,7 +266,7 @@
       option: >-
          --label=caddy='{{ server_domain }}' --label=caddy.2_reverse_proxy={%raw%}'/* {{upstreams http 8000}}'{%endraw%}
       state: present
-   notify: "dokku-tweaks : restart caddy proxy"
+   notify: "dokku-tweaks : Restart caddy proxy"
 
    tags:
     - windmill.server
@@ -473,7 +473,7 @@
       option: >-
          --label=caddy='{{ server_domain }}' --label=caddy.1_reverse_proxy={%raw%}'/ws/* {{upstreams http 3001}}'{%endraw%}
       state: present
-   notify: "dokku-tweaks : restart caddy proxy"
+   notify: "dokku-tweaks : Restart caddy proxy"
 
    tags:
     - windmill.lsp

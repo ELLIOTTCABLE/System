@@ -21,9 +21,9 @@
       changed_when: false
 
     - name: Select Caddy as the global proxy
-      ansible.builtin.command: dokku proxy:set --global caddy
       when: "'Proxy computed type:           caddy' not in proxy_report.stdout"
-      notify: restart caddy proxy
+      ansible.builtin.command: dokku proxy:set --global caddy
+      notify: Restart caddy proxy
 
     - name: Check the caddy configuration
       tags: dokku.certs
@@ -33,12 +33,12 @@
 
     - name: Configure caddy's letsencrypt e-mail settings
       tags: dokku.certs
+      when: caddy_letsencrypt_email is defined and not (caddy_letsencrypt_email in caddy_config_report.stdout)
       ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email | quote }}
-      when: caddy_letsencrypt_email not in caddy_config_report.stdout
-      notify: restart caddy proxy
+      notify: Restart caddy proxy
 
     - name: Configure caddy's letsencrypt server-address settings
       tags: dokku.certs
+      when: caddy_letsencrypt_server is defined and not (caddy_letsencrypt_server in caddy_config_report.stdout)
       ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
-      when: caddy_letsencrypt_server not in caddy_config_report.stdout
-      notify: restart caddy proxy
+      notify: Restart caddy proxy
