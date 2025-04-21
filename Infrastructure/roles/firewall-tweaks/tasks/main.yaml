@@ -54,6 +54,7 @@
       # This seems to be a bug in psad. See:
       # - <https://serverfault.com/a/957578/103102>
       # - <https://github.com/mrash/psad/issues/63>
+      # FIXME: This should probably be in `/etc/psad/auto_dl`?
       become: true
       ansible.builtin.blockinfile:
          dest: /etc/psad/psad.conf
