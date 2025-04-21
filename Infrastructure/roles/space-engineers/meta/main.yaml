@@ -1,0 +1,4 @@
+# code: language=ansible
+
+dependencies:
+ - role: firewall
