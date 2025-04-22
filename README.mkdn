@@ -13,6 +13,17 @@ $ cd ~/Library/System
 $ ./Bootstrap/bootstrap.sh
 ```
 
+---
+
+For Ansible, etc, there's a Python `.venv` w/ Ansible setup. Use [uv][] to configure it:
+
+````console
+$ cd ~/Library/System
+$ mise install # installs uv
+$ uv sync # installs ansible, etc
+$ ansible-galaxy install -r Infrastructure/requirements.yaml
+```
+
 ----
 
 Run before using home/.gitignore:
