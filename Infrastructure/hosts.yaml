@@ -8,5 +8,5 @@ all:
 unified:
    hosts:
       # used for testing
-      berit.ell:
+      berit.ell.io:
          ansible_host:
