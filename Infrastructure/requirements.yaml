@@ -4,6 +4,7 @@ roles:
  - name: aisbergg.acl
  - name: dokku_bot.ansible_dokku
 collections:
+ - community.general
  - community.postgresql
  - community.docker
  - ansible.posix
