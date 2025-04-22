@@ -6,15 +6,18 @@
    block:
 
     - ansible.builtin.debug:
-        verbosity: 1
-        var: ssh_port_retry_count
+         verbosity: 1
+         var: ssh_port_retry_count
 
     - ansible.builtin.set_fact:
-        ssh_port_retry_count: "{{ ((ssh_port_retry_count | default(0)) | int) + 1 }}"
+         ssh_port_retry_count: "{{ ((ssh_port_retry_count | default(0)) | int) + 1 }}"
+
+    - ansible.builtin.set_fact:
+         main_ipv4_address: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
 
     - name: "Test for (configured) SSH port availability w/ netcat ({{ ansible_port }})"
       delegate_to: localhost
-      ansible.builtin.command: nc -z -w2 {{ ansible_host }} {{ ansible_port }}
+      ansible.builtin.command: nc -z -w2 {{ main_ipv4_address }} {{ ansible_port }}
       register: ssh_port_nctest
       changed_when: false
       ignore_errors: true
@@ -28,7 +31,7 @@
 
        - name: "Test for (default) SSH port availability w/ netcat (22)"
          delegate_to: localhost
-         ansible.builtin.command: nc -z -w2 {{ ansible_host }} 22
+         ansible.builtin.command: nc -z -w2 {{ main_ipv4_address }} 22
          register: default_port_nctest
          changed_when: false
          ignore_errors: true
@@ -45,10 +48,10 @@
    rescue:
     - when: ssh_port_retry_count|int > 10
       ansible.builtin.fail:
-        msg: "Giving up after too many retries (attempts: {{ ssh_port_retry_count }})"
+         msg: "Giving up after too many retries (attempts: {{ ssh_port_retry_count }})"
 
     - name: Sleep for 30 seconds before retrying
       ansible.builtin.pause:
-        seconds: 30
+         seconds: 30
 
     - ansible.builtin.include_tasks: 1_wait_for_ssh_port.yaml

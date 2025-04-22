@@ -1,7 +1,10 @@
 # code: language=ansible
 
  - name: Initialize and harden
-   hosts: berit.ell.io
+   hosts:
+    - berit.ell.io
+    - euphemios.ell.io
+    # - eurydice.ell.io
    tags: new-machine
 
    # For newly-provisioned hosts, need to wait for sshd to come up
@@ -22,7 +25,10 @@
     - role: lynis
 
  - name: Setup dokku
-   hosts: [berit.ell.io, eurydice.ell.io]
+   hosts:
+    - berit.ell.io
+    - euphemios.ell.io
+    - eurydice.ell.io
    tags: dokku-machine
 
    roles:
@@ -41,7 +47,7 @@
       caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
  - name: Setup static sites
-   hosts: berit.ell.io
+   hosts: euphemios.ell.io
    tags: static-host
 
    roles:

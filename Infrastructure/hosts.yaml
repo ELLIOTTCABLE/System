@@ -2,11 +2,12 @@
 
 all:
    hosts:
+      berit.ell.io: # varying IP, testing instance
+      euphemios.ell.io: # 69.197.191.2
       eurydice.ell.io: # 45.76.230.26
-      berit.ell.io:
 
 unified:
    hosts:
       # used for testing
       berit.ell.io:
-         ansible_host:
+         ansible_host: # replace w/ temporary IP

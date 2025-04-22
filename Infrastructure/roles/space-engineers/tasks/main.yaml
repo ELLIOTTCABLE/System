@@ -35,7 +35,7 @@
                   mode: host
                environment:
                 # public ip required for healthcheck
-                - PUBLIC_IP="{{ ansible_host }}"
+                - PUBLIC_IP="{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
                 - WINEDEBUG=-all
                 - INSTANCE_NAME="{{ se_ds_instance_name }}"
    tags: [space-engineers]
