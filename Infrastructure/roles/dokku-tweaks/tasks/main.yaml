@@ -10,19 +10,21 @@
       changed_when: false
 
     - name: Deactivate the nginx proxy
-      # TODO: Define changed/success using:
-      #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
       ansible.builtin.command: dokku nginx:stop
       when: nginx_enabled.rc == 0
+      # TODO: Define changed/success using:
+      #     $ /lib/systemd/systemd-sysv-install is-enabled nginx
+      changed_when: true
 
-    - name: Check the proxy-selection configuration
-      ansible.builtin.command: dokku proxy:report
+    - name: Check the globally-selected proxy
+      ansible.builtin.command: dokku proxy:report --proxy-global-type
       register: proxy_report
       changed_when: false
 
     - name: Select Caddy as the global proxy
-      when: proxy_report.stdout is match(".*Proxy computed type:\s+caddy.*")
+      when: proxy_report.stdout | trim != 'caddy'
       ansible.builtin.command: dokku proxy:set --global caddy
+      changed_when: true
       notify: Restart caddy proxy
 
     - name: Check the caddy configuration
@@ -35,10 +37,12 @@
       tags: dokku.certs
       when: caddy_letsencrypt_email is defined and not (caddy_letsencrypt_email in caddy_config_report.stdout)
       ansible.builtin.command: dokku caddy:set --global letsencrypt-email {{ caddy_letsencrypt_email | quote }}
+      changed_when: true
       notify: Restart caddy proxy
 
     - name: Configure caddy's letsencrypt server-address settings
       tags: dokku.certs
       when: caddy_letsencrypt_server is defined and not (caddy_letsencrypt_server in caddy_config_report.stdout)
       ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
+      changed_when: true
       notify: Restart caddy proxy
