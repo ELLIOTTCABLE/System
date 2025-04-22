@@ -37,10 +37,10 @@
    ansible.builtin.set_fact:
       ansible_user_to_restore: "{{ ansible_user | d(lookup('env', 'USER')) }}"
 
- - name: Reauthenticate as root
+ - name: Reauthenticate as bootstrapping-user
    ansible.builtin.set_fact:
-      ansible_user: root
-      ansible_ssh_pass: "{{ bootstrap_pw }}"
+      ansible_user: "{{ bootstrap_user | default('root') }}"
+      ansible_ssh_pass: "{{ bootstrap_pass }}"
 
  - name: Print user IDs after user-fallback
    ansible.builtin.debug:
