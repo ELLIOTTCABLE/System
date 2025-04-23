@@ -2,3 +2,7 @@
 
  - name: Try connection fallbacks
    ansible.builtin.include_tasks: 0_handle_connection_failure.yaml
+
+ - name: Restore ansible_user
+   when: ansible_user_to_restore is defined
+   ansible.builtin.include_tasks: 9_restore_user.yaml

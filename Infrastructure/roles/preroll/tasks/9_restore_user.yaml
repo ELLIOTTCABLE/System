@@ -1,0 +1,26 @@
+# :vim: set ft=ansible :
+
+ - tags:
+    - always
+    - connection-fallback
+   block:
+
+    - when: ansible_verbosity > 1
+      ansible.builtin.debug:
+         msg: |-
+            ansible_user: {{ ansible_user | d('unset') }};
+            remote_user: {{ remote_user | d('unset') }}
+
+    - name: Reauthenticate as normal admin user
+      ansible.builtin.set_fact:
+         ansible_user: "{{ ansible_user_to_restore }}"
+         ansible_ssh_pass: "" # unset password
+
+    - name: Reset connection
+      ansible.builtin.include_tasks: reset_connection.yaml
+
+    - when: ansible_verbosity > 1
+      ansible.builtin.debug:
+         msg: |-
+            ansible_user: {{ ansible_user | d('unset') }};
+            remote_user: {{ remote_user | d('unset') }}

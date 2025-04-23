@@ -1,0 +1,121 @@
+# :vim: set ft=ansible :
+
+ - tags:
+    - admin-user
+   block:
+
+    - when: ansible_verbosity > 2
+      ansible.builtin.debug:
+         var: ansible_become_method
+
+    - block:
+
+       - name: Ensure become is available
+         become: true
+         ansible.builtin.command: id -u
+         register: become_test
+         changed_when: false
+
+      rescue:
+
+       - name: Fallback to su become_mode if sudo is not installed
+         ansible.builtin.set_fact:
+            ansible_become_method: ansible.builtin.su
+
+    - name: Update apt cache
+      # These tasks are from HTSALSWA's "requirements" role:
+      # <https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible/blob/37315ab3/roles/requirements/tasks/main.yml>
+      become: true
+      ansible.builtin.apt:
+         update_cache: true
+         upgrade: false
+
+    - name: Install sudo
+      become: true
+      ansible.builtin.apt:
+         name: sudo
+
+    - name: Create security groups
+      become: true
+      ansible.builtin.group:
+         name: "{{ item }}"
+      with_items:
+       - sshusers
+       - suusers
+       - sudousers
+
+    - name: Create admin user
+      become: true
+      ansible.builtin.user:
+         name: "{{ user_name }}"
+         password: "{{ user_pw | password_hash('sha512') }}"
+         groups: "sshusers, sudousers, suusers"
+         shell: /bin/bash
+
+    - name: Limit sudo to sudousers groups
+      become: true
+      community.general.sudoers:
+         name: "01-ansible-sudousers"
+         state: present
+         validation: required
+         group: sudousers
+         host: ALL
+         runas: ALL
+         nopassword: false
+         commands: ALL
+
+    - name: Passwordless sudo for new user
+      become: true
+      community.general.sudoers:
+         name: "50-ansible-{{ user_name }}-nopasswd"
+         state: present
+         validation: required
+         user: "{{ user_name }}"
+         host: ALL
+         runas: ALL
+         nopassword: true
+         commands: ALL
+
+    - name: Add authorized key for new user
+      become: true
+      ansible.posix.authorized_key:
+         user: "{{ user_name }}"
+         key: "{{ lookup('file', sshpub_location) }}"
+
+    - when: ansible_verbosity > 2
+      ansible.builtin.debug:
+         var: ansible_become_method
+
+    - name: Restore original become method
+      when: ansible_become_method is defined and not (ansible_become_method == 'ansible.builtin.sudo')
+      ansible.builtin.set_fact:
+         ansible_become_method: ansible.builtin.sudo
+
+    - when: ansible_verbosity > 2
+      ansible.builtin.debug:
+         var: ansible_user_to_restore
+
+    - when: ansible_user_to_restore is defined
+      tags:
+       - always
+       - connection-fallback
+      block:
+
+       - ansible.builtin.debug:
+            msg: "Restoring ansible_user ({{ ansible_user }} -> {{ ansible_user_to_restore }})"
+         changed_when: true
+         notify: Restore ansible_user
+
+       - ansible.builtin.meta: flush_handlers
+
+    - name: Check permissions of su
+      register: sucheck
+      become: true
+      ansible.builtin.command: dpkg-statoverride --list /bin/su
+      changed_when: false
+
+    - name: Limit who can use su
+      when: "'root suusers 4750 /bin/su' not in sucheck.stdout"
+      become: true
+      ansible.builtin.command: dpkg-statoverride --update --add root suusers 4750 /bin/su
+      changed_when: true

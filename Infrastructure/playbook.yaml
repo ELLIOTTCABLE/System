@@ -13,6 +13,7 @@
    roles:
     - role: preroll
       tags: [preroll]
+    - role: admin-user
     - role: packages
     - role: ssh
     - role: password-quality

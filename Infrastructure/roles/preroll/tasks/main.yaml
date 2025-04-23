@@ -1,19 +1,21 @@
 # :vim: set ft=ansible :
 
- - block:
+ - tags:
+    - always
+    - ping-gather
+    - connection-fallback
+   block:
+
     - name: Test SSH connection to remote host
       ansible.builtin.ping:
       ignore_unreachable: true
       register: initial_pingtest
-      tags:
-      - always
-      - ping-gather
-      - connection-fallback
 
     - ansible.builtin.fail:
       when: initial_pingtest.unreachable is defined or initial_pingtest.failed
 
    rescue:
+
     - name: Handle initial ping failure
       ansible.builtin.debug:
          var: initial_pingtest
@@ -30,164 +32,3 @@
    tags:
     - always
     - ping-gather
-
- - when: ansible_verbosity > 2
-   ansible.builtin.debug:
-      var: ansible_become_method
-   tags:
-    - admin-user-setup
-
- - name: Ensure become is available
-   tags:
-    - admin-user-setup
-   block:
-
-    - name: Test become
-      become: true
-      ansible.builtin.command: id -u
-      register: become_test
-      changed_when: false
-      tags:
-       - admin-user-setup
-
-   rescue:
-
-    - name: Fallback to su become_mode if sudo is not installed
-      ansible.builtin.set_fact:
-         ansible_become_method: ansible.builtin.su
-      tags:
-       - admin-user-setup
-
- - name: Update apt cache
-   # These tasks are from HTSALSWA's "requirements" role:
-   # <https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible/blob/37315ab3/roles/requirements/tasks/main.yml>
-   become: true
-   ansible.builtin.apt:
-      update_cache: true
-      upgrade: false
-   tags:
-    - admin-user-setup
-
- - name: Install sudo
-   become: true
-   ansible.builtin.apt:
-      name: sudo
-   tags:
-    - admin-user-setup
-
- - name: Create security groups
-   become: true
-   ansible.builtin.group:
-      name: "{{ item }}"
-   with_items:
-    - sshusers
-    - suusers
-    - sudousers
-   tags:
-    - admin-user-setup
-
- - name: Create admin user
-   become: true
-   ansible.builtin.user:
-      name: "{{ user_name }}"
-      password: "{{ user_pw | password_hash('sha512') }}"
-      groups: "sshusers, sudousers, suusers"
-      shell: /bin/bash
-   tags:
-    - admin-user-setup
-
- - name: Limit sudo to sudousers groups
-   become: true
-   community.general.sudoers:
-      name: "01-ansible-sudousers"
-      state: present
-      validation: required
-      group: sudousers
-      host: ALL
-      runas: ALL
-      nopassword: false
-      commands: ALL
-   tags:
-    - admin-user-setup
-
- - name: Passwordless sudo for new user
-   become: true
-   community.general.sudoers:
-      name: "50-ansible-{{ user_name }}-nopasswd"
-      state: present
-      validation: required
-      user: "{{ user_name }}"
-      host: ALL
-      runas: ALL
-      nopassword: true
-      commands: ALL
-   tags:
-    - admin-user-setup
-
- - name: Add authorized key for new user
-   become: true
-   ansible.posix.authorized_key:
-      user: "{{ user_name }}"
-      key: "{{ lookup('file', sshpub_location) }}"
-   tags:
-    - admin-user-setup
-
- - when: ansible_verbosity > 2
-   ansible.builtin.debug:
-      var: ansible_become_method
-   tags:
-    - admin-user-setup
-
- - name: Restore original become method
-   when: ansible_become_method is defined and not (ansible_become_method == 'ansible.builtin.sudo')
-   ansible.builtin.set_fact:
-      ansible_become_method: ansible.builtin.sudo
-   tags:
-    - admin-user-setup
-
- - when: ansible_verbosity > 2
-   ansible.builtin.debug:
-      var: ansible_user_to_restore
-   tags:
-    - always
-    - connection-fallback
-
- - when: ansible_user_to_restore is defined
-   tags:
-    - always
-    - connection-fallback
-   block:
-
-    - name: Reauthenticate as normal admin user
-      ansible.builtin.set_fact:
-         ansible_user: "{{ ansible_user_to_restore }}"
-         ansible_ssh_pass: "" # unset password
-
-    - name: Reset connection
-      ansible.builtin.include_tasks: reset_connection.yaml
-
- - when: ansible_verbosity > 1
-   ansible.builtin.debug:
-      msg: |-
-         ansible_user: {{ ansible_user | d('unset') }};
-         remote_user: {{ remote_user | d('unset') }}
-   tags:
-    - always
-    - ping-gather
-    - connection-fallback
-
- - name: Check permissions of su
-   register: sucheck
-   become: true
-   ansible.builtin.command: dpkg-statoverride --list /bin/su
-   changed_when: false
-   tags:
-    - admin-user-setup
-
- - name: Limit who can use su
-   when: "'root suusers 4750 /bin/su' not in sucheck.stdout"
-   become: true
-   ansible.builtin.command: dpkg-statoverride --update --add root suusers 4750 /bin/su
-   changed_when: true
-   tags:
-    - admin-user-setup
