@@ -205,12 +205,19 @@
     - ping-gather
     - connection-fallback
 
+ - name: Check permissions of su
+   register: sucheck
+   become: true
+   ansible.builtin.command: dpkg-statoverride --list /bin/su
+   changed_when: false
+   tags:
+    - admin-user-setup
+
  - name: Limit who can use su
-   register: sustd
+   when: "'root suusers 4750 /bin/su' not in sucheck.stdout"
+   become: true
    ansible.builtin.shell: |
-      sudo dpkg-statoverride --update --add root suusers 4750 /bin/su
-   failed_when:
-    - sustd.rc != 0
-    - '"exist" not in sustd.stderr' # this has to be changed: unsure how to skip the "already exist" error in other languages
+      dpkg-statoverride --update --add root suusers 4750 /bin/su
+   changed_when: true
    tags:
     - admin-user-setup
