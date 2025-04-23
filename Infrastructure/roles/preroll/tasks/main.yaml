@@ -121,23 +121,29 @@
 
  - name: Limit sudo to sudousers groups
    become: true
-   ansible.builtin.lineinfile:
-      path: /etc/sudoers
-      regexp: '^%sudousers'
-      line: '%sudousers   ALL=(ALL:ALL) ALL'
+   community.general.sudoers:
+      name: "01-ansible-sudousers"
+      state: present
+      validation: required
+      group: sudousers
+      host: ALL
+      runas: ALL
+      nopassword: false
+      commands: ALL
    tags:
     - admin-user-setup
 
  - name: Passwordless sudo for new user
    become: true
-   ansible.builtin.lineinfile:
-      path: /etc/sudoers
-      regexp: '^{{ user_name }}'
-      line: '{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
+   community.general.sudoers:
+      name: "50-ansible-{{ user_name }}-nopasswd"
       state: present
-      mode: "0440"
-      create: true
-      validate: 'visudo -cf %s'
+      validation: required
+      user: "{{ user_name }}"
+      host: ALL
+      runas: ALL
+      nopassword: true
+      commands: ALL
    tags:
     - admin-user-setup
 
