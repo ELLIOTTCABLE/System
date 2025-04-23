@@ -1,0 +1,20 @@
+# :vim: set ft=ansible :
+
+ - tags:
+    - always
+    - connection-fallback
+   block:
+
+    - name: Wait for either SSH port (configured or default) to become available
+      ansible.builtin.include_tasks: 1_wait_for_ssh_port.yaml
+
+    - name: "Use known-good port to test for (configured) SSH user: ({{ ansible_user }}@{{ ansible_port }})"
+      ansible.builtin.ping:
+      ignore_unreachable: true
+      ignore_errors: true
+      register: known_port_pingtest
+
+    - when: known_port_pingtest.unreachable is defined or known_port_pingtest.failed
+      ansible.builtin.include_tasks: 5_fallback_to_root_ssh_user.yaml
+
+    - ansible.builtin.meta: clear_host_errors

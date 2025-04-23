@@ -1,0 +1,4 @@
+# :vim: set ft=ansible :
+
+ - name: Try connection fallbacks
+   ansible.builtin.include_tasks: 0_handle_connection_failure.yaml

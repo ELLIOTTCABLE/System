@@ -1,0 +1,28 @@
+# :vim: set ft=ansible :
+
+ - tags:
+    - always
+    - connection-fallback
+   block:
+
+    - name: "Test for (default) SSH port availability w/ netcat (22)"
+      delegate_to: localhost
+      ansible.builtin.command: nc -z -w2 {{ target_host }} 22
+      register: default_port_nctest
+      changed_when: false
+      ignore_errors: true
+
+    - name: Fallback to default SSH port
+      when: not (default_port_nctest.failed)
+      ansible.builtin.include_tasks: 3_fallback_to_default_ssh_port.yaml
+
+   rescue:
+    - when: ssh_port_retry_count|int > 10
+      ansible.builtin.fail:
+         msg: "Giving up after too many retries (attempts: {{ ssh_port_retry_count }})"
+
+    - name: Sleep for 30 seconds before retrying
+      ansible.builtin.pause:
+         seconds: 30
+
+    - ansible.builtin.include_tasks: 1_wait_for_ssh_port.yaml

@@ -1,0 +1,28 @@
+# :vim: set ft=ansible :
+
+ - tags:
+    - always
+    - connection-fallback
+   block:
+
+    - when: ansible_verbosity > 1
+      ansible.builtin.debug:
+         msg: |
+            ansible_port: {{ ansible_port | d('unset') }};
+            ansible_user: {{ ansible_user | d('unset') }};
+            remote_user: {{ remote_user | d('unset') }}
+
+    - name: Save previous SSH port for later restoration
+      ansible.builtin.set_fact:
+         ansible_port_to_restore: "{{ ansible_port }}"
+
+    - name: Fallback to default SSH port
+      ansible.builtin.set_fact:
+         ansible_port: 22
+
+    - when: ansible_verbosity > 1
+      ansible.builtin.debug:
+         msg: |-
+            ansible_port: {{ ansible_port | d('unset') }};
+            ansible_user: {{ ansible_user | d('unset') }};
+            remote_user: {{ remote_user | d('unset') }}

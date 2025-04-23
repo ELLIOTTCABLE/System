@@ -1,61 +1,38 @@
 # :vim: set ft=ansible :
 
- - name: Test SSH connection to remote host
-   ansible.builtin.ping:
-   ignore_unreachable: true
-   ignore_errors: true
-   register: initial_pingtest
-   tags:
-    - always
-    - ping-gather
-
- - ansible.builtin.debug:
-      verbosity: 1
-      var: initial_pingtest
-   tags:
-    - always
-    - ping-gather
-
- - name: Handle connection failure
-   when: initial_pingtest.unreachable is defined or initial_pingtest.failed
-   tags:
-    - always
-    - connection-fallback
-   block:
-
-    - name: Wait for either SSH port (configured or default) to become available
-      ansible.builtin.include_tasks:
-         file: 1_wait_for_ssh_port.yaml
-         apply:
-            tags:
-             - always
-             - connection-fallback
-
-    - name: "Test for (configured) SSH user availability w/ builtin.ping: ({{ ansible_user }}@{{ ansible_port }})"
+ - block:
+    - name: Test SSH connection to remote host
       ansible.builtin.ping:
       ignore_unreachable: true
-      ignore_errors: true
-      register: known_port_pingtest
+      register: initial_pingtest
+      tags:
+      - always
+      - ping-gather
+      - connection-fallback
 
-    - name: Fallback to root SSH user
-      when: known_port_pingtest.unreachable is defined or known_port_pingtest.failed
-      ansible.builtin.include_tasks:
-         file: 3_fallback_to_root_ssh_user.yaml
-         apply:
-            tags:
-             - always
-             - connection-fallback
+    - ansible.builtin.fail:
+      when: initial_pingtest.unreachable is defined or initial_pingtest.failed
 
-    - ansible.builtin.meta: clear_host_errors
+   rescue:
+    - name: Handle initial ping failure
+      ansible.builtin.debug:
+         var: initial_pingtest
+      changed_when: true
+      notify: Try connection fallbacks
+      tags:
+       - always
+       - connection-fallback
 
- - name: Finally gather facts
+    - ansible.builtin.meta: flush_handlers
+
+ - name: Gather facts
    ansible.builtin.setup:
    tags:
     - always
     - ping-gather
 
- - ansible.builtin.debug:
-      verbosity: 2
+ - when: ansible_verbosity > 2
+   ansible.builtin.debug:
       var: ansible_become_method
    tags:
     - admin-user-setup
@@ -155,8 +132,8 @@
    tags:
     - admin-user-setup
 
- - ansible.builtin.debug:
-      verbosity: 2
+ - when: ansible_verbosity > 2
+   ansible.builtin.debug:
       var: ansible_become_method
    tags:
     - admin-user-setup
@@ -168,8 +145,8 @@
    tags:
     - admin-user-setup
 
- - ansible.builtin.debug:
-      verbosity: 2
+ - when: ansible_verbosity > 2
+   ansible.builtin.debug:
       var: ansible_user_to_restore
    tags:
     - always
@@ -187,16 +164,10 @@
          ansible_ssh_pass: "" # unset password
 
     - name: Reset connection
-      ansible.builtin.include_tasks:
-         file: reset_connection.yaml
-         apply:
-            tags:
-             - always
-             - connection-fallback
+      ansible.builtin.include_tasks: reset_connection.yaml
 
- - name: Print 'after' values for user IDs
+ - when: ansible_verbosity > 1
    ansible.builtin.debug:
-      verbosity: 1
       msg: |-
          ansible_user: {{ ansible_user | d('unset') }};
          remote_user: {{ remote_user | d('unset') }}
