@@ -81,7 +81,7 @@
       tags:
        - admin-user-setup
 
- - name: Update apt packages
+ - name: Update apt cache
    # These tasks are from HTSALSWA's "requirements" role:
    # <https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible/blob/37315ab3/roles/requirements/tasks/main.yml>
    become: true
