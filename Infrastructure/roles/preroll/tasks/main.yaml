@@ -187,8 +187,7 @@
  - name: Limit who can use su
    when: "'root suusers 4750 /bin/su' not in sucheck.stdout"
    become: true
-   ansible.builtin.shell: |
-      dpkg-statoverride --update --add root suusers 4750 /bin/su
+   ansible.builtin.command: dpkg-statoverride --update --add root suusers 4750 /bin/su
    changed_when: true
    tags:
     - admin-user-setup
