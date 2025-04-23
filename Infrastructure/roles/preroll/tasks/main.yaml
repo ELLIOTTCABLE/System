@@ -81,64 +81,73 @@
       tags:
        - admin-user-setup
 
- - name: apt update
+ - name: Update apt packages
    # These tasks are from HTSALSWA's "requirements" role:
    # <https://github.com/moltenbit/How-To-Secure-A-Linux-Server-With-Ansible/blob/37315ab3/roles/requirements/tasks/main.yml>
-   apt:
-      update_cache: yes
+   become: true
+   ansible.builtin.apt:
+      update_cache: true
       upgrade: false
+   tags:
+    - admin-user-setup
 
- - name: install sudo via apt
-   apt:
+ - name: Install sudo
+   become: true
+   ansible.builtin.apt:
       name: sudo
+   tags:
+    - admin-user-setup
 
- - name: create group for ssh users
-   group:
-      name: sshusers
+ - name: Create security groups
+   become: true
+   ansible.builtin.group:
+      name: "{{ item }}"
+   with_items:
+    - sshusers
+    - suusers
+    - sudousers
+   tags:
+    - admin-user-setup
 
- - name: create group for su users
-   group:
-      name: suusers
-
- - name: create group for sudo users
-   group:
-      name: sudousers
-
- - name: create new user with password, add to groups
-   user:
+ - name: Create admin user
+   become: true
+   ansible.builtin.user:
       name: "{{ user_name }}"
       password: "{{ user_pw | password_hash('sha512')}}"
       groups: "sshusers, sudousers, suusers"
       shell: /bin/bash
+   tags:
+    - admin-user-setup
 
- - name: limit sudo to sudousers groups
-   lineinfile:
+ - name: Limit sudo to sudousers groups
+   become: true
+   ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^%sudousers'
       line: '%sudousers   ALL=(ALL:ALL) ALL'
+   tags:
+    - admin-user-setup
 
- - name: limit who can use su
-   register: sustd
-   shell: |
-      sudo dpkg-statoverride --update --add root suusers 4750 /bin/su
-   failed_when:
-    - sustd.rc != 0
-    - '"exist" not in sustd.stderr' # this has to be changed: unsure how to skip the "already exist" error in other languages
-
- - name: passwordless sudo for new user
-   lineinfile:
+ - name: Passwordless sudo for new user
+   become: true
+   ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^{{ user_name }}'
       line: '{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
       state: present
-      mode: 0440
-      create: yes
+      mode: "0440"
+      create: true
       validate: 'visudo -cf %s'
+   tags:
+    - admin-user-setup
 
- - name: add authorized keys for new user
-   authorized_key:
+ - name: Add authorized key for new user
+   become: true
+   ansible.posix.authorized_key:
       user: "{{ user_name }}"
       key: "{{ lookup('file', sshpub_location) }}"
+   tags:
+    - admin-user-setup
 
  - ansible.builtin.debug:
       verbosity: 2
@@ -189,3 +198,13 @@
     - always
     - ping-gather
     - connection-fallback
+
+ - name: Limit who can use su
+   register: sustd
+   ansible.builtin.shell: |
+      sudo dpkg-statoverride --update --add root suusers 4750 /bin/su
+   failed_when:
+    - sustd.rc != 0
+    - '"exist" not in sustd.stderr' # this has to be changed: unsure how to skip the "already exist" error in other languages
+   tags:
+    - admin-user-setup
