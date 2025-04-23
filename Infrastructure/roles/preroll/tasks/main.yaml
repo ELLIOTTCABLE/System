@@ -54,6 +54,33 @@
     - always
     - ping-gather
 
+ - ansible.builtin.debug:
+      verbosity: 2
+      var: ansible_become_method
+   tags:
+    - admin-user-setup
+
+ - name: Ensure become is available
+   tags:
+    - admin-user-setup
+   block:
+
+    - name: Test become
+      become: true
+      ansible.builtin.command: id -u
+      register: become_test
+      changed_when: false
+      tags:
+       - admin-user-setup
+
+   rescue:
+
+    - name: Fallback to su become_mode if sudo is not installed
+      ansible.builtin.set_fact:
+         ansible_become_method: ansible.builtin.su
+      tags:
+      - admin-user-setup
+
  - name: Run HTSALSWA 'requirements' role for actual setup
    ansible.builtin.include_tasks:
       file: ../../../Vendor/HTSALSWA/roles/requirements/tasks/main.yml
@@ -61,6 +88,26 @@
          become: true
          tags:
           - admin-user-setup
+
+ - ansible.builtin.debug:
+      verbosity: 2
+      var: ansible_become_method
+   tags:
+    - admin-user-setup
+
+ - name: Restore original become method
+   when: ansible_become_method is defined and not (ansible_become_method == 'ansible.builtin.sudo')
+   ansible.builtin.set_fact:
+      ansible_become_method: ansible.builtin.sudo
+   tags:
+    - admin-user-setup
+
+ - ansible.builtin.debug:
+      verbosity: 2
+      var: ansible_user_to_restore
+   tags:
+    - always
+    - connection-fallback
 
  - when: ansible_user_to_restore is defined
    tags:
