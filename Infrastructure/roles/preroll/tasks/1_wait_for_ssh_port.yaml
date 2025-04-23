@@ -13,11 +13,11 @@
          ssh_port_retry_count: "{{ ((ssh_port_retry_count | default(0)) | int) + 1 }}"
 
     - ansible.builtin.set_fact:
-         main_ipv4_address: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
+         target_host: "{{ ansible_host }}"
 
     - name: "Test for (configured) SSH port availability w/ netcat ({{ ansible_port }})"
       delegate_to: localhost
-      ansible.builtin.command: nc -z -w2 {{ main_ipv4_address }} {{ ansible_port }}
+      ansible.builtin.command: nc -z -w2 {{ target_host }} {{ ansible_port }}
       register: ssh_port_nctest
       changed_when: false
       ignore_errors: true
@@ -31,7 +31,7 @@
 
        - name: "Test for (default) SSH port availability w/ netcat (22)"
          delegate_to: localhost
-         ansible.builtin.command: nc -z -w2 {{ main_ipv4_address }} 22
+         ansible.builtin.command: nc -z -w2 {{ target_host }} 22
          register: default_port_nctest
          changed_when: false
          ignore_errors: true
