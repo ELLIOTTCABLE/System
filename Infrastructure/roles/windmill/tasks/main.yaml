@@ -1,4 +1,4 @@
- # :vim: set ft=ansible :
+# :vim: set ft=ansible :
 
  - name: Check for database variables
    ansible.builtin.fail:

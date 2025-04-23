@@ -1,4 +1,4 @@
-# code: language=ansible
+# :vim: set ft=ansible :
 
  - name: Print user IDs and port before user-fallback
    ansible.builtin.debug:

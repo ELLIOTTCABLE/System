@@ -1,4 +1,4 @@
-# code: language=ansible
+# :vim: set ft=ansible :
 sshpub_location: "{{ lookup('env', 'HOME') }}/.ssh/identities/personal/identity.pub"
 root_pw: "!" # disables root password, same as `passwd -L`
 ssh_port: 58266

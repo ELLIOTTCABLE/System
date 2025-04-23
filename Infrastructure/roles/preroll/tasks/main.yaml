@@ -1,4 +1,4 @@
-# code: language=ansible
+# :vim: set ft=ansible :
 
  - name: Test SSH connection to remote host
    ansible.builtin.ping:
