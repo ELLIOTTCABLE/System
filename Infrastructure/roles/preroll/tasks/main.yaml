@@ -31,7 +31,7 @@
              - always
              - connection-fallback
 
-    - name: "Test for (configured) SSH user availability w/ builtin.ping: ({{ ansible_user }}) on port ({{ ansible_port }})"
+    - name: "Test for (configured) SSH user availability w/ builtin.ping: ({{ ansible_user }}@{{ ansible_port }})"
       ansible.builtin.ping:
       ignore_unreachable: true
       ignore_errors: true
@@ -113,7 +113,7 @@
    become: true
    ansible.builtin.user:
       name: "{{ user_name }}"
-      password: "{{ user_pw | password_hash('sha512')}}"
+      password: "{{ user_pw | password_hash('sha512') }}"
       groups: "sshusers, sudousers, suusers"
       shell: /bin/bash
    tags:
