@@ -112,6 +112,7 @@
       register: sucheck
       become: true
       ansible.builtin.command: dpkg-statoverride --list /bin/su
+      failed_when: false
       changed_when: false
 
     - name: Limit who can use su
