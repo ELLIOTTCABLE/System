@@ -66,3 +66,16 @@
          marker: "# {mark} ANSIBLE MANAGED BLOCK: ICMPv6 ignore rules"
          state: present
       notify: "firewall : restart psad service"
+
+ - name: Flush SSH & firewall handlers
+   ansible.builtin.meta: flush_handlers
+
+ - name: Validate we're not in port-fallback before continuing
+   ansible.builtin.fail:
+      msg: "SSH connection failing to restore. (ansible_user: '{{ ansible_user }}', ansible_port: '{{ ansible_port }}')"
+   when: |
+      (ansible_user is defined and ansible_user == (bootstrap_user | default('root'))) or
+      (ansible_port is defined and ansible_port == 22)
+   tags:
+    - always
+    - connection-fallback
