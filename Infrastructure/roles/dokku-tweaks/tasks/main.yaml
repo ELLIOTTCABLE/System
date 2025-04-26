@@ -46,3 +46,16 @@
       ansible.builtin.command: dokku caddy:set --global letsencrypt-server {{ caddy_letsencrypt_server | quote }}
       changed_when: true
       notify: Restart caddy proxy
+
+ - tags: dokku.git
+   block:
+
+    - name: Check global deploy-branch
+      ansible.builtin.command: dokku git:report --git-global-deploy-branch
+      register: git_global_deploy_branch
+      changed_when: false
+
+    - name: Set global deploy-branch
+      when: git_global_deploy_branch.stdout | trim != 'main'
+      ansible.builtin.command: dokku git:set --global deploy-branch main
+      changed_when: true
