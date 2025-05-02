@@ -3,6 +3,13 @@
 
 # TODO: Add a --zsh flag or similar, to install Sheldon plugins
 
+# more TODOs
+defaults write "com.apple.dock" "persistent-apps" -array && killall Dock
+osascript -e "tell application \"System Events\" to set the autohide of the dock preferences to true"
+
+sudo xcodebuild -license accept
+# TODO: check paths to `brew` and `tmux`
+
 cyan="$(tput setaf 6)"
 reset="$(tput sgr0)"
 
@@ -51,7 +58,7 @@ install_package_manager() {
 install_packages_frontload() {
    if [ -n "$IS_MAC" ]; then
       puts "Installing packages required for the rest of the bootstrap process..."
-      brew bundle --file="$system_repo/Bootstrap/frontload.brewfile"
+      /opt/homebrew/bin/brew bundle --file="$system_repo/Bootstrap/frontload.brewfile"
    else
       puts "NYI: Can't install packages on non-macOS system yet..."
       exit 1
@@ -62,7 +69,7 @@ install_packages_frontload() {
 install_packages_rest() {
    if [ -n "$IS_MAC" ]; then
       puts "Installing other packages..."
-      brew bundle --file="$system_repo/Bootstrap/rest.brewfile"
+      /opt/homebrew/bin/brew bundle --file="$system_repo/Bootstrap/rest.brewfile"
    else
       puts "NYI: Can't install packages on non-macOS system yet..."
       exit 1
@@ -72,7 +79,7 @@ install_packages_rest() {
 # Install runtimes
 install_runtimes() {
    puts "Installing runtimes..."
-   mise install --install-missing
+   mise install
 }
 
 install_system_components() {
@@ -81,6 +88,7 @@ install_system_components() {
       softwareupdate --install-rosetta --agree-to-license
    fi
 }
+
 
 # ---- ---- ----
 # Begin! 🏁
@@ -105,7 +113,7 @@ FIRST_PARAM_WAS_EMPTY)
       puts "Sleeping until \`tmux\` is available..."
 
       until command -v tmux >/dev/null 2>&1; do
-         print '%s' '.'
+         printf '%s' '.'
          sleep 10
       done
    fi

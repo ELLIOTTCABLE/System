@@ -1,8 +1,6 @@
 # vim: set ft=ruby:
 
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "buo/cask-upgrade"
 brew "mas"

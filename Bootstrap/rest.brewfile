@@ -4,8 +4,6 @@
 tap "buo/cask-upgrade"
 tap "felixkratz/formulae"
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "nikitabobko/tap"
 tap "nrlquaker/createzap"
