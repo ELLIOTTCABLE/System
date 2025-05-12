@@ -201,8 +201,8 @@ account.samsung.com, IoT, purple, fence
 *brighthealthplan.com,  Health, yellow, tree
 *cvs.com,  Health, yellow, tree
 *helloklarity.com,  Health, yellow, tree
-*hospital\.uillinois.edu,  Health, yellow, tree
-*membernetprb2c\.b2clogin.com,  Health, yellow, tree
+*hospital.uillinois.edu,  Health, yellow, tree
+*membernetprb2c.b2clogin.com,  Health, yellow, tree
 *nm.org,  Health, yellow, tree
 *providerfinderonline.com,  Health, yellow, tree
 *simplyinsured.com,  Health, yellow, tree
@@ -216,7 +216,7 @@ ell.stackexchange.com, Language, yellow, vacation
 russian.stackexchange.com, Language, yellow, vacation
 *wiktionary.org,  Language, yellow, vacation
 
-@^[\w]+://[^/]+\.gov/, Government, red, vacation
+*.gov, Government, red, vacation
 *ispfsb.com,  Government, red, vacation
 
 *earthclassmail.com,  Postal Mail, orange, vacation
