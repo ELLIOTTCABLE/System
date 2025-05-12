@@ -1,7 +1,7 @@
 // This is for the Containerise FireFox extension, for which I use this fork:,,
 https://github.com/max-dw-i/container-redirect,,,
 
-@^[\w]+://([^/]+\.)?aws\.amazon.com/, Admin, orange, tree
+*aws.amazon.com,  Admin, orange, tree
 www.cloudflare.com, Admin, orange, tree
 dash.cloudflare.com, Admin, orange, tree
 dnsomatic.com, Admin, orange, tree
@@ -19,288 +19,288 @@ dashboard.opendns.com, Admin, orange, tree
 www.vultr.com, Admin, orange, tree
 my.vultr.com, Admin, orange, tree
 
-@^[\w]+://([^/]+\.)?53\.com/, Banking, green, dollar
+*53.com,  Banking, green, dollar
 affiliate-program.amazon.com, Banking, green, dollar
-@^[\w]+://([^/]+\.)?bitstamp\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?blockchain\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?capitalone\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?cash\.app/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?chase\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?citi\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?citicards\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?citizensbank\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?coinbase\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?creditkarma\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?investor360\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?investpps\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?myfico\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?paypal\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?privacy\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?reimastercard\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?rocketaccount\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?rocketmoney\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?squareup\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?stripe\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?synchrony\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?syf\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?mysynchrony\.com/, Banking, green, dollar
+*bitstamp.com,  Banking, green, dollar
+*blockchain.com,  Banking, green, dollar
+*capitalone.com,  Banking, green, dollar
+*cash.app,  Banking, green, dollar
+*chase.com,  Banking, green, dollar
+*citi.com,  Banking, green, dollar
+*citicards.com,  Banking, green, dollar
+*citizensbank.com,  Banking, green, dollar
+*coinbase.com,  Banking, green, dollar
+*creditkarma.com,  Banking, green, dollar
+*investor360.com,  Banking, green, dollar
+*investpps.com,  Banking, green, dollar
+*myfico.com,  Banking, green, dollar
+*paypal.com,  Banking, green, dollar
+*privacy.com,  Banking, green, dollar
+*reimastercard.com,  Banking, green, dollar
+*rocketaccount.com,  Banking, green, dollar
+*rocketmoney.com,  Banking, green, dollar
+*squareup.com,  Banking, green, dollar
+*stripe.com,  Banking, green, dollar
+*synchrony.com,  Banking, green, dollar
+*syf.com,  Banking, green, dollar
+*mysynchrony.com,  Banking, green, dollar
 rcam.target.com, Banking, green, dollar
-@^[\w]+://([^/]+\.)?usaa\.com/, Banking, green, dollar
+*usaa.com,  Banking, green, dollar
 usaaapi.destinationrewards.com, Banking, green, dollar
-@^[\w]+://([^/]+\.)?usbank\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?wise\.com/, Banking, green, dollar
-@^[\w]+://([^/]+\.)?ynab\.com/, Banking, green, dollar
+*usbank.com,  Banking, green, dollar
+*wise.com,  Banking, green, dollar
+*ynab.com,  Banking, green, dollar
 applecardforynab.com, Banking, green, dollar
 
-@^[\w]+://([^/]+\.)?aliexpress\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?bedbathandbeyond\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?bestbuy\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?bhphotovideo\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?campsaver\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?ebay\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?etsy\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?mauijim\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?meundies\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?mybidder\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?newegg\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?rammount\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?randco\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?rei\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?shipt\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?simplehuman\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?sodastream\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?starbucks\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?sweetwater\.com/, Shopping, pink, cart
+*aliexpress.com,  Shopping, pink, cart
+*bedbathandbeyond.com,  Shopping, pink, cart
+*bestbuy.com,  Shopping, pink, cart
+*bhphotovideo.com,  Shopping, pink, cart
+*campsaver.com,  Shopping, pink, cart
+*ebay.com,  Shopping, pink, cart
+*etsy.com,  Shopping, pink, cart
+*mauijim.com,  Shopping, pink, cart
+*meundies.com,  Shopping, pink, cart
+*mybidder.com,  Shopping, pink, cart
+*newegg.com,  Shopping, pink, cart
+*rammount.com,  Shopping, pink, cart
+*randco.com,  Shopping, pink, cart
+*rei.com,  Shopping, pink, cart
+*shipt.com,  Shopping, pink, cart
+*simplehuman.com,  Shopping, pink, cart
+*sodastream.com,  Shopping, pink, cart
+*starbucks.com,  Shopping, pink, cart
+*sweetwater.com,  Shopping, pink, cart
 www.target.com, Shopping, pink, cart
 us-store.msi.com, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?walmart\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?waveform\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?wayfair\.com/, Shopping, pink, cart
-@^[\w]+://([^/]+\.)?wclink\.co/, Shopping, pink, cart
+*walmart.com,  Shopping, pink, cart
+*waveform.com,  Shopping, pink, cart
+*wayfair.com,  Shopping, pink, cart
+*wclink.co,  Shopping, pink, cart
 
-@^[\w]+://([^/]+\.)?doordash\.com/, Food,  green, fruit
-@^[\w]+://([^/]+\.)?grubhub\.com/, Food,  green, fruit
-@^[\w]+://([^/]+\.)?jimmyjohns\.com/, Food,  green, fruit
-@^[\w]+://([^/]+\.)?noodles\.com/, Food,  green, fruit
-@^[\w]+://([^/]+\.)?postmates\.com/, Food,  green, fruit
-@^[\w]+://([^/]+\.)?potbelly\.com/, Food,  green, fruit
+*doordash.com,  Food,  green, fruit
+*grubhub.com,  Food,  green, fruit
+*jimmyjohns.com,  Food,  green, fruit
+*noodles.com,  Food,  green, fruit
+*postmates.com,  Food,  green, fruit
+*potbelly.com,  Food,  green, fruit
 
-@^[\w]+://([^/]+\.)?beehaw\.org/, Social, purple, chill
-@^[\w]+://([^/]+\.)?beeper\.com/, Social, purple, chill
-@^[\w]+://([^/]+\.)?irccloud\.com/, Social, purple, chill
-@^[\w]+://([^/]+\.)?last\.fm/, Social, purple, chill
-@^[\w]+://([^/]+\.)?matrix\.to/, Social, purple, chill
-@^[\w]+://([^/]+\.)?element\.io/, Social, purple, chill
-@^[\w]+://([^/]+\.)?snapchat\.com/, Social, purple, chill
-@^[\w]+://([^/]+\.)?tiktok\.com/, Social, purple, chill
+*beehaw.org,  Social, purple, chill
+*beeper.com,  Social, purple, chill
+*irccloud.com,  Social, purple, chill
+*last.fm,  Social, purple, chill
+*matrix.to,  Social, purple, chill
+*element.io,  Social, purple, chill
+*snapchat.com,  Social, purple, chill
+*tiktok.com,  Social, purple, chill
 news.ycombinator.com, Social, purple, chill
 
-@^[\w]+://([^/]+\.)?mastodon\.social/, Social, purple, chill
-@^[\w]+://([^/]+\.)?functional\.cafe/, Social, purple, chill
-@^[\w]+://([^/]+\.)?kolektiva\.social/, Social, purple, chill
-@^[\w]+://([^/]+\.)?social\.treehouse.systems/, Social, purple, chill
-@^[\w]+://([^/]+\.)?types\.pl/, Social, purple, chill
+*mastodon.social,  Social, purple, chill
+*functional.cafe,  Social, purple, chill
+*kolektiva.social,  Social, purple, chill
+*social.treehouse.systems,  Social, purple, chill
+*types.pl,  Social, purple, chill
 
-@^[\w]+://([^/]+\.)?asciinema\.org/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?atlassian\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?bitbucket\.org/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?codeship\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?codeship\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?cursor\.sh/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?git-tower\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?gitkraken\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?gitlab\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?gitpod\.io/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?gitter\.im/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?heroku\.com/, Code, turquoise, dollar
+*asciinema.org,  Code, turquoise, dollar
+*atlassian.com,  Code, turquoise, dollar
+*bitbucket.org,  Code, turquoise, dollar
+*codeship.com,  Code, turquoise, dollar
+*codeship.com,  Code, turquoise, dollar
+*cursor.sh,  Code, turquoise, dollar
+*git-tower.com,  Code, turquoise, dollar
+*gitkraken.com,  Code, turquoise, dollar
+*gitlab.com,  Code, turquoise, dollar
+*gitpod.io,  Code, turquoise, dollar
+*gitter.im,  Code, turquoise, dollar
+*heroku.com,  Code, turquoise, dollar
 bugzilla.mozilla.org, Code, turquoise, dollar
 developer.mozilla.org, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?neon\.tech/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?npmjs\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?npms\.io/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?ocaml\.org/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?octotree\.io/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?pipedream\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?rescript-lang\.org/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?semgrep\.dev/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?sentry\.io/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?software\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?sourceforge\.net/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?supabase\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?tabnine\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?wakatime\.com/, Code, turquoise, dollar
+*neon.tech,  Code, turquoise, dollar
+*npmjs.com,  Code, turquoise, dollar
+*npms.io,  Code, turquoise, dollar
+*ocaml.org,  Code, turquoise, dollar
+*octotree.io,  Code, turquoise, dollar
+*pipedream.com,  Code, turquoise, dollar
+*rescript-lang.org,  Code, turquoise, dollar
+*semgrep.dev,  Code, turquoise, dollar
+*sentry.io,  Code, turquoise, dollar
+*software.com,  Code, turquoise, dollar
+*sourceforge.net,  Code, turquoise, dollar
+*supabase.com,  Code, turquoise, dollar
+*tabnine.com,  Code, turquoise, dollar
+*wakatime.com,  Code, turquoise, dollar
 www.windmill.dev, Code, turquoise, dollar
 
 stackexchange.com, Code, turquoise, dollar
 apple.stackexchange.com, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?askubuntu\.com/, Code, turquoise, dollar
+*askubuntu.com,  Code, turquoise, dollar
 codereview.stackexchange.com, Code, turquoise, dollar
 crypto.stackexchange.com, Code, turquoise, dollar
 hardwarerecs.stackexchange.com, Code, turquoise, dollar
 meta.stackexchange.com, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?serverfault\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?stackoverflow\.com/, Code, turquoise, dollar
-@^[\w]+://([^/]+\.)?superuser\.com/, Code, turquoise, dollar
+*serverfault.com,  Code, turquoise, dollar
+*stackoverflow.com,  Code, turquoise, dollar
+*superuser.com,  Code, turquoise, dollar
 tex.stackexchange.com, Code, turquoise, dollar
 unix.stackexchange.com, Code, turquoise, dollar
 vi.stackexchange.com, Code, turquoise, dollar
 webapps.stackexchange.com, Code, turquoise, dollar
 webmasters.stackexchange.com, Code, turquoise, dollar
 
-@^[\w]+://([^/]+\.)?amplitude-studios\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?games2gether\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?arena\.net/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?battle\.net/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?blizzard\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?ea\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?epicgames\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?eveonline\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?eveskillboard\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?fanatical\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?gamebillet\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?gamepedia\.com/, Gaming, red, pet
+*amplitude-studios.com,  Gaming, red, pet
+*games2gether.com,  Gaming, red, pet
+*arena.net,  Gaming, red, pet
+*battle.net,  Gaming, red, pet
+*blizzard.com,  Gaming, red, pet
+*ea.com,  Gaming, red, pet
+*epicgames.com,  Gaming, red, pet
+*eveonline.com,  Gaming, red, pet
+*eveskillboard.com,  Gaming, red, pet
+*fanatical.com,  Gaming, red, pet
+*gamebillet.com,  Gaming, red, pet
+*gamepedia.com,  Gaming, red, pet
 gaming.stackexchange.com, Gaming, red, pet
-@^[\w]+://([^/]+\.)?gearboxsoftware\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?gog\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?greenmangaming\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?humblebundle\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?isthereanydeal\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?itch\.io/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?klei\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?kleientertainment\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?nintendo\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?paradoxplaza\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?playstation\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?account\.sony.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?steamcommunity\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?steampowered\.com/, Gaming, red, pet
-@^[\w]+://([^/]+\.)?ubisoft\.com/, Gaming, red, pet
+*gearboxsoftware.com,  Gaming, red, pet
+*gog.com,  Gaming, red, pet
+*greenmangaming.com,  Gaming, red, pet
+*humblebundle.com,  Gaming, red, pet
+*isthereanydeal.com,  Gaming, red, pet
+*itch.io,  Gaming, red, pet
+*klei.com,  Gaming, red, pet
+*kleientertainment.com,  Gaming, red, pet
+*nintendo.com,  Gaming, red, pet
+*paradoxplaza.com,  Gaming, red, pet
+*playstation.com,  Gaming, red, pet
+*account.sony.com,  Gaming, red, pet
+*steamcommunity.com,  Gaming, red, pet
+*steampowered.com,  Gaming, red, pet
+*ubisoft.com,  Gaming, red, pet
 
-@^[\w]+://([^/]+\.)?curiositystream\.com/, Video, red, chill
-@^[\w]+://([^/]+\.)?disneyplus\.com/, Video, red, chill
-@^[\w]+://([^/]+\.)?hulu\.com/, Video, red, chill
-@^[\w]+://([^/]+\.)?max\.com/, Video, red, chill
-@^[\w]+://([^/]+\.)?nebula\.tv/, Video, red, chill
-@^[\w]+://([^/]+\.)?netflix\.com/, Video, red, chill
-@^[\w]+://([^/]+\.)?peacocktv\.com/, Video, red, chill
+*curiositystream.com,  Video, red, chill
+*disneyplus.com,  Video, red, chill
+*hulu.com,  Video, red, chill
+*max.com,  Video, red, chill
+*nebula.tv,  Video, red, chill
+*netflix.com,  Video, red, chill
+*peacocktv.com,  Video, red, chill
 
 account.samsung.com, IoT, purple, fence
-@^[\w]+://([^/]+\.)?smartthings\.com/, IoT, purple, fence
+*smartthings.com,  IoT, purple, fence
 
-@^[\w]+://([^/]+\.)?redfin\.com/, Real-estate, purple, fence
-@^[\w]+://([^/]+\.)?zillow\.com/, Real-estate, purple, fence
+*redfin.com,  Real-estate, purple, fence
+*zillow.com,  Real-estate, purple, fence
 
-@^[\w]+://([^/]+\.)?functionaljobs\.com/, Job-Hunt, red, dollar
-@^[\w]+://([^/]+\.)?glassdoor\.com/, Job-Hunt, red, dollar
-@^[\w]+://([^/]+\.)?greenhouse\.io/, Job-Hunt, red, dollar
-@^[\w]+://([^/]+\.)?linkedin\.com/, Job-Hunt, red, dollar
-@^[\w]+://([^/]+\.)?weworkremotely\.com/, Job-Hunt, red, dollar
+*functionaljobs.com,  Job-Hunt, red, dollar
+*glassdoor.com,  Job-Hunt, red, dollar
+*greenhouse.io,  Job-Hunt, red, dollar
+*linkedin.com,  Job-Hunt, red, dollar
+*weworkremotely.com,  Job-Hunt, red, dollar
 
-@^[\w]+://([^/]+\.)?bcbsil\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?brighthealthcare\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?brighthealthplan\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?cvs\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?helloklarity\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?hospital\.uillinois\.edu/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?membernetprb2c\.b2clogin\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?nm\.org/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?providerfinderonline\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?simplyinsured\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?walgreens\.com/, Health, yellow, tree
-@^[\w]+://([^/]+\.)?withings\.com/, Health, yellow, tree
+*bcbsil.com,  Health, yellow, tree
+*brighthealthcare.com,  Health, yellow, tree
+*brighthealthplan.com,  Health, yellow, tree
+*cvs.com,  Health, yellow, tree
+*helloklarity.com,  Health, yellow, tree
+*hospital\.uillinois.edu,  Health, yellow, tree
+*membernetprb2c\.b2clogin.com,  Health, yellow, tree
+*nm.org,  Health, yellow, tree
+*providerfinderonline.com,  Health, yellow, tree
+*simplyinsured.com,  Health, yellow, tree
+*walgreens.com,  Health, yellow, tree
+*withings.com,  Health, yellow, tree
 
-@^[\w]+://([^/]+\.)?ankiweb\.net/, Language, yellow, vacation
-@^[\w]+://([^/]+\.)?forvo\.com/, Language, yellow, vacation
-@^[\w]+://([^/]+\.)?rocketlanguages\.com/, Language, yellow, vacation
+*ankiweb.net,  Language, yellow, vacation
+*forvo.com,  Language, yellow, vacation
+*rocketlanguages.com,  Language, yellow, vacation
 ell.stackexchange.com, Language, yellow, vacation
 russian.stackexchange.com, Language, yellow, vacation
-@^[\w]+://([^/]+\.)?wiktionary\.org/, Language, yellow, vacation
+*wiktionary.org,  Language, yellow, vacation
 
 @^[\w]+://[^/]+\.gov/, Government, red, vacation
-@^[\w]+://([^/]+\.)?ispfsb\.com/, Government, red, vacation
+*ispfsb.com,  Government, red, vacation
 
-@^[\w]+://([^/]+\.)?earthclassmail\.com/, Postal Mail, orange, vacation
-@^[\w]+://([^/]+\.)?shoeboxed\.com/, Postal Mail, orange, vacation
-@^[\w]+://([^/]+\.)?usps\.com/, Postal Mail, orange, vacation
+*earthclassmail.com,  Postal Mail, orange, vacation
+*shoeboxed.com,  Postal Mail, orange, vacation
+*usps.com,  Postal Mail, orange, vacation
 
-@^[\w]+://([^/]+\.)?airbnb\.com/, Travel, orange, vacation
-@^[\w]+://([^/]+\.)?alaskaair\.com/, Travel, orange, vacation
-@^[\w]+://([^/]+\.)?expedia\.com/, Travel, orange, vacation
-@^[\w]+://([^/]+\.)?gaiagps\.com/, Travel, orange, vacation
-@^[\w]+://([^/]+\.)?momondo\.com/, Travel, orange, vacation
-@^[\w]+://([^/]+\.)?southwest\.com/, Travel, orange, vacation
+*airbnb.com,  Travel, orange, vacation
+*alaskaair.com,  Travel, orange, vacation
+*expedia.com,  Travel, orange, vacation
+*gaiagps.com,  Travel, orange, vacation
+*momondo.com,  Travel, orange, vacation
+*southwest.com,  Travel, orange, vacation
 
 okcupid.com, Personal, blue, fingerprint
 
-@^[\w]+://([^/]+\.)?1password\.com/, 1Password.com, blue, fence
-@^[\w]+://([^/]+\.)?1password\.community/, 1Password.com, blue, fence
+*1password.com,  1Password.com, blue, fence
+*1password.community,  1Password.com, blue, fence
 
-@^[\w]+://([^/]+\.)?backblaze\.com/, Backblaze.com, red, fence
+*backblaze.com,  Backblaze.com, red, fence
 
-@^[\w]+://([^/]+\.)?rescuetime\.com/, RescueTime.com, red, briefcase
+*rescuetime.com,  RescueTime.com, red, briefcase
 
-@^[\w]+://([^/]+\.)?verizon\.com/, Verizon.com, red, vacation
-@^[\w]+://([^/]+\.)?verizonwireless\.com/, Verizon.com, red, vacation
-@^[\w]+://([^/]+\.)?govzw\.com/, Verizon.com, red, vacation
-@^[\w]+://([^/]+\.)?vzw\.com/, Verizon.com, red, vacation
+*verizon.com,  Verizon.com, red, vacation
+*verizonwireless.com,  Verizon.com, red, vacation
+*govzw.com,  Verizon.com, red, vacation
+*vzw.com,  Verizon.com, red, vacation
 
-@^[\w]+://([^/]+\.)?arcane\.bot/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?astro-bot\.space/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?discord\.com/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?dyno\.gg/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?streamcord\.io/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?top\.gg/, Discord.com, purple, chill
-@^[\w]+://([^/]+\.)?tweetshift\.com/, Discord.com, purple, chill
+*arcane.bot,  Discord.com, purple, chill
+*astro-bot.space,  Discord.com, purple, chill
+*discord.com,  Discord.com, purple, chill
+*dyno.gg,  Discord.com, purple, chill
+*streamcord.io,  Discord.com, purple, chill
+*top.gg,  Discord.com, purple, chill
+*tweetshift.com,  Discord.com, purple, chill
 
-@^[\w]+://([^/]+\.)?pretzel\.rocks/, Twitch.tv, purple, chill
-@^[\w]+://([^/]+\.)?rimworld\.live/, Twitch.tv, purple, chill
-@^[\w]+://([^/]+\.)?streamlabs\.com/, Twitch.tv, purple, chill
-@^[\w]+://([^/]+\.)?twitch\.tv/, Twitch.tv, purple, chill
+*pretzel.rocks,  Twitch.tv, purple, chill
+*rimworld.live,  Twitch.tv, purple, chill
+*streamlabs.com,  Twitch.tv, purple, chill
+*twitch.tv,  Twitch.tv, purple, chill
 
-@^[\w]+://([^/]+\.)?reddit\.com/, Reddit.com, purple, chill
-@^[\w]+://([^/]+\.)?redd\.it/, Reddit.com, purple, chill
+*reddit.com,  Reddit.com, purple, chill
+*redd.it,  Reddit.com, purple, chill
 
-@^[\w]+://([^/]+\.)?buffer\.com/, Twitter.com, purple, chill
+*buffer.com,  Twitter.com, purple, chill
 fedifinder.glitch.me, Twitter.com, purple, chill
-@^[\w]+://([^/]+\.)?x\.com/, Twitter.com, purple, chill
-@^[\w]+://([^/]+\.)?twitter\.com/, Twitter.com, purple, chill
-@^[\w]+://([^/]+\.)?t\.co/, Twitter.com, purple, chill
+*x.com,  Twitter.com, purple, chill
+*twitter.com,  Twitter.com, purple, chill
+*t.co,  Twitter.com, purple, chill
 nitter.poast.org, Twitter.com, purple, chill
 
 www.amazon.com, Amazon.com, pink, cart
 gaming.amazon.com, Amazon.com, pink, cart
 health.amazon.com, Amazon.com, pink, cart
-@^[\w]+://([^/]+\.)?audible\.com/, Amazon.com, pink, cart
-@^[\w]+://([^/]+\.)?keepa\.com/, Amazon.com, pink, cart
+*audible.com,  Amazon.com, pink, cart
+*keepa.com,  Amazon.com, pink, cart
 
-@^[\w]+://([^/]+\.)?tesla\.com/, Tesla.com, red, vacation
+*tesla.com,  Tesla.com, red, vacation
 
-@^[\w]+://([^/]+\.)?live\.com/, Microsoft.com, blue, dollar
-@^[\w]+://([^/]+\.)?microsoft\.com/, Microsoft.com, blue, dollar
-@^[\w]+://([^/]+\.)?microsoftonline\.com/, Microsoft.com, blue, dollar
-@^[\w]+://([^/]+\.)?minecraft\.net/, Microsoft.com, blue, dollar
+*live.com,  Microsoft.com, blue, dollar
+*microsoft.com,  Microsoft.com, blue, dollar
+*microsoftonline.com,  Microsoft.com, blue, dollar
+*minecraft.net,  Microsoft.com, blue, dollar
 
-@^[\w]+://([^/]+\.)?apple\.com/, Apple.com, red, fruit
-@^[\w]+://([^/]+\.)?icloud\.com/, Apple.com, red, fruit
+*apple.com,  Apple.com, red, fruit
+*icloud.com,  Apple.com, red, fruit
 
-@^[\w]+://([^/]+\.)?google\.com/, Google.com, red, briefcase
-@^[\w]+://([^/]+\.)?youtube\.com/, Google.com, red, briefcase
-@^[\w]+://([^/]+\.)?docusign\.com/, Google.com, red, briefcase
-@^[\w]+://([^/]+\.)?everytimezone\.com/, Google.com, red, briefcase
+*google.com,  Google.com, red, briefcase
+*youtube.com,  Google.com, red, briefcase
+*docusign.com,  Google.com, red, briefcase
+*everytimezone.com,  Google.com, red, briefcase
 
 github.com, GitHub.com, turquoise, dollar
-@^[\w]+://([^/]+\.)?github\.community/, GitHub.com, turquoise, dollar
+*github.community,  GitHub.com, turquoise, dollar
 vscode-auth.github.com, GitHub.com, turquoise, dollar
-@^[\w]+://([^/]+\.)?vscode\.dev/, GitHub.com, turquoise, dollar
+*vscode.dev,  GitHub.com, turquoise, dollar
 
-@^[\w]+://([^/]+\.)?pronoundb\.org/, GitHub.com, turquoise, dollar
+*pronoundb.org,  GitHub.com, turquoise, dollar
 app.windmill.dev, GitHub.com, turquoise, dollar
 hub.windmill.dev, GitHub.com, turquoise, dollar
 
-@^[\w]+://([^/]+\.)?proton\.me/, Proton.me , turquoise , fingerprint
-@^[\w]+://([^/]+\.)?protonmail\.com/, Proton.me , turquoise , fingerprint
-@^[\w]+://([^/]+\.)?protonvpn\.com/, Proton.me , turquoise , fingerprint
+*proton.me,  Proton.me , turquoise , fingerprint
+*protonmail.com,  Proton.me , turquoise , fingerprint
+*protonvpn.com,  Proton.me , turquoise , fingerprint
 
-@^[\w]+://([^/]+\.)?zapier\.com/, Zapier.com, turquoise, gift
+*zapier.com,  Zapier.com, turquoise, gift
 
-@^[\w]+://([^/]+\.)?nice\.try/, Porn, pink, vacation
+*nice.try,  Porn, pink, vacation
