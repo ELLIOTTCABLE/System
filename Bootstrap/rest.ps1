@@ -25,6 +25,7 @@ winget install -e --id OpenWhisperSystems.Signal
 winget install -e --id Philips.HueSync
 winget install -e --id PrismLauncher.PrismLauncher
 winget install -e --id RARLab.WinRAR
+winget install -e --id REALiX.HWiNFO
 winget install -e --id SatisfactoryModding.SatisfactoryModManager
 winget install -e --id SlackTechnologies.Slack
 winget install -e --id VB-Audio.Voicemeeter.Banana
