@@ -54,6 +54,7 @@
    roles:
     - dokku-tweaks
     - elliottcable-name
+    - ell-io-redirector
 
  - name: Setup gaming servers
    hosts: berit.ell.io

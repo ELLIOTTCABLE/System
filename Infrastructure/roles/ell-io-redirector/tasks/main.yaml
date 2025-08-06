@@ -1,0 +1,51 @@
+# :vim: set ft=ansible :
+
+ - tags: redirector
+   block:
+    - name: Create redirect app
+      dokku_app:
+         app: ell.io-redirector
+
+    - name: Set domain for redirect app
+      dokku_domains:
+         app: ell.io-redirector
+         domains: ell.io
+         state: set
+
+    - name: Create temporary build directory
+      ansible.builtin.tempfile:
+         state: directory
+         suffix: redirect-build
+      register: build_dir
+
+    - name: Copy Dockerfile and Caddyfile to build directory
+      ansible.builtin.copy:
+         src: "{{ item }}"
+         dest: "{{ build_dir.path }}/{{ item }}"
+         mode: '0644'
+      loop:
+       - Dockerfile
+       - Caddyfile
+
+    - name: Build and deploy redirect container
+      ansible.builtin.shell: |
+         cd {{ build_dir.path }}
+         tar -czf - . | dokku git:from-archive ell.io-redirector --
+      register: deploy_result
+      changed_when: "'application deployed:' in deploy_result.stdout.lower()"
+      failed_when: deploy_result.rc != 0 and
+                     ('no changes detected, skipping git commit' not in deploy_result.stderr.lower())
+
+    - name: Configure caddy-docker-proxy labels for ell.io
+      dokku_docker_options:
+         app: ell.io-redirector
+         phase: deploy
+         option: >-
+            --label=caddy='ell.io' --label=caddy.reverse_proxy={%raw%}'/* {{upstreams http 8000}}'{%endraw%}
+         state: present
+      notify: "dokku-tweaks : Restart caddy proxy"
+
+    - name: Clean up build directory
+      ansible.builtin.file:
+         path: "{{ build_dir.path }}"
+         state: absent

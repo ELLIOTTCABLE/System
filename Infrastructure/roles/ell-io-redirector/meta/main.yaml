@@ -1,0 +1,6 @@
+# :vim: set ft=ansible :
+
+dependencies:
+ - name: dokku_bot.ansible_dokku
+   become: true
+ - dokku-tweaks

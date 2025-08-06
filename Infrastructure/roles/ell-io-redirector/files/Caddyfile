@@ -1,0 +1,17 @@
+:80 {
+   @github path_regexp github ^/tt\$(.+)$
+   redir @github https://github.com/ELLIOTTCABLE/{re.github.1} 301
+
+   @droplr path_regexp droplr ^/i(.+)$
+   redir @droplr https://i.ell.io/{re.droplr.1} 301
+
+   @elliottcable_name path_regexp elliottcable_name ^/tt/(.*)$
+   redir @elliottcable_name https://elliottcable.name/{re.elliottcable_name.1} 301
+
+   # Simple redirects
+   redir /tt https://elliottcable.name 301
+
+   # Fallbacks
+   respond /health "OK" 200
+   respond "huh?" 404
+}
