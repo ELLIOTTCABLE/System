@@ -144,6 +144,7 @@
 
    "editor.codeLensFontFamily": "'Input Nerd Font', Arial",
    "editor.inlayHints.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
+   "editor.inlayHints.fontSize": 10,
    "editor.inlineSuggest.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
    "errorLens.fontFamily": "'Monaspace Krypton Var', 'Symbols Nerd Font', Arial",
 
@@ -175,6 +176,15 @@
    "editor.inlayHints.enabled": "onUnlessPressed",
 
    "editor.guides.bracketPairs": "active",
+
+   // ### Indentation appearance
+   "editor.renderWhitespace": "none",
+   "workbench.colorCustomizations": {
+      "[*Light*][*Bright*]": {
+         "editorWhitespace.foreground": "#00000019"
+      },
+      "editorWhitespace.foreground": "#FFFFFF19"
+   },
 
    // ### Indentation appearance
    "editor.guides.indentation": false,
