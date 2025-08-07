@@ -1,5 +1,15 @@
 # :vim: set ft=ansible :
 
+ - tags: dokku.user
+   block:
+
+    - name: Ensure dokku user is in sshusers group
+      become: true
+      ansible.builtin.user:
+         name: dokku
+         groups: sshusers
+         append: true
+
  - tags: dokku.proxy
    block:
 
