@@ -1,0 +1,24 @@
+{
+   "servers": {
+      "perplexity": {
+         "command": "npx",
+         "args": ["-y", "perplexity-mcp"],
+         "env": {
+            "PERPLEXITY_API_KEY": "${input:perplexityApiKey}"
+         },
+         "type": "stdio"
+      },
+      "Grep": {
+         "url": "https://mcp.grep.app",
+         "type": "http"
+      }
+   },
+   "inputs": [
+      {
+         "type": "promptString",
+         "id": "perplexityApiKey",
+         "description": "Sonar API Key",
+         "password": true
+      }
+   ]
+}
