@@ -9,6 +9,7 @@ brew "whalebrew"
 cask "little-snitch"
 cask "karabiner-elements"
 cask "1password@beta"
+cask "notion"
 cask "firefox"
 
 brew "git"
