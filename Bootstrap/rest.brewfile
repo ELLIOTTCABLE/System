@@ -223,6 +223,7 @@ cask "swiftdefaultappsprefpane"
 cask "syncthing" # in "essentials", above
 cask "timing" # in "essentials", above
 cask "tower"
+cask "transmit"
 cask "visual-studio-code" # in "essentials", above
 cask "visual-studio-code@insiders"
 cask "vlc"
@@ -270,7 +271,6 @@ mas "Synalyze It!", id: 417074533
 mas "The Archive Browser", id: 510232205
 mas "The Unarchiver", id: 425424353
 mas "Things", id: 904280696
-mas "Transmit", id: 1436522307
 mas "Tunes Notifier", id: 555731861
 mas "VBAN Receptor", id: 1462414931
 mas "VBAN Talkie Cherry", id: 1553486090
