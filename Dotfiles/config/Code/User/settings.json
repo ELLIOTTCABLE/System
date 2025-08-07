@@ -596,14 +596,12 @@
 
    // ### SQL formatting
    "[sql]": {
-      "editor.defaultFormatter": "mtxr.sqltools"
+      "editor.defaultFormatter": "dorzey.vscode-sqlfluff"
    },
 
    // ### YAML formatting
    "[yaml][ansible]": {
-      "editor.defaultFormatter": "bluebrown.yamlfmt",
-      "editor.tabSize": 4,
-      "editor.indentSize": 2 // Configured to be 4 in yamlfmt, but yaml lists behave strangely.
+      "editor.defaultFormatter": "bluebrown.yamlfmt"
    },
 
    // Language-specific functionality
