@@ -24,7 +24,6 @@
    "editor.wordWrapColumn": 120,
    "editor.rulers": [72, 80, 100, 120],
    "editor.copyWithSyntaxHighlighting": false,
-   "editor.suggest.shareSuggestSelections": true,
 
    "files.autoSave": "onFocusChange",
    "files.insertFinalNewline": true,
@@ -50,8 +49,6 @@
    "editor.minimap.side": "left",
 
    "workbench.hover.delay": 100,
-
-   "window.customTitleBarVisibility": "never",
    "window.titleBarStyle": "native",
 
    "custom-ui-style.electron": {
@@ -110,6 +107,7 @@
    "workbench.tree.enableStickyScroll": true,
    "explorer.sortOrder": "modified",
    "explorer.decorations.colors": false,
+   "explorer.fileNesting.enabled": true,
 
    "workbench.iconTheme": "vscode-icons",
    "vsicons.dontShowNewVersionMessage": true,
@@ -172,7 +170,6 @@
    // ### Misc. editor appearance
    "editor.codeLens": true,
    "editor.unicodeHighlight.invisibleCharacters": false,
-   "editor.inlineSuggest.enabled": true,
    "editor.inlayHints.enabled": "onUnlessPressed",
 
    "editor.guides.bracketPairs": "active",
@@ -186,7 +183,6 @@
       "editorWhitespace.foreground": "#FFFFFF19"
    },
 
-   // ### Indentation appearance
    "editor.guides.indentation": false,
    "indentRainbow.colorOnWhiteSpaceOnly": true,
 
@@ -242,8 +238,6 @@
    "terminal.integrated.gpuAcceleration": "on",
    "terminal.integrated.enableImages": true,
    "terminal.integrated.experimental.windowsUseConptyDll": true,
-
-   "terminal.integrated.suggest.enabled": true,
 
    // ### Git & SCM appearance
    "git.alwaysShowStagedChangesResourceGroup": true,
@@ -432,6 +426,11 @@
       "**/yarn.lock": true
    },
 
+   // ### Core editor functionality
+   "editor.experimental.treeSitterTelemetry": true,
+   "editor.experimental.preferTreeSitter.css": true,
+   "editor.experimental.preferTreeSitter.regex": true,
+
    // ### Terminal & debugger functionality
    "terminal.integrated.shellIntegration.enabled": true,
    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
@@ -442,8 +441,6 @@
    "terminal.integrated.scrollback": 100000,
    "terminal.integrated.confirmOnExit": "hasChildProcesses",
    "terminal.integrated.showExitAlert": false,
-
-   "terminal.integrated.suggest.runOnEnter": "exactMatchIgnoreExtension",
 
    "terminal.integrated.profiles.windows": {
       "PowerShell": {
@@ -471,6 +468,7 @@
    "search.smartCase": true,
    "search.useGlobalIgnoreFiles": true,
    "search.searchEditor.reusePriorSearchConfiguration": true,
+   "search.searchView.semanticSearchBehavior": "auto",
 
    // ### Vim functionality
    "vim.joinspaces": false,
@@ -493,6 +491,7 @@
    "gitlens.currentLine.enabled": false,
    "gitlens.currentLine.pullRequests.enabled": false,
    "gitlens.codeLens.authors.command": "gitlens.showQuickCommitDetails",
+   "git.openRepositoryInParentFolders": "always",
 
    "gitlens.advanced.messages": {
       "suppressLineUncommittedWarning": true
@@ -509,22 +508,8 @@
    "githubPullRequests.pullBranch": "never",
    "githubPullRequests.terminalLinksHandler": "vscode",
 
-   // ### AI & Copilot functionality
-   "github.copilot.enable": {
-      "*": false,
-      "plaintext": true,
-      "markdown": true,
-      "scminput": false,
-      "yaml": true
-   },
-   "github.copilot-labs.showTestGenerationLenses": true,
-
    // ### Leetcode functionality
    "leetcode.defaultLanguage": "javascript",
-
-   // ### TabNine functionality
-   "tabnine.experimentalAutoImports": true,
-   "tabnine.receiveBetaChannelUpdates": true,
 
    // ### Live Share functionality
    "liveshare.guestApprovalRequired": true,
@@ -539,6 +524,65 @@
 
    // ### Remote / SSH functionality
    "remote.SSH.path": "/Users/ec/.bin/ssh",
+
+   // AI & ML models
+   // ==============
+   "editor.aiStats.enabled": true,
+
+   "githubPullRequests.experimental.useQuickChat": true,
+
+   // ### Chat interface
+   "chat.detectParticipant.enabled": true,
+   "chat.todoListTool.enabled": true,
+   "chat.math.enabled": true,
+
+   "github.copilot.chat.editor.temporalContext.enabled": true,
+   "github.copilot.chat.edits.temporalContext.enabled": true,
+   "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+   "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+   "github.copilot.chat.languageContext.typescript.enabled": true,
+
+   "chat.agent.enabled": true,
+   "chat.agent.maxRequests": 50,
+   "github.copilot.chat.agent.thinkingTool": true,
+
+   // "chat.tools.autoApprove": true,
+   "chat.tools.terminal.autoApprove": {
+      // Always allow
+      "cargo build": true,
+      "cargo run": true,
+      "cargo test": true,
+
+      // Always deny
+      "rm": false,
+      "rmdir": false,
+      "del": false,
+      "kill": false,
+      "curl": false,
+      "wget": false,
+      "eval": false,
+      "chmod": false,
+      "chown": false,
+      "/^Remove-Item\\b/i": false
+   },
+
+   // ### Inline suggestions
+   "github.copilot.enable": {
+      "*": true,
+      "plaintext": true,
+      "markdown": true,
+      "scminput": false,
+      "yaml": true
+   },
+   "editor.inlineSuggest.enabled": true,
+   "editor.suggestSelection": "recentlyUsedByPrefix",
+   "editor.suggest.shareSuggestSelections": true,
+   "editor.inlineSuggest.edits.showCollapsed": true,
+
+   // ### Terminal suggestions
+   "terminal.integrated.suggest.runOnEnter": "exactMatchIgnoreExtension",
+   "terminal.integrated.suggest.enabled": true,
+   "terminal.integrated.suggest.inlineSuggestion": "alwaysOnTopExceptExactMatch",
 
    // Formatting
    // ==========
@@ -578,6 +622,11 @@
 
    "htmlhint.options": { "doctype-first": false },
 
+   // ### Markdown formatting
+   "[markdown]": {
+      "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+   },
+
    // ### OCaml formatting
    "[ocaml]": {
       "editor.defaultFormatter": "ocamllabs.ocaml-platform"
@@ -600,8 +649,18 @@
    },
 
    // ### YAML formatting
-   "[yaml][ansible]": {
+   "[yaml][ansible][dockercompose]": {
       "editor.defaultFormatter": "bluebrown.yamlfmt"
+   },
+
+   // ### C# / F# / ASP.NET formatting
+   "[csharp]": {
+      "editor.defaultFormatter": "csharpier.csharpier-vscode"
+   },
+
+   // ### C, C++, Objective-C, and Swift formatting
+   "[swift]": {
+      "editor.defaultFormatter": "vknabel.vscode-swiftformat"
    },
 
    // Language-specific functionality
@@ -612,12 +671,20 @@
       "OCAMLLSP_HOVER_IS_EXTENDED": "true"
    },
 
-   // ### C#, ASP.NET, etc functionality
-   "[csharp]": {
-      "editor.defaultFormatter": "csharpier.csharpier-vscode"
-   },
+   // ### C, C++, Objective-C, and Swift functionality
+   "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+   "lldb.launch.expressions": "native",
+   "swift.sanitizer": "thread",
+
+   // ### C# / F# / ASP.NET functionality
    "omnisharp.useGlobalMono": "always",
    "FSharp.showProjectExplorerIn": "explorer",
+
+   // ### Rust functionality
+   "rust-analyzer.check.command": "clippy",
+
+   // ### JavaScript & TypeScript functionality
+   "debug.javascript.enableNetworkView": true,
 
    // --- ---- --- /!\ --- ---- ---
    // ... and anything after this, was added programmatically!
