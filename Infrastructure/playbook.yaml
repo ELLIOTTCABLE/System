@@ -47,14 +47,15 @@
       # caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
       caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
 
- - name: Setup static sites
+ - name: Setup sites
    hosts: euphemios.ell.io
-   tags: static-host
+   tags: site-host
 
    roles:
     - dokku-tweaks
     - elliottcable-name
     - ell-io-redirector
+    - xz-ws-twag
 
  - name: Setup gaming servers
    hosts: berit.ell.io
