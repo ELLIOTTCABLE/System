@@ -192,11 +192,13 @@
 
    "indentRainbow.ignoreErrorLanguages": [
       "ansible",
+      "compose",
       "dhall",
       "diff",
       "dune",
       "dune-project",
       "dune-workspace",
+      "log",
       "markdown",
       "ocaml",
       "ocaml.interface",
@@ -260,10 +262,11 @@
    "leetcode.hideSolved": true,
 
    // ### ErrorLens appearance
-   "errorLens.delayMode": "debounce",
+   "errorLens.delayMode": "new",
    "errorLens.delay": 750,
+   "errorLens.enableOnDiffView": true,
    "errorLens.excludeBySource": ["cSpell"],
-   "errorLens.alignMessage": { "end": 100 },
+   "errorLens.alignMessage": { "end": 120 },
    "errorLens.messageBackgroundMode": "message",
    "errorLens.borderRadius": "0.25em",
    "errorLens.editorHoverPartsEnabled": {
@@ -272,10 +275,22 @@
       "buttonsEnabled": true
    },
    "errorLens.followCursor": "allLinesExceptActive",
-   "errorLens.gutterIconsEnabled": true,
-   "errorLens.gutterIconSet": "squareRounded",
+   "errorLens.gutterIconsEnabled": false,
+   // "errorLens.gutterIconSet": "squareRounded",
    "errorLens.padding": "0.3em",
    "errorLens.enabledInMergeConflict": false,
+
+   "errorLens.replace": [
+      // rustc
+      { "matcher": "(.*)\n`.*` on by default", "message": "$1" }
+   ],
+
+   "errorLens.excludeByMessage": [
+      // rustc
+      { "regex": "^unused variable: `.*`" },
+      { "regex": "^unused imports?: .*" },
+      { "regex": "^multiple fields are never read" }
+   ],
 
    // Keybindings
    // ===========
