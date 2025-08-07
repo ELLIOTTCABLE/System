@@ -1,5 +1,9 @@
 {
    "servers": {
+      "github": {
+         "type": "http",
+         "url": "https://api.githubcopilot.com/mcp/"
+      },
       "perplexity": {
          "command": "npx",
          "args": ["-y", "perplexity-mcp"],
