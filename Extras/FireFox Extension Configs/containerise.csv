@@ -69,6 +69,8 @@ syf.com, Banking, green, dollar
 *.syf.com, Banking, green, dollar
 mysynchrony.com, Banking, green, dollar
 *.mysynchrony.com, Banking, green, dollar
+netxinvestor.com, Banking, green, dollar
+*.netxinvestor.com, Banking, green, dollar
 rcam.target.com, Banking, green, dollar
 usaa.com, Banking, green, dollar
 *.usaa.com, Banking, green, dollar
@@ -151,6 +153,8 @@ irccloud.com, Social, purple, chill
 *.irccloud.com, Social, purple, chill
 last.fm, Social, purple, chill
 *.last.fm, Social, purple, chill
+lobste.rs, Social, purple, chill
+*.lobste.rs, Social, purple, chill
 matrix.to, Social, purple, chill
 *.matrix.to, Social, purple, chill
 element.io, Social, purple, chill
@@ -266,6 +270,9 @@ eveonline.com, Gaming, red, pet
 *.eveonline.com, Gaming, red, pet
 eveskillboard.com, Gaming, red, pet
 *.eveskillboard.com, Gaming, red, pet
+factorio.com, Gaming, red, pet
+*.factorio.com, Gaming, red, pet
+
 fanatical.com, Gaming, red, pet
 *.fanatical.com, Gaming, red, pet
 gamebillet.com, Gaming, red, pet
@@ -396,6 +403,8 @@ airbnb.com, Travel, orange, vacation
 *.airbnb.com, Travel, orange, vacation
 alaskaair.com, Travel, orange, vacation
 *.alaskaair.com, Travel, orange, vacation
+awardhq.com, Travel, orange, vacation
+*.awardhq.com, Travel, orange, vacation
 expedia.com, Travel, orange, vacation
 *.expedia.com, Travel, orange, vacation
 gaiagps.com, Travel, orange, vacation
@@ -404,6 +413,9 @@ momondo.com, Travel, orange, vacation
 *.momondo.com, Travel, orange, vacation
 southwest.com, Travel, orange, vacation
 *.southwest.com, Travel, orange, vacation
+travel.google.com, Travel, orange, vacation
+united.com, Travel, orange, vacation
+*.united.com, Travel, orange, vacation
 
 okcupid.com, Personal, blue, fingerprint
 
@@ -493,7 +505,9 @@ icloud.com, Apple.com, red, fruit
 *.icloud.com, Apple.com, red, fruit
 
 google.com, Google.com, red, briefcase
-*.google.com, Google.com, red, briefcase
+calendar.google.com, Google.com, red, briefcase
+docs.google.com, Google.com, red, briefcase
+sheets.google.com, Google.com, red, briefcase
 youtube.com, Google.com, red, briefcase
 *.youtube.com, Google.com, red, briefcase
 docusign.com, Google.com, red, briefcase
