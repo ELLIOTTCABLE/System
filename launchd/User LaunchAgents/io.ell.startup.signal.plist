@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      <key>Label</key>
+      <string>io.ell.startup.signal</string>
+      <key>ProgramArguments</key>
+      <array>
+         <string>/Users/ec/Library/System/launchd/User LaunchAgents/startup-signal.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>KeepAlive</key>
+      <false/>
+      <key>StandardOutPath</key>
+      <string>/tmp/io.ell.startup.signal.stdout.log</string>
+      <key>StandardErrorPath</key>
+      <string>/tmp/io.ell.startup.signal.stderr.log</string>
+   </dict>
+</plist>

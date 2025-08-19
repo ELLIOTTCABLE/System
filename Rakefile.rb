@@ -48,14 +48,29 @@ end
 
 desc 'Symlink dotfiles/dotdirs into home directory'
 task :symlink do
+  root = File.dirname(File.expand_path(__FILE__))
   files = Dir['Dotfiles/*'] # Get all the files
-  files = files.map { |file| File.join( File.dirname(File.expand_path(__FILE__)), file ) } # Finally, create an absolute path from our working directory
+  files = files.map { |file| File.join( root, file ) } # Create an absolute path from our working directory
+
+  special_links = {}
+  user_launch_agents_dir = File.join(root, 'launchd', 'User LaunchAgents')
+  if File.directory?(user_launch_agents_dir)
+    special_links[user_launch_agents_dir] = File.expand_path('~/Library/LaunchAgents')
+    files << user_launch_agents_dir
+  end
 
   puts "Linking in $HOME/"
   files.each do |from|
     next unless (File.file?(from) || File.directory?(from))
 
-    to = File.join(File.expand_path('~/'), '.' + File.basename(from))
+    home = File.expand_path('~/')
+    to = if (override = special_links[from])
+      override
+    elsif from.include?('/Dotfiles/')
+      File.join(home, '.' + File.basename(from))
+    else
+      File.join(home, File.basename(from))
+    end
 
     if File.exist?(to)
       print "   ! #{to} exists... "
@@ -63,7 +78,7 @@ task :symlink do
         FileUtils.rm to
         puts "as a symlink, removed"
       else
-        print "as a normal file/directory, moving to #{File.basename(to)}~... "
+        print "as a normal file/directory, moving to #{File.basename(to)}~ ..."
         toto = to + '~'
 
         if File.exist? toto

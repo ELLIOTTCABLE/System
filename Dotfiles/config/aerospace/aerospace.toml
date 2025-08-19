@@ -203,3 +203,22 @@ run = 'layout tiling'
 [[on-window-detected]]
 if.app-id = 'com.cub-and-pup.Bluebird'
 run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Proton Mail'
+run = 'move-node-to-workspace V'
+[[on-window-detected]]
+if.app-id = 'org.whispersystems.signal-desktop'
+run = 'move-node-to-workspace V'
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = 'move-node-to-workspace V'
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace V'
+[[on-window-detected]]
+if.app-id = 'com.automattic.beeper.desktop'
+run = 'move-node-to-workspace V'
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace V'
