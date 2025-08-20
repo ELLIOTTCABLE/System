@@ -14,11 +14,3 @@ defaults write com.apple.dock expose-group-apps -bool true
 
 # TODO: Tweak this to not include additional paths from mise etc
 sudo launchctl config user path "${PATH}"
-
-# Bootstrap LaunchAgents
-for p in "${SYSTEM_REPO:-$HOME/Library/System}"/launchd/User\ LaunchAgents/*.plist; do
-   [ -e "$p" ] || continue
-   glbl="$HOME/Library/LaunchAgents/${p##*/}"
-   printf "Bootstrapping LaunchAgent: %s\n" "$glbl"
-   sudo launchctl bootstrap "gui/$(id -u)" "$glbl" || true
-done

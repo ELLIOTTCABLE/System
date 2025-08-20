@@ -55,8 +55,14 @@ task :symlink do
   special_links = {}
   user_launch_agents_dir = File.join(root, 'launchd', 'User LaunchAgents')
   if File.directory?(user_launch_agents_dir)
-    special_links[user_launch_agents_dir] = File.expand_path('~/Library/LaunchAgents')
-    files << user_launch_agents_dir
+    home_launch_agents = File.expand_path('~/Library/LaunchAgents')
+    File.delete(home_launch_agents) if File.symlink?(home_launch_agents)
+    Dir.mkdir(home_launch_agents) unless Dir.exist?(home_launch_agents)
+    Dir.glob(File.join(user_launch_agents_dir, '**', '*.plist')).each do |plist|
+      target = File.join(home_launch_agents, File.basename(plist))
+      File.delete(target) if File.symlink?(target) || File.exist?(target)
+      FileUtils.ln_s(plist, target)
+    end
   end
 
   puts "Linking in $HOME/"
@@ -64,9 +70,7 @@ task :symlink do
     next unless (File.file?(from) || File.directory?(from))
 
     home = File.expand_path('~/')
-    to = if (override = special_links[from])
-      override
-    elsif from.include?('/Dotfiles/')
+    to = if from.include?('/Dotfiles/')
       File.join(home, '.' + File.basename(from))
     else
       File.join(home, File.basename(from))
@@ -103,6 +107,8 @@ task :symlink do
       end
     end
 
-    FileUtils.symlink(from, to)
+  # Avoid recreating symlink for LaunchAgents directory; handled above.
+  next if from == user_launch_agents_dir
+  FileUtils.symlink(from, to)
   end
 end

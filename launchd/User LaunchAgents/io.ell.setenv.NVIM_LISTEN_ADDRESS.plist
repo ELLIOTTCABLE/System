@@ -3,7 +3,7 @@
 <plist version="1.0">
    <dict>
       <key>Label</key>
-      <string>setenv.NVIM_LISTEN_ADDRESS</string>
+      <string>io.ell.setenv.NVIM_LISTEN_ADDRESS</string>
       <key>ProgramArguments</key>
       <array>
          <string>sh</string>
