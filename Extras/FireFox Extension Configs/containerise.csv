@@ -43,6 +43,8 @@ coinbase.com, Banking, green, dollar
 *.coinbase.com, Banking, green, dollar
 creditkarma.com, Banking, green, dollar
 *.creditkarma.com, Banking, green, dollar
+intuit.com, Banking, green, dollar
+*.intuit.com, Banking, green, dollar
 investor360.com, Banking, green, dollar
 *.investor360.com, Banking, green, dollar
 investpps.com, Banking, green, dollar
@@ -262,6 +264,8 @@ battle.net, Gaming, red, pet
 *.battle.net, Gaming, red, pet
 blizzard.com, Gaming, red, pet
 *.blizzard.com, Gaming, red, pet
+curseforge.com, Gaming, red, pet
+*.curseforge.com, Gaming, red, pet
 ea.com, Gaming, red, pet
 *.ea.com, Gaming, red, pet
 epicgames.com, Gaming, red, pet
@@ -272,7 +276,6 @@ eveskillboard.com, Gaming, red, pet
 *.eveskillboard.com, Gaming, red, pet
 factorio.com, Gaming, red, pet
 *.factorio.com, Gaming, red, pet
-
 fanatical.com, Gaming, red, pet
 *.fanatical.com, Gaming, red, pet
 gamebillet.com, Gaming, red, pet
@@ -296,6 +299,8 @@ klei.com, Gaming, red, pet
 *.klei.com, Gaming, red, pet
 kleientertainment.com, Gaming, red, pet
 *.kleientertainment.com, Gaming, red, pet
+modrinth.com, Gaming, red, pet
+*.modrinth.com, Gaming, red, pet
 nintendo.com, Gaming, red, pet
 *.nintendo.com, Gaming, red, pet
 paradoxplaza.com, Gaming, red, pet
@@ -505,6 +510,7 @@ icloud.com, Apple.com, red, fruit
 *.icloud.com, Apple.com, red, fruit
 
 google.com, Google.com, red, briefcase
+mail.google.com, Google.com, red, briefcase
 calendar.google.com, Google.com, red, briefcase
 docs.google.com, Google.com, red, briefcase
 sheets.google.com, Google.com, red, briefcase
@@ -533,6 +539,9 @@ protonmail.com, Proton.me, turquoise, fingerprint
 *.protonmail.com, Proton.me, turquoise, fingerprint
 protonvpn.com, Proton.me, turquoise, fingerprint
 *.protonvpn.com, Proton.me, turquoise, fingerprint
+
+perplexity.ai, Perplexity.ai, blue, briefcase
+*.perplexity.ai, Perplexity.ai, blue, briefcase
 
 zapier.com, Zapier.com, turquoise, gift
 *.zapier.com, Zapier.com, turquoise, gift
