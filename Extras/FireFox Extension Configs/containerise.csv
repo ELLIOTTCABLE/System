@@ -27,6 +27,8 @@ bitstamp.com, Banking, green, dollar
 *.bitstamp.com, Banking, green, dollar
 blockchain.com, Banking, green, dollar
 *.blockchain.com, Banking, green, dollar
+braiins.com, Banking, green, dollar
+*.braiins.com, Banking, green, dollar
 capitalone.com, Banking, green, dollar
 *.capitalone.com, Banking, green, dollar
 cash.app, Banking, green, dollar
@@ -190,6 +192,8 @@ codeship.com, Code, turquoise, dollar
 *.codeship.com, Code, turquoise, dollar
 cursor.sh, Code, turquoise, dollar
 *.cursor.sh, Code, turquoise, dollar
+docker.com, Code, turquoise, dollar
+*.docker.com, Code, turquoise, dollar
 git-tower.com, Code, turquoise, dollar
 *.git-tower.com, Code, turquoise, dollar
 gitkraken.com, Code, turquoise, dollar
@@ -404,6 +408,10 @@ shoeboxed.com, Postal Mail, orange, vacation
 *.shoeboxed.com, Postal Mail, orange, vacation
 usps.com, Postal Mail, orange, vacation
 *.usps.com, Postal Mail, orange, vacation
+notarize.com, Postal Mail, orange, vacation
+*.notarize.com, Postal Mail, orange, vacation
+proof.com, Postal Mail, orange, vacation
+*.proof.com, Postal Mail, orange, vacation
 
 airbnb.com, Travel, orange, vacation
 *.airbnb.com, Travel, orange, vacation
