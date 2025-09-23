@@ -392,10 +392,11 @@ ell.stackexchange.com, Language, yellow, vacation
 russian.stackexchange.com, Language, yellow, vacation
 wiktionary.org, Language, yellow, vacation
 *.wiktionary.org, Language, yellow, vacation
-
 *.gov, Government, red, vacation
 ispfsb.com, Government, red, vacation
 *.ispfsb.com, Government, red, vacation
+id.me, Government, red, vacation
+*.id.me, Government, red, vacation
 
 earthclassmail.com, Postal Mail, orange, vacation
 *.earthclassmail.com, Postal Mail, orange, vacation
@@ -510,6 +511,7 @@ icloud.com, Apple.com, red, fruit
 *.icloud.com, Apple.com, red, fruit
 
 google.com, Google.com, red, briefcase
+accounts.google.com, Google.com, red, briefcase
 mail.google.com, Google.com, red, briefcase
 calendar.google.com, Google.com, red, briefcase
 docs.google.com, Google.com, red, briefcase
