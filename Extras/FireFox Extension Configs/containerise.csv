@@ -45,6 +45,10 @@ coinbase.com, Banking, green, dollar
 *.coinbase.com, Banking, green, dollar
 creditkarma.com, Banking, green, dollar
 *.creditkarma.com, Banking, green, dollar
+gs.com, Banking, green, dollar
+*.gs.com, Banking, green, dollar
+gsselect.com, Banking, green, dollar
+*.gsselect.com, Banking, green, dollar
 intuit.com, Banking, green, dollar
 *.intuit.com, Banking, green, dollar
 investor360.com, Banking, green, dollar
@@ -555,6 +559,3 @@ perplexity.ai, Perplexity.ai, blue, briefcase
 
 zapier.com, Zapier.com, turquoise, gift
 *.zapier.com, Zapier.com, turquoise, gift
-
-nice.try, Porn, pink, vacation
-*.nice.try, Porn, pink, vacation

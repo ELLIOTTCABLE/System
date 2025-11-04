@@ -41,3 +41,5 @@ Dotfiles/jupyter/nbconfig/
 
 Dotfiles/gnupg/.#*.*.*
 Dotfiles/gnupg/random_seed
+
+Extras/FireFox Extension Configs/*.local.csv
