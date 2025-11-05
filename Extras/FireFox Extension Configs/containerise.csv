@@ -19,6 +19,8 @@ login.opendns.com, Admin, orange, tree
 dashboard.opendns.com, Admin, orange, tree
 www.vultr.com, Admin, orange, tree
 my.vultr.com, Admin, orange, tree
+ui.com, Admin, orange, tree
+*.ui.com, Admin, orange, tree
 
 53.com, Banking, green, dollar
 *.53.com, Banking, green, dollar
@@ -105,6 +107,10 @@ ebay.com, Shopping, pink, cart
 *.ebay.com, Shopping, pink, cart
 etsy.com, Shopping, pink, cart
 *.etsy.com, Shopping, pink, cart
+homedepot.com, Shopping, pink, cart
+*.homedepot.com, Shopping, pink, cart
+laylopets.com, Shopping, pink, cart
+*.laylopets.com, Shopping, pink, cart
 mauijim.com, Shopping, pink, cart
 *.mauijim.com, Shopping, pink, cart
 meundies.com, Shopping, pink, cart
@@ -121,6 +127,8 @@ rei.com, Shopping, pink, cart
 *.rei.com, Shopping, pink, cart
 shipt.com, Shopping, pink, cart
 *.shipt.com, Shopping, pink, cart
+shopify.com, Shopping, pink, cart
+*.shopify.com, Shopping, pink, cart
 simplehuman.com, Shopping, pink, cart
 *.simplehuman.com, Shopping, pink, cart
 sodastream.com, Shopping, pink, cart
@@ -536,8 +544,13 @@ everytimezone.com, Google.com, red, briefcase
 *.everytimezone.com, Google.com, red, briefcase
 
 github.com, GitHub.com, turquoise, dollar
+*.github.com, GitHub.com, turquoise, dollar
+github.blog, GitHub.com, turquoise, dollar
+*.github.blog, GitHub.com, turquoise, dollar
 github.community, GitHub.com, turquoise, dollar
 *.github.community, GitHub.com, turquoise, dollar
+visualstudio.com, GitHub.com, turquoise, dollar
+*.visualstudio.com, GitHub.com, turquoise, dollar
 vscode-auth.github.com, GitHub.com, turquoise, dollar
 vscode.dev, GitHub.com, turquoise, dollar
 *.vscode.dev, GitHub.com, turquoise, dollar
