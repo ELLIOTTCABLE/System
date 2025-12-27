@@ -175,11 +175,16 @@ matrix.to, Social, purple, chill
 *.matrix.to, Social, purple, chill
 element.io, Social, purple, chill
 *.element.io, Social, purple, chill
+patreon.com, Social, purple, chill
+*.patreon.com, Social, purple, chill
 snapchat.com, Social, purple, chill
 *.snapchat.com, Social, purple, chill
 tiktok.com, Social, purple, chill
 *.tiktok.com, Social, purple, chill
 news.ycombinator.com, Social, purple, chill
+
+bsky.app, Social, purple, chill
+*.bsky.app, Social, purple, chill
 
 mastodon.social, Social, purple, chill
 *.mastodon.social, Social, purple, chill
@@ -420,6 +425,7 @@ ell.stackexchange.com, Language, yellow, vacation
 russian.stackexchange.com, Language, yellow, vacation
 wiktionary.org, Language, yellow, vacation
 *.wiktionary.org, Language, yellow, vacation
+
 *.gov, Government, red, vacation
 ispfsb.com, Government, red, vacation
 *.ispfsb.com, Government, red, vacation
@@ -428,14 +434,23 @@ id.me, Government, red, vacation
 
 earthclassmail.com, Postal Mail, orange, vacation
 *.earthclassmail.com, Postal Mail, orange, vacation
-shoeboxed.com, Postal Mail, orange, vacation
-*.shoeboxed.com, Postal Mail, orange, vacation
-usps.com, Postal Mail, orange, vacation
-*.usps.com, Postal Mail, orange, vacation
+legalzoom.com, Postal Mail, orange, vacation
+*.legalzoom.com, Postal Mail, orange, vacation
 notarize.com, Postal Mail, orange, vacation
 *.notarize.com, Postal Mail, orange, vacation
 proof.com, Postal Mail, orange, vacation
 *.proof.com, Postal Mail, orange, vacation
+shoeboxed.com, Postal Mail, orange, vacation
+*.shoeboxed.com, Postal Mail, orange, vacation
+usps.com, Postal Mail, orange, vacation
+*.usps.com, Postal Mail, orange, vacation
+
+peoplesgasdelivery.com, Utilities, yellow, tree
+*.peoplesgasdelivery.com, Utilities, yellow, tree
+wecenergygroup.com, Utilities, yellow, tree
+*.wecenergygroup.com, Utilities, yellow, tree
+comed.com, Utilities, yellow, tree
+*.comed.com, Utilities, yellow, tree
 
 airbnb.com, Travel, orange, vacation
 *.airbnb.com, Travel, orange, vacation
@@ -543,10 +558,12 @@ icloud.com, Apple.com, red, fruit
 *.icloud.com, Apple.com, red, fruit
 
 google.com, Google.com, red, briefcase
+www.google.com, Google.com, red, briefcase
 accounts.google.com, Google.com, red, briefcase
-mail.google.com, Google.com, red, briefcase
 calendar.google.com, Google.com, red, briefcase
 docs.google.com, Google.com, red, briefcase
+mail.google.com, Google.com, red, briefcase
+maps.google.com, Google.com, red, briefcase
 sheets.google.com, Google.com, red, briefcase
 youtube.com, Google.com, red, briefcase
 *.youtube.com, Google.com, red, briefcase
