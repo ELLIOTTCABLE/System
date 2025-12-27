@@ -31,8 +31,10 @@ winget install -e --id SlackTechnologies.Slack
 winget install -e --id VB-Audio.Voicemeeter.Banana
 winget install -e --id WhatPulse.WhatPulse
 winget install -e --id WinDirStat.WinDirStat
-winget install -e --id code52.Carnac
+winget install -e --id code52.Carnac # Keypress visualizer
+winget install -e --id h3poteto.whalebird-desktop # Mastodon client
 winget install -e --id icsharpcode.ILSpy
 
 # TODO: User-level (non-admin)
 winget install -e --id 9NCBCSZSJRSB # Spotify
+winget install -e --id 9P0KN9S5RP86 # Fantastical
