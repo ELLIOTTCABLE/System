@@ -596,6 +596,11 @@ protonmail.com, Proton.me, turquoise, fingerprint
 protonvpn.com, Proton.me, turquoise, fingerprint
 *.protonvpn.com, Proton.me, turquoise, fingerprint
 
+notion.com, Notion.so, black, briefcase
+*.notion.com, Notion.so, black, briefcase
+notion.so, Notion.so, black, briefcase
+*.notion.so, Notion.so, black, briefcase
+
 perplexity.ai, Perplexity.ai, blue, briefcase
 *.perplexity.ai, Perplexity.ai, blue, briefcase
 
