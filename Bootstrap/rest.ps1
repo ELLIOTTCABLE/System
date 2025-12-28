@@ -38,3 +38,4 @@ winget install -e --id icsharpcode.ILSpy
 # TODO: User-level (non-admin)
 winget install -e --id 9NCBCSZSJRSB # Spotify
 winget install -e --id 9P0KN9S5RP86 # Fantastical
+winget install -e --id 9PFXXSHC64H3 # Raycast
