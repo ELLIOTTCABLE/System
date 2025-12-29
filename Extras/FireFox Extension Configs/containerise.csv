@@ -182,6 +182,8 @@ snapchat.com, Social, purple, chill
 tiktok.com, Social, purple, chill
 *.tiktok.com, Social, purple, chill
 news.ycombinator.com, Social, purple, chill
+hardcover.app, Social, purple, chill
+*.hardcover.app, Social, purple, chill
 
 bsky.app, Social, purple, chill
 *.bsky.app, Social, purple, chill
@@ -196,6 +198,14 @@ social.treehouse.systems, Social, purple, chill
 *.social.treehouse.systems, Social, purple, chill
 types.pl, Social, purple, chill
 *.types.pl, Social, purple, chill
+infosec.exchange, Social, purple, chill
+*.infosec.exchange, Social, purple, chill
+bookwyrm.social, Social, purple, chill
+*.bookwyrm.social, Social, purple, chill
+joinbookwyrm.com, Social, purple, chill
+*.joinbookwyrm.com, Social, purple, chill
+bookrastinating.com, Social, purple, chill
+*.bookrastinating.com, Social, purple, chill
 
 asciinema.org, Code, turquoise, dollar
 *.asciinema.org, Code, turquoise, dollar
