@@ -221,6 +221,31 @@ if [ -n "$IS_MAC" ]; then
    alias beeper="open -a 'Beeper Desktop'"
    alias bb-log="lessf '$XDG_STATE_HOME/bbctl/'sh-imessage*.log '$HOME/Library/Logs/bluebubbles-server/main.log'"
    alias bb-server-restart="killall BlueBubbles ; sleep 10 && open -a BlueBubbles"
+
+   function brew-upgrade-minor() {
+      # Upgrade all Homebrew packages, but only minor versions.
+      # See: <https://stackoverflow.com/a/65476110/31897>
+      # Build the list (printing each match) and store it in a variable.
+      list=$(
+         brew outdated --json | \
+            jq -r '(.formulae[] | [.name, .installed_versions[-1], .current_version]) | join(" ")' | \
+            while read -r formula current new; do
+               if npx semver --range "^${current}" "${new}" >/dev/null 2>&1;
+                  then >&2 echo "${formula}: $current --> $new"; printf '%s\n' "$formula"; fi
+            done
+      )
+
+      [ -z "$list" ] && return 0
+
+      printf "\nProceed with brew upgrade? [yN] "
+      read -r yn
+      case $yn in
+         [Yy]*)   # shellcheck disable=SC2046
+                  { oldIFS=$IFS; IFS=$'\n'; set -f; set -- $(printf '%s\n' "$list"); set +f; IFS=$oldIFS; }
+                  brew upgrade "$@";;
+            *)    exit 1;;
+      esac
+   }
 fi
 
 alias wget='wget -q --show-progress'
