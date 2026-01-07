@@ -361,7 +361,6 @@
       // Can find available disables by searching this file for "use<":
       //    <https://github.com/VSCodeVim/Vim/blob/master/package.json>
       "<C-k>": false, // VScode's "leader"
-      "<C-q>": false, // Quick navigation
       "<C-t>": false, // Goto symbol
       "<C-b>": false, // Toggle sidebar
       "<C-j>": false, // Toggle panel
