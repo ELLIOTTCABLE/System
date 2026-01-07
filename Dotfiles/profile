@@ -216,12 +216,6 @@ if [ -n "$IS_MAC" ]; then
   # "intel brew"
   alias ibrew='arch -x86_64 brew'
 
-   # BlueBubbles Matrix bridge for iMessage; see:
-   # <https://www.notion.so/troe/Beeper-Matrix-iMessage-bridges-18ef99b3151d8033acdcdbb72d2df168>
-   alias beeper="open -a 'Beeper Desktop'"
-   alias bb-log="lessf '$XDG_STATE_HOME/bbctl/'sh-imessage*.log '$HOME/Library/Logs/bluebubbles-server/main.log'"
-   alias bb-server-restart="killall BlueBubbles ; sleep 10 && open -a BlueBubbles"
-
    function brew-upgrade-minor() {
       # Upgrade all Homebrew packages, but only minor versions.
       # See: <https://stackoverflow.com/a/65476110/31897>
