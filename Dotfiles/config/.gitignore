@@ -16,8 +16,8 @@ inkscape/
 karabiner/assets
 karabiner/automatic_backups
 keybase/
-raycast/config.json
-raycast/extensions
+raycast*/config.json
+raycast*/extensions
 swiftpm/
 wireshark/
 yarn/link/
