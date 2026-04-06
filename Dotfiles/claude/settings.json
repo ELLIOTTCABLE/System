@@ -1,0 +1,8 @@
+{
+  "model": "opus",
+  "permissions": {
+    "allow": [
+      "WebSearch"
+    ]
+  }
+}

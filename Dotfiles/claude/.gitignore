@@ -1,0 +1,8 @@
+ide/*.lock
+plugins/install-counts-cache.json
+
+session-env
+shell-snapshots
+backups
+projects
+sessions
