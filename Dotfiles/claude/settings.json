@@ -1,8 +1,10 @@
 {
-  "model": "opus",
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:agents.md)"
     ]
-  }
+  },
+  "model": "opus"
 }
