@@ -3,7 +3,10 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:agents.md)"
+      "WebFetch(domain:agents.md)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:arxiv.org)"
     ]
   },
   "model": "opus"
