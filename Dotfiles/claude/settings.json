@@ -9,5 +9,6 @@
       "WebFetch(domain:arxiv.org)"
     ]
   },
-  "model": "opus"
+  "model": "opus",
+  "effortLevel": "medium"
 }
