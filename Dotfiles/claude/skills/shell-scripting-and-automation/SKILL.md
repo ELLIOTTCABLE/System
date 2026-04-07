@@ -1,6 +1,6 @@
 ---
 name: shell-scripting-and-automation
-description: Writing and modifying scripts; shell/bash/zx/ansible/etc
+description: Writing and modifying scripts; read for any shell/bash/zx/node.js/ansible/Makefile-type tasks
 ---
 
 # Shell scripting and automation preferences
