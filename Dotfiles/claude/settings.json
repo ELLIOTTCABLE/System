@@ -6,7 +6,19 @@
       "WebFetch(domain:agents.md)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:www.anthropic.com)",
-      "WebFetch(domain:arxiv.org)"
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:claude.com)",
+      "WebFetch(domain:claude.ai)",
+      "WebFetch(domain:www.claude.com)",
+      "WebFetch(domain:docs.github.com)",
+      "WebFetch(domain:docs.cursor.com)",
+      "WebFetch(domain:cursor.com)",
+      "WebFetch(domain:docs.codeium.com)",
+      "WebFetch(domain:code.visualstudio.com)",
+      "WebFetch(domain:github.blog)",
+      "WebFetch(domain:www.windmill.dev)",
+      "WebFetch(domain:neon.tech)",
+      "WebFetch(domain:neon.com)"
     ]
   },
   "model": "opus",

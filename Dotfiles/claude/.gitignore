@@ -1,8 +1,13 @@
 ide/*.lock
-plugins/install-counts-cache.json
+history.jsonl
 
-session-env
-shell-snapshots
 backups
+cache
+file-history
 projects
+session-env
 sessions
+shell-snapshots
+
+plugins/install-counts-cache.json
+plugins/known_marketplaces.json
