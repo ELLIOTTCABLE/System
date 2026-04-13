@@ -12,3 +12,10 @@ mail_from: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail 
 mail_smtp_server: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/SMTP server\"') }}"
 mail_pw: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/password\"') }}"
 mail_port: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/port number\"') }}"
+
+dokku_packages_state: latest
+dokku_hostname: with.ec
+dokku_manage_nginx: false
+caddy_letsencrypt_email: "letsencrypt-automated@from.ec"
+# staging letsencrypt server:
+# caddy_letsencrypt_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
