@@ -15,15 +15,24 @@
       tags: [preroll]
     - role: admin-user
     - role: packages
+      tags: [HTSALSWA, packages]
     - role: ssh
+      tags: [HTSALSWA, ssh]
     - role: password-quality
+      tags: [HTSALSWA, password-quality]
     - role: unattended-upgrades
+      tags: [HTSALSWA, unattended-upgrades]
     - role: firewall-tweaks
     - role: mail
+      tags: [HTSALSWA, mail]
     - role: clamav
+      tags: [HTSALSWA, clamav]
     - role: rkhunter
+      tags: [HTSALSWA, rkhunter]
     - role: auditd
+      tags: [HTSALSWA, auditd]
     - role: lynis
+      tags: [HTSALSWA, lynis]
 
  - name: Setup dokku
    hosts:
