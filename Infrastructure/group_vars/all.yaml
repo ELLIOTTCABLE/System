@@ -5,10 +5,10 @@ ssh_port: 58266
 ansible_port: 58266
 
 user_name: ec
-user_pw: "{{ lookup('env', 'USER_PW') | password_hash('sha512', 'lilysalt') }}"
+user_pw: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/' + inventory_hostname + '/password\"') | password_hash('sha512', 'lilysalt') }}"
 
 mail_to: admin@from.ec
-mail_from: admin@from.ec
-mail_smtp_server: smtp.protonmail.ch
-mail_pw: "{{ lookup('env', 'MAIL_PW') }}"
-mail_port: 587
+mail_from: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/username\"') }}"
+mail_smtp_server: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/SMTP server\"') }}"
+mail_pw: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/password\"') }}"
+mail_port: "{{ lookup('pipe', 'op read \"op://Elliott - Work-visible/ProtonMail SMTP - admin-at-from.ec/SMTP/port number\"') }}"

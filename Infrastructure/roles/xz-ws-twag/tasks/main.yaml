@@ -1,6 +1,6 @@
  # :vim: set ft=ansible :
 
- - tags: xz-ws-twag
+ - tags: xz-ws, twag
    block:
     - name: Create xz.ws twag app
       dokku_app:
@@ -13,22 +13,15 @@
          state: set
 
     - name: Configure environment for xz.ws twag app
-      vars:
-         vault: Elliott - Work-visible
-         db_item: Neon PostgreSQL - twag (dev/ec; twag_admin@twag)
-         api_item: Notion API key - twag (xz.ws)
       dokku_config:
          app: xz.ws-twag
          config:
-            DATABASE_URL: "{{ lookup('onepassword', db_item, field='connection string', vault=vault) }}"
-            NOTION_TOKEN: "{{ lookup('onepassword', api_item, field='credential', vault=vault) }}"
-            NOTION_THINGS_DB: "{{ lookup('onepassword', api_item, section='things DB', field='UUID', vault=vault) }}"
-            NOTION_THINGS_COLUMN_NAME: "{{ lookup('onepassword', api_item, section='things DB', field='column name', vault=vault)
-               }}"
-            NOTION_CONTAINERS_DB: "{{ lookup('onepassword', api_item, section='containers DB', field='UUID', vault=vault)
-               }}"
-            NOTION_CONTAINERS_COLUMN_NAME: "{{ lookup('onepassword', api_item, section='containers DB', field='column name',
-               vault=vault) }}"
+            DATABASE_URL: "{{ lookup('env', 'XZ_WS_DB_URL') }}"
+            NOTION_TOKEN: "{{ lookup('env', 'XZ_WS_NOTION_TOKEN') }}"
+            NOTION_THINGS_DB: "{{ lookup('env', 'XZ_WS_NOTION_THINGS_DB') }}"
+            NOTION_THINGS_COLUMN_NAME: "{{ lookup('env', 'XZ_WS_NOTION_THINGS_COLUMN_NAME') }}"
+            NOTION_CONTAINERS_DB: "{{ lookup('env', 'XZ_WS_NOTION_CONTAINERS_DB') }}"
+            NOTION_CONTAINERS_COLUMN_NAME: "{{ lookup('env', 'XZ_WS_NOTION_CONTAINERS_COLUMN_NAME') }}"
             RUST_LOG: info
             RUST_FMT: json
 

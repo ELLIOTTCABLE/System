@@ -42,5 +42,8 @@ for f in roles/*/.env; do
    log "Loading: '$f'"
 done
 
+export SSH_BATCH_MODE=true       # Quieten ssh-ident
+export DEFAULT_IDENTITY=personal # Resolve hosts where appropriate
+
 # Example: `op run -- ansible-playbook -v -i hosts.yaml playbook.yaml --limit 'euphemios.ell.io'`
 exec op run "$@"
