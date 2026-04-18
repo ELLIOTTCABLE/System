@@ -34,7 +34,6 @@
          option: >-
             --label=caddy='xz.ws' --label=caddy.reverse_proxy={%raw%}'/* {{upstreams http 3000}}'{%endraw%}
          state: present
-      notify: "dokku-tweaks : Restart caddy proxy"
 
     - name: Clone twag repo
       dokku_clone:

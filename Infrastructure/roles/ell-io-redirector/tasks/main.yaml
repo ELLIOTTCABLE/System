@@ -43,7 +43,6 @@
          option: >-
             --label=caddy='ell.io' --label=caddy.reverse_proxy={%raw%}'/* {{upstreams http 8000}}'{%endraw%}
          state: present
-      notify: "dokku-tweaks : Restart caddy proxy"
 
     - name: Clean up build directory
       ansible.builtin.file:
