@@ -16,11 +16,13 @@
       dokku_config:
          app: xz.ws-twag
          config:
-            DATABASE_URL: "{{ lookup('env', 'XZ_WS_DB_URL') }}"
+            POSTGRES_URL: "{{ lookup('env', 'XZ_WS_POSTGRES_URL') }}"
             NOTION_TOKEN: "{{ lookup('env', 'XZ_WS_NOTION_TOKEN') }}"
             NOTION_THINGS_DB: "{{ lookup('env', 'XZ_WS_NOTION_THINGS_DB') }}"
+            NOTION_THINGS_DS: "{{ lookup('env', 'XZ_WS_NOTION_THINGS_DS') }}"
             NOTION_THINGS_COLUMN_NAME: "{{ lookup('env', 'XZ_WS_NOTION_THINGS_COLUMN_NAME') }}"
             NOTION_CONTAINERS_DB: "{{ lookup('env', 'XZ_WS_NOTION_CONTAINERS_DB') }}"
+            NOTION_CONTAINERS_DS: "{{ lookup('env', 'XZ_WS_NOTION_CONTAINERS_DS') }}"
             NOTION_CONTAINERS_COLUMN_NAME: "{{ lookup('env', 'XZ_WS_NOTION_CONTAINERS_COLUMN_NAME') }}"
             RUST_LOG: info
             RUST_FMT: json
@@ -33,3 +35,9 @@
             --label=caddy='xz.ws' --label=caddy.reverse_proxy={%raw%}'/* {{upstreams http 3000}}'{%endraw%}
          state: present
       notify: "dokku-tweaks : Restart caddy proxy"
+
+    - name: Clone twag repo
+      dokku_clone:
+         app: xz.ws-twag
+         repository: https://github.com/ELLIOTTCABLE/twag.git
+         version: main
