@@ -10,7 +10,7 @@
       dokku_domains:
          app: ell.io-redirector
          domains: ell.io
-         state: set
+         state: present
 
     - name: Create temporary build directory
       ansible.builtin.tempfile:

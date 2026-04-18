@@ -7,14 +7,21 @@
       dokku_app:
          app: elliottcable.name
 
-    - name: Clone elliottcable.name repo
+    - name: Sync elliottcable.name repo
       dokku_clone:
          app: elliottcable.name
          repository: https://github.com/ELLIOTTCABLE/elliottcable.name.git
          version: main
+         build: false
+      register: elliottcable_name_sync
+
+    - name: Rebuild elliottcable.name if repo changed
+      ansible.builtin.command: dokku ps:rebuild elliottcable.name
+      when: elliottcable_name_sync.changed
+      changed_when: true
 
     - name: Set elliottcable.name domain
       dokku_domains:
          app: elliottcable.name
          domains: elliottcable.name
-         state: set
+         state: present

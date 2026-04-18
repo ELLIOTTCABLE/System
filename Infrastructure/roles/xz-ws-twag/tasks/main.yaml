@@ -10,7 +10,7 @@
       dokku_domains:
          app: xz.ws-twag
          domains: xz.ws
-         state: set
+         state: present
 
     - name: Configure environment for xz.ws twag app
       dokku_config:
@@ -35,8 +35,15 @@
             --label=caddy='xz.ws' --label=caddy.reverse_proxy={%raw%}'/* {{upstreams http 3000}}'{%endraw%}
          state: present
 
-    - name: Clone twag repo
+    - name: Sync twag repo
       dokku_clone:
          app: xz.ws-twag
          repository: https://github.com/ELLIOTTCABLE/twag.git
          version: main
+         build: false
+      register: twag_sync
+
+    - name: Rebuild twag if repo changed
+      ansible.builtin.command: dokku ps:rebuild xz.ws-twag
+      when: twag_sync.changed
+      changed_when: true
