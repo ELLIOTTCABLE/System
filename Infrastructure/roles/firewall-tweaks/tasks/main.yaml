@@ -8,6 +8,20 @@
       ansible.builtin.import_role:
          name: firewall
 
+    - name: ufw - allow host-originated traffic to the Docker bridge
+      # The upstream role sets `default deny out`, which breaks Dokku's
+      # host-side healthchecks (curl from host → container's bridge IP).
+      # Container→anywhere traffic is unaffected (it uses the FORWARD
+      # chain, not OUTPUT). This narrowly allows the host to reach
+      # containers on the default Docker bridge — not the public
+      # internet on arbitrary ports.
+      become: true
+      community.general.ufw:
+         rule: allow
+         direction: out
+         interface: docker0
+      notify: "firewall : restart ufw service"
+
     - name: Get control-node's public IP
       # FIXME: This won't work if there's NAT in both directions, or if there's multiple public IPs. See
       # <https://stackoverflow.com/a/47070138/31897>
