@@ -24,6 +24,8 @@ CrashpadMetrics.pma
 DawnCache/
 DawnGraphiteCache/
 DawnWebGPUCache/
+DIPS
+DIPS-wal
 GPUCache/
 IndexedDB/
 Local State

@@ -17,6 +17,10 @@ if ((Get-Location).Path -ne $grandparentDirectory) {
 
 # --- Everything below this line will be run as Administrator ---
 
+$extrasRoot = Join-Path $PSScriptRoot '..\Extras\Windows'
+$regFile = Join-Path $extrasRoot 'SetInactivityTimeout.reg'
+reg import $regFile
+
 # Create a "Task Scheduler" task to start GlazeWM at logon.
 # Note: this appears to cause some sort of bug if you don't disable the
 #    "system tray" plugin; see: <https://github.com/glzr-io/glazewm/issues/546>)
@@ -75,7 +79,8 @@ function Initialize-Symlinks {
          if ((Get-Item -Path $to).LinkType) {
             (Get-Item -Path $to).Delete()
             Write-Host "as a symlink, removed"
-         } else {
+         }
+         else {
             Write-Host "as a normal file/directory, moving to $($file.Name)~... "
             $toto = $to + "~"
             if (Test-Path -Path $toto) {

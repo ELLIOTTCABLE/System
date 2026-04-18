@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Configure inactivity auto-lock to 15 minutes
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"InactivityTimeoutSecs"=dword:00000384
