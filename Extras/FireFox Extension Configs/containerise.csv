@@ -620,5 +620,10 @@ notion.cafe, Notion.so, red, briefcase
 perplexity.ai, Perplexity.ai, blue, briefcase
 *.perplexity.ai, Perplexity.ai, blue, briefcase
 
+anthropic.com, Claude.ai, orange, pet
+*.anthropic.com, Claude.ai, orange, pet
+claude.ai, Claude.ai, orange, pet
+*.claude.ai, Claude.ai, orange, pet
+
 zapier.com, Zapier.com, turquoise, gift
 *.zapier.com, Zapier.com, turquoise, gift
