@@ -34,6 +34,7 @@ winget install -e --id WinDirStat.WinDirStat
 winget install -e --id code52.Carnac # Keypress visualizer
 winget install -e --id h3poteto.whalebird-desktop # Mastodon client
 winget install -e --id icsharpcode.ILSpy
+winget install -e --id sharkdp.fd
 
 # TODO: User-level (non-admin)
 winget install -e --id 9NCBCSZSJRSB # Spotify

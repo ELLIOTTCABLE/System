@@ -14,11 +14,13 @@ compile = true
 default_packages_file = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-pip-packages"
 
 [tools]
+"github:joevt/AllRez" = "latest"
 cargo-binstall = "latest"
 deno = "latest"
 dotnet = "latest"
-"github:joevt/AllRez" = "latest"
+fd = "latest"
 go = "latest"
+hk = "latest"
 java = "22"
 lua = "latest"
 nodejs = "latest"

@@ -10,6 +10,7 @@ Fritzing/
 asciinema/config
 asciinema/install-id
 com.add0n.node/
+go/telemetry
 grammarly-languageserver/client_*/
 hub
 inkscape/
