@@ -41,6 +41,8 @@ coc/mru
 coc/snippets-mru
 coc/suggest.txt
 
+neonctl/credentials.json
+
 # Why do so many games store their info in .config!?
 AtomZombieData/
 Colossal Order/Cities_Skylines/
