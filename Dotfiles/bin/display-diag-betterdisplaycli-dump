@@ -50,6 +50,27 @@ esac
 
 x() { (set -x; exec "$@"); }
 
+# In stable mode, betterdisplaycli's multi-line list outputs come back in
+# arbitrary order across runs. `xs` sorts; `xj` re-emits a sorted JSON
+# array (for the malformed `-identifiers` output, which is bare
+# comma-separated objects). Trace line still appears identically.
+xs() {
+   if [ "$mode" = stable ]; then
+      (set -x; exec "$@") | sort
+   else
+      x "$@"
+   fi
+}
+xj() {
+   if [ "$mode" = stable ]; then
+      (set -x; exec "$@") \
+         | { printf '['; cat; printf ']'; } \
+         | jq -S 'sort_by(.tagID | tonumber) | .[]'
+   else
+      x "$@"
+   fi
+}
+
 # Properties skipped in stable mode — values that vary per session or
 # constantly under user/auto control. Tune empirically from real diffs.
 unstable_props='
@@ -122,7 +143,11 @@ for p in identifiers installedColorProfileURLs nightShift nightShiftValue \
          trueTone darkMode ambientLight proAvailable
 do
    [ "$mode" = stable ] && is_unstable "$p" && continue
-   x betterdisplaycli get -"$p"
+   case "$p" in
+      identifiers)               xj betterdisplaycli get -"$p" ;;
+      installedColorProfileURLs) xs betterdisplaycli get -"$p" ;;
+      *)                         x  betterdisplaycli get -"$p" ;;
+   esac
 done
 
 # Re-fetch identifiers silently for parsing. (The traced call above is
@@ -161,6 +186,9 @@ for tag in $tags; do
    done
    for p in $feature_names; do
       [ "$mode" = stable ] && is_unstable "$p" && continue
-      x betterdisplaycli get -tagID="$tag" -"$p"
+      case "$p" in
+         installedColorProfileURLs) xs betterdisplaycli get -tagID="$tag" -"$p" ;;
+         *)                         x  betterdisplaycli get -tagID="$tag" -"$p" ;;
+      esac
    done
 done

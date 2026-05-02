@@ -61,40 +61,103 @@ xfilter() {
 
 # Per-tool noise filters — named `filter_<command>` and dispatched by xfilter.
 
-# shellcheck disable=SC2317,SC2329
+# shellcheck disable=SC2016,SC2317,SC2329
 {
    filter_system_profiler() {
-      # Brightness auto-adjusts; pure noise.
-      sed -E '/^[[:space:]]*Brightness:/d'
+      sed -E '
+         # Per-call timestamp + PID + thread ID prefix on stderr-sniff lines
+         s/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+\.[0-9]+ system_profiler\[[0-9]+:[0-9]+\] /system_profiler[T] /
+         # Auto-adjusted brightness
+         /^[[:space:]]*Brightness:/d
+      '
    }
 
    filter_ioreg() {
       sed -E '
+         # busy/retain runtime counters baked into class-header lines
          s/busy [0-9]+ \([0-9]+ ms\)/busy N (T ms)/g
          s/, retain [0-9]+>/, retain N>/g
+         # power-state values inside IOPowerManagement dicts
          s/"(DevicePowerState|CurrentPowerState)"=[0-9]+/"\1"=N/g
+         # Standalone single-line power-state declarations (intermittent)
+         /^[[:space:]]*DevicePowerState = [0-9]+;$/d
       '
    }
 
    filter_displayplacer() {
-      # Contextual screen ID changes are important debugging
-      # information, as they're used in many apps
-      #sed -E '/^Contextual screen id:/d'
+      # Contextual screen ID changes, but that's important debugging
+      # information, as they are used in many apps.
       cat
    }
 
+   # AllRez bundles AGDCDiagnose output verbatim, so its filter has to
+   # cover both: AllRez-native noise (timing handles, cursor position,
+   # IOService allocs) AND AGDC noise (kernel trace event log).
    filter_AllRez() {
       sed -E '
-         s/busy [0-9]+ \([0-9]+ ms\)/busy N (T ms)/g
-         s/, retain [0-9]+>/, retain N>/g
+         # busy/retain counters
+         s/busy [0-9]+ \([0-9]+ ms\)/busy SNIP (SNIP ms)/g
+         s/, retain [0-9]+>/, retain SNIP>/g
+
+         # Power-management state (noisy; intermittent display sleep)
          /^[[:space:]]+Brightness = /d
          /CurrentPowerState/d
+
+         # Per-process IOService numeric handles & runtime pointers
+         s/IOService = 0x[0-9a-f]+;/IOService = 0xSNIP;/g
+         s/IOFramebuffer 0x[0-9a-f]+ =/IOFramebuffer 0xSNIP =/g
+         s/IODisplay 0x[0-9a-f]+ =/IODisplay 0xSNIP =/g
+         s/<CGColorSpace 0x[0-9a-f]+>/<CGColorSpace 0xSNIP>/g
+         s/CFBundle 0x[0-9a-f]+ /CFBundle 0xSNIP /g
+         s/modeAlias = [0-9]+/modeAlias = SNIP/g
+         s/id:0x8000[0-9a-f]{4}/id:0x8000SNIP/g
+
+         # Cursor position (changes constantly during use)
+         s/(kIOFBCursorMemory = \{ size:)[0-9]+( version:)[0-9]+( location:)-?[0-9]+x-?[0-9]+/\1SNIP\2SNIP\3SNIPxSNIP/g
+
+         # AGDC GTrace per-event timestamps & counters
+         s/Last Event  : [0-9]+ \(0x[0-9a-f]+\)/Last Event  : SNIP (0xSNIP)/g
+         s/Stamp Start : 0x[0-9a-f]+/Stamp Start : 0xSNIP/g
+         s/Stamp Delta : [0-9]+ ns/Stamp Delta : SNIP ns/g
+         s/\(took [0-9]+\.[0-9]+ sec\)/(took SNIP sec)/g
+
+         # AllRez "unexpected data" hex captures (binary state per-run)
+         s/\(unexpected data: [0-9a-f]+\)/(unexpected data: HEX SNIP)/g
+         s/\(unexpected data at offset [0-9]+: [0-9a-f]+\)/(unexpected data at offset SNIP: HEX SNIP)/g
+
+         # AllRez DPCD-read-error attempt offset
+         s/\([0-9a-f]+h: dpErrReadDpcd /(SNIPh: dpErrReadDpcd /g
+
+         # AppleDisplay-Portrait suffix: applied non-deterministically
+         # by the OS to rotated displays. Real rotation is captured via
+         # `displayplacer` Rotation: lines.
+         s/AppleDisplay-Portrait/AppleDisplay/g
+
+         # AGDC kernel trace event log entries (~thousands of lines per
+         # run of pure non-deterministic instrumentation)
+         /timestamp:[[:space:]]+[0-9]+=[0-9]{4}-[0-9]{2}-[0-9]{2}/d
+         /\{ timestamp:[0-9]+=[0-9]{4}-[0-9]{2}-[0-9]{2}/d
+         /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+\.[0-9]+-[0-9]+:[[:space:]]*kAGDCPlugin/d
+
+         # Catch-all for any remaining long hex pointer/handle (10+ hex
+         # digits is essentially always an address or runtime ID)
+         s/0x[0-9a-f]{10,}/0xAUTOSNIP/g
       '
    }
 
+   # When AllRez is missing and we fall back to invoking AGDCDiagnose
+   # directly, the AGDC-specific subset of the AllRez filter applies.
    filter_AGDCDiagnose() {
-      # placeholder
-      cat
+      sed -E '
+         /timestamp:[[:space:]]+[0-9]+=[0-9]{4}-[0-9]{2}-[0-9]{2}/d
+         /\{ timestamp:[0-9]+=[0-9]{4}-[0-9]{2}-[0-9]{2}/d
+         /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+\.[0-9]+-[0-9]+:[[:space:]]*kAGDCPlugin/d
+         s/Last Event  : [0-9]+ \(0x[0-9a-f]+\)/Last Event  : SNIP (0xSNIP)/g
+         s/Stamp Start : 0x[0-9a-f]+/Stamp Start : 0xSNIP/g
+         s/Stamp Delta : [0-9]+ ns/Stamp Delta : SNIP ns/g
+         s/\(took [0-9]+\.[0-9]+ sec\)/(took SNIP sec)/g
+         s/0x[0-9a-f]{10,}/0xAUTOSNIP/g
+      '
    }
 }
 
