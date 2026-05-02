@@ -1,0 +1,62 @@
+#!/usr/bin/env sh
+# Uses `displayplacer` (`brew install displayplacer`) to reset my display-arrangement; as of 2026:
+# - Vertical (Pro Display XDR)
+# - Horizontal (Pro Display XDR, primary)
+# - Horizontal (Pro Display XDR)
+# - below ()
+displayplacer \
+   "id:EA2FFBBA-4D91-C91A-E605-8BF03F9084E0 res:1692x3008 hz:59 color_depth:8 enabled:true scaling:on origin:(-1692,-655) degree:270" \
+   "id:B19262D6-70C8-BE36-6FEA-8C68C9DCC52A res:3008x1692 hz:59 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0" \
+   "id:21AAF4C4-32AC-934B-AA2A-363BB9CB286A res:3008x1692 hz:59 color_depth:8 enabled:true scaling:on origin:(3008,0) degree:0" \
+   "id:0B6C360F-C245-FF2F-04F0-22A56B43529F res:1920x1080 hz:30 color_depth:8 enabled:true scaling:on origin:(3120,1692) degree:180"
+
+# ```console
+# $ displayplacer list | grep -v "^  mode "
+# Persistent screen id: B19262D6-70C8-BE36-6FEA-8C68C9DCC52A
+# Contextual screen id: 69961354
+# Serial screen id: s402656770
+# Type: 32 inch external screen
+# Resolution: 3008x1692
+# Hertz: 59
+# Color Depth: 8
+# Scaling: on
+# Origin: (0,0) - main display
+# Rotation: 0
+# Enabled: true
+#
+# Persistent screen id: 21AAF4C4-32AC-934B-AA2A-363BB9CB286A
+# Contextual screen id: 69961355
+# Serial screen id: s134483458
+# Type: 32 inch external screen
+# Resolution: 3008x1692
+# Hertz: 59
+# Color Depth: 8
+# Scaling: on
+# Origin: (3008,0)
+# Rotation: 0
+# Enabled: true
+#
+# Persistent screen id: EA2FFBBA-4D91-C91A-E605-8BF03F9084E0
+# Contextual screen id: 69960576
+# Serial screen id: s202705666
+# Type: 32 inch external screen
+# Resolution: 1692x3008
+# Hertz: 59
+# Color Depth: 8
+# Scaling: on
+# Origin: (-1692,-655)
+# Rotation: 270
+# Enabled: true
+#
+# Persistent screen id: 0B6C360F-C245-FF2F-04F0-22A56B43529F
+# Contextual screen id: 583014977
+# Serial screen id: s0
+# Type: 61 inch external screen
+# Resolution: 1920x1080
+# Hertz: 30
+# Color Depth: 8
+# Scaling: on
+# Origin: (3120,1692)
+# Rotation: 180
+# Enabled: true
+# ```

@@ -1,0 +1,149 @@
+#!/usr/bin/env sh
+# display-diag-dump — dump display state from every available macOS source.
+#
+# Modes:
+#   --full    (default) dump everything verbatim
+#   --stable  apply per-tool noise filters; suitable for diffing two
+#             baselines across reconnects/re-topology events. The filter
+#             set is tuned empirically — when noise still bleeds through
+#             to a real diff, add to the relevant `filter_<tool>` below.
+#
+# Combined capture for diffing baselines:
+#
+#     display-diag-dump --stable 2>&1 \
+#        > ~/Library/Logs/display-diag/baselines/display-diag-$(date -u +'%Y-%m-%d_%H.%M.%S').log
+#
+# Watch live while capturing (slow on first run; many `Failed.` are normal):
+#
+#     display-diag-dump --stable 2>&1 \
+#        | tee ~/Library/Logs/display-diag/baselines/display-diag-$(date -u +'%Y-%m-%d_%H.%M.%S').log
+#
+# Sources:
+# - `system_profiler` (basically the same as the GUI; uniquely has GPU info
+#   beyond display info)
+# - `log show` predicate against AppleDCPDPTXController (Apple Silicon DCP
+#   driver chatter — DSC negotiation, link bandwidth, pixel clock; returns
+#   little/nothing on Intel, harmless)
+# - `displayplacer` (concise current arrangement; simple to install)
+# - `betterdisplaycli` (Apple Silicon connection-mode access; per-display)
+# - `AllRez` (joevt) — reimplements AGDCDiagnose (~1400 LoC C++) AND does
+#   its own per-display IORegistry traversal. When installed, it subsumes
+#   both `AGDCDiagnose` and the `ioreg -c IODisplayConnect`/`-c AppleDisplay`
+#   calls below, so we skip those to avoid duplication.
+# - Fallback when AllRez is missing:
+#   - `ioreg -r -c IODisplayConnect` and `-r -c AppleDisplay`
+#   - `AGDCDiagnose -a` (Intel-only) from `AppleGraphicsControl.kext`
+#
+# Exits non-zero (counting how many) when any tool was missing.
+
+set -u
+
+mode=full
+case "${1:-}" in
+   --stable)  mode=stable; shift ;;
+   --full)    mode=full;   shift ;;
+   --help|-h)
+      cat <<EOF
+Usage: $(basename "$0") [--full|--stable]
+   --full    (default) dump everything verbatim
+   --stable  apply per-tool noise filters for diffing baselines
+EOF
+      exit ;;
+   '')        ;;
+   *)         echo "unknown flag: $1" >&2; exit 2 ;;
+esac
+
+x() { printf \\n; (set -x; exec "$@"); }
+xfilter() {
+   if [ "$mode" = stable ]; then
+      printf \\n; (set -x; exec "$@") | "filter_$(basename "$1")"
+   else x "$@"; fi; }
+
+# Per-tool noise filters — named `filter_<command>` and dispatched by xfilter.
+
+# shellcheck disable=SC2317,SC2329
+{
+   filter_system_profiler() {
+      # Brightness auto-adjusts; pure noise.
+      sed -E '/^[[:space:]]*Brightness:/d'
+   }
+
+   filter_ioreg() {
+      sed -E '
+         s/busy [0-9]+ \([0-9]+ ms\)/busy N (T ms)/g
+         s/, retain [0-9]+>/, retain N>/g
+         s/"(DevicePowerState|CurrentPowerState)"=[0-9]+/"\1"=N/g
+      '
+   }
+
+   filter_displayplacer() {
+      # Contextual screen ID changes are important debugging
+      # information, as they're used in many apps
+      #sed -E '/^Contextual screen id:/d'
+      cat
+   }
+
+   filter_AllRez() {
+      sed -E '
+         s/busy [0-9]+ \([0-9]+ ms\)/busy N (T ms)/g
+         s/, retain [0-9]+>/, retain N>/g
+         /^[[:space:]]+Brightness = /d
+         /CurrentPowerState/d
+      '
+   }
+
+   filter_AGDCDiagnose() {
+      # placeholder
+      cat
+   }
+}
+
+missing_count=0
+missing() { missing_count=$((missing_count + 1)); echo "missing: $*" >&2; }
+
+x date # unstable, but distinguishes runs
+x uname -a
+x sw_vers
+xfilter system_profiler SPDisplaysDataType
+[ "$mode" = full ] && x log show --last 1h --info \
+   --predicate "processImagePath CONTAINS 'kernel' AND senderImagePath CONTAINS 'DCP'"
+
+if command -v displayplacer >/dev/null; then
+   xfilter displayplacer list
+else
+   # shellcheck disable=SC2016
+   missing 'displayplacer (`brew install displayplacer`)'
+fi
+
+# AllRez reimplements AGDCDiagnose and re-reads IOReg display properties
+# itself, so when installed it subsumes both — skip the redundant calls.
+if command -v AllRez >/dev/null; then
+   xfilter AllRez
+else
+   # shellcheck disable=SC2016
+   missing 'AllRez (`mise install github:joevt/AllRez` or `ubi --project joevt/AllRez --in ~/.bin`)'
+
+   xfilter ioreg -l -w 0 -r -c IODisplayConnect
+   xfilter ioreg -l -w 0 -r -c AppleDisplay
+
+   agc_dir="$(dirname "$(locate -l1 AGDCDiagnose 2>/dev/null)")"
+   if [ -x "$agc_dir" ]; then
+      export PATH="$agc_dir:$PATH"
+      xfilter AGDCDiagnose -a
+   else
+      missing 'AGDCDiagnose (Intel Macs only)'
+   fi
+fi
+
+if command -v betterdisplaycli >/dev/null; then
+   if [ "$mode" = stable ]; then
+      x "$(dirname "$0")/display-diag-betterdisplaycli-dump" --stable
+   else
+      x "$(dirname "$0")/display-diag-betterdisplaycli-dump"
+   fi
+else
+   # shellcheck disable=SC2016
+   missing 'betterdisplaycli (`brew install --cask betterdisplay`, run app, authorize w/ macOS)'
+fi
+
+exit "$missing_count"

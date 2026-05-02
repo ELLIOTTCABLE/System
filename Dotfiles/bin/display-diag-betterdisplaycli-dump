@@ -1,0 +1,166 @@
+#!/usr/bin/env sh
+# ### display-diag-betterdisplaycli-dump —
+# enumerate every (interesting) `betterdisplaycli` property for every attached display.
+#
+# Combined capture for diffing:
+#
+#     display-diag-betterdisplaycli-dump > out.log 2>&1
+#
+# Watch live while capturing (script is slow — hundreds of `betterdisplaycli`
+# invocations, each ~50ms — and many `Failed.` lines are expected):
+#
+#     display-diag-betterdisplaycli-dump 2>&1 | tee out.log
+#
+# Separate streams:
+#
+#     display-diag-betterdisplaycli-dump > data.log 2> traces.log
+#
+# `betterdisplaycli` prints the literal string "Failed." for any property
+# that doesn't apply to a given display (e.g. `xdrPresetList` on a non-XDR
+# display, `notch` on an external monitor, `connectionMode*` on an Intel
+# Mac). Those are expected outputs, not script errors — completionism is
+# the goal here. The tool's "Failed." is also opaque about *why* it
+# failed; treat it as data, not as feedback.
+#
+# Per-display calls are dispatched against `tagID`s extracted from
+# `betterdisplaycli get -identifiers` (which emits multiple bare JSON
+# objects separated by commas — invalid JSON, hence the `[…]` wrap before
+# parsing).
+#
+# Identifier-style properties (`tagID`, `UUID`, `serial`, …) must be
+# queried via `-identifier=<name>` rather than as bare `-<name>` flags;
+# the bare form is interpreted as a selector with empty value and
+# unconditionally fails.
+#
+# The set of properties to query is derived from `betterdisplaycli help`'s
+# section structure rather than maintained as a hardcoded list, so new
+# properties added by the tool are picked up automatically.
+
+# shellcheck disable=SC2016
+
+set -u
+
+mode=full
+case "${1:-}" in
+   --stable) mode=stable; shift ;;
+   --full)   mode=full;   shift ;;
+   '')       ;;
+   *)        echo "unknown flag: $1" >&2; exit 2 ;;
+esac
+
+x() { (set -x; exec "$@"); }
+
+# Properties skipped in stable mode — values that vary per session or
+# constantly under user/auto control. Tune empirically from real diffs.
+unstable_props='
+   brightness combinedBrightness hardwareBrightness softwareBrightness
+   ambientLight nightShift nightShiftValue
+   temperature gain gamma rGain gGain bGain rGamma gGamma bGamma
+   contrast saturation hue
+'
+
+is_unstable() {
+   for _u in $unstable_props; do
+      [ "$_u" = "$1" ] && return 0
+   done
+   return 1
+}
+
+if ! command -v betterdisplaycli >/dev/null; then
+   # echo 'No betterdisplaycli in $PATH' >&2
+   # echo 'Install with Homebrew:' >&2
+   # printf \\n >&2
+   # echo '   brew install --cask betterdisplay' >&2
+   # printf \\n >&2
+   # echo 'Then run the BetterDisplay app, and authorize it with macOS.' >&2
+   cat >&2 <<'EOF'
+No `betterdisplaycli` in $PATH.
+Install with Homebrew:
+
+    brew install --cask betterdisplay
+
+Then run BetterDisplay.app, and authorize it with macOS.
+EOF
+   exit 1
+fi
+
+# Capture once for the section-extraction logic below.
+help_out=$(betterdisplaycli help 2>/dev/null) || {
+   echo 'failed: `betterdisplaycli help` returned non-zero; cannot parse available fields' >&2
+   exit 1
+}
+
+# Extract every parameter name `- \`name\`` under a given `### section`
+# heading. Stops at the next `### …` or `## …` heading.
+#
+# (Jesus, this is janky. Please write mechanizable CLIs, fam.)
+section_params() {
+   printf '%s\n' "$help_out" | awk -v want="### $1" '
+      $0 == want         { in_s = 1; next }
+      in_s && /^### /    { exit }
+      in_s && /^## /     { exit }
+      in_s && /^- `[^`]+`/ {
+         s = $0
+         sub(/^- `/, "", s)
+         sub(/`.*/, "", s)
+         print s
+      }
+   '
+}
+
+identifier_names=$(section_params 'Device identification and device listing')
+feature_names=$(section_params 'Parameters invoking an app feature')
+
+if [ -z "$identifier_names" ] || [ -z "$feature_names" ]; then
+   echo 'failed: could not extract parameter names from `betterdisplaycli help`' >&2
+   echo '       (help-text section structure may have changed)' >&2
+   exit 1
+fi
+
+# Global state (not per-display)
+for p in identifiers installedColorProfileURLs nightShift nightShiftValue \
+         trueTone darkMode ambientLight proAvailable
+do
+   [ "$mode" = stable ] && is_unstable "$p" && continue
+   x betterdisplaycli get -"$p"
+done
+
+# Re-fetch identifiers silently for parsing. (The traced call above is
+# operator-visible; this one is for us.) Wrap in `[…]` because
+# betterdisplaycli emits objects-with-commas, not a real JSON array.
+ids=$(betterdisplaycli get -identifiers 2>/dev/null) || {
+   echo 'failed: `betterdisplaycli get -identifiers` returned non-zero' >&2
+   exit 1
+}
+
+# Filter to deviceType=Display: skip the `Default Group` DisplayGroup
+# (tagID -1001) and any VirtualScreens. There's no `betterdisplaycli`
+# command to ask "what properties apply to this entity", so iterating
+# every feature against a DisplayGroup just produces ~150 `Failed.` lines.
+# `betterdisplaycli` doesn't emit valid JSON (bare objects separated by
+# commas), hence the `[…]` wrap before parsing.
+if command -v jq >/dev/null; then
+   tags=$(printf '[%s]' "$ids" \
+      | jq -r '.[] | select(.deviceType == "Display") | .tagID' \
+      | sort -un)
+else
+   echo 'failed: `jq` not in PATH; required for deviceType filtering' >&2
+   echo '       install with `brew install jq`' >&2
+   exit 1
+fi
+
+if [ -z "${tags:-}" ]; then
+   echo 'failed: no Display-typed entities found in `betterdisplaycli get -identifiers`' >&2
+   exit 1
+fi
+
+for tag in $tags; do
+   for n in $identifier_names; do
+      [ "$mode" = stable ] && is_unstable "$n" && continue
+      x betterdisplaycli get -tagID="$tag" -identifier="$n"
+   done
+   for p in $feature_names; do
+      [ "$mode" = stable ] && is_unstable "$p" && continue
+      x betterdisplaycli get -tagID="$tag" -"$p"
+   done
+done
