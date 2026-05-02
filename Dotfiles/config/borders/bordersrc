@@ -1,6 +1,7 @@
 #!/bin/bash
 
 options=(
+   #order=above
    style=round
    width=6.0
    hidpi=off
