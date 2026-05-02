@@ -32,19 +32,26 @@ let -- Specify a custom repo url for a given plugin
 let tools-to-frontload = [ "nodejs" ]
 
 let tools-to-keep-updated =
-      [ "dotnet"
-      , "golang"
+      [ "cargo-binstall"
+      , "deno"
+      , "dotnet"
+      , "go"
+      , "github:joevt/AllRez"
       , "lua"
       , "opam"
       , "postgres"
-      , "deno"
       , "python"
       , "ruby"
       , "rust"
       , "usage"
+      , "yamlfmt"
       ]
 
 let slow-tools = [ "racket", "purescript" ]
+
+let -- Tools pinned to a specific version, rather than tracking `latest`
+    pinned-tools =
+      [ { mapKey = "java", mapValue = "22" } ]
 
 let tools =
       Prelude.List.concat
@@ -52,10 +59,26 @@ let tools =
         [ tools-to-frontload, tools-to-keep-updated, slow-tools ]
 
 let tools =
-      Prelude.List.map
-        Text
-        { mapKey : Text, mapValue : Text }
-        latest-version
-        tools
+        Prelude.List.map
+          Text
+          { mapKey : Text, mapValue : Text }
+          latest-version
+          tools
+      # pinned-tools
 
-in  { plugins, tools }
+let xdg-config = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}"
+
+let env =
+      { MISE_NODE_DEFAULT_PACKAGES_FILE =
+          "${xdg-config}/mise/default-npm-packages"
+      }
+
+let settings =
+      { idiomatic_version_file_enable_tools = [ "ruby" ]
+      , python =
+        { default_packages_file = "${xdg-config}/mise/default-pip-packages"
+        , compile = True
+        }
+      }
+
+in  { plugins, tools, env, settings }

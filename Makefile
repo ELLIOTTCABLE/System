@@ -1,9 +1,11 @@
 makeFileDir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-ALL_DHALL := $(shell fd --glob '*.dhall' "$(makeFileDir)" )
-ALL_TOML := $(wildcard $(ALL_DHALL:%.dhall=%.toml))
+ALL_DHALL := $(shell cd "$(makeFileDir)" && fd --glob '*.dhall')
+ALL_TOML := $(ALL_DHALL:%.dhall=%.toml)
 
 DHALL_TO_TOML := $(makeFileDir)/Dotfiles/bin/dhall-to-toml-via-yq
+
+.DEFAULT_GOAL := dhall
 
 print_all:
 	@echo "Dhall sources: $(ALL_DHALL)"
