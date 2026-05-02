@@ -1,3 +1,5 @@
+Include /Users/ec/.config/colima/ssh_config
+
 HashKnownHosts yes
 VerifyHostKeyDNS ask
 
