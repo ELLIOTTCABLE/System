@@ -47,8 +47,6 @@ colima/_store
 colima/_lima
 colima/ssh_config
 colima/*/daemon/daemon.log
-colima/*/daemon/daemon.pid
-colima/**/*.sock
 
 # Why do so many games store their info in .config!?
 AtomZombieData/

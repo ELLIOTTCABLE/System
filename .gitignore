@@ -3,16 +3,24 @@
 #   Dotfiles/config/Code/.gitignore
 
 node_modules/
+.neon
+
+**/config.local
+**/*.local.json
+**/*.local.csv
+
+**/*.sock
+**/*.lock
+**/lock
+**/*.pid
+**/pid
 
 # NB: These are not actually lockfiles; see:
 #   <https://github.com/Homebrew/homebrew-bundle/issues/1188>
 Bootstrap/rest.brewfile.lock.json
 Bootstrap/frontload.brewfile.lock.json
 
-Dotfiles/git/config.local
-
 Dotfiles/ssh/ahrefs
-Dotfiles/ssh/config.local
 Dotfiles/ssh/identities/ahrefs/config
 
 Dotfiles/ssh/known_hosts*
@@ -26,8 +34,6 @@ Dotfiles/ssh/agents/
 Dotfiles/ocp/ocp-build.prefs
 
 Dotfiles/opam/config
-Dotfiles/opam/config.lock
-Dotfiles/opam/lock
 Dotfiles/opam/*/
 
 Dotfiles/vim/undo
@@ -41,5 +47,3 @@ Dotfiles/jupyter/nbconfig/
 
 Dotfiles/gnupg/.#*.*.*
 Dotfiles/gnupg/random_seed
-
-Extras/FireFox Extension Configs/*.local.csv

@@ -1,6 +1,3 @@
-**/*.local.json
-
-ide/*.lock
 history.jsonl
 
 backups
