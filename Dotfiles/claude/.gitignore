@@ -1,3 +1,5 @@
+**/*.local.json
+
 ide/*.lock
 history.jsonl
 
@@ -8,6 +10,10 @@ projects
 session-env
 sessions
 shell-snapshots
+telemetry
 
+plugins/blocklist.json
+plugins/installed_plugins.json
 plugins/install-counts-cache.json
 plugins/known_marketplaces.json
+plugins/marketplaces/*
