@@ -18,7 +18,9 @@
       "WebFetch(domain:github.blog)",
       "WebFetch(domain:www.windmill.dev)",
       "WebFetch(domain:neon.tech)",
-      "WebFetch(domain:neon.com)"
+      "WebFetch(domain:neon.com)",
+      "Read(//c/Users/ec/.claude/skills/prompt-review/**)",
+      "Read(//c/Users/ec/System/Dotfiles/claude/skills/prompt-review/**)"
     ]
   },
   "hooks": {
