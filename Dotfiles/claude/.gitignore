@@ -1,11 +1,15 @@
+.credentials.json
 history.jsonl
 
-backups
-cache
-file-history
+plans
 projects
-session-env
 sessions
+file-history
+
+backups
+tasks
+cache
+session-env
 shell-snapshots
 telemetry
 
