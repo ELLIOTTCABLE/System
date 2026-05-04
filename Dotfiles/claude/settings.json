@@ -21,8 +21,106 @@
       "WebFetch(domain:neon.com)"
     ]
   },
-  "model": "opus",
-  "effortLevel": "medium",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel 2>/dev/null); branch=$(git branch --show-current 2>/dev/null); if [ -f \"$root/.claude-commit\" ]; then exit 0; fi; case \"$branch\" in ai/*) exit 0;; *) echo \"Blocked: git commit on '$branch' (autonomous mode requires an ai/* branch or .claude-commit sentinel at the repo root). Produce the message and let the user run the commit.\" >&2; exit 2;; esac",
+            "if": "Bash(git commit *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git push reserved for the user; remote state is not Claude-managed.' >&2; exit 2",
+            "if": "Bash(git push *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git rebase reserved for the user. The user does the review-and-rebase pass on AI commits.' >&2; exit 2",
+            "if": "Bash(git rebase *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git merge reserved for the user.' >&2; exit 2",
+            "if": "Bash(git merge *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git reset --hard discards working state. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git reset --hard*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git clean -f discards untracked files. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git clean -*f*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git branch -D force-deletes branches. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git branch -D *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git branch -d deletes branches. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git branch -d *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git branch --delete reserved for the user.' >&2; exit 2",
+            "if": "Bash(git branch --delete*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git stash drop loses stashed work. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git stash drop*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git stash clear loses all stashed work. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git stash clear*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git tag -d reserved for the user.' >&2; exit 2",
+            "if": "Bash(git tag -d *)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git tag --delete reserved for the user.' >&2; exit 2",
+            "if": "Bash(git tag --delete*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git filter-branch rewrites history. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git filter-branch*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git filter-repo rewrites history. Reserved for the user.' >&2; exit 2",
+            "if": "Bash(git filter-repo*)"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Blocked: git update-ref reserved for the user.' >&2; exit 2",
+            "if": "Bash(git update-ref*)"
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$j=[Console]::In.ReadToEnd()|ConvertFrom-Json; $cmd=$j.tool_input.command; $blocked=@('\\bgit\\s+push\\b','\\bgit\\s+rebase\\b','\\bgit\\s+merge\\b','\\bgit\\s+reset\\s+--hard\\b','\\bgit\\s+clean\\s+-[a-zA-Z]*f','\\bgit\\s+branch\\s+(-D|-d|--delete)\\b','\\bgit\\s+stash\\s+(drop|clear)\\b','\\bgit\\s+tag\\s+(-d|--delete)\\b','\\bgit\\s+filter-branch\\b','\\bgit\\s+filter-repo\\b','\\bgit\\s+update-ref\\b'); foreach($p in $blocked){ if($cmd -match $p){ [Console]::Error.WriteLine('Blocked: mutative git operation reserved for the user.'); exit 2 } }; if($cmd -match '(?i)\\bgit\\s+commit\\b'){ $root=(git rev-parse --show-toplevel 2>$null); $branch=(git branch --show-current 2>$null); if((Test-Path \"$root/.claude-commit\") -or ($branch -match '^ai/')){exit 0}; [Console]::Error.WriteLine(\"Blocked: git commit on '$branch' (requires ai/* branch or .claude-commit sentinel).\"); exit 2 }",
+            "shell": "powershell"
+          }
+        ]
+      }
+    ]
+  },
   "editorMode": "vim",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "effortLevel": "medium"
 }
