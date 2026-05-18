@@ -460,6 +460,30 @@ else return 1; fi ;}
 
 export zsh_directory_name_functions
 
+gitignores() {
+   set --
+   d=${1:-$PWD}
+   top=$(command git -C "$d" rev-parse --show-toplevel 2>/dev/null)
+   if [ -n "$top" ]; then
+      while :; do
+         [ -f "$d/.gitignore" ] && set -- "$d/.gitignore" "$@"
+         [ "$d" = "$top" ] && break
+         d=${d%/*}
+         [ -z "$d" ] && d=/
+      done
+      e=$(command git -C "$top" rev-parse --git-path info/exclude 2>/dev/null) \
+         && [ -f "$e" ] && set -- "$@" "$e"
+   fi
+   g=$(command git config --get core.excludesFile 2>/dev/null)
+   if [ -z "$g" ]; then
+      g=${XDG_CONFIG_HOME:-$HOME/.config}/git/ignore
+   else
+      case $g in "~/"*) g=$HOME/${g#~/} ;; esac
+   fi
+   [ -f "$g" ] && set -- "$@" "$g"
+   [ $# -gt 0 ] && printf '%s\n' "$@"
+}
+
 # make `dig` less insanely verbose.
 alias dig='dig +nocmd +nocomments +noadditional +nostats'
 
