@@ -1,8 +1,5 @@
 {
-  "minimumVersion": "2.1.138",
-  "autoUpdatesChannel": "stable",
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "WebSearch",
       "WebFetch(domain:github.com)",
@@ -24,7 +21,8 @@
       "WebFetch(domain:neon.com)",
       "Read(//c/Users/ec/.claude/skills/prompt-review/**)",
       "Read(//c/Users/ec/System/Dotfiles/claude/skills/prompt-review/**)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -50,7 +48,13 @@
       }
     ]
   },
+  "effortLevel": "xhigh",
+  "promptSuggestionEnabled": false,
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.138",
+  "theme": "auto",
   "editorMode": "vim",
+  "verbose": true,
   "agentPushNotifEnabled": true,
-  "effortLevel": "medium"
+  "skipAutoPermissionPrompt": true
 }
