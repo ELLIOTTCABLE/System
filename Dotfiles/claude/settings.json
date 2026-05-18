@@ -1,5 +1,8 @@
 {
+  "minimumVersion": "2.1.138",
+  "autoUpdatesChannel": "stable",
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "WebSearch",
       "WebFetch(domain:github.com)",
@@ -30,83 +33,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "root=$(git rev-parse --show-toplevel 2>/dev/null); branch=$(git branch --show-current 2>/dev/null); if [ -f \"$root/.claude-commit\" ]; then exit 0; fi; case \"$branch\" in ai/*) exit 0;; *) echo \"Blocked: git commit on '$branch' (autonomous mode requires an ai/* branch or .claude-commit sentinel at the repo root). Produce the message and let the user run the commit.\" >&2; exit 2;; esac",
-            "if": "Bash(git commit *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git push reserved for the user; remote state is not Claude-managed.' >&2; exit 2",
-            "if": "Bash(git push *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git rebase reserved for the user. The user does the review-and-rebase pass on AI commits.' >&2; exit 2",
-            "if": "Bash(git rebase *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git merge reserved for the user.' >&2; exit 2",
-            "if": "Bash(git merge *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git reset --hard discards working state. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git reset --hard*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git clean -f discards untracked files. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git clean -*f*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git branch -D force-deletes branches. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git branch -D *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git branch -d deletes branches. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git branch -d *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git branch --delete reserved for the user.' >&2; exit 2",
-            "if": "Bash(git branch --delete*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git stash drop loses stashed work. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git stash drop*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git stash clear loses all stashed work. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git stash clear*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git tag -d reserved for the user.' >&2; exit 2",
-            "if": "Bash(git tag -d *)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git tag --delete reserved for the user.' >&2; exit 2",
-            "if": "Bash(git tag --delete*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git filter-branch rewrites history. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git filter-branch*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git filter-repo rewrites history. Reserved for the user.' >&2; exit 2",
-            "if": "Bash(git filter-repo*)"
-          },
-          {
-            "type": "command",
-            "command": "echo 'Blocked: git update-ref reserved for the user.' >&2; exit 2",
-            "if": "Bash(git update-ref*)"
+            "command": "node \"$HOME/.claude/hooks/git-deny.mjs\"",
+            "if": "Bash(*git*)"
           }
         ]
       },
