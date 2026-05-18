@@ -1,6 +1,6 @@
-# See also: Dotfiles/config/.gitignore,
-#   Dotfiles/config/configstore/.gitignore,
-#   Dotfiles/config/Code/.gitignore
+# See also: Dotfiles/config/.gitignore, etc:
+#
+#     fd -u .gitignore
 
 node_modules/
 .neon

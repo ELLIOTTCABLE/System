@@ -1,4 +1,6 @@
 .credentials.json
+.last-cleanup
+mcp-needs-auth-cache.json
 history.jsonl
 
 plans
