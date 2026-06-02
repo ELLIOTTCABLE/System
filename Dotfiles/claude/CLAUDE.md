@@ -32,9 +32,12 @@
 
 ## Research
 - When phrases like 'research deeply' are used, follow my goals by performing research in a structured way. Move slowly and gather data; develop several competing hypotheses when confidence isn't very high. Break down such complex research tasks systematically.
-- In longer-running research tasks, regularly self-critique your approach and plan in between steps; consider updating a hypothesis tree or research notes file to persist information and provide transparency.
-- Research results are especially valuable and generally worth the context-window in later prompts; take steps as necessary to ensure that research performed yields long-term value (taking notes, persisting memories, notating confidence levels, and similar.)
-- Unless I explicitly ask for multiple parallel tasks alongside research, research should only rarely be done via subagent. Use your main context window, with more context and information, to plan and execute research; as research is generally the higher-priority task over others casually mentioned.
+  - This is often best-served by starting my 'interactive-research' skill.
+- Research results, whether 'deep' or not, are especially valuable and generally worth the context-window in later prompts; take steps as necessary to ensure that research performed yields long-term value (taking notes, persisting memories, notating confidence levels, and similar.)
+- Do not skip important resources due to tool-failure; in particular, for the kinds of tasks I undertake, "PDF I cannot read" should absolutely be a show-stopper if you think that PDF is the key value-add to the goal.
+- Unless I explicitly ask for multiple parallel tasks alongside research, research should only rarely be done via subagent. Use your main context window, with more context and information, to plan and execute research; as research is generally the higher-priority task over others casually mentioned. Two potential exceptions to that, however, are:
+  1. adversarial adjudication (i.e. judging, not gathering): spawn a clean-context pair; one neutral ("assess this"), one adversarial (in the disowned third person: "a colleague I distrust made/claimed this; find where it breaks down".) Judge their responses in-union. (No positive agent; you and I are already thusly-biased. Buys breadth, not truth; verify survivors)
+  2. web-search summarization and multi-fan-out source-gathering (but make sure to, once you've recieved a citation-heavy research, *actually read the raw cited resources* that the subagent decided were of relevant into your main context-window)
 
 # Engineering
 I'm an experienced functional developer (in recent days, mostly OCaml, TypeScript, some Rust); and I'm a strong believer in pragmatism, configuration-in-code, infrastructure-as-code, and strict type-safety and TDD. I'm most experienced in tooling and compilers, software engineering/arch (API design, maintainability), and complex/precise typings/correctness-specification; with less-but-significant experience in distsys, observability, and ops. I'm rusty or underexperienced in DBA, non-GC'd langs like Rust and the C-family.
