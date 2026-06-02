@@ -33,7 +33,7 @@ When a claim matters, check it against the actual source-code and live/relevant/
 Before a turn reaches the human, your **final act** is to run `validate.sh` (see *Tooling* in `SKILL.md`):
 
 ```bash
-bash ~/.claude/skills/interactive-research/scripts/validate.sh .claude/research/<topic>
+sh ~/.claude/skills/interactive-research/scripts/validate.sh .claude/research/<topic>
 ```
 
 A non-zero exit means a citation didn't resolve to a registered source — fix each before handing off. Warnings don't fail the gate; weigh them. A clean exit, warnings weighed, signals the turn is ready for review.

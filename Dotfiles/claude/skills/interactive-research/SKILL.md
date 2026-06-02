@@ -120,7 +120,7 @@ Reserve the returned-to-user *response*, post-generation, for meta-procedural co
 
 ## Tooling
 
-The skill's `scripts/` holds three helpers; invoke them by absolute path (they need `bash`, `jq`, `curl`). Read one to adapt it; otherwise just call it.
+The skill's `scripts/` holds three helpers; invoke them by absolute path (they need `sh`, `jq`, `curl`). Read one to adapt it; otherwise just call it.
 
 **`new-turn.sh <research-dir>`** — creates this turn's notes file and echoes the path.
 
@@ -130,10 +130,10 @@ The skill's `scripts/` holds three helpers; invoke them by absolute path (they n
 
 ```bash
 d=.claude/research/<topic>
-bash ~/.claude/skills/interactive-research/scripts/new-turn.sh "$d"
+sh ~/.claude/skills/interactive-research/scripts/new-turn.sh "$d"
 echo '{"url":"https://…","grading-certainty":"+1:SURE", … ,"via":"…"}' \
-  | bash ~/.claude/skills/interactive-research/scripts/new-source.sh "$d" B-moeller-spa-2025
-bash ~/.claude/skills/interactive-research/scripts/validate.sh "$d"
+  | sh ~/.claude/skills/interactive-research/scripts/new-source.sh "$d" B-moeller-spa-2025
+sh ~/.claude/skills/interactive-research/scripts/validate.sh "$d"
 ```
 
 ## Phase 0 — shape the problem space (no questions yet)

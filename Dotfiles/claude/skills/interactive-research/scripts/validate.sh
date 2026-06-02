@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 # Final gate before a turn's artifacts reach the human. The bracketed reference-format —
 # [B-moeller-spa-2025] — is the required way to cite. Artifacts are scanned newest-first
 # (by mtime), so issues in what you just edited surface at the top:
@@ -16,60 +16,66 @@
 #
 # Usage:  validate.sh <research-dir>
 # Exit:   0 clean or warnings-only · 1 unregistered canonical citation(s) · 2 usage/tooling error
-set -euo pipefail
+set -eu
 WARN_CAP=20
 
 die() { printf 'validate: %s\n' "$*" >&2; exit 2; }
+matches() { printf '%s\n' "$1" | grep -Eq -- "$2"; }
 
 [ $# -eq 1 ] || die "usage: validate.sh <research-dir>"
 dir=$1
-command -v jq >/dev/null || die "jq not found"
+command -v jq >/dev/null 2>&1 || die "jq not found"
 [ -d "$dir" ] || die "no such dir: $dir"
 
 src="$dir/sources.json"
-keys=$([ -f "$src" ] && jq -r 'keys[]' "$src" || true)
+if [ -f "$src" ]; then keys=$(jq -r 'keys[]' "$src"); else keys=; fi
+is_key() { printf '%s\n' "$keys" | grep -Fxq -- "$1"; }
 
-# Artifacts newest-first; the literal glob (no match) yields no lines, so arts stays empty.
-arts=()
-while IFS= read -r f; do arts+=("$f"); done < <(ls -t "$dir"/*.md 2>/dev/null)
-[ ${#arts[@]} -gt 0 ] || { echo "validate: no .md artifacts in $dir — nothing to check"; exit 0; }
+work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
+errf="$work/err"; warnf="$work/warn"; : > "$errf"; : > "$warnf"
 
 cite_re='\[[A-Fa-f]-[A-Za-z0-9._-]+\]'             # bracketed citation, either grade case
-canon_re='^[A-F]-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}$' # strict canonical slug
+# Strict canonical slug. The year is matched as any 4 digits here — deliberately laxer than
+# new-source.sh's (19|20)YY. That asymmetry is load-bearing: a canonical-shaped but
+# unregisterable cite like [A-xyz-2250] must resolve to nothing and ERROR, not slip to a
+# warn. Do not "unify" this with new-source.sh's slug_re without re-reading that contract.
+canon_re='^[A-F]-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}$'
 strong_re='[A-F]-[A-Za-z0-9_-]+-[0-9]{4}'          # fully-formed slug, bracket-agnostic
 
-errors=() warns=()
-for f in "${arts[@]}"; do
-   while IFS= read -r ln; do
+# Artifacts newest-first; a non-matching glob yields no lines, leaving arts empty.
+ls -t "$dir"/*.md 2>/dev/null > "$work/arts" || true
+[ -s "$work/arts" ] || { echo "validate: no .md artifacts in $dir — nothing to check"; exit 0; }
+
+while IFS= read -r f; do
+   [ -n "$f" ] || continue
+   grep -oEn "$cite_re" "$f" 2>/dev/null | while IFS= read -r ln; do
       [ -n "$ln" ] || continue
       tok=${ln#*:}; slug=${tok#[}; slug=${slug%]}; line=${ln%%:*}
-      if [[ $slug =~ $canon_re ]]; then
-         if grep -Fxq -- "$slug" <<<"$keys"; then continue; fi
-         errors+=("$(printf 'ERROR  unregistered   %-34s  %s:%s' "$slug" "$f" "$line")")
+      if matches "$slug" "$canon_re"; then
+         if is_key "$slug"; then continue; fi
+         printf 'ERROR  unregistered   %-34s  %s:%s\n' "$slug" "$f" "$line" >> "$errf"
       else
-         if   [[ $slug =~ ^[a-f]- ]];      then why="lower-case grade"
-         elif [[ ! $slug =~ -[0-9]{4}$ ]]; then why="missing year"
-         else                                   why="off-canonical"; fi
-         warns+=("$(printf 'warn   %-16s  %-34s  %s:%s' "$why" "$slug" "$f" "$line")")
+         case "$slug" in
+            [a-f]-*) why="lower-case grade" ;;
+            *) if matches "$slug" '-[0-9]{4}$'; then why="off-canonical"; else why="missing year"; fi ;;
+         esac
+         printf 'warn   %-16s  %-34s  %s:%s\n' "$why" "$slug" "$f" "$line" >> "$warnf"
       fi
-   done < <(grep -oEn "$cite_re" "$f" || true)
-
+   done
    # Unbracketed strong slugs: strip bracketed spans first (sed keeps line count), then match.
-   while IFS= read -r ln; do
+   sed 's/\[[^][]*\]//g' "$f" | grep -oEn "$strong_re" 2>/dev/null | while IFS= read -r ln; do
       [ -n "$ln" ] || continue
       slug=${ln#*:}; line=${ln%%:*}
-      warns+=("$(printf 'warn   %-16s  %-34s  %s:%s' "unbracketed" "$slug" "$f" "$line")")
-   done < <(sed 's/\[[^][]*\]//g' "$f" | grep -oEn "$strong_re" || true)
-done
-
-errc=${#errors[@]} warnc=${#warns[@]}
-[ "$errc" -eq 0 ] || for e in "${errors[@]}"; do printf '  %s\n' "$e" >&2; done
-if [ "$warnc" -gt 0 ]; then
-   shown=0
-   for w in "${warns[@]}"; do
-      [ "$shown" -lt "$WARN_CAP" ] || break
-      printf '  %s\n' "$w" >&2; shown=$((shown + 1))
+      printf 'warn   %-16s  %-34s  %s:%s\n' "unbracketed" "$slug" "$f" "$line" >> "$warnf"
    done
+done < "$work/arts"
+
+errc=$(wc -l < "$errf" | tr -d ' ')
+warnc=$(wc -l < "$warnf" | tr -d ' ')
+
+[ "$errc" -eq 0 ] || sed 's/^/  /' "$errf" >&2
+if [ "$warnc" -gt 0 ]; then
+   sed 's/^/  /' "$warnf" | head -n "$WARN_CAP" >&2
    [ "$warnc" -le "$WARN_CAP" ] \
       || printf 'validate: %d warnings; showing the %d in the most-recently-changed files (%d more suppressed).\n' "$warnc" "$WARN_CAP" "$((warnc - WARN_CAP))" >&2
 fi
