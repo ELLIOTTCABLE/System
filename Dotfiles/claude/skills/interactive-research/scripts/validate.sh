@@ -22,8 +22,13 @@ WARN_CAP=20
 die() { printf 'validate: %s\n' "$*" >&2; exit 2; }
 matches() { printf '%s\n' "$1" | grep -Eq -- "$2"; }
 
+if ! command -v jq >/dev/null 2>&1 && command -v mise >/dev/null 2>&1 && [ -z "${_IR_VIA_MISE:-}" ]; then
+   exec env _IR_VIA_MISE=1 mise exec -- sh "$0" "$@"
+fi
+
 [ $# -eq 1 ] || die "usage: validate.sh <research-dir>"
 dir=$1
+printf 'validate: cwd %s — checking %s\n' "$(pwd)" "$dir" >&2
 command -v jq >/dev/null 2>&1 || die "jq not found"
 [ -d "$dir" ] || die "no such dir: $dir"
 
@@ -42,9 +47,11 @@ cite_re='\[[A-Fa-f]-[A-Za-z0-9._-]+\]'             # bracketed citation, either 
 canon_re='^[A-F]-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}$'
 strong_re='[A-F]-[A-Za-z0-9_-]+-[0-9]{4}'          # fully-formed slug, bracket-agnostic
 
-# Artifacts newest-first; a non-matching glob yields no lines, leaving arts empty.
-ls -t "$dir"/*.md 2>/dev/null > "$work/arts" || true
-[ -s "$work/arts" ] || { echo "validate: no .md artifacts in $dir — nothing to check"; exit 0; }
+# Every *.md under the tree (tiered research-dirs included), newest-first — but never the
+# sources/ archive, whose files are copies of external sources, not our own artifacts.
+find "$dir" -type d -name sources -prune -o -type f -name '*.md' -print0 2>/dev/null > "$work/found"
+[ -s "$work/found" ] || { echo "validate: no .md artifacts under $dir — nothing to check"; exit 0; }
+xargs -0 ls -t < "$work/found" > "$work/arts" 2>/dev/null || true
 
 while IFS= read -r f; do
    [ -n "$f" ] || continue

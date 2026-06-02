@@ -46,7 +46,7 @@ Keep an append-only manifest-of-sources in machine-queryable `.claude/research/<
 - **grading-reasoning** and **relevance-description** — brief sentence-fragments on *why* that grade and *how* it's relevant to the phase you found it in.
 - **graded-by** — `subagent`, `top-level-agent`, or `human`: who made the judgment (see below).
 - **published** — the source's own date (`YYYY`, `YYYY-MM`, or `YYYY-MM-DD`).
-- **via** — provenance: the slug that led you here (`C-other-source-slug-2021`), or the tool-call that surfaced it (`kagi_search(static analysis pdf)`).
+- **via** — provenance: either the slug that led you here (`C-other-source-slug-2021`), or the surfacing tool-call written *as actually invoked* — real tool name and arguments, replayable — e.g. `mcp__kagi-ken__kagi_search_fetch(queries: ['sycophancy LLM Sharma'])`. Not a paraphrase, and not a generic `ToolInvocation(…)` wrapper.
 
 `new-source.sh` additionally stamps **retrieved** (today) and **sha256** (of the copy it downloads into `sources/<slug>.<ext>`) — never write those by hand.
 
@@ -178,4 +178,6 @@ Built by `new-source.sh` (see *Tooling*), keyed by slug — grade is the slug's 
 }
 ```
 
-`via` is either a source-slug (as above) or the tool-call that surfaced it — e.g. `"via": "kagi_search(static analysis pdf)"` — exactly one of the two.
+`via` is either (exactly one):
+- the source-slug that led you here (as in the example above), or
+- the tool-call that surfaced it, copied *as invoked*: `"via": "mcp__kagi-ken__kagi_search_fetch(queries: ['static analysis pdf'])"`

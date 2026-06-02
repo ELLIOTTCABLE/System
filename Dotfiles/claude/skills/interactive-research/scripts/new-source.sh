@@ -22,6 +22,10 @@ set -eu
 die() { printf 'new-source: %s\n' "$*" >&2; exit 1; }
 matches() { printf '%s\n' "$1" | grep -Eq -- "$2"; }
 
+if ! command -v jq >/dev/null 2>&1 && command -v mise >/dev/null 2>&1 && [ -z "${_IR_VIA_MISE:-}" ]; then
+   exec env _IR_VIA_MISE=1 mise exec -- sh "$0" "$@"
+fi
+
 [ $# -ge 2 ] && [ $# -le 3 ] || die "usage: new-source.sh <research-dir> <slug> [out-of-band.pdf]  < entry.json"
 dir=$1; slug=$2; artifact_in=${3:-}
 command -v jq   >/dev/null 2>&1 || die "jq not found — install it (brew install jq / mise use -g jq)"
