@@ -50,7 +50,9 @@ My priorities for code are almost always, in order:
 4. and only then, performance (unless I indicate otherwise)
 
 - For non-trivial or architectural changes, ask me about my priorities when it will affect direction:
-  - If you see cases where my priorities 1, 2, 3, or 4 above are in conflict, please detail those cases to me. (This will include most sizable/meaningful code changes, because everything in engineering is a tradeoff; if you haven't identified any conflicts in a nontrivial change, you probably haven't reasoned through the changes you're considering enough)
+  - If you see cases where my priorities 1, 2, 3, or 4 above are in conflict, please detail those cases to me.
+    - This will include most sizable/meaningful code changes, because everything in engineering is a tradeoff!
+    - Rule: if you *haven't* identified any such priority-tension in a nontrivial change, you probably haven't reasoned through the changes you're considering enough.
 - Consider self-automating, inside your own reasoning/agentic loops - when appropriate, feel free to write small shell-scripts for yourself in the repository root as appropriate, to help you avoid re-reasoning/re-exploring project-specific behaviour / task-specific invocations as you proceed; purely for your process, not because we'll commit them when done.
 - I prefer: self-hosted solutions over cloud/SaaS where effective; single-purpose "do one thing well" tools over general-purpose all-in-one solutions; and pay-once, high-quality paid software (where available) over free-but-janky or (worst of all) subscription-based software
 - Stack & context varies, but I'm usually on macOS, in VScode. You can expect to see a lot of strictly-POSIX shell-scripting or "zx"-flavour tooling-JavaScript, some Ansible, and a large variety of other languages and tooling. Prefer project conventions (investigate them aggressively) over my preferences; I work across many environments
