@@ -12,6 +12,8 @@ winget install -e --id Valve.Steam
 # Rest
 winget install -e --id 3Dconnexion.3DxWare.10
 winget install -e --id AgileBits.1Password.CLI
+winget install -e --id Anthropic.Claude
+winget install -e --id Anthropic.ClaudeCode
 winget install -e --id Armin2208.WindowsAutoNightMode
 winget install -e --id AutoHotkey.AutoHotkey
 winget install -e --id Discord.Discord
