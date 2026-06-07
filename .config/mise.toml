@@ -6,5 +6,6 @@ _.python.venv = { path = ".venv", create = true }
 
 [tools]
 bun = "1"
+jq = "latest"
 python = "3"
 uv = "latest"
