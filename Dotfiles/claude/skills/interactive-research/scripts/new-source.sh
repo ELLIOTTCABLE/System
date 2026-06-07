@@ -35,8 +35,16 @@ matches "$slug" '^[A-F]-[a-z0-9]+(-[a-z0-9]+)*-(19|20)[0-9]{2}$' \
    || die "slug '$slug' must be <A-F>-<lower-kebab>-<YYYY>, e.g. B-moeller-spa-2025"
 
 entry=$(cat)
-[ -n "$entry" ] || die "no JSON on stdin"
-printf '%s' "$entry" | jq -e . >/dev/null 2>&1 || die "stdin is not valid JSON"
+[ -n "$entry" ] || die "no JSON on stdin (read 0 bytes)"
+# Validate shape, and on failure SHOW what arrived — a bare 'not valid JSON' hides the common
+# causes (a \r-suffixed slug from 'jq -r keys[]' on Windows makes a lookup return the JSON value
+# 'null'; a truncated pipe yields a parse error). Distinguish the two and echo the payload.
+etype=$(printf '%s' "$entry" | jq -r 'type' 2>/dev/null) || etype=""
+case "$etype" in
+   object) : ;;
+   "")     die "stdin is not valid JSON — got ${#entry} bytes: $(printf '%s' "$entry" | head -c 160)" ;;
+   *)      die "stdin must be a JSON object, got JSON $etype (likely a wrong/empty slug lookup): $(printf '%s' "$entry" | head -c 160)" ;;
+esac
 
 field() { printf '%s' "$entry" | jq -r --arg k "$1" '.[$k] // empty'; }
 for k in url grading-certainty grading-reasoning relevance-certainty relevance-description graded-by published via; do
