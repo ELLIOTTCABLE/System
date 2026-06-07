@@ -1,0 +1,5 @@
+# The files under research/sources/ are third-party papers (mostly copyrighted) that
+# were fetched for this investigation. They are NOT committed. The committable record
+# of them is research/sources.json — it carries each source's URL, sha256, retrieved
+# date, and grading, so anyone can re-fetch and verify byte-for-byte.
+research/sources/
