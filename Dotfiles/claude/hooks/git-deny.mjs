@@ -82,8 +82,11 @@ if (/\bgit\s+commit\b/.test(cmd)) {
    const branch = sh("branch --show-current")
    if (root && existsSync(`${root}/.claude-commit`)) process.exit(0)
    if (/^ai\//.test(branch)) process.exit(0)
+   // Claude worktrees are autonomous like ai/*, but require BOTH the dedicated
+   // `worktree-*` branch AND a `.claude/worktrees/` path — neither signal alone suffices.
+   if (/^worktree-/.test(branch) && root.includes("/.claude/worktrees/")) process.exit(0)
    deny(
-      `git commit on '${branch}' (autonomous mode requires an ai/* branch or .claude-commit sentinel at the repo root). Produce the message and let the user run the commit.`,
+      `git commit on '${branch}' (autonomous mode requires an ai/* branch, a worktree-* branch under .claude/worktrees/, or a .claude-commit sentinel). Produce the message and let the user run the commit.`,
    )
 }
 
