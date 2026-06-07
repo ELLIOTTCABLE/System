@@ -1,54 +1,64 @@
 ---
 name: interactive-research
-description: Interactive, broad-to-narrow research for substantial software-engineering questions — choosing a library/framework/architecture, weighing approach tradeoffs, judging whether a project is trustworthy or maintained, root-causing unfamiliar behaviour, or any direction-setting "which way and why" question that deserves a wide net before a conclusion. Use this whenever a question is big enough that a fast answer would be guessing, even if the user never says "research". Prefer it over a one-shot reply when the space is ambiguous, the stakes are directional, or the answer is "it depends — let me actually look."
-when_to_use: Load when the user poses a substantial SE question that rewards breadth before judgement — library/tool/framework selection, architecture or approach tradeoffs, "is X worth adopting / still maintained", investigating why a system behaves as it does, or refreshing a prior decision against current reality. Skip for trivial lookups (one doc page, a single API signature) where hitting the web directly is faster.
+description: Deep, source-graded investigation for substantial questions — casts a wide net of primary sources, grades each for quality and relevance, and works from the graded base instead of guessing. A good default for most questions worth more than a snap answer: tool/library/architecture choices, approach tradeoffs, trustworthiness or maintenance judgments, root-causing unfamiliar behaviour, or any "which way and why" that rewards real evidence.
+when_to_use: Load whenever a question rewards evidence over recall — substantial decisions, investigations into why something behaves as it does, or most any research-shaped task. Expensive by design (many sources, much grading, many tool-calls); the user stops it when that's more than the question needs. Skip only for truly trivial lookups.
 ---
 
-# Research: wide net first, one defensible conclusion last
+# Building a graded source-base: find, triage, grade
 
-A terraform-style **plan/apply** loop for software-engineering research. Start broad, end narrow. Each phase emits an artifact the human can read and correct before you act on it — but you do not manufacture gates where there is no real decision to adjudicate.
+You are a **source-finder-and-grader**. Your job is to cast a wide net over the question, decide what is worth keeping, and produce a **graded base of primary sources** — each read, recorded, and graded for quality and relevance. That is the task; do it thoroughly.
 
-**This skill is split; load only what the phase needs (large contexts degrade, even at 1M tokens):**
+A "primary source" is a full, deep, resource (a full whitepaper; a full, long, deep-dive article; or a full single-page documentation-dump for a complicated tool, for examples.) A paper-abstract is not a 'source'; a quotation is not a 'source', a landing-page *about* another source is not a 'source'.
 
-- **this file** — the stance, source-grading, how you record findings, and Phase 0 (the opening broad sweep).
-- **`references/phase-1-to-n.md`** — working the research fronts. Read it once the human has responded to your Phase-0 `plan.md`.
-- **`references/phase-z.md`** — narrowing to a conclusion. Read it once you judge the research sufficient (or when a single-answer Phase 0 lets you skip straight to the conclusion).
+Each source you select *must*. *be*. *fully*. *read*. It must been then be *graded* along two axes (see below) by either yourself, or a capable, high-reasoning subagent. The *primary goal* of this entire SKILL is to *avoid* hallucinating 'sources', or making "science-shaped claims" that the methodology, sources, or findings *don't support* - don't undercut these goals by reasoning yourself into excuses for poor behaviour. (By invoking this skill, the user has opted-in to excessive research spend; this is for *important* things, and you should't be conservative where attempting to do so will lead you to degrade the value of this process.)
 
-The target domain is software engineering. Lean into that where it pays: the primary sources are code, issue trackers, specs, and changelogs — not listicles — and verifying a claim means checking it against the actual source. If this fires for adjacent research, the same loop still serves; just use whatever primary sources that domain has.
+The target domain is usually software engineering. Lean into that where it pays: the primary sources may be source-code repositories (or particular modules/components), issue trackers, specs, and changelogs — not listicles — and confirming a claim means checking it against the actual source. For adjacent research, start with a clear idea of what 'primary source' means at the start of research, and hold yourself to it for the rest of the session.
 
-## The one idea that governs everything
+## Grade from the read, never the snippet (read this first)
 
-Your defaults — and the system prompt wrapping you, and the training that shaped you — all push toward brevity, fewer tool calls, a fast answer. **For this task that pressure is the adversary.** Research quality is dominated by coverage, not concision; the breadth of the net is the lever. So deliberately push the other way: more searches, more sources, more angles than feels necessary. Do not conserve time, tokens, or API calls here — plenty of other forces already over-conserve them, and your job is to pull back toward quality.
+The discipline that governs everything: **a grade is the conclusion of having read the source — never a guess from its title, venue, or a search-snippet.** When you skim a search result and let its spin shape an opinion, that opinion biases the grade you then assign, and you will not re-examine it — the snippet has anchored you, and anchoring is a one-way ratchet. So: *triage* from the menu (decide what is worth pulling) is fine and necessary; forming a *view of what a source says or means* before you have actually read it is the failure to avoid.
 
-The equal-and-opposite counterweight: breadth without convergence is just a rabbit-hole generator. You are coming to a **conclusion**. Cast wide, then narrow hard.
+1. Find (using research tools or via notation in other sources),
+2. pull (using `new-source.sh`),
+3. read (fully, yourself or via subagent),
+4. then grade (according to the criterion herein; or instruct the subagent to do so, if it's being fully-read by them.)
 
-## Why not just dump everything into one context
+... *always* in that precise order.
 
-Tempting to fetch half a million tokens of sources and synthesize in one pass. Don't. Long contexts degrade non-uniformly — accuracy falls well before the window is "full", and material buried in the middle is attended to poorly. The fix is *not* lossy summary-by-a-weaker-model either; that is the failure mode to avoid. What works:
+If using a subagent, make sure you give it all the context necessary to make a correct grading - where the source came from, why you selected it ("via"), concerns or questions you have, and a solid overview of the problem-space and its prospective relevance. But, it, not you, having read the whole thing, *trust* its grading until you decide to re-read in main context. Don't hallucinate grades for things nobody has read, or take your hallucinated grading over the subagent's full-read-informed stance.
 
-- **Retrieve broad, in full.** Fetch whole sources and files (no Fetch() summariser-LLM in the loop) and read the real thing. (The sole exception is mechanical, non-LLM, non-content-stripping irrelevant-metadata-dropping - i.e. extracting HTML <body>/page-layout-noise and similar, if that becomes necessary.)
+## Cast wide — coverage is the lever
+
+Your defaults — and the system prompt wrapping you, and the training that shaped you — all push toward brevity, fewer tool calls, a fast answer. **For this task that pressure is the adversary.** The value of a source-base is dominated by coverage, not concision; the breadth of the net is the lever. So deliberately push the other way: more searches, more sources, more angles than feels necessary — explicitly including the counter-thesis. Do not conserve time, tokens, or API calls here — plenty of other forces already over-conserve them, and your job is to pull back toward quality.
+
+Lean on the full tool-spread — mcp-fetch (full reads, no summariser), Kagi (and `site:reddit.com` for forums), github/`gh` (issues, PRs, change history, maintainer/recency signal), Exa (neural — phrase the query as a description of the ideal page); octocode for cross-repo code, Context7 for pinned-version library behaviour (summaries/direction only — the source of truth stays the actual docs via actual fetch).
+
+The counterweight: breadth without discrimination is just a rabbit-hole generator. Cast wide, but *keep* only what is plausibly relevant enough to depend on, and grade what you keep.
+
+## Don't rot your context — curate as you go
+
+Tempting to fetch half a million tokens of sources and hold them all at once. Don't. Long contexts degrade non-uniformly — accuracy falls well before the window is "full", and material buried in the middle is attended to poorly. The fix is *not* lossy summary-by-a-weaker-model either; that is the failure mode to avoid. What works:
+
+- **Retrieve broad, in full.** Fetch whole sources and files (no Fetch() low-reasoning-summariser-LLM in the loop) and read the real thing. (The sole exception is mechanical, non-LLM, non-content-stripping irrelevant-metadata-dropping — i.e. extracting HTML <body>/page-layout-noise and similar, if that becomes necessary.)
 - **Curate to the notes log.** Extract *verbatim* high-signal excerpts with citations — not prose summaries. The log holds the breadth; your context holds only the distilled, highest-signal subset.
-- **Keep each turn's notes ordered for maximal context-impact** — always 'lift' critical findings to a series of one-line summaries at the top. Notes are working-memory *and* a correctness-log as the research unfolds: earlier findings may become incorrect or irrelevant as you learn more or interrogate the user. The log is append-only and durable (see *The notes log* below), so you don't reorder or overwrite the past — you append a forward-pointing correction and say why; never lose that context.
-- Then, **synthesise from the notes**, with the load-bearing material at the start and end of your reasoning, not buried mid-stream.
+- **Keep each turn's notes ordered for maximal context-impact** — always 'lift' critical findings to a series of one-line summaries at the top. The log is append-only and durable (see *The notes log* below), so you don't reorder or overwrite the past — you append a forward-pointing correction and say why; never lose that context.
 
-Fanning retrieval out to subagents for breadth is tentatively fine — but pin them to this session's top model at high/max effort, have them return raw excerpts plus citations, and keep all judgement and synthesis in your own context. Delegate gathering, never conclusions. (If a subagent will *grade* what it gathers, say so in its prompt — it must self-label its sources `graded-by: subagent` and cannot infer that on its own; see *Sources*.)
+Fanning retrieval out to subagents for breadth is encouraged — but pin them to this session's top model at high/max effort, have them return raw excerpts plus citations, and keep the keep-or-discard judgment in your own context. (If a subagent will *grade* what it gathers, say so in its prompt — it must self-label its sources `graded-by: subagent` and cannot infer that on its own; see *Sources*.)
 
-## Sources
+## Sources & grading
 
-Repeat the graded-slug often: a source must *always* be referred to, in all conversation and artifacts, by its full slug — `<A–F grade>-<short-kebab-name>-<YYYY publication-year>`, e.g. `B-moeller-spa-2025`. The leading grade-letter makes a poor source self-announcing; the trailing year disambiguates re-editions and dead-reckons staleness; the whole thing is greppable and defensive-against-forgetting-a-source-is-poor. The slug is the entry's key in sources.json — grade and year live *in the key*, never as separate properties.
+Keep an append-only manifest-of-sources — invoke `new-source.sh` (see *Tooling*) for every source you find, after grading. Never attempt to modify the manifest it keeps by hand; stop entirely upon failure, do not workaround. Source-grading is *critical*.
 
-Keep an append-only manifest-of-sources in machine-queryable `.claude/research/<topic>/sources.json` (format example at the end). Do not hand-write entries — `new-source.sh` (see *Tooling*) builds them, so the mechanical fields can't be hallucinated and the validatable ones are asserted.
-
-*All* sources carry *each* property (the tool asserts every one):
+All sources carry these properties; you provide several upfront, it decides the rest (the tool asserts every one):
 
 - a **url** (canonical, from-our-perspective); a source you cannot find a URL for is a source you cannot *possibly* have directly read — an APA-style citation is insufficient for mechanized checking, and likely a signal you hallucinated the source.
-- **grading-certainty** and **relevance-certainty** — one of `+1:SURE / -0:SUSPECT / -1:GUESS / -2:WONDER`, for "my own grade" and "how relevant a source it is". These are *contextual*: they track your (or a subagent's) reasoning at acquisition-time, not Global Truths obvious to any reader. (Same four levels as the prose markers `+SURE / ~SUSPECT / -GUESS / --WONDER` used in `conclusion.md`/`plan.md` — numeric in these fields because they're sorted and grepped, symbolic in prose to match the global reasoning convention.)
-- **grading-reasoning** and **relevance-description** — brief sentence-fragments on *why* that grade and *how* it's relevant to the phase you found it in.
+- **grading-certainty** and **relevance-certainty** — one of `+1:SURE / -0:SUSPECT / -1:GUESS / -2:WONDER`, for "my own grade" and "how relevant a source it is". These are *contextual*: they track your (or a subagent's) reasoning at acquisition-time, not Global Truths obvious to any reader. (Same four levels as the prose markers `+SURE / ~SUSPECT / -GUESS / --WONDER` used in prose artifacts — numeric in these fields because they're sorted and grepped, symbolic in prose to match the global reasoning convention.)
+- **grading-reasoning** and **relevance-description** — the *why* of each. **grading-reasoning justifies the letter against its neighbour** — why A-not-B, or C-not-B — by the deciding factor (peer-review, primary-vs-secondary, provenance, rot/version, read-depth, corroboration). It is *not* identification: restating the author/title/venue is already implied by the slug+url; do not put that here.
 - **graded-by** — `subagent`, `top-level-agent`, or `human`: who made the judgment (see below).
 - **published** — the source's own date (`YYYY`, `YYYY-MM`, or `YYYY-MM-DD`).
 - **via** — provenance: either the slug that led you here (`C-other-source-slug-2021`), or the surfacing tool-call written *as actually invoked* — real tool name and arguments, replayable — e.g. `mcp__kagi-ken__kagi_search_fetch(queries: ['sycophancy LLM Sharma'])`. Not a paraphrase, and not a generic `ToolInvocation(…)` wrapper.
 
-`new-source.sh` additionally stamps **retrieved** (today) and **sha256** (of the copy it downloads into `sources/<slug>.<ext>`) — never write those by hand.
+`new-source.sh` additionally stamps **retrieved** (today) and **sha256** (of the copy it downloads into `sources/<slug>.<ext>`).
 
 ### graded-by — who judged (you can't self-detect this)
 
@@ -74,59 +84,56 @@ Grade poorly:
 - social-media claims low in reference-count (no hyperlinks, and I can't correlate your name? sorry, that's a C or D.)
 - ephemeral content: repos with few commits; personal websites without clear provenance/maintenance/track-record.
 
+A grade is the conclusion of *having read* — never a guess from the venue.
+
 ## The notes log — one durable, per-turn file
 
 Your notes are an **append-only, durable log**, not a single living document. Research here can run for days, with new information arriving mid-session, so past findings must stay put — with their original context — and corrections must be traceable, never silently overwritten.
 
-At the start of each turn in which you research or record anything, create that turn's notes file with `new-turn.sh` (see *Tooling*) — it stamps the turn-number and date so neither can be fumbled. Write this turn's findings into the path it echoes.
+At the start of each machine-turn (immediately after the human responds and submits a new prompt with their input to your last round), create that turn's notes file with `new-turn.sh` (see *Tooling*) — it stamps the turn-number and date so neither can be fumbled. Write this turn's findings into the path it echoes.
 
-The **turn number is your recency metadata** — it replaces a per-note timestamp, and the file's `date` header anchors the turn to real time. Each turn file holds, most-attended material first:
+The **turn number is your recency metadata** — it replaces a per-note timestamp, and the file's `date` header anchors the turn to real time. Each turn file holds, most-attended material first - square-brackets are to be substituted:
 
 ```
-# turn N — <created timestamp>
+# turn [NUM] — [CREATED TIMESTAMP; stamped by new-turn.sh, not by you]
 
 ## Findings
-- one-line, lifted summaries of what this turn established
+- [one-line, lifted summaries of what this turn established]
+- [another summary of a finding]
 
 ## Citations
-> [GRADED-SOURCE-IDENTIFIER]:[LOC-WITHIN-PRIMARY-COPY - line-number/range, or pdf-*content-embedded*-page-number, or other stable ID] (relevance: [CITE-SPECIFIC CERTAINTY, how sure you are this citation affects direction])
+> [GRADED-SOURCE-IDENTIFIER]:[LOC-WITHIN-PRIMARY-COPY; this will be a line-number/range, or pdf-*content-embedded*-page-number, or other stable ID] (relevance: [CITE-SPECIFIC CERTAINTY; i.e. how sure you are this individual citation affects direction])
 > verbatim excerpt,
 > verbatim excerpt
 ```
 
-`GRADED-SOURCE-IDENTIFIER` is the slug carrying its grade and year (**must** be mirrored and fully-populated in sources.json), reused everywhere it's cited: `B-okmij-ocaml-typechecker-2014`, `D-stackoverflow-parse-shell-2019`. Always wrap a cited slug in `[…]` — that bracketed form is what `validate.sh` checks.
-
-`[CITE-SPECIFIC CERTAINTY]` is one of **+1:SURE / -0:SUSPECT / -1:GUESS / -2:WONDER**. List a source under `## Sources` in the turn that first depends on it, and reuse the same slug in later turns.
+- `GRADED-SOURCE-IDENTIFIER` is the slug carrying its grade and year (**must** be mirrored and fully-populated via `new-source.sh`), reused everywhere it's cited: `B-okmij-ocaml-typechecker-2014`, `D-stackoverflow-parse-shell-2019`. Always wrap a cited slug in `[…]` — that bracketed form is what `validate.sh` checks.
+- `[CITE-SPECIFIC CERTAINTY]` is one of **+1:SURE / -0:SUSPECT / -1:GUESS / -2:WONDER**.
 
 **Corrections are append-only.** Never edit or delete a past finding. When a later turn overturns an earlier one, append a single forward-pointing line beneath the original citation, in its own turn file — name the turn that corrected it and why:
 
 ```
-> └ superseded in turn06: source later retracted the claim
+> └ superseded in turn06: a new source later retracted this claim
 ```
 
 Only annotate when it genuinely matters — a load-bearing claim that flipped, not every small drift.
 
 ## State: the research directory
 
-Note/artifact-siting can default to `./.claude/research/<topic>/` under the CWD or git-root. Low-stakes choice — pick a reasonable home and move on. Either way the artifacts double as the plan/apply review surface: the human reads, and may either comment *in the files* or reply in-prompt-flow; and you re-read to pick up their corrections before proceeding.
+Note/artifact-siting can default to `./.claude/research/<topic>/` under the CWD or git-root. Re-use an existing durable dir if the project is using one.
 
-- `plan.md` — the problem-space map and the strategy (the reviewable "research plan")
 - `turnNN-<date>-notes.md` — the per-turn durable log described above; the meat of your working memory
 - `sources.json` + `sources/` — the graded manifest (built by `new-source.sh`) and the archived primary copies it downloads, each named `<slug>.<ext>`
-- if necessary: `quarantine.md` — discovered tangents, bugs, and side-questions: captured, not chased. only important if research starts rabbit-holing
-- `conclusion.md` — the final narrowed answer; again with citations and reasoning. Do not generate until the end, and re-review all notes and conversational steps before writing it.
-
-Reserve the returned-to-user *response*, post-generation, for meta-procedural communication - the user may include additional questions or commentary in their last round, or any one of a million other things, and we do not want the context-bloat limiting the 'correct size' of the *answer*. There's `conclusion.md` files whose answers will be one, clear sentence; and questions whose genuine full conclusion *needs* subtle context trending into multiple Markdown headers. Do not target a specific size, target a specific correctness and relevance.
 
 ## Tooling
 
-The skill's `scripts/` holds three helpers; invoke them by absolute path (they need `sh`, `jq`, `curl`). Read one to adapt it; otherwise just call it.
+The skill's `scripts/` holds three control-scripts; invoke them by mise (they need `sh`, `jq`, `curl`). These are authoritative, do not circumvent them, they are absolute *requirements* to proceeding. The user can be instructed to fix one if it fails you, but first try and adjust *your* behaviour to the *script's demands*, not vice versa.
 
-**`new-turn.sh <research-dir>`** — creates this turn's notes file and echoes the path.
+**`mise exec -- sh new-turn.sh <research-dir>`** — creates this turn's notes file and echoes the path.
 
-**`new-source.sh <research-dir> <slug>`** — reads one source's JSON on stdin (the fields from *Sources*), validates it, downloads the artifact to `sources/<slug>.<ext>`, stamps `retrieved` + `sha256`, and appends it to `sources.json`. Use it for every source; never hand-edit the manifest.
+**`mise exec -- sh new-source.sh <research-dir> <slug>`** — reads one source's JSON on stdin (the fields from *Sources*), validates it, downloads the artifact to `sources/<slug>.<ext>`, stamps `retrieved` + `sha256`, and appends it to `sources.json`. Use it for every source; never hand-edit the manifest.
 
-**`validate.sh <research-dir>`** — the per-turn gate; run it as the **last act of any turn that touched the artifacts**. It checks every bracketed `[slug]` citation against `sources.json`: fix every error, weigh every warning.
+**`mise exec -- sh validate.sh <research-dir>`** — the per-turn gate; run it as the **last act of any turn that touched the artifacts**. It checks every bracketed `[slug]` citation against `sources.json`: fix every error, weigh every warning.
 
 ```bash
 d=.claude/research/<topic>
@@ -136,24 +143,17 @@ echo '{"url":"https://…","grading-certainty":"+1:SURE", … ,"via":"…"}' \
 sh ~/.claude/skills/interactive-research/scripts/validate.sh "$d"
 ```
 
-## Phase 0 — shape the problem space (no questions yet)
+## The gather-and-grade round
 
-Dive straight in, ideally with no clarifying questions. You can't ask sharp questions about a space you haven't mapped, and dull ones waste the human's attention. Even if you *have* important targeting-questions, feel free to hallucinate potential answers and still move forward with an initial broad research/resource-gathering phase; it will still allow you to ask *better versions* of those required clarifying questions.
+This is the procedure. Dive straight in — no clarifying questions, since you can't ask sharp ones about a space you haven't mapped, and the gathering itself sharpens them. Even if you *have* targeting-questions, hallucinate provisional answers and gather anyway; you'll ask *better versions* afterward.
 
-Cast the first wide net: parallel searches from several angles including the counter-thesis, full-content fetches of the most authoritative hits, a pass through the actual code/issues/specs where relevant. Dynamically tweak the depth/runtime of this first phase with reasoning; sometimes it's reasonable to dig quite deep before looping in the human, sometimes the best you can do is a quick single Kagi search followed by clarifying questions.
+1. **Cast a wide net.** Parallel searches from several angles *including the counter-thesis*; lean on the full tool-spread. Breadth is the lever (see *Cast wide*).
+2. **Triage to a keep-set.** From the menu of hits, pick what is *plausibly relevant enough to depend on* — use discretion, you needn't grade every Kagi URL. Triage is the *only* reasoning this round calls for.
+3. **Read and grade each kept source.** Fetch it in full (mcp-fetch, no summariser) or hand it to a grading subagent; then register it with `new-source.sh` (grade + both certainties + reasoning) per *Sources*. The grade is the conclusion of having read — not a guess from the venue or the snippet.
 
-Write `plan.md` describing *how* you will attain the best results for the user's goals: the landscape, the genuine options or hypotheses, the axes the decision turns on, what's ambiguous, and — critically — your read on the **shape of the answer**:
+Dynamically tweak the depth: sometimes it's worth digging deep, sometimes a quick sweep is all the question affords. Close the turn with `validate.sh`.
 
-- **Single-answer** (unambiguous, no real tradeoff frontier, the evidence already converges)? Skip the loop: read `references/phase-z.md` and write `conclusion.md` now. Don't perform research theatre on a settled question.
-- **Genuine variance** (competing options on a pareto frontier, tradeoffs only the human can weigh, scope ambiguity)? Then `plan.md` proposes the research fronts and you pause for review.
-
-## Gate: review the plan (only when there's variance)
-
-Present `plan.md` and the proposed fronts; invite correction. The human may reframe the question, kill a front, add a constraint, or reprioritise — this is the highest-leverage touchpoint, because they're adjudicating *how* to research before you spend the effort. The user will direct you to either re-read the file for inline commentary/instructions/modifications, or simply reply in-thread. Once they have responded, read `references/phase-1-to-n.md` and begin the fronts.
-
-## What "done" looks like
-
-A defensible conclusion the human can act on, backed by a wider net than felt comfortable to cast, every load-bearing claim cited, graded, and confidence-marked — plus a clean, separate list of everything interesting you found and correctly refused to chase.
+When your graded source-base is solid, continue: **`references/after-first-pass.md`**.
 
 ## Examples
 
@@ -166,7 +166,7 @@ Built by `new-source.sh` (see *Tooling*), keyed by slug — grade is the slug's 
    "B-moeller-spa-2025": {
       "url": "https://cs.au.dk/~amoeller/spa/spa.pdf",
       "grading-certainty": "+1:SURE",
-      "grading-reasoning": "author is a professor at a well-known university; written as a beginner overview of static analysis; multiple other sources recommended it as thorough",
+      "grading-reasoning": "not A: peer-reviewed-grade textbook by a known professor, but a broad beginner overview, so secondary/introductory for our purposes rather than a primary result ... not C: authoritative author, no rot, widely recommended; thus B-grade",
       "relevance-certainty": "-0:SUSPECT",
       "relevance-description": "referenced by multiple high-quality sources; likely basic but foundational",
       "graded-by": "top-level-agent",
