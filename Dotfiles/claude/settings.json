@@ -1,4 +1,9 @@
 {
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "opus",
+    "CLAUDE_CODE_EFFORT_LEVEL": "max",
+    "MISE_AUTO_INSTALL": "false"
+  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -48,13 +53,14 @@
       }
     ]
   },
-  "effortLevel": "xhigh",
   "promptSuggestionEnabled": false,
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.138",
   "theme": "auto",
   "editorMode": "vim",
   "verbose": true,
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }
