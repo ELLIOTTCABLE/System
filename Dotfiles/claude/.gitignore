@@ -20,3 +20,5 @@ plugins/installed_plugins.json
 plugins/install-counts-cache.json
 plugins/known_marketplaces.json
 plugins/marketplaces/*
+
+chrome/chrome-native-host.bat

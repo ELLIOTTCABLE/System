@@ -10,6 +10,8 @@
 #       slug loosely; and
 #     - a fully-formed UNBRACKETED slug ([A-F]-…-<4 digits>): usually a real-or-hallucinated
 #       source written in citation form but missing its brackets — the case worth catching.
+#       (Exempt: a slug written as its on-disk path, sources/<slug>.<ext>, when registered —
+#       a filename, not a citation; an unregistered sources/ path still warns.)
 #     Warnings are capped (see WARN_CAP); weaker unbracketed forms are deliberately ignored.
 #
 # sources.json is clean-by-construction (new-source.sh) and is not re-checked.
@@ -45,7 +47,7 @@ cite_re='\[[A-Fa-f]-[A-Za-z0-9._-]+\]'             # bracketed citation, either 
 # unregisterable cite like [A-xyz-2250] must resolve to nothing and ERROR, not slip to a
 # warn. Do not "unify" this with new-source.sh's slug_re without re-reading that contract.
 canon_re='^[A-F]-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}$'
-strong_re='[A-F]-[A-Za-z0-9_-]+-[0-9]{4}'          # fully-formed slug, bracket-agnostic
+strong_re='\b[A-F]-[A-Za-z0-9_-]+-[0-9]{4}\b'      # fully-formed slug, bracket-agnostic; \b skips CVE-YYYY-NNNNN false-matches (GNU/BSD ext)
 
 # Every *.md under the tree (tiered research-dirs included), newest-first — but never the
 # sources/ archive, whose files are copies of external sources, not our own artifacts.
@@ -70,9 +72,17 @@ while IFS= read -r f; do
       fi
    done
    # Unbracketed strong slugs: strip bracketed spans first (sed keeps line count), then match.
-   sed 's/\[[^][]*\]//g' "$f" | grep -oEn "$strong_re" 2>/dev/null | while IFS= read -r ln; do
+   # Carve-out: a slug written as its on-disk archive path (sources/<slug>.<ext>, where
+   # new-source.sh puts every copy) is a file reference to a registered source, not a forgotten
+   # citation — exempt it when the slug is a key. Match an optional sources/ prefix so the path
+   # form is distinguishable from a bare slug; a sources/ path to an *un*registered slug still warns.
+   sed 's/\[[^][]*\]//g' "$f" | grep -oEn "(sources/)?$strong_re" 2>/dev/null | while IFS= read -r ln; do
       [ -n "$ln" ] || continue
-      slug=${ln#*:}; line=${ln%%:*}
+      tok=${ln#*:}; line=${ln%%:*}
+      case "$tok" in
+         sources/*) slug=${tok#sources/}; is_key "$slug" && continue ;;
+         *) slug=$tok ;;
+      esac
       printf 'warn   %-16s  %-34s  %s:%s\n' "unbracketed" "$slug" "$f" "$line" >> "$warnf"
    done
 done < "$work/arts"

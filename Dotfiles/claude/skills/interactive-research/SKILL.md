@@ -107,7 +107,7 @@ The **turn number is your recency metadata** — it replaces a per-note timestam
 > verbatim excerpt
 ```
 
-- `GRADED-SOURCE-IDENTIFIER` is the slug carrying its grade and year (**must** be mirrored and fully-populated via `new-source.sh`), reused everywhere it's cited: `B-okmij-ocaml-typechecker-2014`, `D-stackoverflow-parse-shell-2019`. Always wrap a cited slug in `[…]` — that bracketed form is what `validate.sh` checks.
+- `GRADED-SOURCE-IDENTIFIER` is the slug carrying its grade and year (**must** be mirrored and fully-populated via `new-source.sh`), reused everywhere it's cited: `B-okmij-ocaml-typechecker-2014`, `D-stackoverflow-parse-shell-2019`. Wrap a slug in `[…]` *every* time you write it — citing it as evidence or merely *naming* it (a manifest row, an index/audit table, prose weighing its grade). One bracketed form, no exceptions: the brackets are the marker `validate.sh` resolves against `sources.json`, so a bracketed mention turns a typo or a stale grade-letter (an `A-` slug since rekeyed to `B-`) into a caught *error*, where a bare or back-ticked slug slips by unchecked. The strictness is the point — this convention exists to pin you to *one* citation format and away from the traditional, hallucination-prone ones; the moment a back-ticked mention reads as acceptable, so does a second format, then an invented third, and the discipline is gone. The lone bare slug that's fine is a literal on-disk path (`sources/<slug>.<ext>`) — a filename, not a citation, which `validate.sh` recognizes against `sources.json` and passes.
 - `[CITE-SPECIFIC CERTAINTY]` is one of **+1:SURE / -0:SUSPECT / -1:GUESS / -2:WONDER**.
 
 **Corrections are append-only.** Never edit or delete a past finding. When a later turn overturns an earlier one, append a single forward-pointing line beneath the original citation, in its own turn file — name the turn that corrected it and why:
@@ -133,7 +133,7 @@ The skill's `scripts/` holds three control-scripts; invoke them by mise (they ne
 
 **`mise exec -- sh new-source.sh <research-dir> <slug>`** — reads one source's JSON on stdin (the fields from *Sources*), validates it, downloads the artifact to `sources/<slug>.<ext>`, stamps `retrieved` + `sha256`, and appends it to `sources.json`. Use it for every source; never hand-edit the manifest.
 
-**`mise exec -- sh validate.sh <research-dir>`** — the per-turn gate; run it as the **last act of any turn that touched the artifacts**. It checks every bracketed `[slug]` citation against `sources.json`: fix every error, weigh every warning.
+**`mise exec -- sh validate.sh <research-dir>`** — the per-turn gate; run it as the **last act of any turn that touched the artifacts**. It checks every bracketed `[slug]` reference against `sources.json`: fix every error; a fully-formed slug it flags *unbracketed* is a reference you forgot to wrap — bracket it; weigh the rest.
 
 ```bash
 d=.claude/research/<topic>
