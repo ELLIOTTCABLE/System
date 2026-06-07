@@ -64,6 +64,10 @@ while IFS= read -r f; do
          if is_key "$slug"; then continue; fi
          printf 'ERROR  unregistered   %-34s  %s:%s\n' "$slug" "$f" "$line" >> "$errf"
       else
+         # A real citation's name is a word; a regex char-class ([A-Za-z_], [A-Z], [a-z]) is nothing
+         # but single/double-char ranges. Require a 3+-letter run to warn. Canon-shaped tokens never
+         # reach this branch, so a short-named *error* like [A-go-2025] is still caught above.
+         matches "$slug" '[A-Za-z]{3}' || continue
          case "$slug" in
             [a-f]-*) why="lower-case grade" ;;
             *) if matches "$slug" '-[0-9]{4}$'; then why="off-canonical"; else why="missing year"; fi ;;
