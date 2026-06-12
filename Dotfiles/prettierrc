@@ -5,3 +5,15 @@ semi: false
 trailingComma: "all"
 jsxBracketSameLine: true
 endOfLine: "lf"
+
+experimentalTernaries: true
+experimentalOperatorPosition: start
+
+# The Prettier extension completely ignores the buffer-type passed by VScode,
+# apparently, and depends only on extension. Thus, modelines don't help. I need
+# to hardcode overrides for any files that are, well, jsonc. Harrumph.
+overrides:
+ - options:
+      parser: jsonc
+   files:
+    - "**/Code/User/settings.json"
