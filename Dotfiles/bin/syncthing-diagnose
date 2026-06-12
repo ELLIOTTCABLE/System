@@ -1,0 +1,160 @@
+#!/usr/bin/env node
+// syncthing-diagnose — list the files/directories that keep folders "Out of Sync".
+//
+// Talks to the LOCAL Syncthing REST API (portable across OS and Syncthing v1/v2;
+// verified against v2.1.1). One tab-separated record per problem item on stdout:
+//
+//     <folder-id>	<kind>	<path>
+//
+// kind is the pull-error cause for a file that cannot be written here
+// (case-collision, reserved-character, reserved-name, bad-path-separator,
+// invalid-utf8, other), or "held" for an item a send-only folder will not pull.
+// With --need, pending items on receive-capable folders appear as "need".
+//
+// Folders with no problems emit nothing; a fully-synced node prints "in sync" on
+// stderr. Pipe to grep/awk/wc; use --json for full detail (error text, size,
+// modifiedBy, deleted, paused, etc.).
+//
+// Usage: syncthing-diagnose [--folder ID] [--need] [--json]
+//   --folder ID   only this folder id
+//   --need        also list pending items on receive-capable folders (normally
+//                 just transient download backlog, so off by default)
+//   --json        emit the raw aggregate instead of the text records
+//
+// Connection auto-detected from config.xml; override via environment:
+//   SYNCTHING_API_KEY, SYNCTHING_ADDRESS (e.g. 127.0.0.1:8384 or https://h:8384),
+//   SYNCTHING_HOME (config dir; else STCONFDIR/STHOMEDIR, then per-OS defaults).
+//
+// Needs only `node` (>=18, for global fetch); no other dependencies. The API key
+// stays in-process — never on argv.
+//
+// AI-generated.
+
+'use strict';
+const fs = require('node:fs');
+const os = require('node:os');
+
+const die = (msg) => { console.error(`syncthing-diagnose: ${msg}`); process.exit(1); };
+
+function printHelp() {
+   for (const line of fs.readFileSync(__filename, 'utf8').split('\n').slice(1)) {
+      if (!line.startsWith('//')) break;
+      console.log(line.replace(/^\/\/ ?/, ''));
+   }
+}
+
+// Defaults per https://docs.syncthing.net/users/config.html (Unix default moved
+// to ~/.local/state in v1.27; older installs may still be in ~/.config).
+function findConfigDir() {
+   const home = process.env.HOME || os.homedir();
+   const xdgState = process.env.XDG_STATE_HOME || `${home}/.local/state`;
+   const xdgConfig = process.env.XDG_CONFIG_HOME || `${home}/.config`;
+   return [
+      process.env.SYNCTHING_HOME, process.env.STCONFDIR, process.env.STHOMEDIR,
+      `${home}/Library/Application Support/Syncthing`,
+      `${xdgState}/syncthing`,
+      `${xdgConfig}/syncthing`,
+      process.env.LOCALAPPDATA && `${process.env.LOCALAPPDATA}/Syncthing`,
+   ].filter(Boolean).find((d) => fs.existsSync(`${d}/config.xml`));
+}
+
+// Scoped to the <gui> element so a device's <address> can't be mistaken for it.
+function readCreds(dir) {
+   const xml = fs.readFileSync(`${dir}/config.xml`, 'utf8');
+   const gui = xml.match(/<gui\b[^>]*>([\s\S]*?)<\/gui>/i);
+   const openTag = gui ? gui[0] : '';
+   const block = gui ? gui[1] : '';
+   const pick = (tag) => (block.match(new RegExp(`<${tag}>([^<]*)</${tag}>`, 'i')) || [])[1] || '';
+   return { apikey: pick('apikey'), address: pick('address'), tls: /\btls="true"/i.test(openTag) };
+}
+
+const category = (err) =>
+   /different upper or lowercase/.test(err) ? 'case-collision'
+   : /reserved character/.test(err) ? 'reserved-character'
+   : /reserved name/.test(err) ? 'reserved-name'
+   : /invalid path separator/.test(err) ? 'bad-path-separator'
+   : /invalid UTF-8/.test(err) ? 'invalid-utf8'
+   : 'other';
+
+(async () => {
+   const opt = { folder: null, need: false, json: false };
+   const args = process.argv.slice(2);
+   for (let i = 0; i < args.length; i++) {
+      const a = args[i];
+      if (a === '--folder') opt.folder = args[++i];
+      else if (a.startsWith('--folder=')) opt.folder = a.slice('--folder='.length);
+      else if (a === '--need') opt.need = true;
+      else if (a === '--json') opt.json = true;
+      else if (a === '-h' || a === '--help') { printHelp(); process.exit(0); }
+      else die(`unexpected argument: ${a} (try --help)`);
+   }
+
+   let apikey = process.env.SYNCTHING_API_KEY || '';
+   let address = process.env.SYNCTHING_ADDRESS || '';
+   let tls = /^https:/i.test(address);
+   if (!apikey || !address) {
+      const dir = findConfigDir();
+      if (!dir) die('config.xml not found — set SYNCTHING_HOME, or SYNCTHING_API_KEY + SYNCTHING_ADDRESS');
+      const cr = readCreds(dir);
+      apikey ||= cr.apikey;
+      if (!address) { address = cr.address; tls = cr.tls; }
+   }
+   if (!apikey) die('no GUI API key found (set SYNCTHING_API_KEY)');
+   if (!address) die('no GUI address found (set SYNCTHING_ADDRESS)');
+
+   let scheme = tls ? 'https' : 'http';
+   const host = address.replace(/^https?:\/\//i, '').replace(/\/$/, '')
+      .replace('0.0.0.0', '127.0.0.1').replace('[::]', '[::1]');
+   let base = `${scheme}://${host}`;
+   if (scheme === 'https') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // local self-signed GUI cert
+
+   const api = async (p) => {
+      const res = await fetch(`${base}${p}`, { headers: { 'X-API-Key': apikey } });
+      if (!res.ok) throw new Error(`${p}: HTTP ${res.status}`);
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+   };
+   const reachable = async () => {
+      try { return (await api('/rest/system/ping'))?.ping === 'pong'; } catch { return false; }
+   };
+   if (!(await reachable())) { // maybe the scheme guess was wrong; flip once
+      scheme = scheme === 'https' ? 'http' : 'https';
+      base = `${scheme}://${host}`;
+      if (scheme === 'https') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      if (!(await reachable())) die(`cannot reach the Syncthing API at ${base} — is it running, and the key correct?`);
+   }
+
+   const cap = 100000;
+   const folders = ((await api('/rest/config/folders')) || []).filter((f) => !opt.folder || f.id === opt.folder);
+   if (opt.folder && !folders.length) die(`no such folder: ${opt.folder}`);
+
+   const agg = [];
+   for (const f of folders) {
+      const q = encodeURIComponent(f.id);
+      try {
+         const pullErrors = ((await api(`/rest/folder/errors?folder=${q}&perpage=${cap}`)) || {}).errors || [];
+         let need = [];
+         if (f.type === 'sendonly' || opt.need) {
+            const n = (await api(`/rest/db/need?folder=${q}&perpage=${cap}`)) || {};
+            need = [...(n.progress || []), ...(n.queued || []), ...(n.rest || [])];
+         }
+         agg.push({ id: f.id, label: f.label, type: f.type, paused: !!f.paused, pullErrors, need });
+      } catch (e) {
+         console.error(`${f.id}: ${e.message}`);
+      }
+   }
+
+   if (opt.json) { console.log(JSON.stringify(agg, null, 2)); return; }
+
+   let lines = 0;
+   for (const f of agg) {
+      for (const e of f.pullErrors) { console.log(`${f.id}\t${category(e.error)}\t${e.path}`); lines++; }
+      const kind = f.type === 'sendonly' ? 'held' : 'need';
+      for (const it of f.need) {
+         const slash = /DIRECTORY/.test(it.type) ? '/' : '';
+         console.log(`${f.id}\t${kind}\t${it.name}${slash}`);
+         lines++;
+      }
+   }
+   if (lines === 0) console.error('in sync');
+})().catch((e) => die(e.stack || e.message));

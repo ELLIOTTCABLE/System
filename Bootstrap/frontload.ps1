@@ -6,11 +6,11 @@ winget install -e --id AgileBits.1Password.Beta
 winget install -e --id GitHub.GitHubDesktop
 winget install -e --id GitHub.cli
 winget install -e --id Logitech.OptionsPlus
+winget install -e --id Martchus.syncthingtray
 winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id Mozilla.Firefox
 winget install -e --id Notion.Notion
 winget install -e --id RandyRants.SharpKeys
-winget install -e --id SyncTrayzor.SyncTrayzor
 winget install -e --id Yubico.Authenticator
 winget install -e --id glzr-io.glazewm
 winget install -e --id jdx.mise
