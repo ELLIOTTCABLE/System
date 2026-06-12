@@ -14,22 +14,36 @@ compile = true
 default_packages_file = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-pip-packages"
 
 [tools]
-"github:joevt/AllRez" = "latest"
 cargo-binstall = "latest"
 deno = "latest"
 dotnet = "latest"
 fd = "latest"
+"github:joevt/AllRez" = "latest"
 go = "latest"
 hk = "latest"
 java = "22"
-lua = "latest"
 nodejs = "latest"
 opam = "latest"
-postgres = "latest"
 purescript = "latest"
 python = "latest"
-racket = "latest"
 ruby = "latest"
-rust = "latest"
 usage = "latest"
 yamlfmt = "latest"
+
+[tools.claude-code]
+bin = "claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{{ version }}/{{ os(macos=\"darwin\") }}-{{ arch() }}/claude"
+version = "latest"
+version_list_url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
+
+[tools.claude-code.platforms.windows-x64]
+bin = "claude.exe"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{{ version }}/win32-x64/claude.exe"
+
+[tools.lua]
+os = ["linux", "macos"]
+version = "latest"
+
+[tools.rust]
+components = "rust-src,rust-analyzer"
+version = "stable"
