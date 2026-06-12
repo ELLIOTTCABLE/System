@@ -1,13 +1,11 @@
 @fsouza/prettierd
 @prettier/plugin-ruby
 @prettier/plugin-xml
-a11y
 eslint_d
 hiper
 htmlhint
 json5
 jsonlint
-nativefier
 neovim
 ngrok
 npm
@@ -20,7 +18,6 @@ pin-cushion
 prettier
 prettier-plugin-sql-cst
 semver
-tern
 vim-language-server
 windmill-cli
 yarn

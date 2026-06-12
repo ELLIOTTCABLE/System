@@ -49,25 +49,44 @@ let -- Specify a custom repo url for a given plugin
 let tools-to-frontload = [ "nodejs" ]
 
 let tools-to-keep-updated =
-      [ "cargo-binstall"
+      [ "bun"
+      , "cargo-binstall"
       , "deno"
       , "dotnet"
-      , "fd"
       , "github:joevt/AllRez"
       , "go"
-      , "hk"
-      , "opam"
-      , "python"
       , "ruby"
       , "usage"
+      , "uv"
       , "yamlfmt"
       ]
 
 let slow-tools = [ "purescript" ]
 
-let -- Tools pinned to a specific version, rather than tracking `latest`
-    pinned-tools =
-      [ field "java" (str "22") ]
+let -- fd and hk stopped publishing x86_64-apple-darwin binaries; Intel macs
+    -- build from crates.io instead (whose crate name can differ: fd → fd-find)
+    cargo-on-intel-mac =
+      \(tool : Text) ->
+      \(crate : Text) ->
+        [ field
+            tool
+            ( json.object
+                [ field "version" (str "latest")
+                , field
+                    "os"
+                    ( json.array
+                        [ str "windows", str "linux", str "darwin/arm64" ]
+                    )
+                ]
+            )
+        , field
+            "cargo:${crate}"
+            ( json.object
+                [ field "version" (str "latest")
+                , field "os" (json.array [ str "darwin/amd64" ])
+                ]
+            )
+        ]
 
 let claude-base =
       "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
@@ -89,6 +108,13 @@ let -- Tools whose mise config is a table rather than a bare version
           )
       , field
           "lua"
+          ( json.object
+              [ field "version" (str "latest")
+              , field "os" (json.array [ str "linux", str "macos" ])
+              ]
+          )
+      , field
+          "opam"
           ( json.object
               [ field "version" (str "latest")
               , field "os" (json.array [ str "linux", str "macos" ])
@@ -122,7 +148,13 @@ let simple-tools =
             [ tools-to-frontload, tools-to-keep-updated, slow-tools ]
         )
 
-let tools = json.object (simple-tools # pinned-tools # structured-tools)
+let tools =
+      json.object
+        (   simple-tools
+          # structured-tools
+          # cargo-on-intel-mac "hk" "hk"
+          # cargo-on-intel-mac "fd" "fd-find"
+        )
 
 let xdg-config = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}"
 

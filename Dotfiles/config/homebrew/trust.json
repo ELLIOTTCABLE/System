@@ -1,0 +1,6 @@
+{
+  "trustedtaps": [
+    "buo/cask-upgrade",
+    "nrlquaker/createzap"
+  ]
+}

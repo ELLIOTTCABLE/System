@@ -14,21 +14,26 @@ compile = true
 default_packages_file = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}/mise/default-pip-packages"
 
 [tools]
+bun = "latest"
 cargo-binstall = "latest"
 deno = "latest"
 dotnet = "latest"
-fd = "latest"
 "github:joevt/AllRez" = "latest"
 go = "latest"
-hk = "latest"
-java = "22"
 nodejs = "latest"
-opam = "latest"
 purescript = "latest"
-python = "latest"
 ruby = "latest"
 usage = "latest"
+uv = "latest"
 yamlfmt = "latest"
+
+[tools."cargo:fd-find"]
+os = ["darwin/amd64"]
+version = "latest"
+
+[tools."cargo:hk"]
+os = ["darwin/amd64"]
+version = "latest"
 
 [tools.claude-code]
 bin = "claude"
@@ -40,7 +45,19 @@ version_list_url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f75
 bin = "claude.exe"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{{ version }}/win32-x64/claude.exe"
 
+[tools.fd]
+os = ["windows", "linux", "darwin/arm64"]
+version = "latest"
+
+[tools.hk]
+os = ["windows", "linux", "darwin/arm64"]
+version = "latest"
+
 [tools.lua]
+os = ["linux", "macos"]
+version = "latest"
+
+[tools.opam]
 os = ["linux", "macos"]
 version = "latest"
 
