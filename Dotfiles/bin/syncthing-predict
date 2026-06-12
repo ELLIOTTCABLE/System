@@ -1,0 +1,303 @@
+#!/usr/bin/env node
+// syncthing-predict — dry-run: what would change LOCALLY if pending cluster
+// state were applied (i.e. when a paused/send-only folder is unpaused or set
+// back to send-receive, or simply what an active folder is about to do).
+//
+// Talks to the LOCAL Syncthing REST API (verified against v2.x). For every
+// item the folder "needs", compares the local and global version vectors
+// (/rest/db/file) and classifies the incoming action. One tab-separated
+// record per item on stdout:
+//
+//     <folder-id>	<action>	<detail>	<path>
+//
+// action is one of:
+//   create     new from the cluster; no local record           (harmless)
+//   update     local content replaced by a strict descendant   (local version
+//              is cluster history; nothing uniquely-local lost)
+//   conflict   local and global edits are concurrent; the loser is renamed
+//              to *.sync-conflict-* — both contents survive (unless the
+//              folder's maxConflicts is 0)
+//   delete     local file/dir/symlink will be REMOVED — recoverable only via
+//              the folder's versioning (or a backup)
+//   noop       tombstone bookkeeping, nothing on disk changes  (--all only)
+//   in-sync    transient: already matches global               (--all only)
+//   anomaly    local is strictly newer yet still "needed" — investigate
+//
+// detail is the incoming size in bytes, or "blocked:<category>" when a pull
+// error means Syncthing currently CANNOT apply it (see syncthing-diagnose).
+// A human summary per folder — counts, bytes, per-device attribution, and the
+// receive-only "Revert would destroy N local-only items" exposure — goes to
+// stderr. Exit 0: nothing pending anywhere; 1: pending changes; 2: error.
+//
+// Usage: syncthing-predict [--folder ID] [--all] [--json] [--remote DEVICE]
+//   --folder ID    only this folder id
+//   --all          include noop/in-sync records
+//   --json         emit the full aggregate (versions, modifiedBy, ...) instead
+//   --remote DEV   also summarize what device DEV (name or short id) still
+//                  needs from the cluster, per folder (what IT will pull;
+//                  classification not possible from here)
+//
+// Connection auto-detected from config.xml; override via environment:
+//   SYNCTHING_API_KEY, SYNCTHING_ADDRESS, SYNCTHING_HOME (as syncthing-diagnose).
+//
+// Needs only `node` (>=18, for global fetch); no other dependencies. The API
+// key stays in-process — never on argv.
+//
+// AI-generated.
+
+'use strict';
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+
+const die = (msg) => { console.error(`syncthing-predict: ${msg}`); process.exit(2); };
+
+function printHelp() {
+   for (const line of fs.readFileSync(__filename, 'utf8').split('\n').slice(1)) {
+      if (!line.startsWith('//')) break;
+      console.log(line.replace(/^\/\/ ?/, ''));
+   }
+}
+
+// Connection bootstrap shared with syncthing-diagnose (keep in step).
+function findConfigDir() {
+   const home = process.env.HOME || os.homedir();
+   const xdgState = process.env.XDG_STATE_HOME || `${home}/.local/state`;
+   const xdgConfig = process.env.XDG_CONFIG_HOME || `${home}/.config`;
+   return [
+      process.env.SYNCTHING_HOME, process.env.STCONFDIR, process.env.STHOMEDIR,
+      `${home}/Library/Application Support/Syncthing`,
+      `${xdgState}/syncthing`,
+      `${xdgConfig}/syncthing`,
+      process.env.LOCALAPPDATA && `${process.env.LOCALAPPDATA}/Syncthing`,
+   ].filter(Boolean).find((d) => fs.existsSync(`${d}/config.xml`));
+}
+
+function readCreds(dir) {
+   const xml = fs.readFileSync(`${dir}/config.xml`, 'utf8');
+   const gui = xml.match(/<gui\b[^>]*>([\s\S]*?)<\/gui>/i);
+   const openTag = gui ? gui[0] : '';
+   const block = gui ? gui[1] : '';
+   const pick = (tag) => (block.match(new RegExp(`<${tag}>([^<]*)</${tag}>`, 'i')) || [])[1] || '';
+   return { apikey: pick('apikey'), address: pick('address'), tls: /\btls="true"/i.test(openTag) };
+}
+
+// Version vectors arrive as ["SHORTID:counter", ...]; counters can exceed 2^53.
+function parseVector(v) {
+   const m = new Map();
+   for (const s of v || []) { const i = s.lastIndexOf(':'); m.set(s.slice(0, i), BigInt(s.slice(i + 1))); }
+   return m;
+}
+function compareVectors(a, b) { // 'equal' | 'newer' (a>b) | 'older' | 'concurrent'
+   let aGt = false, bGt = false;
+   for (const [id, n] of a) if (n > (b.get(id) ?? 0n)) { aGt = true; break; }
+   for (const [id, n] of b) if (n > (a.get(id) ?? 0n)) { bGt = true; break; }
+   return aGt && bGt ? 'concurrent' : aGt ? 'newer' : bGt ? 'older' : 'equal';
+}
+
+const fmtBytes = (n) => {
+   if (n < 1024) return `${n} B`;
+   for (const unit of ['KiB', 'MiB', 'GiB', 'TiB']) { n /= 1024; if (n < 1024) return `${n.toFixed(1)} ${unit}`; }
+   return `${n.toFixed(1)} PiB`;
+};
+
+async function pool(items, width, fn) {
+   const out = new Array(items.length);
+   let next = 0;
+   await Promise.all(Array.from({ length: Math.min(width, items.length) }, async () => {
+      while (next < items.length) { const i = next++; out[i] = await fn(items[i], i); }
+   }));
+   return out;
+}
+
+(async () => {
+   const opt = { folder: null, all: false, json: false, remote: null };
+   const args = process.argv.slice(2);
+   for (let i = 0; i < args.length; i++) {
+      const a = args[i];
+      if (a === '--folder') opt.folder = args[++i];
+      else if (a.startsWith('--folder=')) opt.folder = a.slice('--folder='.length);
+      else if (a === '--remote') opt.remote = args[++i];
+      else if (a.startsWith('--remote=')) opt.remote = a.slice('--remote='.length);
+      else if (a === '--all') opt.all = true;
+      else if (a === '--json') opt.json = true;
+      else if (a === '-h' || a === '--help') { printHelp(); process.exit(0); }
+      else die(`unexpected argument: ${a} (try --help)`);
+   }
+
+   let apikey = process.env.SYNCTHING_API_KEY || '';
+   let address = process.env.SYNCTHING_ADDRESS || '';
+   let tls = /^https:/i.test(address);
+   if (!apikey || !address) {
+      const dir = findConfigDir();
+      if (!dir) die('config.xml not found — set SYNCTHING_HOME, or SYNCTHING_API_KEY + SYNCTHING_ADDRESS');
+      const cr = readCreds(dir);
+      apikey ||= cr.apikey;
+      if (!address) { address = cr.address; tls = cr.tls; }
+   }
+   if (!apikey) die('no GUI API key found (set SYNCTHING_API_KEY)');
+   if (!address) die('no GUI address found (set SYNCTHING_ADDRESS)');
+
+   let scheme = tls ? 'https' : 'http';
+   const host = address.replace(/^https?:\/\//i, '').replace(/\/$/, '')
+      .replace('0.0.0.0', '127.0.0.1').replace('[::]', '[::1]');
+   let base = `${scheme}://${host}`;
+   if (scheme === 'https') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // local self-signed GUI cert
+
+   const api = async (p, params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      const res = await fetch(`${base}${p}${qs ? `?${qs}` : ''}`, { headers: { 'X-API-Key': apikey } });
+      if (!res.ok) throw new Error(`${p}: HTTP ${res.status}`);
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+   };
+   const reachable = async () => {
+      try { return (await api('/rest/system/ping'))?.ping === 'pong'; } catch { return false; }
+   };
+   if (!(await reachable())) {
+      scheme = scheme === 'https' ? 'http' : 'https';
+      base = `${scheme}://${host}`;
+      if (scheme === 'https') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      if (!(await reachable())) die(`cannot reach the Syncthing API at ${base} — is it running, and the key correct?`);
+   }
+
+   const devices = (await api('/rest/config/devices')) || [];
+   const devName = (shortId) => {
+      const d = devices.find((d) => d.deviceID.startsWith(shortId));
+      return d ? d.name : `${shortId}(unknown)`;
+   };
+
+   const folders = ((await api('/rest/config/folders')) || []).filter((f) => !opt.folder || f.id === opt.folder);
+   if (opt.folder && !folders.length) die(`no such folder: ${opt.folder}`);
+
+   let remoteDev = null;
+   if (opt.remote) {
+      remoteDev = devices.find((d) => d.deviceID === opt.remote || d.deviceID.startsWith(opt.remote) || d.name === opt.remote);
+      if (!remoteDev) die(`no such device: ${opt.remote}`);
+   }
+
+   const perpage = 50000;
+   const agg = [];
+   let pending = 0;
+   for (const f of folders) {
+      const status = await api('/rest/db/status', { folder: f.id }).catch((e) => { console.error(`${f.id}: ${e.message}`); return null; });
+      if (!status) continue;
+
+      // pull errors = needed items Syncthing currently cannot apply
+      const errs = ((await api('/rest/folder/errors', { folder: f.id, perpage }).catch(() => null)) || {}).errors || [];
+      const blocked = new Map(errs.map((e) => [e.path, e.error]));
+      const errCategory = (err) =>
+         /different upper or lowercase/.test(err) ? 'case-collision'
+         : /reserved character/.test(err) ? 'reserved-character'
+         : /reserved name/.test(err) ? 'reserved-name'
+         : /invalid path separator/.test(err) ? 'bad-path-separator'
+         : /invalid UTF-8/.test(err) ? 'invalid-utf8'
+         : /modified but not rescanned/.test(err) ? 'dirty-local'
+         : 'other';
+
+      const need = [];
+      for (let page = 1; page <= 40; page++) {
+         const n = (await api('/rest/db/need', { folder: f.id, page, perpage })) || {};
+         const got = [...(n.progress || []), ...(n.queued || []), ...(n.rest || [])];
+         need.push(...got);
+         if (got.length < perpage) break;
+      }
+
+      if (need.length > 1000) console.error(`${f.id}: classifying ${need.length} items...`);
+      const items = await pool(need, 16, async (it) => {
+         const item = {
+            name: it.name, size: it.size || 0, deleted: !!it.deleted,
+            kind: (it.type || '').replace('FILE_INFO_TYPE_', '').toLowerCase(),
+            modified: it.modified, modifiedBy: it.modifiedBy, action: null,
+         };
+         try {
+            const v = await api('/rest/db/file', { folder: f.id, file: it.name });
+            const local = v?.local || {};
+            const localVec = parseVector(local.version);
+            item.localVersion = local.version || [];
+            item.globalVersion = v?.global?.version || [];
+            const hasLocal = localVec.size > 0 && !local.deleted;
+            if (item.deleted) item.action = hasLocal ? 'delete' : 'noop';
+            else if (!hasLocal) item.action = 'create';
+            else {
+               const rel = compareVectors(localVec, parseVector(item.globalVersion));
+               item.action = rel === 'older' ? 'update'
+                  : rel === 'concurrent' ? 'conflict'
+                  : rel === 'equal' ? 'in-sync'
+                  : 'anomaly';
+            }
+            if (item.action === 'delete') {
+               item.localSize = local.size || 0;
+               item.localModifiedBy = local.modifiedBy;
+            }
+         } catch (e) { item.action = 'unknown'; item.error = e.message; }
+         if (blocked.has(it.name)) item.blocked = errCategory(blocked.get(it.name));
+         return item;
+      });
+
+      agg.push({
+         id: f.id, label: f.label, type: f.type, paused: !!f.paused,
+         state: status.state,
+         versioning: f.versioning?.type || 'none', maxConflicts: f.maxConflicts,
+         localOnly: {
+            items: status.receiveOnlyTotalItems || 0,
+            bytes: status.receiveOnlyChangedBytes || 0,
+         },
+         remoteNeed: null,
+         items,
+      });
+      pending += items.filter((i) => i.action !== 'noop' && i.action !== 'in-sync').length;
+
+      if (remoteDev) {
+         const rn = await api('/rest/db/remoteneed', { folder: f.id, device: remoteDev.deviceID, perpage }).catch(() => null);
+         const ritems = rn ? [...(rn.progress || []), ...(rn.queued || []), ...(rn.rest || [])] : [];
+         agg[agg.length - 1].remoteNeed = {
+            device: remoteDev.name,
+            items: ritems.length,
+            deletes: ritems.filter((i) => i.deleted).length,
+            bytes: ritems.reduce((s, i) => s + (i.size || 0), 0),
+         };
+      }
+   }
+
+   if (opt.json) { console.log(JSON.stringify(agg, null, 2)); process.exit(pending ? 1 : 0); }
+
+   const order = ['delete', 'conflict', 'update', 'create', 'anomaly', 'unknown', 'noop', 'in-sync'];
+   for (const f of agg) {
+      const shown = f.items.filter((i) => opt.all || (i.action !== 'noop' && i.action !== 'in-sync'));
+      for (const i of shown.sort((a, b) => order.indexOf(a.action) - order.indexOf(b.action) || a.name.localeCompare(b.name))) {
+         const detail = i.blocked ? `blocked:${i.blocked}` : i.action === 'delete' ? (i.localSize ?? 0) : i.size;
+         console.log(`${f.id}\t${i.action}\t${detail}\t${i.name}${i.kind === 'directory' ? '/' : ''}`);
+      }
+
+      const counts = {};
+      for (const i of f.items) (counts[i.action] ??= []).push(i);
+      const held = f.type === 'sendonly' ? ' — HELD: applies only on switch to send-receive' : '';
+      const paused = f.paused ? ' [PAUSED]' : '';
+      console.error(`\n${f.id} (${f.label}) ${f.type}${paused}, ${f.state}${held}`);
+      const interesting = order.filter((a) => counts[a] && (opt.all || (a !== 'noop' && a !== 'in-sync')));
+      if (!interesting.length) console.error('   nothing pending from the cluster');
+      for (const a of interesting) {
+         const list = counts[a];
+         const bytes = list.reduce((s, i) => s + (a === 'delete' ? (i.localSize || 0) : i.size), 0);
+         const nBlocked = list.filter((i) => i.blocked).length;
+         const who = [...list.reduce((m, i) => m.set(i.modifiedBy, (m.get(i.modifiedBy) || 0) + 1), new Map())]
+            .sort((x, y) => y[1] - x[1]).slice(0, 3)
+            .map(([id, n]) => `${devName(id)}:${n}`).join(' ');
+         console.error(`   ${a}: ${list.length} (${fmtBytes(bytes)})${nBlocked ? ` [${nBlocked} blocked]` : ''} — by ${who}`);
+      }
+      if (f.localOnly.items) {
+         const verb = f.type === 'receiveonly' ? '"Revert Local Changes" would destroy'
+            : f.type === 'sendonly' ? '"Override Changes" would force onto the cluster'
+            : 'locally-changed';
+         console.error(`   local-only: ${f.localOnly.items} items (${fmtBytes(f.localOnly.bytes)}) — ${verb} these`);
+      }
+      if (f.remoteNeed) {
+         const r = f.remoteNeed;
+         console.error(`   remote ${r.device} still needs: ${r.items} items (${fmtBytes(r.bytes)}, ${r.deletes} deletes)`);
+      }
+      console.error(`   safety: versioning=${f.versioning}${f.versioning === 'none' ? ' (deletes/updates UNRECOVERABLE)' : ''}, maxConflicts=${f.maxConflicts === 0 ? '0 (CONFLICTS DISCARD DATA)' : f.maxConflicts}`);
+   }
+   console.error(pending ? `\n${pending} pending incoming change(s)` : '\nnothing pending — local state matches the cluster');
+   process.exit(pending ? 1 : 0);
+})().catch((e) => die(e.stack || e.message));
