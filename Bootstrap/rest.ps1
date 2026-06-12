@@ -38,6 +38,9 @@ winget install -e --id h3poteto.whalebird-desktop # Mastodon client
 winget install -e --id icsharpcode.ILSpy
 winget install -e --id sharkdp.fd
 
+# Necessary for Rust
+winget install -e --id Microsoft.VisualStudio.2022.BuildTools --override "--quiet --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+
 # TODO: User-level (non-admin)
 winget install -e --id 9NCBCSZSJRSB # Spotify
 winget install -e --id 9P0KN9S5RP86 # Fantastical
