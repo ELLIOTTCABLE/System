@@ -93,7 +93,7 @@ else
       brew install mise
 
       mise trust "$HOME/.config/mise/config.toml"
-      mise trust "$SYSTEM_REPO/.config/mie.toml"
+      mise trust "$SYSTEM_REPO/.config/mise.toml"
       eval "$(mise activate)"
    else
       printf "[profile:mise] May I install it via their curl-script? [yN, ^C for minimal shell] "
