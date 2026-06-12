@@ -52,6 +52,20 @@
       }
     ]
   },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-plugins-official.git"
+      }
+    },
+    "claude-code-lsps": {
+      "source": {
+        "source": "github",
+        "repo": "boostvolt/claude-code-lsps"
+      }
+    }
+  },
   "promptSuggestionEnabled": false,
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.138",
