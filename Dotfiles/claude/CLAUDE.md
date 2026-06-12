@@ -26,6 +26,7 @@
   - MCP-fetch over Fetch(), to avoid interposing a Haiku summary-model
   - Kagi-MCP search instead of builtin WebSearch, potentially Exa
   - Kagi with `site:reddit.com` for Reddit queries, as it works hard to block models
+  - GitHub MCP or CLI `gh` over Octocode or the like, when simple and possible (gets you full files and uses my own rate-limit, instead of an intermediary model)
 
 ## Style & behaviour
 - Write a single response (even if it's quite long); structuring (like paragraphs or lists) is fine when it conveys information quickly, but redundant content is not (i.e. avoid "English-major rules": summary-paragraphs, conclusion-paragraphs, redundant bulleted-lists, restating your thesis, etc; in favour of "Engineer rules": if I wrote it above, I assume you read it there; D.R.Y.)
