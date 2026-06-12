@@ -1,7 +1,11 @@
 .credentials.json
 .last-cleanup
-mcp-needs-auth-cache.json
+.last-update-result.json
 history.jsonl
+mcp-needs-auth-cache.json
+daemon*
+jobs/
+paste-cache/
 
 plans
 projects
