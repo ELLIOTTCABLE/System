@@ -66,7 +66,7 @@ privacy.com, Banking, green, dollar
 reimastercard.com, Banking, green, dollar
 *.reimastercard.com, Banking, green, dollar
 rocketaccount.com, Banking, green, dollar
-*.rocketaccount.com, Banking, green, dollar
+*.rocketaccount.com, Banking,green, dollar
 rocketmoney.com, Banking, green, dollar
 *.rocketmoney.com, Banking, green, dollar
 squareup.com, Banking, green, dollar
@@ -103,6 +103,8 @@ bhphotovideo.com, Shopping, pink, cart
 *.bhphotovideo.com, Shopping, pink, cart
 campsaver.com, Shopping, pink, cart
 *.campsaver.com, Shopping, pink, cart
+costco.com, Shopping, pink, cart
+*.costco.com, Shopping, pink, cart
 ebay.com, Shopping, pink, cart
 *.ebay.com, Shopping, pink, cart
 etsy.com, Shopping, pink, cart
@@ -121,6 +123,10 @@ mybidder.com, Shopping, pink, cart
 *.mybidder.com, Shopping, pink, cart
 newegg.com, Shopping, pink, cart
 *.newegg.com, Shopping, pink, cart
+petco.com, Shopping, pink, cart
+*.petco.com, Shopping, pink, cart
+petsmart.com, Shopping, pink, cart
+*.petsmart.com, Shopping, pink, cart
 rammount.com, Shopping, pink, cart
 *.rammount.com, Shopping, pink, cart
 randco.com, Shopping, pink, cart
@@ -169,6 +175,8 @@ beeper.com, Social, purple, chill
 *.beeper.com, Social, purple, chill
 hardcover.app, Social, purple, chill
 *.hardcover.app, Social, purple, chill
+element.io, Social, purple, chill
+*.element.io, Social, purple, chill
 irccloud.com, Social, purple, chill
 *.irccloud.com, Social, purple, chill
 last.fm, Social, purple, chill
@@ -179,8 +187,6 @@ matrix.to, Social, purple, chill
 *.matrix.to, Social, purple, chill
 meetup.com, Social, purple, chill
 *.meetup.com, Social, purple, chill
-element.io, Social, purple, chill
-*.element.io, Social, purple, chill
 patreon.com, Social, purple, chill
 *.patreon.com, Social, purple, chill
 readest.com, Social, purple, chill
@@ -451,6 +457,7 @@ ispfsb.com, Government, red, vacation
 *.ispfsb.com, Government, red, vacation
 id.me, Government, red, vacation
 *.id.me, Government, red, vacation
+alaskanow.servicenowservices.com, Government, red, vacation
 cookcountytreasurer.com, Government, red, vacation
 *.cookcountytreasurer.com, Government, red, vacation
 
@@ -559,6 +566,8 @@ gaming.amazon.com, Amazon.com, pink, cart
 health.amazon.com, Amazon.com, pink, cart
 audible.com, Amazon.com, pink, cart
 *.audible.com, Amazon.com, pink, cart
+goodreads.com, Amazon.com, pink, cart
+*.goodreads.com, Amazon.com, pink, cart
 keepa.com, Amazon.com, pink, cart
 *.keepa.com, Amazon.com, pink, cart
 
