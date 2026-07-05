@@ -1,0 +1,43 @@
+#!/bin/sh
+# DeepSeek V4-Pro via a nested, read-only, isolated Claude Code instance.
+# Raw output is for the dispatching conductor to adjudicate — never shown to the human verbatim.
+set -eu
+
+# Key resolution: prefer an already-exported DEEPSEEK_API_KEY; else read it from 1Password at
+# runtime so it never lives in a dotfile. Fail loud (before any network) if neither is available.
+if [ -z "${DEEPSEEK_API_KEY:-}" ]; then
+   command -v op >/dev/null 2>&1 || { printf '%s\n' 'ds-review: DEEPSEEK_API_KEY unset and no `op` CLI to read it (see README)' >&2; exit 1; }
+fi
+
+if [ "$#" -gt 0 ]; then
+   prompt="$*"
+else
+   prompt="$(cat)"        # allow piping a review packet on stdin
+fi
+
+# Stash the nested Claude Code invocation so the two auth branches don't duplicate it.
+# --mcp-config + --strict-mcp-config: load ONLY our read-only kagi-ken server (web search), never the
+# user's own MCP set — the foreign lineage stays isolated from personal tooling (the bare profile's point).
+set -- claude -p "$prompt" --output-format json \
+   --disallowedTools "Edit,Write,Bash" \
+   --allowedTools "mcp__kagi-ken__kagi_search_fetch,mcp__kagi-ken__kagi_summarizer" \
+   --mcp-config "$HOME/.claude/bin/foreign-mcp.json" --strict-mcp-config
+
+# env -u CLAUDECODE: drop the parent-session marker so the child runs as a fresh top-level agent.
+# CLAUDE_CONFIG_DIR bare profile: the user's own skills/MCP/settings must NOT load into the foreign lineage.
+# `env` is load-bearing: `exec VAR=… cmd` without it misparses VAR=<key> as the program name and leaks
+# the key in the "not found" error (see VERIFICATION T5b). The op read stays inline so the key is never
+# assigned to a named var, written to disk, or echoed.
+if [ -n "${DEEPSEEK_API_KEY:-}" ]; then
+   exec env -u CLAUDECODE \
+      ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
+      ANTHROPIC_API_KEY="$DEEPSEEK_API_KEY" \
+      CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
+      "$@"
+else
+   exec env -u CLAUDECODE \
+      ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
+      ANTHROPIC_API_KEY="$(op read 'op://Elliott - Work-visible/DeepSeek/API key')" \
+      CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
+      "$@"
+fi

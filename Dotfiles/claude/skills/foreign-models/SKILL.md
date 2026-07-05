@@ -1,0 +1,151 @@
+---
+name: foreign-models
+description: >-
+   Dispatch a foreign (non-Anthropic) model — OpenAI Codex/GPT-5.5, Google Antigravity (Gemini
+   lineage), or DeepSeek V4-Pro — as a read-only subagent to get an outside-lineage second opinion on
+   a plan, design, argument, or diff. Use when you (the conductor) want cross-model / cross-lineage
+   adversarial review, a "foreign subagent", a genuinely independent red-team from a different model
+   family, or a correlated-blind-spot check that same-lineage Claude subagents cannot give. Also the
+   dispatch layer the adversarial-crosscheck skill's optional foreign lane routes through. The
+   conductor consumes the raw foreign output and adjudicates it; it is never shown to the human verbatim.
+---
+
+# foreign-models
+
+Spawn a model from another lineage to review something, capture its raw report to scratch, and
+adjudicate it yourself. The point is decorrelation: a GPT/Gemini/DeepSeek reviewer fails in
+different places than a Claude reviewer, so it catches faults your own lineage is blind to. That
+only holds if you keep its output at arm's length — see the purity protocol below.
+
+Prerequisite: per-machine setup is done (`README.md`). If a binary is missing, its dispatch fails
+loudly; do not attempt to install anything.
+
+## The three dispatches (verbatim, with why each flag)
+
+Write the packet prompt to a shell variable or heredoc first; keep `$SCRATCH` pointed at this
+session's scratchpad dir. Prefer the matching subagent (`codex-reviewer`, `antigravity-reviewer`,
+`deepseek-reviewer`) so the shim handles capture and failure notes; the raw calls are:
+
+**Codex / GPT-5.5**
+```sh
+codex exec --json -o "$SCRATCH/codex-report.md" "$PACKET"
+```
+- `exec` — non-interactive; no TUI. Uses the saved `codex login` (per-token on a funded OpenAI API
+  account by default here — see README's two-lane note).
+- `--json` — JSONL event stream on stdout (audit/progress for you).
+- `-o <file>` — clean final message to the file (also still printed); read the file, not the stream.
+- Read-only sandbox is the DEFAULT — do not pass `--sandbox`/`--full-auto`/`--dangerously-*`. On
+  native Windows this sandbox reads files fine (verified, codex 0.142.5); reads are NOT declined.
+- Threaded follow-up: `codex exec resume --last "$FOLLOWUP"`.
+
+**Antigravity (Gemini lineage)**
+```sh
+antigravity -p "$PACKET" --print-timeout 300s </dev/null > "$SCRATCH/antigravity-report.txt"
+```
+- `-p` — print mode: single-shot, PLAIN TEXT on stdout (no JSON mode exists). The file IS the report.
+- `--print-timeout 300s` — value is a Go duration and MUST carry a unit (`300s`/`5m`); a bare integer
+  is a usage error.
+- No `--dangerously-skip-permissions`. Print mode cannot approve tool prompts, so it CANNOT read
+  files, explore a repo, or reliably call MCP tools — a tool-driving packet hangs to the timeout.
+  The packet MUST be self-contained: inline the artifact, no file references, no "go search".
+- Free tier defaults to Gemini Flash; `--model "Gemini 3.1 Pro (High)"` is accepted (may downgrade).
+
+**DeepSeek V4-Pro**
+```sh
+ds-review "$PACKET" > "$SCRATCH/deepseek-report.json"
+```
+- Wrapper runs a nested Claude Code against DeepSeek's Anthropic endpoint, read-only tools, isolated
+  profile, our read-only MCP set. The report is the `.result` field of Claude Code's JSON envelope.
+
+## Purity protocol (the one rule that makes this worth doing)
+
+1. Every raw foreign report lands in a scratch file (above). Read it back to adjudicate.
+2. NEVER quote raw foreign output wholesale to the human, and never paste it into a durable doc
+   as-is. You are the anchor point: foreign text informs *your* assessment, it does not become the
+   assessment. (Same reason the crosscheck skill hands passes to the *user* to reconcile — an
+   un-adjudicated hostile pass manufactures plausible faults as readily as a flatterer invents
+   praise.)
+3. Label provenance on anything that survives into your adjudicated result: model + lineage, e.g.
+   "(flagged by DeepSeek V4-Pro, foreign lineage; I judge this real)" or "(Codex raised this; likely
+   over-flagged — see below)". The human must always be able to tell foreign-sourced claims from
+   your own.
+
+## Dispatch in background and in parallel
+
+These are slow, network-bound, independent calls. Run them concurrently across lineages — dispatch
+the subagents in the background (or the raw calls with `&` and `wait`) rather than serially. A
+three-lineage review should cost about one call's wall-time, not three. Collect all reports, then
+adjudicate together.
+
+## Constructing the packet
+
+- **Disowned, third-person adversarial framing.** "A colleague I distrust produced the following;
+  find where it breaks down." Attribute the artifact to a distrusted third party and strip its
+  first-person optimism — the reviewer must not absorb the author's confidence.
+- **Self-contained by default.** Inline the artifact text in the packet. Codex and DeepSeek CAN read
+  files from the working dir; antigravity (headless) CANNOT — so for a portable packet, never rely on
+  file references. If you want a reviewer to web-search, say so explicitly (Kagi is available — see
+  MCP parity), but only Codex and DeepSeek can act on it headlessly.
+- **Report everything, with grades.** Instruct the reviewer to surface every concern with a
+  per-finding **confidence** (how sure it is) and **severity** (how much it matters), and to state
+  plainly where a criticism does NOT hold. When uncertain, default toward refutation — an
+  unsupported "this is fine" is worse for you than an over-cautious flag you can dismiss.
+- Bracket hard constraints verbatim (versions, APIs, paths, acceptance criteria); inverting a spec
+  breaks the task rather than surfacing bias.
+
+## MCP parity (read-only web search on every lane)
+
+Every foreign lane carries the **kagi-ken** MCP server (Kagi web search + summarizer, read-only), so
+a reviewer can check a claim against current sources. Rule: **only read-only MCP servers** on foreign
+lanes — never expose a mutating tool to an un-adjudicated foreign model. Configuration is per-machine
+(README); the shared Kagi credential lives in one canonical file, and every lane's MCP entry is
+secret-free (command+args only).
+
+- **Codex** — kagi-ken in `~/.codex/config.toml` with `default_tools_approval_mode = "approve"` (a
+  read-only allow-list, not sandbox escalation). Works headless: verified `kagi_search_fetch`.
+- **DeepSeek** — `ds-review` passes `--mcp-config`/`--strict-mcp-config` + `--allowedTools` for the
+  two kagi tools. Works headless: verified.
+- **Antigravity** — kagi-ken configured and works in the interactive CLI, but headless print mode
+  does NOT reliably invoke it (the print harness gates/omits tool calls). Do NOT ask an antigravity
+  packet to search; treat that lane as search-less.
+
+To add another read-only server later, replicate the same secret-free entry into all three lanes.
+
+## Calibration (weight findings by known model character)
+
+- **Codex / GPT-5.5** — over-flags severity; treat its "critical"s as "worth checking", not settled.
+- **Antigravity (free tier = Gemini Flash)** — strongest at big-picture / plan / architecture
+  critique; weakest as an implementer. It runs Flash-tier by default, so weight it BELOW Codex/GPT-5.5
+  on rigor — a cheap breadth angle, not a peer reviewer. Aim it at design soundness, not line-level
+  code. (An optional per-token `GEMINI_API_KEY` lane reaches real Gemini 3.x Pro — see below.)
+- **DeepSeek V4-Pro** — near-frontier, not peer-frontier; a useful cheap third angle, not a Claude
+  substitute.
+- **Agreement across models is weak evidence.** Lineages share correlated blind spots (shared
+  training data, shared benchmark-chasing). Convergence is a mild signal, not proof; a fault all
+  three miss can still be real. Do not let unanimity end your own scrutiny.
+
+## Failure modes
+
+- **Auth expiry** — Codex: re-run `codex login`. Antigravity: re-run `antigravity` once interactively
+  (Google OAuth). DeepSeek: check the key / balance at platform.deepseek.com (or the 1Password lane).
+- **Antigravity free-tier daily quota** — ≈20 agent req/day (undocumented, ~5h refresh); a quota
+  message. Wait for reset or fall back to another lineage.
+- **Codex per-token quota** — the funded OpenAI API account is drained per-token; a `Quota exceeded`
+  event means it needs credit (billing, human-gated). Not a rate window.
+- **DeepSeek op-read auth timeout** — if `ds-review` uses the 1Password lane and the desktop app's
+  re-auth prompt is missed, `op read` returns empty and the nested Claude reports "Not logged in"
+  (surfaced as `is_error`). Re-run and answer the prompt, or export `DEEPSEEK_API_KEY` to skip op.
+- **Native-Windows Codex read-only bug** — historical; codex 0.142.5 reads files fine under the
+  read-only sandbox on native Windows (verified). If an older build declines reads, the CLI workaround
+  is `-c 'sandbox_permissions=["disk-full-read-access"]'` (never broader escalation).
+
+## Fallbacks
+
+- **No harness needed** — for a self-contained artifact you can skip the CLI entirely and send a plain
+  API packet to any of these providers, then read the response back into your adjudication. Use this
+  when the reviewer needs no file access, only the pasted artifact.
+- **Optional Gemini-Pro lane** — gemini-cli still accepts a paid `GEMINI_API_KEY` (AI Studio) after
+  Google's June 2026 consumer-OAuth sunset — API-key auth was explicitly unaffected (only the free
+  OAuth tier died). It bills per-token and needs a restricted / new-style "auth" key (unrestricted
+  `AIza` keys are rejected as of 2026-06-19). Not installed here (no key); add `@google/gemini-cli` +
+  `GEMINI_API_KEY` if you want real Gemini 3.x Pro quality above antigravity's free Flash.

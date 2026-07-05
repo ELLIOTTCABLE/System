@@ -1,0 +1,26 @@
+#!/bin/sh
+# OpenAI Codex (GPT-5.x) as a read-only review subagent, authenticated per-run from 1Password.
+# Raw output is for the dispatching conductor to adjudicate — never shown to the human verbatim.
+set -eu
+
+command -v op    >/dev/null 2>&1 || { printf '%s\n' 'codex-review: 1Password CLI "op" not on PATH (see README)' >&2; exit 1; }
+command -v codex >/dev/null 2>&1 || { printf '%s\n' 'codex-review: "codex" not on PATH — install via mise (see README)' >&2; exit 1; }
+
+if [ "$#" -gt 0 ]; then
+   prompt="$*"
+else
+   prompt="$(cat)"        # allow piping a review packet on stdin
+fi
+
+# --json streams JSONL events (token usage, errors) to stdout; -o writes ONLY the clean final
+# message to $report. Path is announced so a caller that left CODEX_REPORT unset can still find it.
+report="${CODEX_REPORT:-$(mktemp)}"
+printf '%s\n' "codex-review: final message -> $report" >&2
+
+# Key is read inline into codex's environment for this one command — never persisted to disk (no
+# `codex login`, which would write ~/.codex/auth.json) and never echoed. `env` is load-bearing:
+# `exec` alone parses CODEX_API_KEY=... as the program name (exit 127) and leaks the key in the
+# "not found" error. Read-only sandbox is codex's default and is deliberately not escalated.
+# </dev/null: the prompt is already captured in $prompt, so codex must not block on its own stdin.
+exec env CODEX_API_KEY="$(op read 'op://Elliott - Work-visible/mdxlk5fozepggmewg2cblpno54/API key')" \
+   codex exec --json -o "$report" "$prompt" </dev/null

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "kagi-ken": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "github:czottmann/kagi-ken-mcp"]
+    }
+  }
+}
