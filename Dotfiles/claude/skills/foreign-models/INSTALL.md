@@ -58,6 +58,21 @@ the human verbatim. Behaviour lives in the `foreign-models` skill; this file is 
 The agent defs reference the wrappers by absolute `$HOME/.claude/bin/<wrapper>` path, so no PATH or
 shell-rc changes are needed.
 
+> **Shim model pin (cost-critical).** All three reviewer agent defs carry `model: sonnet` in their
+> frontmatter — keep it. Claude Code resolves a subagent's model as: the def's frontmatter `model`,
+> else the *conductor's* model by inheritance. Unpinned, a reviewer shim silently runs on whatever the
+> dispatching session runs — and on a frontier-class conductor that bills every packet and every raw
+> foreign report at frontier rates. This omission once burned a week of plan quota in minutes. Pin a
+> cheap `model` on any new lane or ad-hoc `Agent` dispatch too.
+
+> **Packet-as-file contract (churn-critical).** The shims take a packet FILE path, not inline text.
+> The dispatching conductor writes the packet to a file with its Write tool and hands over the path;
+> the shims never reconstruct packet text through shell heredocs / `echo` (shell expansion corrupts
+> `$`, backticks, and quoting — piecemeal heredoc assembly once burned 10+ minutes per dispatch).
+> From a file, dispatch is pure redirection: deepseek and codex read it on stdin (`ds-review < pkt`,
+> `codex exec - < pkt`), antigravity lifts it via `"$(cat pkt)"` (command-substitution output is not
+> re-expanded, so `$` survives). The agent defs and the skill's dispatch section carry the full rule.
+
 ### `bin/codex-review` (op-key alternate lane)
 
 `codex-review "<prompt>"` (or a packet piped on stdin) reads the OpenAI key inline from 1Password
@@ -78,7 +93,8 @@ Every foreign lane carries the **kagi-ken** MCP server (Kagi search + summarizer
 - **Every MCP entry is secret-free** — command + args only, no embedded token:
   - **Codex:** `~/.codex/config.toml` → `[mcp_servers.kagi-ken]` with `default_tools_approval_mode =
     "approve"` (a read-only allow-list; not sandbox escalation). *Verified headless.*
-  - **DeepSeek:** `~/.claude/bin/foreign-mcp.json` (kagi-only); ds-review passes `--mcp-config` +
+  - **DeepSeek:** `~/.claude/bin/foreign-mcp.json` (kagi-only, pinned to an immutable commit —
+    `github:czottmann/kagi-ken-mcp#<sha>`, currently release 1.3.0); ds-review passes `--mcp-config` +
     `--strict-mcp-config` + `--allowedTools` for the two kagi tools. *Verified headless.*
   - **Antigravity:** `~/.gemini/config/mcp_config.json`. Works in the interactive CLI; headless print
     mode does NOT reliably invoke it (print harness gap — the model flails instead of calling the
@@ -88,13 +104,19 @@ To add another read-only server later, replicate the same secret-free entry into
 (The user's own Claude Code kagi-ken entry is already secret-free — same token file — so no change is
 needed there; whether to simplify anything else in personal dotfiles is the human's call.)
 
+> **Supply-chain pin.** `foreign-mcp.json` pins kagi-ken-mcp to a full commit SHA rather than the
+> default branch, so an upstream force-push or a moved tag can't change what `npx` runs inside the
+> foreign lane. Bump it deliberately — review the upstream diff, then update the SHA. The codex and
+> antigravity kagi entries are per-machine; pin them the same way where the launcher accepts a
+> commit-ish.
+
 ## Platform matrix
 
 | Platform | Status |
 |---|---|
 | macOS | OK |
 | WSL2 | OK — but antigravity's keyring may not persist (reauth loop reported); native Windows Credential Manager persists. |
-| native Windows | (a) `codex exec` read-only sandbox **reads files fine** on codex 0.142.5 (verified 2026-07-05 — the old read-decline bug does not reproduce; no `-c sandbox_permissions` workaround needed). (b) `ds-review`/`codex-review` and the sh wrappers need Git Bash — not cmd/PowerShell. (c) install codex via mise's **npm** backend, not aqua. (d) antigravity `-p` prints plain text and can't run tools headlessly — send self-contained packets only. |
+| native Windows | (a) `codex exec` read-only sandbox reads files **only from a git-repo-root cwd, and only inside that repo** on codex 0.142.5 (verified 2026-07-05 — the old blanket read-decline bug does not reproduce, but a non-repo or out-of-workspace cwd still denies reads; `--skip-git-repo-check` suppresses the front-door check without granting trust). Dispatch codex from the repo root holding the artifacts. (b) `ds-review`/`codex-review` and the sh wrappers need Git Bash — not cmd/PowerShell. (c) install codex via mise's **npm** backend, not aqua. (d) antigravity `-p` prints plain text and can't run tools headlessly — send self-contained packets only. |
 
 ## Cost & quota
 
