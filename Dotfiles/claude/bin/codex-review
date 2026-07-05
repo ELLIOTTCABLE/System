@@ -3,8 +3,8 @@
 # Raw output is for the dispatching conductor to adjudicate — never shown to the human verbatim.
 set -eu
 
-command -v op    >/dev/null 2>&1 || { printf '%s\n' 'codex-review: 1Password CLI "op" not on PATH (see README)' >&2; exit 1; }
-command -v codex >/dev/null 2>&1 || { printf '%s\n' 'codex-review: "codex" not on PATH — install via mise (see README)' >&2; exit 1; }
+command -v op    >/dev/null 2>&1 || { printf '%s\n' 'codex-review: 1Password CLI "op" not on PATH (see INSTALL.md)' >&2; exit 1; }
+command -v codex >/dev/null 2>&1 || { printf '%s\n' 'codex-review: "codex" not on PATH — install via mise (see INSTALL.md)' >&2; exit 1; }
 
 if [ "$#" -gt 0 ]; then
    prompt="$*"
@@ -17,10 +17,17 @@ fi
 report="${CODEX_REPORT:-$(mktemp)}"
 printf '%s\n' "codex-review: final message -> $report" >&2
 
-# Key is read inline into codex's environment for this one command — never persisted to disk (no
-# `codex login`, which would write ~/.codex/auth.json) and never echoed. `env` is load-bearing:
-# `exec` alone parses CODEX_API_KEY=... as the program name (exit 127) and leaks the key in the
-# "not found" error. Read-only sandbox is codex's default and is deliberately not escalated.
-# </dev/null: the prompt is already captured in $prompt, so codex must not block on its own stdin.
-exec env CODEX_API_KEY="$(op read 'op://Elliott - Work-visible/mdxlk5fozepggmewg2cblpno54/API key')" \
-   codex exec --json -o "$report" "$prompt" </dev/null
+# Key read from 1Password into CODEX_API_KEY by shell assignment + export — never on a command line
+# (argv-exposed) and never to disk (no `codex login`, which writes ~/.codex/auth.json). `set -e`
+# aborts if op read errors; the guard makes an empty read a loud local failure, not a remote 401.
+CODEX_API_KEY="$(op read 'op://Elliott - Work-visible/mdxlk5fozepggmewg2cblpno54/API key')"
+[ -n "$CODEX_API_KEY" ] || {
+   printf '%s\n' 'codex-review: OpenAI key resolved empty (op read failed or was cancelled) — aborting before network' >&2
+   exit 1
+}
+export CODEX_API_KEY
+
+# Prompt on STDIN via `codex exec -` (not argv): a multi-line argv prompt dies at the mise batch shim
+# on Windows ("batch file arguments are invalid"); stdin is codex's documented equivalent and also
+# keeps the packet out of the process table. Read-only sandbox is codex's default; not escalated.
+printf '%s' "$prompt" | codex exec --json -o "$report" -
