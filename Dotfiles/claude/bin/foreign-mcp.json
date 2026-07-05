@@ -3,7 +3,7 @@
     "kagi-ken": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "github:czottmann/kagi-ken-mcp"]
+      "args": ["-y", "github:czottmann/kagi-ken-mcp#83e1c5b1e31eaed7aa43d6b05b4a5697aa025651"]
     }
   }
 }
