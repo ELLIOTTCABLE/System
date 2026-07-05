@@ -17,7 +17,7 @@ adjudicate it yourself. The point is decorrelation: a GPT/Gemini/DeepSeek review
 different places than a Claude reviewer, so it catches faults your own lineage is blind to. That
 only holds if you keep its output at arm's length — see the purity protocol below.
 
-Prerequisite: per-machine setup is done (`README.md`). If a binary is missing, its dispatch fails
+Prerequisite: per-machine setup is done (`INSTALL.md`). If a binary is missing, its dispatch fails
 loudly; do not attempt to install anything.
 
 ## The three dispatches (verbatim, with why each flag)
@@ -43,7 +43,7 @@ The raw calls are:
 cd <git-repo-root-containing-artifacts> && codex exec --json -o "$SCRATCH/codex-report.md" - < "$PACKET_FILE"
 ```
 - `exec` — non-interactive; no TUI. Uses the saved `codex login` (per-token on a funded OpenAI API
-  account by default here — see README's two-lane note).
+  account by default here — see INSTALL.md's two-lane note).
 - CWD RULE (native Windows, verified): the read-only sandbox trusts only a cwd that is ITSELF a
   git-repo root — from there reads work; from a non-repo dir ALL reads are denied even with
   `--skip-git-repo-check` (it suppresses the check, it does not grant trust). Loose artifacts: copy
@@ -69,10 +69,16 @@ antigravity -p "$PACKET" --print-timeout 300s </dev/null > "$SCRATCH/antigravity
 
 **DeepSeek V4-Pro**
 ```sh
-ds-review "$PACKET" > "$SCRATCH/deepseek-report.json"
+ds-review < "$PACKET_FILE" > "$SCRATCH/deepseek-report.json"
 ```
-- Wrapper runs a nested Claude Code against DeepSeek's Anthropic endpoint, read-only tools, isolated
-  profile, our read-only MCP set. The report is the `.result` field of Claude Code's JSON envelope.
+- Packet on STDIN from the file (the packet-as-file contract; the wrapper reads argv-or-stdin, and
+  stdin has no ARG_MAX ceiling and never re-expands `$` in the packet). The wrapper runs a nested
+  Claude Code against DeepSeek's Anthropic endpoint, model pinned to `deepseek-v4-pro` (DeepSeek maps
+  claude-sonnet/haiku* and any unknown name to the weaker v4-flash, so the pin is load-bearing), an
+  isolated bare profile, and an explicit read-only toolset (`Read,Grep,Glob` + the two kagi tools;
+  mutating/egress/escalation tools denied by name). Reads are scoped to the working-dir subtree —
+  allow-listing the tools does NOT grant out-of-workspace paths (verified this round) — so cd to the
+  artifacts' ROOT. The report is `.result` in the JSON envelope.
 
 ## Purity protocol (the one rule that makes this worth doing)
 
@@ -86,6 +92,10 @@ ds-review "$PACKET" > "$SCRATCH/deepseek-report.json"
    "(flagged by DeepSeek V4-Pro, foreign lineage; I judge this real)" or "(Codex raised this; likely
    over-flagged — see below)". The human must always be able to tell foreign-sourced claims from
    your own.
+4. Spend adjudication effort on the UNVERIFIED bucket first. If you required a grounding ledger (see
+   "Constructing the packet"), the reviewer's self-declared unverified claims are where wrong findings
+   concentrate — validated twice in live-fire (both DeepSeek's misses, and antigravity's ungrounded
+   "sure" false-positives, sat there). VERIFIED claims it actually checked are cheaper to accept.
 
 ## Dispatch in background and in parallel
 
@@ -99,14 +109,23 @@ adjudicate together.
 - **Disowned, third-person adversarial framing.** "A colleague I distrust produced the following;
   find where it breaks down." Attribute the artifact to a distrusted third party and strip its
   first-person optimism — the reviewer must not absorb the author's confidence.
-- **Self-contained by default.** Inline the artifact text in the packet. Codex and DeepSeek CAN read
-  files from the working dir; antigravity (headless) CANNOT — so for a portable packet, never rely on
-  file references. If you want a reviewer to web-search, say so explicitly (Kagi is available — see
-  MCP parity), but only Codex and DeepSeek can act on it headlessly.
+- **Self-contained by default.** Inline the artifact text in the packet. DeepSeek reads files in its
+  working-dir subtree (cd to the artifacts root); Codex reads only from a git-repo-root cwd;
+  antigravity (headless) reads nothing — so for a portable packet, never rely on file references. If
+  you want a reviewer to web-search, say so explicitly (Kagi is available — see MCP parity), but only
+  Codex and DeepSeek can act on it headlessly.
 - **Report everything, with grades.** Instruct the reviewer to surface every concern with a
   per-finding **confidence** (how sure it is) and **severity** (how much it matters), and to state
   plainly where a criticism does NOT hold. When uncertain, default toward refutation — an
   unsupported "this is fine" is worse for you than an over-cautious flag you can dismiss.
+- **Require a grounding ledger.** Tell the reviewer to split its findings into VERIFIED (checked
+  against the artifact or a source it actually read) vs UNVERIFIED (asserted from priors), and to mark
+  which per finding. This is the single best triage signal you get — wrong findings cluster in the
+  unverified bucket (spend your scrutiny there, purity protocol #4).
+- **Review artifacts in situ.** Point the reviewer at the files where they actually live; do not copy
+  them elsewhere first. A relocated path manufactures false positives (a codex "wrong config path"
+  finding was purely an artifact of reviewing a moved copy). If relocation is unavoidable — e.g. codex
+  needs a git-repo root — say so explicitly in the packet.
 - Bracket hard constraints verbatim (versions, APIs, paths, acceptance criteria); inverting a spec
   breaks the task rather than surfacing bias.
 
@@ -115,7 +134,7 @@ adjudicate together.
 Every foreign lane carries the **kagi-ken** MCP server (Kagi web search + summarizer, read-only), so
 a reviewer can check a claim against current sources. Rule: **only read-only MCP servers** on foreign
 lanes — never expose a mutating tool to an un-adjudicated foreign model. Configuration is per-machine
-(README); the shared Kagi credential lives in one canonical file, and every lane's MCP entry is
+(INSTALL.md); the shared Kagi credential lives in one canonical file, and every lane's MCP entry is
 secret-free (command+args only).
 
 - **Codex** — kagi-ken in `~/.codex/config.toml` with `default_tools_approval_mode = "approve"` (a
@@ -130,6 +149,11 @@ To add another read-only server later, replicate the same secret-free entry into
 
 ## Calibration (weight findings by known model character)
 
+- **Precision ranking (live-fire, n=1 each — indicative, not settled): Codex/GPT-5.5 > DeepSeek/V4-Pro
+  > Antigravity/Flash.** Tracks cost (~$1+ ≫ ~cents ≫ $0) and social priors. Codex twice refused to
+  fabricate — reported it couldn't read the artifact rather than inventing findings (a reviewer virtue).
+  Weight a lone antigravity flag lightest, a lone codex flag heaviest — but still verify (codex's one
+  live-fire miss was context-induced, not random).
 - **Codex / GPT-5.5** — over-flags severity; treat its "critical"s as "worth checking", not settled.
 - **Antigravity (free tier = Gemini Flash)** — strongest at big-picture / plan / architecture
   critique; weakest as an implementer. It runs Flash-tier by default, so weight it BELOW Codex/GPT-5.5
@@ -139,7 +163,9 @@ To add another read-only server later, replicate the same secret-free entry into
   substitute.
 - **Agreement across models is weak evidence.** Lineages share correlated blind spots (shared
   training data, shared benchmark-chasing). Convergence is a mild signal, not proof; a fault all
-  three miss can still be real. Do not let unanimity end your own scrutiny.
+  three miss can still be real — and in live-fire, antigravity missed a real read-only-posture gap
+  that both codex and deepseek caught, so even three-way overlap on adjacent concerns proved nothing.
+  Do not let unanimity end your own scrutiny.
 
 ## Failure modes
 
