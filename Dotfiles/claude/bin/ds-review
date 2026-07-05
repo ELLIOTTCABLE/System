@@ -3,10 +3,10 @@
 # Raw output is for the dispatching conductor to adjudicate — never shown to the human verbatim.
 set -eu
 
-# Key resolution: prefer an already-exported DEEPSEEK_API_KEY; else read it from 1Password at
-# runtime so it never lives in a dotfile. Fail loud (before any network) if neither is available.
-if [ -z "${DEEPSEEK_API_KEY:-}" ]; then
-   command -v op >/dev/null 2>&1 || { printf '%s\n' 'ds-review: DEEPSEEK_API_KEY unset and no `op` CLI to read it (see README)' >&2; exit 1; }
+# Fail loud, before any network, if the key can't be resolved: neither exported nor readable via op.
+if [ -z "${DEEPSEEK_API_KEY:-}" ] && ! command -v op >/dev/null 2>&1; then
+   printf '%s\n' 'ds-review: DEEPSEEK_API_KEY unset and no `op` CLI to read it (see INSTALL.md)' >&2
+   exit 1
 fi
 
 if [ "$#" -gt 0 ]; then
@@ -15,29 +15,47 @@ else
    prompt="$(cat)"        # allow piping a review packet on stdin
 fi
 
-# Stash the nested Claude Code invocation so the two auth branches don't duplicate it.
-# --mcp-config + --strict-mcp-config: load ONLY our read-only kagi-ken server (web search), never the
-# user's own MCP set — the foreign lineage stays isolated from personal tooling (the bare profile's point).
-set -- claude -p "$prompt" --output-format json \
-   --disallowedTools "Edit,Write,Bash" \
-   --allowedTools "mcp__kagi-ken__kagi_search_fetch,mcp__kagi-ken__kagi_summarizer" \
-   --mcp-config "$HOME/.claude/bin/foreign-mcp.json" --strict-mcp-config
-
-# env -u CLAUDECODE: drop the parent-session marker so the child runs as a fresh top-level agent.
-# CLAUDE_CONFIG_DIR bare profile: the user's own skills/MCP/settings must NOT load into the foreign lineage.
-# `env` is load-bearing: `exec VAR=… cmd` without it misparses VAR=<key> as the program name and leaks
-# the key in the "not found" error (see VERIFICATION T5b). The op read stays inline so the key is never
-# assigned to a named var, written to disk, or echoed.
+# Resolve the key into ANTHROPIC_API_KEY by shell assignment + export — never on a command line. The
+# child must see it in its environment (unavoidable), but it must not transit any argv: `env VAR=$key
+# cmd` would expose the key in env's argv (ps/proc-readable) for the exec's lifetime. `set -e` aborts
+# here if `op read` errors; the guard below turns an empty-but-zero read into a loud local failure
+# instead of a remote 401. (`exec VAR=… cmd` without env is a distinct, worse bug — see VERIFICATION.)
 if [ -n "${DEEPSEEK_API_KEY:-}" ]; then
-   exec env -u CLAUDECODE \
-      ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
-      ANTHROPIC_API_KEY="$DEEPSEEK_API_KEY" \
-      CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
-      "$@"
+   ANTHROPIC_API_KEY="$DEEPSEEK_API_KEY"
 else
-   exec env -u CLAUDECODE \
-      ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
-      ANTHROPIC_API_KEY="$(op read 'op://Elliott - Work-visible/DeepSeek/API key')" \
-      CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
-      "$@"
+   ANTHROPIC_API_KEY="$(op read 'op://Elliott - Work-visible/DeepSeek/API key')"
 fi
+[ -n "$ANTHROPIC_API_KEY" ] || {
+   printf '%s\n' 'ds-review: DeepSeek key resolved empty (op read failed or was cancelled) — aborting before network' >&2
+   exit 1
+}
+export ANTHROPIC_API_KEY
+
+# Nested Claude Code against DeepSeek's Anthropic-compatible endpoint:
+#   - prompt on STDIN, not argv: no ARG_MAX ceiling, no packet in the process table, one path whether
+#     the packet arrived on our argv or our stdin. `claude -p` with no positional prompt reads stdin.
+#   - model PINNED to native ids: DeepSeek maps claude-opus*→v4-pro but claude-sonnet/haiku* and any
+#     unknown name→v4-flash, so an unpinned default reaches v4-pro only incidentally. Name it.
+#   - read-only posture is EXPLICIT: allow Read/Grep/Glob + the two kagi tools; deny the mutating/
+#     egress/escalation tools by name rather than relying on headless prompt auto-deny. Allow-listing
+#     the read tools sanctions the tools, not paths — file access stays scoped to the cwd subtree, so
+#     the caller dispatches from the artifacts' root (an out-of-tree Read still prompts, then denies).
+#   - env hygiene: drop CLAUDECODE and every inherited var that could redirect the child's auth/model/
+#     endpoint (a caller's ANTHROPIC_AUTH_TOKEN would else be sent to DeepSeek; CLAUDE_CODE_USE_BEDROCK/
+#     VERTEX would divert it off-endpoint). Proxy vars are left intact so the child can still egress.
+#   - CLAUDE_CONFIG_DIR from FOREIGN_CLAUDE_CONFIG_DIR (dedicated override), NOT the caller's own — the
+#     latter would load the user's real skills/MCP/settings into the foreign lineage, defeating isolation.
+printf '%s' "$prompt" | env \
+   -u CLAUDECODE \
+   -u ANTHROPIC_AUTH_TOKEN \
+   -u ANTHROPIC_SMALL_FAST_MODEL \
+   -u ANTHROPIC_DEFAULT_HAIKU_MODEL -u ANTHROPIC_DEFAULT_SONNET_MODEL -u ANTHROPIC_DEFAULT_OPUS_MODEL \
+   -u CLAUDE_CODE_USE_BEDROCK -u CLAUDE_CODE_USE_VERTEX -u CLAUDE_CODE_SUBAGENT_MODEL \
+   ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
+   ANTHROPIC_MODEL="deepseek-v4-pro" \
+   ANTHROPIC_SMALL_FAST_MODEL="deepseek-v4-flash" \
+   CLAUDE_CONFIG_DIR="${FOREIGN_CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
+   claude -p --output-format json \
+      --disallowedTools "Edit,Write,Bash,NotebookEdit,WebFetch,WebSearch,Task" \
+      --allowedTools "Read,Grep,Glob,mcp__kagi-ken__kagi_search_fetch,mcp__kagi-ken__kagi_summarizer" \
+      --mcp-config "$HOME/.claude/bin/foreign-mcp.json" --strict-mcp-config
