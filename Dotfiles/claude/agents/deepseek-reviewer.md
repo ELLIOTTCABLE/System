@@ -15,7 +15,7 @@ Steps:
 1. Set `REPORT="<scratch>/deepseek-report.json"` (use the scratch dir you were given; if none, `REPORT="$(mktemp)"`).
 2. Run exactly one invocation via Bash, capturing stdout — from the right directory, packet via stdin:
    `cd <dir-containing-the-artifacts> && "$HOME/.claude/bin/ds-review" < "<packet-file>" > "$REPORT"`
-   - CWD RULE (verified empirically): the nested instance's file reads are default-permitted only INSIDE its working directory; out-of-CWD reads hit a permission prompt that auto-denies headlessly (its `--allowedTools` currently covers only the kagi tools, not `Read`). Run from the root of whatever the packet references. If the packet is fully self-contained (artifact inlined), any cwd works.
+   - CWD RULE (verified this round): ds-review allow-lists `Read,Grep,Glob`, but that sanctions the TOOLS only — file-path access stays scoped to the working-directory subtree. Allow-listing a tool does NOT grant out-of-workspace paths: a headless read of a file outside the cwd tree still hits a permission prompt and auto-denies. So `cd` to the ROOT of the artifacts (the whole subtree is then readable — that covers in-repo exploration); a file outside that subtree must be inlined into the packet. A fully self-contained (inlined) packet needs no cwd.
 3. Read `$REPORT` — Claude Code's JSON envelope. Trust `.is_error` for pass/fail (`.subtype` can say
    "success" even when `.is_error` is true); `.result` is the final text — the report on success, the
    error cause on failure. Lift `.result` deterministically (ds-review runs Node-based Claude Code, so
@@ -33,7 +33,7 @@ Note on cost/model in the envelope: `.total_cost_usd` and the model id are Claud
 Failure handling (do not retry more than once total):
 - Transient (network blip, timeout, empty `result`, `is_error` true with a transient cause): retry the single invocation once.
 - Missing key: `ds-review` exits nonzero with `DEEPSEEK_API_KEY unset and no op CLI`. Do NOT retry. Return
-  `FOREIGN-DISPATCH-FAILED: deepseek — key unavailable (env unset, op absent) — human action: export DEEPSEEK_API_KEY or sign in to 1Password (see README)`
+  `FOREIGN-DISPATCH-FAILED: deepseek — key unavailable (env unset, op absent) — human action: export DEEPSEEK_API_KEY or sign in to 1Password (see INSTALL.md)`
 - "Not logged in" in `.result` (the 1Password lane's op read timed out — the desktop-app prompt was missed): retry once; if it recurs, return
   `FOREIGN-DISPATCH-FAILED: deepseek — op read auth timeout (key came back empty) — human action: answer the 1Password prompt, or export DEEPSEEK_API_KEY`
 - Auth or quota (401/402/429 from DeepSeek surfaced in the envelope): do NOT retry. Return
