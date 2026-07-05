@@ -22,8 +22,11 @@ loudly; do not attempt to install anything.
 
 ## The three dispatches (verbatim, with why each flag)
 
-Write the packet prompt to a shell variable or heredoc first; keep `$SCRATCH` pointed at this
-session's scratchpad dir. Prefer the matching subagent (`codex-reviewer`, `antigravity-reviewer`,
+**Packet-as-file contract (churn-critical).** Write the packet to a FILE in `$SCRATCH` yourself —
+with your Write tool, never via shell heredocs/echo (shell expansion corrupts `$`, backticks, and
+quoting in packet text; piecing packets together from heredoc fragments has burned 10+ minutes per
+dispatch). Hand the shims the file PATH, not inline text. Keep `$SCRATCH` pointed at this session's
+scratchpad dir. Prefer the matching subagent (`codex-reviewer`, `antigravity-reviewer`,
 `deepseek-reviewer`) so the shim handles capture and failure notes.
 
 **Shim model rule (cost-critical).** The reviewer subagents are pure relays — they must run on a
