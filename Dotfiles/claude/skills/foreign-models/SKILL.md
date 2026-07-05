@@ -24,18 +24,32 @@ loudly; do not attempt to install anything.
 
 Write the packet prompt to a shell variable or heredoc first; keep `$SCRATCH` pointed at this
 session's scratchpad dir. Prefer the matching subagent (`codex-reviewer`, `antigravity-reviewer`,
-`deepseek-reviewer`) so the shim handles capture and failure notes; the raw calls are:
+`deepseek-reviewer`) so the shim handles capture and failure notes.
+
+**Shim model rule (cost-critical).** The reviewer subagents are pure relays — they must run on a
+CHEAP model, never yours. The agent defs pin `model: sonnet`; keep that pin. If you ever dispatch
+ad-hoc (a raw Agent call, your own wrapper def), pass an explicit cheap `model` yourself: an unpinned
+subagent silently inherits the CONDUCTOR'S model, and on a frontier-class conductor that multiplies
+every packet and raw report by frontier pricing — this exact omission once burned a week of plan
+quota in minutes.
+
+The raw calls are:
 
 **Codex / GPT-5.5**
 ```sh
-codex exec --json -o "$SCRATCH/codex-report.md" "$PACKET"
+cd <git-repo-root-containing-artifacts> && codex exec --json -o "$SCRATCH/codex-report.md" - < "$PACKET_FILE"
 ```
 - `exec` — non-interactive; no TUI. Uses the saved `codex login` (per-token on a funded OpenAI API
   account by default here — see README's two-lane note).
+- CWD RULE (native Windows, verified): the read-only sandbox trusts only a cwd that is ITSELF a
+  git-repo root — from there reads work; from a non-repo dir ALL reads are denied even with
+  `--skip-git-repo-check` (it suppresses the check, it does not grant trust). Loose artifacts: copy
+  into a scratch `git init`+commit repo and say so in the packet.
+- STDIN RULE: pass the packet via `- <` stdin, never argv — multi-line argv dies at the mise batch
+  shim on Windows before codex launches.
 - `--json` — JSONL event stream on stdout (audit/progress for you).
 - `-o <file>` — clean final message to the file (also still printed); read the file, not the stream.
-- Read-only sandbox is the DEFAULT — do not pass `--sandbox`/`--full-auto`/`--dangerously-*`. On
-  native Windows this sandbox reads files fine (verified, codex 0.142.5); reads are NOT declined.
+- Read-only sandbox is the DEFAULT — do not pass `--sandbox`/`--full-auto`/`--dangerously-*`.
 - Threaded follow-up: `codex exec resume --last "$FOLLOWUP"`.
 
 **Antigravity (Gemini lineage)**
@@ -135,9 +149,10 @@ To add another read-only server later, replicate the same secret-free entry into
 - **DeepSeek op-read auth timeout** — if `ds-review` uses the 1Password lane and the desktop app's
   re-auth prompt is missed, `op read` returns empty and the nested Claude reports "Not logged in"
   (surfaced as `is_error`). Re-run and answer the prompt, or export `DEEPSEEK_API_KEY` to skip op.
-- **Native-Windows Codex read-only bug** — historical; codex 0.142.5 reads files fine under the
-  read-only sandbox on native Windows (verified). If an older build declines reads, the CLI workaround
-  is `-c 'sandbox_permissions=["disk-full-read-access"]'` (never broader escalation).
+- **Native-Windows Codex sandbox scoping** — reads are trusted only from a git-repo-root cwd (see
+  CWD RULE above); denials from a non-repo or out-of-workspace context are expected behavior, not a
+  bug. Last-resort read-scope widening (never broader escalation):
+  `-c 'sandbox_permissions=["disk-full-read-access"]'`.
 
 ## Fallbacks
 
