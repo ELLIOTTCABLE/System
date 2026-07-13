@@ -1,8 +1,9 @@
 # foreign-models — dispatch outside-lineage reviewers from Claude Code
 
-Lets the conductor spawn non-Anthropic models (OpenAI Codex/GPT-5.5, Google Antigravity/Gemini
-lineage, DeepSeek V4-Pro) as read-only review subagents for adversarial cross-lineage review. The
-conductor captures each raw report to scratch and adjudicates it; foreign output is never shown to
+Lets the conductor spawn non-Anthropic models (OpenAI Codex/GPT-5.6-Sol, Google Antigravity/Gemini
+lineage, DeepSeek V4-Pro) as review OR write-authorized worker subagents — for outside-lineage review,
+or to offload agentic work to another harness. Each dispatch's output is made durable (a committed
+report file, or a worker's branch) and the conductor adjudicates it; foreign output is never shown to
 the human verbatim. Behaviour lives in the `foreign-models` skill; this file is install/setup only.
 
 ## Per-machine setup (one time, human-run)
@@ -52,13 +53,19 @@ the human verbatim. Behaviour lives in the `foreign-models` skill; this file is 
 | `skills/foreign-models/` | `~/.claude/skills/foreign-models/` |
 | `agents/*.md` | `~/.claude/agents/` |
 | `bin/ds-review` | `~/.claude/bin/ds-review` (`chmod +x`; agents call it by absolute `$HOME/.claude/bin/` path) |
+| `bin/ds-write` | `~/.claude/bin/ds-write` (`chmod +x`; DeepSeek worker — `Write,Edit,Bash`, self-commits, UNSANDBOXED) |
 | `bin/codex-review` | `~/.claude/bin/codex-review` (`chmod +x`; needs `op` + `codex`) |
 | `bin/foreign-mcp.json` | `~/.claude/bin/foreign-mcp.json` (kagi-only MCP config ds-review passes to the nested Claude) |
 
 The agent defs reference the wrappers by absolute `$HOME/.claude/bin/<wrapper>` path, so no PATH or
 shell-rc changes are needed.
 
-> **Shim model pin (cost-critical).** All three reviewer agent defs carry `model: sonnet` in their
+> **Worker lanes & Fable.** The `*-worker` agent defs run the write-enabled wrappers (`ds-write`, or
+> codex `-s workspace-write`) inside a harness worktree — no extra install beyond the binaries above.
+> Fable is dispatched natively (`model: fable`) — no CLI, no setup; human-ack per use, at most one per
+> task.
+
+> **Shim model pin (cost-critical).** All five reviewer/worker agent defs carry `model: sonnet` in their
 > frontmatter — keep it. Claude Code resolves a subagent's model as: the def's frontmatter `model`,
 > else the *conductor's* model by inheritance. Unpinned, a reviewer shim silently runs on whatever the
 > dispatching session runs — and on a frontier-class conductor that bills every packet and every raw

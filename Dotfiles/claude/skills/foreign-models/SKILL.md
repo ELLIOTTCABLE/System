@@ -90,6 +90,14 @@ The whole dispatch differs by mode:
 Default to read-only review for a bounded critique; escalate to agentic-worker the moment the task is
 large or touches code/build/tests.
 
+**Worker commit discipline (all agentic lanes).** The git tree is the product: instruct the worker to
+commit GRANULARLY as it goes — one coherent commit per logical step, not one dump at the end — and to
+put its final summary at the conductor-named DURABLE report path, kept OUT of commit messages. Every
+worker follows the house commit convention: it reads the `commit` skill (`~/.claude/skills/commit/SKILL.md`)
+and honors any `.gitlabels` at the repo root, tagging AI-authored commits. The foreign shims append the
+commit skill to the model's prompt automatically (a sandboxed model can't reach `~/.claude` from a
+foreign-repo worktree); a native Fable has the skill and reads it directly.
+
 ## The dispatch bundle — one file, one conductor-emission
 
 Do NOT write a packet per model. Emit the WHOLE stable as ONE file in a SINGLE Write — a dispatch
@@ -150,7 +158,8 @@ one call's wall-time, not three. Collect, then adjudicate together.
 ### Fable (Claude 5, in-lineage) — human-ack, at most one
 Not a CLI, and NO shim (native invocation is safe): dispatch a native Agent subagent with `model:
 fable`. Worker mode: give it an isolated worktree (`isolation: worktree`), full tools, and a short
-goal-first prompt telling it to commit and keep notes as it goes. Review mode: read-only, returns its
+goal-first prompt telling it to commit granularly as it goes (it has the `commit` skill — read it and
+honor `.gitlabels`) and to put its final report at the durable path. Review mode: read-only, returns its
 assessment. One per task; never parallel Fables.
 - **Worktree-fork rule (same as every agentic subagent).** `isolation: worktree` forks from PROJECT
   ROOT, so put the target commit-SHA in Fable's prompt and have it `git reset --hard <SHA>` its fresh
@@ -187,16 +196,15 @@ cd <artifacts-root> && ds-review < "$PROMPT_FILE" > "$SCRATCH/deepseek-report.js
 Report is `.result` in the JSON envelope. Prompt on stdin (no ARG_MAX ceiling, no `$` re-expansion).
 Uses `op` for the key — the human must approve the 1Password prompt, or export `DEEPSEEK_API_KEY`.
 
-Write lane (`ds-write` — same wrapper, `Write,Edit` allowed): lets DeepSeek edit files and maintain its
-own report/notes. Same isolation and cwd-subtree scoping; runs UNSANDBOXED as you (no separate sandbox
-user like Codex), and deliberately has NO `Bash` — so it cannot self-commit; the CONDUCTOR owns
-git/commits for a DeepSeek worker lane.
+Write/worker lane (`ds-write` — same wrapper, `Write,Edit,Bash` allowed): lets DeepSeek edit files, run
+git, and **commit granularly as it goes**, like the Codex/Fable worker lanes. Same isolation and
+cwd-subtree scoping; runs UNSANDBOXED as you (no separate sandbox user, and Bash is real shell) — the
+worktree + `ai/` branch are the containment, not an OS sandbox.
 ```sh
 cd <workspace-root> && ds-write < "$PROMPT_FILE" > "$SCRATCH/deepseek-final.json"
 ```
-A full commit-as-you-go DeepSeek would need `Bash` (arbitrary unsandboxed shell as you) — a deliberate
-escalation, not the default; prefer Codex/Fable for anything that compiles, tests, or self-commits.
-DeepSeek's real strength is the cheap agentic READ/review lane.
+Still lower-intelligence, so verify its work more thoroughly; its cheapest, strongest use remains the
+read/review lane. Reach for the worker lane when the task is genuinely agentic work, not a bounded critique.
 
 ### Antigravity (Gemini) — least-exercised; verify before relying
 ```sh
@@ -225,11 +233,11 @@ conductor puts a target commit-SHA in every agentic dispatch prompt, and the sub
 <SHA>`s its worktree to that commit before anything else. Parallel workers are isolated automatically —
 each gets its own worktree/branch. Conventions:
 
-- **Git in the worktree is the shim's job.** The shim is Claude Code (Bash/git work), so it does the
-  reset and — for any lane whose model can't self-commit — commits the model's work as it goes.
-  `ds-write` has no Bash (never self-commits); codex is git-blind in a linked worktree on Windows (its
-  gitdir sits outside the sandbox), so the shim commits for it there too. A native Fable subagent has
-  full git and self-commits.
+- **Workers self-commit granularly; the shim resets and backstops.** The shim (Claude Code) does the
+  `git reset --hard <SHA>`; the worker then commits its own work as it goes (`ds-write` now has Bash;
+  Fable is native; Codex self-commits when it can). One exception: Codex is git-blind in a linked
+  worktree on Windows (gitdir outside its sandbox), so there the shim commits Codex's edits for it. All
+  workers follow the commit discipline below.
 - **Native-Windows codex `workspace-write`** runs commands as separate sandbox users that need an ACL on
   the workspace; codex auto-grants it for most repos but not all. Do-every-time for codex-WRITE on
   Windows: run a fail-soft grant on the worktree before dispatch and IGNORE any error —
