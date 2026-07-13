@@ -53,14 +53,22 @@ More capable models want fewer words; less capable models want tighter rails.
 
 - **Fable** — a paragraph; a couple of sentences. Explain the GOALS, not the steps — it works out
   what-to-do itself. Do NOT enumerate guardrails unless one is genuinely critical AND non-obvious
-  (usually none). Overprompting degrades it. If unsure the brief is right, have the human review it
-  before dispatch — Fable is too expensive to waste on a bad or overconstrained prompt.
+  (usually none). Overprompting degrades it. **Encourage it to delegate** to protect its very expensive
+  tokens: spawn Opus-class subagents for complex exploration and code-authoring, Sonnet-class for
+  mechanical grunt work — Fable orchestrates and reasons; it shouldn't burn its own context on legwork.
+  If unsure the brief is right, have the human review it before dispatch — Fable is too expensive to
+  waste on a bad or overconstrained prompt.
 - **Sol (GPT-5.6)** — follows instructions well and is generally competent. It's okay to give it
   explicit guardrails IF any exist, but don't over-target or deeply enumerate; a clear goal plus the
   real constraints suffices.
 - **DeepSeek** — lower intelligence: a NARROW brief with clear do/don't, and EXPLICITLY enumerate every
   constraint and guardrail. Make very clear what NOT to do — it won't reliably infer the bounds.
 - **Antigravity** — fully self-contained and inlined (it can't explore); one packet, no file references.
+
+**Only Fable delegates.** The foreign lanes (Codex, DeepSeek, Antigravity) work SOLO — tell them to do
+the work themselves and NOT spawn further subagents (DeepSeek's wrapper already denies the Task tool;
+the others have no Claude-subagent path anyway). Sub-orchestration is Fable's privilege, to spare its
+tokens; a foreign model fanning out just multiplies cost and correlated error.
 
 **Every dispatch prompt, whatever the lane:** tell the model to FAIL-FAST if kagi-ken (web search) or
 its file-read tools are unavailable — do NOT fall back to reasoning from training data. Online research
@@ -73,6 +81,13 @@ skill and route it through here. Not every dispatch is a crosscheck. (When chara
 appropriate, Fable may need slightly more prompting than otherwise - but primarily to build the story
 and establish the owned-position; still conversational, still very light on the *constraints* and
 enumeration.)
+
+When **Fable** runs a crosscheck/review specifically, mandate the ORDER of its first moves so its own
+intelligence sets the frame before any lesser input can dilute it: (1) a deep read of the core
+materials; (2) a **reasoning-only pass — no tools, no subagents** — laying out its own report structure
+and initial judgement; and only THEN (3) fan out research subagents, code-editing/testing, or focused
+sub-reviewers as warranted. Never let it consume a lower-reasoning agent's conception of the review
+before its own is committed — that watering-down is the whole thing you're paying Fable to avoid.
 
 ## Two dispatch modes — decide before you prompt
 
