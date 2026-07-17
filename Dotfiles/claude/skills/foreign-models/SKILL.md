@@ -105,13 +105,24 @@ The whole dispatch differs by mode:
 Default to read-only review for a bounded critique; escalate to agentic-worker the moment the task is
 large or touches code/build/tests.
 
-**Worker commit discipline (all agentic lanes).** The git tree is the product: instruct the worker to
-commit GRANULARLY as it goes — one coherent commit per logical step, not one dump at the end — and to
-put its final summary at the conductor-named DURABLE report path, kept OUT of commit messages. Every
-worker follows the house commit convention: it reads the `commit` skill (`~/.claude/skills/commit/SKILL.md`)
-and honors any `.gitlabels` at the repo root, tagging AI-authored commits. The foreign shims append the
-commit skill to the model's prompt automatically (a sandboxed model can't reach `~/.claude` from a
-foreign-repo worktree); a native Fable has the skill and reads it directly.
+**Worker commit discipline (all agentic lanes).** The git tree is the product: the worker commits
+GRANULARLY as it goes — one coherent commit per logical step, not one dump at the end — and puts its
+final summary at the conductor-named DURABLE report path, kept OUT of commit messages. Every worker
+follows the house commit convention (`~/.claude/skills/commit/SKILL.md` + any `.gitlabels`, tagging
+AI-authored commits); the foreign shims append the commit skill to the model's prompt automatically
+(a sandboxed model can't reach `~/.claude`), a native Fable reads it directly.
+
+Two enablers make worker SELF-commit actually work — without them the model dumps *suggested* commits
+into its final message and commits nothing (observed on both foreign lanes):
+- **Autonomous-commit sentinel.** Harness worker branches are `worktree-agent-*`, NOT `ai/`-prefixed, so
+  the commit skill defaults to message-only mode. The shim `touch`es a `.claude-commit` sentinel in the
+  worktree to switch it into autonomous-commit mode (untracked scratch; never staged).
+- **Writable gitdir (Windows Codex).** A linked worktree's real gitdir is at `<main>/.git/worktrees/<name>`,
+  OUTSIDE the worktree — the Codex sandbox can't write its `index.lock` there and fails every commit. The
+  shim ACL-grants the sandbox users write to the gitdir too, not just the worktree.
+Shim-commits-on-the-worker's-behalf is the LAST-resort backstop, not the plan. `ds-write`'s restricted
+mode still often declines to commit even so, so the deepseek-worker shim treats guaranteeing the commit
+as its own job.
 
 ## The dispatch bundle — one file, one conductor-emission
 
@@ -134,25 +145,37 @@ Bundle format — one section per lane, fenced by markers a low-reasoning shim c
 ```
 
 Each Sonnet-tier shim is dispatched with `isolation: worktree` and handed the bundle PATH, its own KEY,
-and (worker mode) the conductor's target commit-SHA. It does EXACTLY, in order: (1) for a worker lane,
-`git reset --hard <SHA>` the harness worktree it is ALREADY inside (the harness's `isolation: worktree`
-forks from PROJECT ROOT, so this is mandatory), then AUTHORIZE that worktree — `mise trust` its config,
-the Windows codex `icacls` grant, whatever trust gates apply (the conductor states the desired end-state
-and authorizations; the shim does the tool-calls); (2) extract the one section between `=== DISPATCH:
-<key> …` and `=== END DISPATCH: <key> ===`, verbatim, to a tempfile (or pipe on stdin); (3) dispatch via
-that model's call below, cwd = this worktree; (4) make the output DURABLE and return a POINTER, not the
-payload — a worker lane already committed its work into the branch; a packet/review lane writes the
-model's report to the conductor-named durable file and commits it. The shim returns to the conductor
-ONLY the durable path (or branch), the exit status, and any prepended setup errors — NEVER the report
-body. It never edits the prompt, touches another section, or `git worktree add`s.
+(worker mode) the conductor's target commit-SHA, and the two paths it must NOT operate in — the PROJECT
+ROOT and the CONDUCTOR'S OWN worktree. It does EXACTLY, in order: (1) for a worker lane, CONFIRM
+ISOLATION FIRST — assert `git rev-parse --show-toplevel` is a `.claude/worktrees/agent-*` path and is
+neither of the two forbidden paths; abort if not (an un-isolated shim running a base-change against the
+shared tree once reset the human's main checkout). Then base the worktree: if HEAD already equals <SHA>
+do nothing, else `git switch -C <its-branch> <SHA>` — NEVER `git reset --hard` (the git-deny hook blocks
+it, reserved for the human; a blocked reset also signals you may be in the wrong tree). Then AUTHORIZE —
+`mise trust`, the Windows codex `icacls` grant on worktree AND gitdir, the `.claude-commit` sentinel
+(the conductor states the desired end-state; the shim does the tool-calls); (2) extract the one section
+between `=== DISPATCH: <key> …` and `=== END DISPATCH: <key> ===`, verbatim, to a tempfile (or stdin),
+and ASSERT it is non-empty (its key matched) — abort if the section is missing rather than falling back
+to another key/bundle/worktree; (3) dispatch via that model's call below, cwd = this worktree; (4) make
+the output DURABLE and return a POINTER, not the payload — a worker lane already committed its work into
+the branch; a packet/review lane writes the model's report to the conductor-named durable file and
+commits it. The shim returns to the conductor ONLY the durable path (or branch), the exit status, and
+any prepended setup errors — NEVER the report body. It never edits the prompt, touches another section,
+or `git worktree add`s.
 
-The shim's dispatch prompt (which the conductor writes) MUST also carry two guards:
+The shim's dispatch prompt (which the conductor writes) MUST also carry three guards:
 - **A bounded debug budget.** State it explicitly: "at most FIVE failures may be debugged or
   re-attempted; then fail and return to your conductor for repair." A low-reasoning relay must never
   loop indefinitely on a broken lane.
 - **Report errors UPWARD; never paper over them.** Even if a later retry succeeds, PREPEND the final
   report with every dispatch/setup error hit along the way. A silently-recovered failure hides a real
   fragility from the conductor.
+- **Stay alive to collect the run — never background-and-exit.** The foreign call routinely outlives the
+  ~10-min synchronous Bash-tool cap, so a foreground call dies at the cap (exit 143). The shim must
+  BACKGROUND the invocation (detached, with a completion-marker file), then hold ITSELF alive with a
+  CHUNKED foreground poll-waiter — a `while`/`for` loop that sleeps and checks the marker in sub-cap
+  chunks, re-issued until the run finishes — and only THEN commit + return the pointer. It must NOT end
+  its turn while the run is in flight (that orphans the run and forces a conductor resume — see below).
 
 Shims exist ONLY to wrap the foreign harnesses' odd invocation forms and bug-profiles and to spend cheap
 tokens on setup/debug instead of yours. Harness-NATIVE subagents (Fable, any `model:` Agent) need no
@@ -168,6 +191,25 @@ expensive model, dispatched with `model: fable` under human ack.
 shims out in the background (worker lanes each into their own worktree); a three-lane review costs about
 one call's wall-time, not three. Collect, then adjudicate together.
 
+**Never SendMessage-resume a backgrounded foreign shim.** If a shim returns without a pointer (it
+background-exited its foreign call), do NOT resume it to "finish" — a resumed shim can have its branch
+re-checked-out at the PROJECT ROOT, hijacking the shared main checkout and cross-contaminating lanes
+(both observed). The stay-alive waiter-loop guard above is what prevents the background-exit in the first
+place; if one slips through anyway, either rescue the lane's output READ-ONLY (inspect its worktree, and
+if a valid report exists, cherry-pick/commit it yourself from a `.claude` worktree) or re-run the lane
+CLEAN. Resume is the hijack-adjacent step; avoid it.
+
+**Conductor pre-flight (per lane, before fan-out).** The bundle carries only prompt TEXT; the Agent()
+call parameters are assembled separately at dispatch time, so a forgotten one is silent and unchecked.
+Before firing each worker lane, confirm the call carries: `isolation: "worktree"` (its omission on four
+lanes is what let shims reset the shared tree); a cheap pinned `model` (never inherit the conductor's);
+the base commit-SHA; the durable output path; the extraction KEY; and the two forbidden paths (project
+root + your own worktree) for the shim's self-check. Point the shim at ONE authoritative bundle path and
+forbid sibling-worktree fallback — a shim that couldn't find its bundle once wandered to a stale sibling
+worktree and reviewed the wrong copy. If the bundle won't exist at the base SHA (it's newer than the
+review point), hand the shim an absolute path to a stable checkout that has it, not a path inside the
+about-to-be-reset worktree.
+
 ## The dispatch calls (verbatim, with why each flag)
 
 ### Fable (Claude 5, in-lineage) — human-ack, at most one
@@ -177,8 +219,9 @@ goal-first prompt telling it to commit granularly as it goes (it has the `commit
 honor `.gitlabels`) and to put its final report at the durable path. Review mode: read-only, returns its
 assessment. One per task; never parallel Fables.
 - **Worktree-fork rule (same as every agentic subagent).** `isolation: worktree` forks from PROJECT
-  ROOT, so put the target commit-SHA in Fable's prompt and have it `git reset --hard <SHA>` its fresh
-  worktree before working — otherwise it starts from stale root HEAD. It has full git, so it self-commits.
+  ROOT, so put the target commit-SHA in Fable's prompt and have it base its fresh worktree there before
+  working — if HEAD isn't already <SHA>, `git switch -C <its-branch> <SHA>` (NOT `git reset --hard`; the
+  git-deny hook blocks it). It has full git, so it self-commits.
 
 ### Codex / GPT-5.6-Sol — review (read-only) and work (write)
 Read-only review:
@@ -200,6 +243,9 @@ cd <workspace-root> && \
 - STDIN RULE: prompt via `- <` stdin, never argv (multi-line argv dies at the mise shim on Windows).
 - `--json` = event stream on stdout; `-o` = clean final message to file. In work mode the deliverable is
   the commits/worktree, not the final message. Threaded follow-up: `codex exec resume --last "$MSG"`.
+- In WORKER mode this call routinely outruns the ~10-min sync Bash cap: background it with a
+  completion-marker and hold the shim alive with a chunked foreground poll-waiter — never run it
+  synchronously, never background-and-exit (see the stay-alive guard and the codex-worker def).
 - Native-Windows `workspace-write` has a setup wrinkle — see "Worktree & workspace topology".
 
 ### DeepSeek V4-Pro — agentic read (default) and write
@@ -211,10 +257,11 @@ cd <artifacts-root> && ds-review < "$PROMPT_FILE" > "$SCRATCH/deepseek-report.js
 Report is `.result` in the JSON envelope. Prompt on stdin (no ARG_MAX ceiling, no `$` re-expansion).
 Uses `op` for the key — the human must approve the 1Password prompt, or export `DEEPSEEK_API_KEY`.
 
-Write/worker lane (`ds-write` — same wrapper, `Write,Edit,Bash` allowed): lets DeepSeek edit files, run
-git, and **commit granularly as it goes**, like the Codex/Fable worker lanes. Same isolation and
-cwd-subtree scoping; runs UNSANDBOXED as you (no separate sandbox user, and Bash is real shell) — the
-worktree + `ai/` branch are the containment, not an OS sandbox.
+Write/worker lane (`ds-write` — same wrapper, `Write,Edit,Bash` allowed): lets DeepSeek edit files and
+run git. Same isolation and cwd-subtree scoping; runs UNSANDBOXED as you (no separate sandbox user, and
+Bash is real shell) — the worktree + branch are the containment, not an OS sandbox. It CAN self-commit,
+but its restricted mode frequently DECLINES to (handing back a suggested commit instead), so the
+deepseek-worker shim guarantees the commit itself rather than trusting the model.
 ```sh
 cd <workspace-root> && ds-write < "$PROMPT_FILE" > "$SCRATCH/deepseek-final.json"
 ```
@@ -243,27 +290,40 @@ shim can handle the tool-calls and debuging; tell it your desired end-state and 
 ## Worktree & workspace topology (worker mode)
 
 Every agentic (non-packet) subagent — foreign-shim or native — runs in a harness worktree via
-`isolation: worktree`; nobody runs `git worktree add`. Because that feature forks from PROJECT ROOT, the
-conductor puts a target commit-SHA in every agentic dispatch prompt, and the subagent `git reset --hard
-<SHA>`s its worktree to that commit before anything else. Parallel workers are isolated automatically —
+`isolation: worktree`; nobody runs `git worktree add`. `isolation: worktree` is a caller-supplied Agent()
+parameter AND pinned in the shim agent-defs' frontmatter — keep both (the frontmatter is the
+load-bearing default; the def cannot self-verify it took, so the shim still self-checks). Because the
+fork is from PROJECT ROOT, the conductor puts a target commit-SHA in every agentic dispatch prompt, and
+the subagent bases its worktree there before anything else. Parallel workers are isolated automatically —
 each gets its own worktree/branch. Conventions:
 
-- **Workers self-commit granularly; the shim resets and backstops.** The shim (Claude Code) does the
-  `git reset --hard <SHA>`; the worker then commits its own work as it goes (`ds-write` now has Bash;
-  Fable is native; Codex self-commits when it can). One exception: Codex is git-blind in a linked
-  worktree on Windows (gitdir outside its sandbox), so there the shim commits Codex's edits for it. All
-  workers follow the commit discipline below.
+- **Isolation self-check, THEN base via `git switch` — never `git reset --hard`.** The shim first asserts
+  it is in its OWN fork (`git rev-parse --show-toplevel` is a `.claude/worktrees/agent-*` path, and is
+  neither the project root nor the conductor's worktree — the conductor names both) and ABORTS otherwise;
+  only then, if HEAD isn't already the target SHA, `git switch -C <its-branch> <SHA>`. A bare
+  `git reset --hard` is blocked by the git-deny hook (reserved for the human) — and a shim that skips the
+  self-check and resets an un-isolated tree is exactly what once clobbered the human's main checkout.
+- **Workers self-commit granularly; the shim only backstops.** The worker commits its own work as it
+  goes, enabled by the `.claude-commit` sentinel + (Windows Codex) the gitdir ACL grant (see "Worker
+  commit discipline"). The shim commits on the worker's behalf ONLY as a last resort when self-commit
+  still failed — and prepends that failure to its return. `ds-write` restricted mode is the common
+  last-resort case; native Fable always self-commits.
 - **Native-Windows codex `workspace-write`** runs commands as separate sandbox users that need an ACL on
   the workspace; codex auto-grants it for most repos but not all. Do-every-time for codex-WRITE on
-  Windows: run a fail-soft grant on the worktree before dispatch and IGNORE any error —
+  Windows: fail-soft grant BOTH the worktree AND its linked gitdir before dispatch, IGNORE any error.
+  The gitdir grant is what lets Codex self-commit — a linked worktree's gitdir is at
+  `<main>/.git/worktrees/<name>`, outside the worktree, and without write there Codex hits
+  `index.lock: Permission denied` on every commit. Pass Windows-style paths (NOT `$(pwd)`, whose POSIX
+  form icacls can't parse):
   ```sh
-  MSYS_NO_PATHCONV=1 icacls "<worktree>" \
-    /grant "CodexSandboxOffline:(OI)(CI)(M)" /grant "CodexSandboxOnline:(OI)(CI)(M)"
+  WT="$(cygpath -w "$(pwd)")"; GD="$(cygpath -w "$(git rev-parse --git-dir)")"
+  MSYS_NO_PATHCONV=1 icacls "$WT" /grant "CodexSandboxOffline:(OI)(CI)(M)" /grant "CodexSandboxOnline:(OI)(CI)(M)"
+  MSYS_NO_PATHCONV=1 icacls "$GD" /grant "CodexSandboxOffline:(OI)(CI)(M)" /grant "CodexSandboxOnline:(OI)(CI)(M)"
   ```
   It no-ops off-Windows and where the users don't exist, and fixes the common failure in place so the
-  shim never loops on it. Still failing (`CreateProcessWithLogonW`/`Access is denied`/wrote-nothing)?
-  Read `windows-codex-leads.md` for the one-line fixes and WSL2 / `danger-full-access` alternatives, and
-  hand debugging to a subagent — don't dig inline.
+  shim never loops on it. Still failing (`index.lock`/`CreateProcessWithLogonW`/`Access is denied`/
+  wrote-nothing)? Read `windows-codex-leads.md` for the one-line fixes and WSL2 / `danger-full-access`
+  alternatives, and hand debugging to a subagent — don't dig inline.
 
 ## Durable outputs, one batched adjudication
 

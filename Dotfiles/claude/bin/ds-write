@@ -1,0 +1,49 @@
+#!/bin/sh
+# DeepSeek V4-Pro via a nested, WRITE+COMMIT-ENABLED, isolated Claude Code instance — the worker
+# sibling of ds-review. Allows Read/Grep/Glob + Write/Edit + Bash (+ kagi), so DeepSeek can edit files,
+# run git, and commit its own work granularly (like the Codex/Fable worker lanes). Runs as the user,
+# UNSANDBOXED (unlike Codex's workspace-write) — the worktree + `ai/` branch are the containment, not an
+# OS sandbox. Raw output is for the dispatching conductor to adjudicate — never shown to the human verbatim.
+set -eu
+
+# Fail loud, before any network, if the key can't be resolved: neither exported nor readable via op.
+if [ -z "${DEEPSEEK_API_KEY:-}" ] && ! command -v op >/dev/null 2>&1; then
+   printf '%s\n' 'ds-write: DEEPSEEK_API_KEY unset and no `op` CLI to read it (see INSTALL.md)' >&2
+   exit 1
+fi
+
+if [ "$#" -gt 0 ]; then
+   prompt="$*"
+else
+   prompt="$(cat)"        # allow piping a prompt on stdin
+fi
+
+# Resolve the key into ANTHROPIC_API_KEY by shell assignment + export — never on a command line.
+if [ -n "${DEEPSEEK_API_KEY:-}" ]; then
+   ANTHROPIC_API_KEY="$DEEPSEEK_API_KEY"
+else
+   ANTHROPIC_API_KEY="$(op read 'op://Elliott - Work-visible/DeepSeek/API key')"
+fi
+[ -n "$ANTHROPIC_API_KEY" ] || {
+   printf '%s\n' 'ds-write: DeepSeek key resolved empty (op read failed or was cancelled) — aborting before network' >&2
+   exit 1
+}
+export ANTHROPIC_API_KEY
+
+# Nested Claude Code against DeepSeek's Anthropic-compatible endpoint. Same isolation/env-hygiene as
+# ds-review; the difference is the toolset — Write, Edit, and Bash are allowed (so it can commit), and
+# only egress/escalation/notebook tools stay denied.
+printf '%s' "$prompt" | env \
+   -u CLAUDECODE \
+   -u ANTHROPIC_AUTH_TOKEN \
+   -u ANTHROPIC_SMALL_FAST_MODEL \
+   -u ANTHROPIC_DEFAULT_HAIKU_MODEL -u ANTHROPIC_DEFAULT_SONNET_MODEL -u ANTHROPIC_DEFAULT_OPUS_MODEL \
+   -u CLAUDE_CODE_USE_BEDROCK -u CLAUDE_CODE_USE_VERTEX -u CLAUDE_CODE_SUBAGENT_MODEL \
+   ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic" \
+   ANTHROPIC_MODEL="deepseek-v4-pro" \
+   ANTHROPIC_SMALL_FAST_MODEL="deepseek-v4-flash" \
+   CLAUDE_CONFIG_DIR="${FOREIGN_CLAUDE_CONFIG_DIR:-$HOME/.config/foreign-claude}" \
+   claude -p --output-format json \
+      --disallowedTools "NotebookEdit,WebFetch,WebSearch,Task" \
+      --allowedTools "Read,Grep,Glob,Write,Edit,Bash,mcp__kagi-ken__kagi_search_fetch,mcp__kagi-ken__kagi_summarizer" \
+      --mcp-config "$HOME/.claude/bin/foreign-mcp.json" --strict-mcp-config
