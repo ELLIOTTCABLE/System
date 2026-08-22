@@ -19,9 +19,10 @@ The target domain is usually software engineering. Lean into that where it pays:
 The discipline that governs everything: **a grade is the conclusion of having read the source — never a guess from its title, venue, or a search-snippet.** When you skim a search result and let its spin shape an opinion, that opinion biases the grade you then assign, and you will not re-examine it — the snippet has anchored you, and anchoring is a one-way ratchet. So: *triage* from the menu (decide what is worth pulling) is fine and necessary; forming a *view of what a source says or means* before you have actually read it is the failure to avoid.
 
 1. Find (using research tools or via notation in other sources),
-2. pull (using `new-source.sh`),
+2. pull (using curl, as that's what `new-source.sh` will use, to ensure reachability),
 3. read (fully, yourself or via subagent),
-4. then grade (according to the criterion herein; or instruct the subagent to do so, if it's being fully-read by them.)
+4. then grade (according to the criterion herein; or instruct the subagent to do so, if it's being fully-read by them),
+5. and mint (using `new-source.sh`.)
 
 ... *always* in that precise order.
 
