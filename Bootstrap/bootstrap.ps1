@@ -24,7 +24,16 @@ reg import $regFile
 # Setup the profile.ps1 symlink
 $profilePath = $PROFILE.CurrentUserAllHosts
 New-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null
-New-Item -ItemType SymbolicLink -Path $profilePath -Target (Join-Path $extrasRoot 'profile.ps1') | Out-Null
+if (-not (Test-Path -LiteralPath $profilePath)) {
+   New-Item -ItemType SymbolicLink -Path $profilePath -Target (Join-Path $extrasRoot 'profile.ps1') | Out-Null
+}
+
+# Setup $PATH
+$cargoBin = Join-Path $HOME '.cargo\bin'
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+if ($cargoBin -notin ($userPath -split ';')) {
+   [Environment]::SetEnvironmentVariable('Path', "$userPath;$cargoBin", 'User')
+}
 
 # Create a "Task Scheduler" task to start GlazeWM at logon.
 # Note: this appears to cause some sort of bug if you don't disable the
