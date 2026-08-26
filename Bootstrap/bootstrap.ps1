@@ -21,6 +21,11 @@ $extrasRoot = Join-Path $PSScriptRoot '..\Extras\Windows'
 $regFile = Join-Path $extrasRoot 'SetInactivityTimeout.reg'
 reg import $regFile
 
+# Setup the profile.ps1 symlink
+$profilePath = $PROFILE.CurrentUserAllHosts
+New-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null
+New-Item -ItemType SymbolicLink -Path $profilePath -Target (Join-Path $extrasRoot 'profile.ps1') | Out-Null
+
 # Create a "Task Scheduler" task to start GlazeWM at logon.
 # Note: this appears to cause some sort of bug if you don't disable the
 #    "system tray" plugin; see: <https://github.com/glzr-io/glazewm/issues/546>)
