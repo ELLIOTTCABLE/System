@@ -223,29 +223,34 @@ assessment. One per task; never parallel Fables.
   working — if HEAD isn't already <SHA>, `git switch -C <its-branch> <SHA>` (NOT `git reset --hard`; the
   git-deny hook blocks it). It has full git, so it self-commits.
 
-### Codex / GPT-5.6-Sol — review (read-only) and work (write)
+### Codex / GPT-6-Astra — review (read-only) and work (write)
 Read-only review:
 ```sh
 cd <git-repo-root-containing-artifacts> && \
-  codex exec --json -o "$SCRATCH/codex-report.md" - < "$PROMPT_FILE"
+  codex exec -s read-only -m gpt-6-astra -c 'model_reasoning_effort="high"' \
+    --json -o "$SCRATCH/codex-report.md" - < "$PROMPT_FILE"
 ```
 Work (edits + self-reports; commits as it goes in worker mode):
 ```sh
 cd <workspace-root> && \
-  codex exec -s workspace-write -m gpt-5.6-sol -c 'model_reasoning_effort="high"' \
+  codex exec -s workspace-write -m gpt-6-astra -c 'model_reasoning_effort="high"' \
     --json -o "$SCRATCH/codex-final.md" - < "$PROMPT_FILE"
 ```
-- `-m gpt-5.6-sol` pins the model; `-c 'model_reasoning_effort="high"'` pins reasoning (single-quote so
-  the TOML string survives the shell). `-s workspace-write` grants writes (work mode only); read-only is
-  the DEFAULT — for review pass no `-s`, never a `--dangerously-*` flag.
+- `-m gpt-6-astra` pins the model; `-c 'model_reasoning_effort="high"'` pins reasoning (single-quote so
+  the TOML string survives the shell). Pass the sandbox EXPLICITLY: `-s read-only` for review,
+  `-s workspace-write` for work — a trusted project defaults to workspace-write (verified 2026-09-16,
+  codex 0.154.0), so an unflagged "review" can write. Never `danger-full-access`/`--dangerously-*`.
+- No `op`/env-key step on either codex lane: both ride the saved `codex login`, which is what lets them
+  run unattended. The only hard evidence of the model used is the persisted session record under
+  `~/.codex/sessions/` (`"model"`, `"reasoning_effort"`) — the `--json` stream never names it.
 - CWD / read-scope RULE (native Windows): the read-only sandbox trusts only a cwd that is ITSELF a
   git-repo root; loose artifacts must be copied into a scratch `git init` repo (say so in the prompt).
 - STDIN RULE: prompt via `- <` stdin, never argv (multi-line argv dies at the mise shim on Windows).
 - `--json` = event stream on stdout; `-o` = clean final message to file. In work mode the deliverable is
   the commits/worktree, not the final message. Threaded follow-up: `codex exec resume --last "$MSG"`.
-- In WORKER mode this call routinely outruns the ~10-min sync Bash cap: background it with a
-  completion-marker and hold the shim alive with a chunked foreground poll-waiter — never run it
-  synchronously, never background-and-exit (see the stay-alive guard and the codex-worker def).
+- Either lane can outrun the ~10-min sync Bash cap (work mode routinely does): background it with a
+  lane-qualified completion-marker and hold the shim alive with a chunked foreground poll-waiter — never
+  run it synchronously, never background-and-exit (see the stay-alive guard in both codex defs).
 - Native-Windows `workspace-write` has a setup wrinkle — see "Worktree & workspace topology".
 
 ### DeepSeek V4-Pro — agentic read (default) and write
