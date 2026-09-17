@@ -169,8 +169,9 @@ another section, or `git worktree add`s.
 context until you choose to read it. Use it when the report may be large, when several lanes will be
 adjudicated together later (possibly after a rewind), or when a worker already writes its own report to
 disk. `inline`: the shim hands the body straight back after a one-line header — no file round-trip, no
-extra tool-churn. Use it for a small, simple review you'll adjudicate immediately. Either way the raw
-report reaches YOU, not the human — the purity protocol below applies unchanged.
+extra tool-churn. Use it ONLY for a single lane whose report you'll adjudicate on its own, right away.
+Never on a fan-out: a body that lands in your context the moment its lane returns anchors your read of
+the lanes still running — exactly what `file` mode plus the one batched read (below) exists to prevent.
 
 The shim's dispatch prompt (which the conductor writes) MUST also carry three guards:
 - **A bounded debug budget.** State it explicitly: "at most FIVE failures may be debugged or
@@ -349,7 +350,8 @@ lane's full output durable, and consume them all in ONE later pass.
   scratch tempfile: worker lanes commit their work and notes into their branch; packet/review lanes have
   the shim write the report to a durable file and commit it. In the default `file` REPORT MODE shims
   return only pointers (path/branch + status), so nothing long enters your context until you choose to
-  read it; `inline` mode is the deliberate exception for small reviews adjudicated on the spot.
+  read it; `inline` is the deliberate exception for ONE small review adjudicated on the spot — never a
+  fan-out, whose reports must arrive together (below).
 - **Where it lives** (unless the human directs otherwise): the project's house-style location if it has
   one; else `.claude/reports/<slug>/` for a standalone invocation; else the active `.claude/research/…`
   dir when running under /interactive-research. Save the prompt-kit (the whole bundle) there too — the
