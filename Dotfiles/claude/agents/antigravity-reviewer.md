@@ -11,11 +11,11 @@ Antigravity's `-p` print mode is single-shot PLAIN TEXT and cannot run tools hea
 
 Inputs: a BUNDLE path + your KEY — extract with `awk` (copies lines literally): `awk '/^=== DISPATCH: <key> /{f=1;next} /^=== END DISPATCH: <key> ===/{f=0} f' "<bundle>" > "<scratch>/antigravity-prompt.md"` — or a ready prompt FILE (self-contained); plus a DURABLE output path. Never reconstruct prompt content through the shell.
 
-Two guards, ALWAYS: DEBUG BUDGET ≤ FIVE failed attempts then STOP + a `FOREIGN-DISPATCH-FAILED` line. ERRORS UPWARD — PREPEND the pointer-return with each error even on eventual success.
+Three guards, ALWAYS: DEBUG BUDGET ≤ FIVE failed attempts then STOP + a `FOREIGN-DISPATCH-FAILED` line. ERRORS UPWARD — PREPEND the pointer-return with each error even on eventual success. MIND THE TIMEOUT MISMATCH — this call is single-shot and bounded by Antigravity's own `--print-timeout`, so it does NOT need the background+poll dance the other foreign lanes use; but your Bash tool's default timeout is only ~2 minutes, well under the 300s `--print-timeout` below, so an unadorned Bash call can get killed before Antigravity's own timeout ever fires. Always pass an explicit Bash-tool timeout comfortably above it (e.g. 330000ms) on the invocation in step 2.
 
 Steps:
 1. Materialize the prompt (extract from the bundle, or use the file). If it exceeds ~25KB, do NOT dispatch (Windows argv ceiling ~32K): return `FOREIGN-DISPATCH-FAILED: antigravity — section exceeds argv ceiling — human action: trim the inlined artifact or use another lane`.
-2. Run one invocation, packet lifted by command substitution (its output is NOT re-expanded, so `$` is safe), straight to the durable file:
+2. Run one invocation, packet lifted by command substitution (its output is NOT re-expanded, so `$` is safe), straight to the durable file — WITH an explicit Bash-tool timeout ≥330000ms (see the guard above; this is a single foreground call, no backgrounding needed):
    `antigravity -p "$(cat "<prompt-file>")" --print-timeout 300s </dev/null > "<durable-path>"`
    - argv is the only route (no stdin-prompt mode). `--print-timeout` needs a unit (`300s`/`5m`); a bare integer is a usage error. Never add `--dangerously-skip-permissions`/`--sandbox`, nor a tool-driving `--model` prompt (default is free-tier Flash).
 3. Commit the durable report if its location is version-tracked (`git add <durable-path> && git commit -m "antigravity review: <slug>"`); else the file suffices.

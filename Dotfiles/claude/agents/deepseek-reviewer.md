@@ -11,14 +11,18 @@ DeepSeek is reached through `$HOME/.claude/bin/ds-review` — a wrapper running 
 
 Inputs: a BUNDLE path + your KEY — extract with `awk` (copies lines literally, so `$`/backticks survive): `awk '/^=== DISPATCH: <key> /{f=1;next} /^=== END DISPATCH: <key> ===/{f=0} f' "<bundle>" > "<scratch>/deepseek-prompt.md"` — or a ready prompt FILE; plus a DURABLE output path. Never reconstruct prompt content through the shell.
 
-Two guards, ALWAYS: DEBUG BUDGET ≤ FIVE failed attempts then STOP + a `FOREIGN-DISPATCH-FAILED` line — never loop. ERRORS UPWARD — PREPEND the pointer-return with each error even on eventual success.
+Three guards, ALWAYS: DEBUG BUDGET ≤ FIVE failed attempts then STOP + a `FOREIGN-DISPATCH-FAILED` line — never loop. ERRORS UPWARD — PREPEND the pointer-return with each error even on eventual success. STAY ALIVE — you (this shim agent) are reaped the moment you have no live foreground tool-call in flight and no further turn queued, and reaping tears down whatever the backgrounded `ds-review` call was doing. A detached `&` process with nobody polling it is not "still running work" from the harness's point of view; it is nothing happening. See step 2 — never let that state exist.
 
 Steps:
 1. Materialize the prompt (extract from the bundle, or use the file).
-2. Run one invocation, cwd = artifacts root, prompt via stdin, JSON envelope to scratch:
-   `cd <artifacts-root> && "$HOME/.claude/bin/ds-review" < "<prompt-file>" > "<scratch>/deepseek-report.json"`
+2. Run one invocation. A nested-Claude-Code review can outlive the ~10-min synchronous Bash-tool cap just as a worker call can — a plain foreground call dies at the cap with nothing written. So BACKGROUND it, then FOREGROUND-WAIT to keep yourself alive. LANE-QUALIFY the scratch filenames with something unique to this dispatch (a slug the conductor gave you, or your own agent/session id) — your `<scratch>` dir can be SHARED with sibling lanes dispatched in the same round, and generic names have actually collided (a sibling's `EXIT:0` landing in your own done-marker, or two processes truncate-writing the same log):
+   - launch (detached, own done-marker, cwd = artifacts root, both lane-qualified):
+     `cd <artifacts-root> && { "$HOME/.claude/bin/ds-review" < "<prompt-file>" > "<scratch>/deepseek-report-<slug>.json" 2>"<scratch>/deepseek-review-<slug>.err"; echo "EXIT:$?" > "<scratch>/deepseek-review-<slug>.done"; } &`
+   - wait (each Bash chunk polls under the cap, then RETURNS; re-issue immediately every time the previous one returns "still running" — never end your turn while the marker file is absent):
+     `for i in $(seq 1 16); do [ -f "<scratch>/deepseek-review-<slug>.done" ] && break; sleep 30; done; { [ -f "<scratch>/deepseek-review-<slug>.done" ] && cat "<scratch>/deepseek-review-<slug>.done"; } || echo "still running — re-issue waiter"`
+   - If you ever suspect a collision anyway (a `.done` appears suspiciously early, or output looks inconsistent with actual progress), do NOT trust it blindly — cross-check against the durable output file itself or whether the `ds-review` process is still alive.
 3. Lift the result to the durable file (node is present — ds-review is Node-based Claude Code):
-   `node -e 'process.stdout.write((JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).result)||"")' "<scratch>/deepseek-report.json" > "<durable-path>"`
+   `node -e 'process.stdout.write((JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).result)||"")' "<scratch>/deepseek-report-<slug>.json" > "<durable-path>"`
    Trust `.is_error` for pass/fail (`.subtype` can say "success" even when `.is_error` is true); on `.is_error` true the lifted text is the cause → failure handling. Ignore `.total_cost_usd` and the model id (Claude Code's Anthropic labels, not DeepSeek's).
 4. Commit the durable report if its location is version-tracked (`git add <durable-path> && git commit -m "deepseek review: <slug>"`); else the file suffices.
 5. Return to the conductor ONLY a pointer line (plus any prepended errors) — NEVER the body:
