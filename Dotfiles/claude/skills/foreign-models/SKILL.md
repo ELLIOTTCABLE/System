@@ -157,11 +157,20 @@ it, reserved for the human; a blocked reset also signals you may be in the wrong
 between `=== DISPATCH: <key> …` and `=== END DISPATCH: <key> ===`, verbatim, to a tempfile (or stdin),
 and ASSERT it is non-empty (its key matched) — abort if the section is missing rather than falling back
 to another key/bundle/worktree; (3) dispatch via that model's call below, cwd = this worktree; (4) make
-the output DURABLE and return a POINTER, not the payload — a worker lane already committed its work into
-the branch; a packet/review lane writes the model's report to the conductor-named durable file and
-commits it. The shim returns to the conductor ONLY the durable path (or branch), the exit status, and
-any prepended setup errors — NEVER the report body. It never edits the prompt, touches another section,
-or `git worktree add`s.
+the output DURABLE and return per the REPORT MODE you named (see below) — a worker lane already committed
+its work into the branch; a packet/review lane writes the model's report to the conductor-named durable
+file and commits it. In `file` mode (the default) the shim returns ONLY the durable path (or branch), the
+exit status, and any prepended setup errors — NEVER the report body; in `inline` mode it returns that
+same pointer line as a header and then the report body verbatim. It never edits the prompt, touches
+another section, or `git worktree add`s.
+
+**REPORT MODE — your call, per dispatch, named in the shim's instructions (not in the packet).** `file`
+(default): the report lands durable and the shim hands back a pointer, so nothing long enters your
+context until you choose to read it. Use it when the report may be large, when several lanes will be
+adjudicated together later (possibly after a rewind), or when a worker already writes its own report to
+disk. `inline`: the shim hands the body straight back after a one-line header — no file round-trip, no
+extra tool-churn. Use it for a small, simple review you'll adjudicate immediately. Either way the raw
+report reaches YOU, not the human — the purity protocol below applies unchanged.
 
 The shim's dispatch prompt (which the conductor writes) MUST also carry three guards:
 - **A bounded debug budget.** State it explicitly: "at most FIVE failures may be debugged or
@@ -203,9 +212,10 @@ CLEAN. Resume is the hijack-adjacent step; avoid it.
 call parameters are assembled separately at dispatch time, so a forgotten one is silent and unchecked.
 Before firing each worker lane, confirm the call carries: `isolation: "worktree"` (its omission on four
 lanes is what let shims reset the shared tree); a cheap pinned `model` (never inherit the conductor's);
-the base commit-SHA; the durable output path; the extraction KEY; and the two forbidden paths (project
-root + your own worktree) for the shim's self-check. Point the shim at ONE authoritative bundle path and
-forbid sibling-worktree fallback — a shim that couldn't find its bundle once wandered to a stale sibling
+the base commit-SHA; the durable output path and REPORT MODE; the extraction KEY; and the two forbidden
+paths (project root + your own worktree) for the shim's self-check. Point the shim at ONE authoritative
+bundle path and forbid sibling-worktree fallback — a shim that couldn't find its bundle once wandered to
+a stale sibling
 worktree and reviewed the wrong copy. If the bundle won't exist at the base SHA (it's newer than the
 review point), hand the shim an absolute path to a stable checkout that has it, not a path inside the
 about-to-be-reset worktree.
@@ -337,8 +347,9 @@ lane's full output durable, and consume them all in ONE later pass.
 
 - **Durable by default.** Every dispatch's full output ends as a committed file or branch, never only a
   scratch tempfile: worker lanes commit their work and notes into their branch; packet/review lanes have
-  the shim write the report to a durable file and commit it. Shims return only pointers (path/branch +
-  status), so nothing long enters your context until you choose to read it.
+  the shim write the report to a durable file and commit it. In the default `file` REPORT MODE shims
+  return only pointers (path/branch + status), so nothing long enters your context until you choose to
+  read it; `inline` mode is the deliberate exception for small reviews adjudicated on the spot.
 - **Where it lives** (unless the human directs otherwise): the project's house-style location if it has
   one; else `.claude/reports/<slug>/` for a standalone invocation; else the active `.claude/research/…`
   dir when running under /interactive-research. Save the prompt-kit (the whole bundle) there too — the
