@@ -1,6 +1,6 @@
 # foreign-models — dispatch outside-lineage reviewers from Claude Code
 
-Lets the conductor spawn non-Anthropic models (OpenAI Codex/GPT-5.6-Sol, Google Antigravity/Gemini
+Lets the conductor spawn non-Anthropic models (OpenAI Codex/GPT-6-Astra, Google Antigravity/Gemini
 lineage, DeepSeek V4-Pro) as review OR write-authorized worker subagents — for outside-lineage review,
 or to offload agentic work to another harness. Each dispatch's output is made durable (a committed
 report file, or a worker's branch) and the conductor adjudicates it; foreign output is never shown to
@@ -13,15 +13,12 @@ the human verbatim. Behaviour lives in the `foreign-models` skill; this file is 
    ```sh
    mise use -g npm:@openai/codex      # or, without mise:  npm install -g @openai/codex
    ```
-2. Authenticate codex — `codex login`. Two lanes share this saved login:
-   - **Saved-login lane (default, used by the agents):** `codex login` with an API-key sign-in persists
-     the key to `~/.codex/auth.json`; `codex exec` then bills **per-token** on that funded OpenAI **API**
-     account. This is the lane in use here (a small funded throwaway account). An unfunded account
-     returns `Quota exceeded`.
-   - **op-key lane (alternate, `bin/codex-review`):** reads the same key from 1Password per-run and
-     injects it via `CODEX_API_KEY`, keeping it off disk — for CI / env-explicit contexts.
-   - **ChatGPT-plan lane:** if you ever `codex login` with a ChatGPT subscription instead, usage draws
-     on plan quota rather than per-token. Available, unused here.
+2. Authenticate codex — `codex login`. The agents ride this saved login (`~/.codex/auth.json`) and
+   need nothing else: no env var, no `op`, no human present. That makes codex the one foreign lane
+   that runs unattended — keep it that way (no per-run key steps).
+   - **ChatGPT-plan sign-in:** usage draws on plan quota. The lane in use here as of 2026-09.
+   - **API-key sign-in:** `codex exec` bills **per-token** on that funded OpenAI **API** account; an
+     unfunded account returns `Quota exceeded`.
 3. Install antigravity (the gemini-cli successor) and authenticate — one-time interactive Google OAuth:
    ```sh
    mise use -g antigravity-cli        # binaries: antigravity / agy (1.0.16 verified)
@@ -54,7 +51,6 @@ the human verbatim. Behaviour lives in the `foreign-models` skill; this file is 
 | `agents/*.md` | `~/.claude/agents/` |
 | `bin/ds-review` | `~/.claude/bin/ds-review` (`chmod +x`; agents call it by absolute `$HOME/.claude/bin/` path) |
 | `bin/ds-write` | `~/.claude/bin/ds-write` (`chmod +x`; DeepSeek worker — `Write,Edit,Bash`, self-commits, UNSANDBOXED) |
-| `bin/codex-review` | `~/.claude/bin/codex-review` (`chmod +x`; needs `op` + `codex`) |
 | `bin/foreign-mcp.json` | `~/.claude/bin/foreign-mcp.json` (kagi-only MCP config ds-review passes to the nested Claude) |
 
 The agent defs reference the wrappers by absolute `$HOME/.claude/bin/<wrapper>` path, so no PATH or
@@ -79,14 +75,6 @@ shell-rc changes are needed.
 > From a file, dispatch is pure redirection: deepseek and codex read it on stdin (`ds-review < pkt`,
 > `codex exec - < pkt`), antigravity lifts it via `"$(cat pkt)"` (command-substitution output is not
 > re-expanded, so `$` survives). The agent defs and the skill's dispatch section carry the full rule.
-
-### `bin/codex-review` (op-key alternate lane)
-
-`codex-review "<prompt>"` (or a packet piped on stdin) reads the OpenAI key inline from 1Password
-(`op read`), runs `codex exec --json`, and writes ONLY the clean final message to a report file. The
-JSONL event stream (token usage, errors) goes to stdout; the report path is announced on stderr. Set
-`CODEX_REPORT=/path` to control where the clean message lands (default: an `mktemp` file whose path is
-printed). The key is never written to disk or echoed.
 
 ## MCP parity — read-only web search on every lane
 
@@ -123,13 +111,14 @@ needed there; whether to simplify anything else in personal dotfiles is the huma
 |---|---|
 | macOS | OK |
 | WSL2 | OK — but antigravity's keyring may not persist (reauth loop reported); native Windows Credential Manager persists. |
-| native Windows | (a) `codex exec` read-only sandbox reads files **only from a git-repo-root cwd, and only inside that repo** on codex 0.142.5 (verified 2026-07-05 — the old blanket read-decline bug does not reproduce, but a non-repo or out-of-workspace cwd still denies reads; `--skip-git-repo-check` suppresses the front-door check without granting trust). Dispatch codex from the repo root holding the artifacts. (b) `ds-review`/`codex-review` and the sh wrappers need Git Bash — not cmd/PowerShell. (c) install codex via mise's **npm** backend, not aqua. (d) antigravity `-p` prints plain text and can't run tools headlessly — send self-contained packets only. |
+| native Windows | (a) `codex exec` read-only sandbox reads files **only from a git-repo-root cwd, and only inside that repo** on codex 0.142.5 (verified 2026-07-05 — the old blanket read-decline bug does not reproduce, but a non-repo or out-of-workspace cwd still denies reads; `--skip-git-repo-check` suppresses the front-door check without granting trust). Dispatch codex from the repo root holding the artifacts. (b) `ds-review` and the sh wrappers need Git Bash — not cmd/PowerShell. (c) install codex via mise's **npm** backend, not aqua. (d) antigravity `-p` prints plain text and can't run tools headlessly — send self-contained packets only. |
 
 ## Cost & quota
 
-- **Codex / GPT-5.5** — saved-login lane bills **per-token** on the funded OpenAI **API** account (no
-  ChatGPT plan here). A trivial file-read turn ran ~25K input / ~120 output tokens (≈ a few cents at
-  GPT-5-class rates). `Quota exceeded` = the account needs credit.
+- **Codex / GPT-6-Astra** — bills per the saved login: ChatGPT-plan quota (current), or per-token on
+  a funded API account. A trivial file-read review at `model_reasoning_effort="high"` ran ~200K input
+  (~160K cached) / ~1.3K output tokens (2026-09-16) — Codex's own system prompt, skills listing, and
+  self-exploration are most of that floor. `Quota exceeded` = plan exhausted or account needs credit.
 - **Antigravity (free tier)** — ≈20 agent req/day on a ~5h refresh, cut from ~250/day at launch and
   "not guaranteed" by Google. Default model is Gemini Flash-tier.
 - **DeepSeek V4-Pro** — pay-as-you-go, ~cents per review (V4-Pro $0.435 in / $0.87 out per MTok, cache
