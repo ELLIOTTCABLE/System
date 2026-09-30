@@ -16,6 +16,7 @@ winget install -e --id Anthropic.Claude
 winget install -e --id Anthropic.ClaudeCode
 winget install -e --id Armin2208.WindowsAutoNightMode
 winget install -e --id AutoHotkey.AutoHotkey
+winget install -e --id Beeper.Beeper
 winget install -e --id Discord.Discord
 winget install -e --id FinalWire.AIDA64.Extreme
 winget install -e --id Google.Chrome
