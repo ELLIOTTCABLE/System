@@ -17,40 +17,41 @@ CachedExtensionVSIXs/
 CachedExtensions/
 CachedProfilesData/
 Code Cache/
-Cookies
-Cookies-journal
 Crashpad/
-CrashpadMetrics-active.pma
-CrashpadMetrics.pma
 DawnCache/
 DawnGraphiteCache/
 DawnWebGPUCache/
-DIPS
-DIPS-wal
 GPUCache/
 IndexedDB/
 Local State
 Local Storage/
-Network Persistent State
 Network/
-Preferences
-QuotaManager
-QuotaManager-journal
 Service Worker/
 Session Storage/
 Shared Dictionary/
+VideoDecodeStats/
+WebStorage/
+databases/
+logs/
+shared_proto_db/
+
+Conversions
+Conversions-journal
+Cookies
+Cookies-journal
+CrashpadMetrics-active.pma
+CrashpadMetrics.pma
+DIPS
+DIPS-wal
+Network Persistent State
+Preferences
+QuotaManager
+QuotaManager-journal
 SharedStorage
 SharedStorage-wal
 TransportSecurity
 Trust Tokens
 Trust Tokens-journal
-VideoDecodeStats/
-WebStorage/
-databases/
 languagepacks.json
-logs/
 machineid
-shared_proto_db/
 storage.json
-Conversions
-Conversions-journal
