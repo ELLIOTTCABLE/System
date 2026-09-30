@@ -10,14 +10,14 @@ data=$(cat)
 exitcodes=()
 hookname=`basename $0`
 
-# Run each hook, passing through STDIN and storing the exit code.
+# Run each hook, passing through arguments and STDIN, and storing the exit code.
 # We don't want to bail at the first failure, as the user might
 # then bypass the hooks without knowing about additional issues.
 
 # Git doesn't export GIT_DIR to hooks; the sub-hooks are installed beside this one.
 for hook in "$(dirname "$0")/$hookname"-*; do
   test -x "$hook" || continue
-  echo "$data" | "$hook"
+  echo "$data" | "$hook" "$@"
   exitcodes+=($?)
 done
 
