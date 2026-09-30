@@ -5,17 +5,24 @@ daemon*
 .last-update-result.json
 history.jsonl
 mcp-needs-auth-cache.json
+stats-cache.json
 
+plugins/.last_inuse_sweep
 plugins/blocklist.json
 plugins/install-counts-cache.json
 plugins/installed_plugins.json
 plugins/known_marketplaces.json
-plugins/marketplaces/*
+plugins/plugin-catalog-cache.json
+plugins/cache/
+plugins/data/
+plugins/marketplaces/
+plugins/synced/
 
 chrome/chrome-native-host.bat
 
 backups/
 cache/
+feedback/
 file-history/
 jobs/
 paste-cache/
@@ -24,5 +31,6 @@ projects/
 session-env/
 sessions/
 shell-snapshots/
+state/
 tasks/
 telemetry/
