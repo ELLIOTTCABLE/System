@@ -16,7 +16,7 @@ MAX_COMMIT_AGE='1.year' # Commits older than this will not be checked for labels
 
 
 # == Hook parameters ==
-COMMIT_FILENAME="${1:-.git/COMMIT_EDITMSG}"  # (filename of the generated commit message)
+COMMIT_FILENAME="${1:-$(git rev-parse --git-path COMMIT_EDITMSG)}"  # (filename of the generated commit message)
 COMMIT_TYPE="$2"                             # (one of <empty>|message|template|merge|squash|commit)
 COMMIT_ORIGINAL_SHA="$3"                     # (if this is an `--ammend` commit)
 
@@ -26,8 +26,8 @@ SEPARATOR="$(printf '\036')"
 
 # First we have to find the git-hooks dir, from which the hooks may be symlinked;
 SCRIPT="$(
-   cd "$(dirname "${BASH_SOURCE[0]}")"
-   SCRIPT="$(basename "${BASH_SOURCE[0]}")"
+   cd "$(dirname "$0")"
+   SCRIPT="$(basename "$0")"
    
    while [ -L "$SCRIPT" ]; do
       SCRIPT="$(readlink "$SCRIPT")"
@@ -42,16 +42,15 @@ SCRIPTDIR="$(dirname "$SCRIPT")"
 
 # ... and then we invoke the `rank-gitlabels.js` script therein, to get a list of labels.
 SUGGESTIONS="$(
-   "${SCRIPTDIR}/rank-gitlabels.js" yes "$MAX_COMMIT_AGE" "$MAX_COMMITS" \
+   "${SCRIPTDIR}/rank-gitlabels.js" yes "$MAX_COMMIT_AGE" "$MAX_COMMITS" 2>/dev/null \
     | head -n $MAX_SUGGESTIONS                                           \
     | tr '\n' "$SEPARATOR" | sed "s/$SEPARATOR/  /g"                     \
 )"
+[ -n "$SUGGESTIONS" ] || exit 0
 
-# FIXME: The `-i ''` syntax is exclusive to non-OSX
-# FIXME: The `1,` is also an OSX-ism; I need to actually *test* this on *nix.
-sed -i '' '1,/^#/{/^#/i\
-# Suggested gitlabels:\
-#    '"$SUGGESTIONS"'\
-# \
-
-}' "$COMMIT_FILENAME"
+# Via a temporary file, because BSD and GNU `sed -i` are mutually incompatible.
+awk -v suggestions="$SUGGESTIONS" '
+   !done && /^#/ { print "# Suggested gitlabels:"; print "#    " suggestions; print "# "; print ""; done = 1 }
+   { print }
+' "$COMMIT_FILENAME" > "$COMMIT_FILENAME.gitlabels" &&
+   mv -f "$COMMIT_FILENAME.gitlabels" "$COMMIT_FILENAME"

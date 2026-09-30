@@ -32,27 +32,24 @@ var child_process = require('child_process')
   , decorate       = !process.argv[2] || !(process.argv[2][0] === 'n' || process.argv[2][0] === 'f')
   , max_commit_age = process.argv[3]                  || '1 year'
   , max_commits    = parseInt(process.argv[4], 10)    || 1000
-  , separator      = process.argv[5] && process.argv[4].length > 0 ?
-                        process.argv[4]                : "\x1E"
+  , separator      = process.argv[5]                  || "\x1E"
 
 // If piped to `head` or similar, we don't want to spit up on a closing stdout.
 process.stdout.on('error', function(err){
-   if (err.code === 'epipe') process.exit(0) })
+   if (err.code === 'EPIPE') process.exit(0) })
 
 
 // First, I generate a log of recent commit messages (delimited by `separator` codepoints).
 var format_code_body       = '%B'
   , format_code_separator  = '%x'+separator.charCodeAt(0).toString(16)
 
-var git_log = 'git --no-pager log'
-    git_log += " --all"
-    git_log += " --max-count='"+max_commits+"'"
-    git_log += " --since='"+max_commit_age+"'"
-    git_log += " --no-decorate"
-    git_log += " --no-notes"
-    git_log += ' --format="' + 'format:'+format_code_body+format_code_separator + '"'
+var git_log_args = [ '--no-pager', 'log', '--all', '--no-decorate', '--no-notes'
+                   , '--max-count=' + max_commits
+                   , '--since=' + max_commit_age
+                   , '--format=format:' + format_code_body + format_code_separator ]
 
-child_process.exec(git_log, function(err, log){ var labels, extract_labels, occurrences = new Object
+// No shell: `exec` hands its string to cmd.exe on Windows, which doesn't strip POSIX quoting.
+child_process.execFile('git', git_log_args, { maxBuffer: 64 * 1024 * 1024 }, function(err, log){ var labels, extract_labels, occurrences = new Object
    if (err) throw err
    
    // This will iterate record-wise over each commit-message selected above, extracting gitlabels
