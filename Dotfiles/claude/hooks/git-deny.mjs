@@ -5,7 +5,8 @@
 // without "git" substring skip the spawn entirely. $-containing commands
 // false-positive that matcher (upstream bug anthropics/claude-code#48722)
 // and fall through here for proper JSON-aware extraction + pattern matching.
-// settings.json registers this same script for the PowerShell tool.
+// settings.json registers this same script for the PowerShell tool, and pi's
+// extensions/git-deny.ts feeds it pi's bash/powershell tool calls.
 //
 // Upstream bug:
 //    <https://github.com/anthropics/claude-code/issues/48722> "PreToolUse 'if: Bash(foo*)' falsely matches Bash commands containing $()"
