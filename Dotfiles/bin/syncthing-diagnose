@@ -24,6 +24,8 @@
 // Connection auto-detected from config.xml; override via environment:
 //   SYNCTHING_API_KEY, SYNCTHING_ADDRESS (e.g. 127.0.0.1:8384 or https://h:8384),
 //   SYNCTHING_HOME (config dir; else STCONFDIR/STHOMEDIR, then per-OS defaults).
+// Under WSL2 the Windows loopback GUI is unreachable, so the tool re-executes
+// itself with the Windows `node.exe` — unless SYNCTHING_* env targets an instance.
 //
 // Needs only `node` (>=18, for global fetch); no other dependencies. The API key
 // stays in-process — never on argv.
@@ -35,6 +37,23 @@ const fs = require('node:fs');
 const os = require('node:os');
 
 const die = (msg) => { console.error(`syncthing-diagnose: ${msg}`); process.exit(1); };
+
+// WSL2 NAT can't reach the Windows GUI loopback (and %LOCALAPPDATA% is invisible),
+// so unless env explicitly targets an instance, re-exec on the Windows side.
+(function wslDelegate() {
+   if (process.platform !== 'linux') return;
+   if (process.env.SYNCTHING_HOME || process.env.SYNCTHING_API_KEY || process.env.SYNCTHING_ADDRESS) return;
+   let kernel = '';
+   try { kernel = fs.readFileSync('/proc/version', 'utf8'); } catch { return; }
+   if (!/microsoft/i.test(kernel)) return;
+   const { execFileSync, spawnSync } = require('node:child_process');
+   let winSelf;
+   try { winSelf = execFileSync('wslpath', ['-w', __filename], { encoding: 'utf8' }).trim(); }
+   catch (e) { die(`under WSL but wslpath failed (${e.message}); set SYNCTHING_ADDRESS + SYNCTHING_API_KEY instead`); }
+   const r = spawnSync('node.exe', [winSelf, ...process.argv.slice(2)], { stdio: 'inherit' });
+   if (r.error) die(`under WSL but Windows node.exe unavailable (${r.error.message}); set SYNCTHING_ADDRESS + SYNCTHING_API_KEY instead`);
+   process.exit(r.status === null ? 1 : r.status);
+})();
 
 function printHelp() {
    for (const line of fs.readFileSync(__filename, 'utf8').split('\n').slice(1)) {
