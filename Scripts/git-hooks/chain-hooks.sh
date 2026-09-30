@@ -14,7 +14,8 @@ hookname=`basename $0`
 # We don't want to bail at the first failure, as the user might
 # then bypass the hooks without knowing about additional issues.
 
-for hook in $GIT_DIR/hooks/$hookname-*; do
+# Git doesn't export GIT_DIR to hooks; the sub-hooks are installed beside this one.
+for hook in "$(dirname "$0")/$hookname"-*; do
   test -x "$hook" || continue
   echo "$data" | "$hook"
   exitcodes+=($?)
