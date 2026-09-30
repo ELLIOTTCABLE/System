@@ -1,3 +1,6 @@
+# symlink to keybindings.*.json
+keybindings.json
+
 daemon*
 
 .credentials.json
