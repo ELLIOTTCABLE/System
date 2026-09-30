@@ -1,0 +1,21 @@
+#!/bin/sh
+# Refuse symlinks that won't survive every platform this repo is checked out on: one recorded as a
+# plain file (what a core.symlinks=false checkout commits back, cf. 54d9009), or one whose target
+# isn't relative. `git commit --no-verify` overrides.
+puts() { printf %s\\n "$@" ;}
+tab=$(printf '\t')
+
+nonportable() { while IFS=$tab read -r meta path; do
+   set -- $meta
+   case $1:$2 in
+      *:120000)       case $(git cat-file -p ":$path" 2>/dev/null) in
+                         /*|\~*|[A-Za-z]:*|*\\*) puts "   non-relative target:  $path" ;; esac ;;
+      :120000:000000) ;;
+      :120000:*)      puts "   symlink became file:  $path" ;;
+   esac
+done ;}
+
+bad=$(git -c core.quotePath=false diff --cached --raw --no-renames | nonportable)
+if [ -n "$bad" ]; then
+   puts 'pre-commit: refusing symlinks that would break on some platform:' "$bad" >&2
+   exit 1                                                                                        ;fi
