@@ -149,11 +149,23 @@
       "grading-certainty": "+1:SURE",
       "grading-reasoning": "EJSP peer-reviewed; now clean first-party (supersedes degraded scispace copy)",
       "relevance-certainty": "+1:SURE",
-      "relevance-description": "load-bearing caveat: authentic dissent superior to all role-played devil-advocate forms; role-play bolsters initial view, cannot be cloned",
+      "relevance-description": "authentic dissent superior to all 3 role-played devil's-advocate forms on solution quantity/quality (role-played DA approx no-dissent control; perceived-stimulation-without-payoff dissociation). NB the 'DA bolsters the initial view' finding is the companion B-nemeth-connell-2001, which this paper only summarizes — not this paper's own result",
       "published": "2001-11-01",
       "retrieved": "2026-06-01",
       "sha256": "e202eb5a4012cd7f89bccb663bc5de00659806dd18ce55aa3a635e65ff2ae9ea",
       "via": "user-fetch (requested turn04); discovered ToolInvocation(kagi: Nemeth devil advocate versus authentic dissent)"
+   },
+   "B-nemeth-connell-2001": {
+      "url": "https://doi.org/10.1111/j.1559-1816.2001.tb02481.x",
+      "local": "sources/nemeth-connell-2001.pdf",
+      "grading-certainty": "-0:SUSPECT",
+      "grading-reasoning": "JASP peer-reviewed, clean first-party PDF; but single small study (n=47, all-female undergrads, *simulated* 4-person group with 3 preprogrammed confederates, no objectively-correct-answer task), marginal omnibus on opinion-change & external-thought (p<.09), and the key bolstering contrast is significant only vs authentic dissent (t(41)=2.16, p<.05), NOT vs the no-dissent control (directional, ns)",
+      "relevance-certainty": "+1:SURE",
+      "relevance-description": "the ACTUAL source of the devil's-advocate cognitive-bolstering/entrenchment finding (A-nemeth-2001 only summarizes it); supports the 'false due-diligence entrenches the initial view' mechanism, but NOT 'reduces truth-value below baseline' (no accuracy DV; DA never significantly worse than control)",
+      "published": "2001-01-01",
+      "retrieved": "2026-06-07",
+      "sha256": "095fc1787fd457a0401f311bd0b9ff10a5309aa0626241f978cb162c77f789e4",
+      "via": "user-download (~/Downloads, requested); discovered via adversarial-crosscheck of [A-nemeth-2001], which mis-attributed this companion study's bolstering finding"
    },
    "A-lord-lepper-preston-1984": {
       "url": "https://doi.org/10.1037/0022-3514.47.6.1231",
@@ -202,5 +214,44 @@
       "retrieved": "2026-06-01",
       "sha256": "92c0e6184336b5adcc0b27ec84a9e30a6f30c1ae2bda9b4748260af06b1e47b3",
       "via": "user-fetch (requested turn04); discovered ToolInvocation(kagi: premortem prospective hindsight Klein)"
+   },
+   "A-hirt-markman-1995": {
+      "url": "https://doi.org/10.1037/0022-3514.69.6.1069",
+      "grading-certainty": "+1:SURE",
+      "grading-reasoning": "not-B: peer-reviewed JPSP, 3 experiments (N approx 307/548), canonical consider-an-alternative paper, fully read top-level; provides reasons-coding process data isolating the broadening mechanism, not a secondary overview",
+      "relevance-certainty": "+1:SURE",
+      "relevance-description": "generalizes Lord consider-the-opposite: considering ANY plausible alternative spontaneously broadens the simulated option-set and debiases (Studies 1-2); Study 3 - the alternative's plausibility moderates (implausible alternatives fail to debias). Direct support for 'structured contrary consideration broadens what gets explored', with a boundary condition",
+      "graded-by": "top-level-agent",
+      "published": "1995",
+      "retrieved": "2026-06-07",
+      "sha256": "8829b31ef774b5da8e25978d85c2fef7d115fb3217b081e455b343aaf3f0908b",
+      "acquired": "out-of-band",
+      "via": "mcp__kagi-ken__kagi_search_fetch(queries: ['Hirt Markman 1995 multiple explanation consider-an-alternative strategy debiasing JPSP'])"
+   },
+   "A-mercier-sperber-2011": {
+      "url": "https://www.dan.sperber.fr/wp-content/uploads/2009/10/MercierSperberWhydohumansreason.pdf",
+      "grading-certainty": "+1:SURE",
+      "grading-reasoning": "not-B: BBS target article (peer-reviewed with open peer commentary), foundational/highly-cited, author-hosted first-party PDF; key sections read top-level (skilled-arguer asymmetry, Wason-in-groups, polarization/bolstering)",
+      "relevance-certainty": "+1:SURE",
+      "relevance-description": "reasoning improves sharply in genuine argumentative/group settings (Wason approx 10pct solo to approx 80pct in groups, Moshman and Geil); people evaluate others arguments better than they reason solo (externalization rationale); solo reasoning polarizes/bolsters (sec 4.2.2). Supports the externalize-the-critique mechanism AND the solo-cross-check-entrenches caveat. Gap: emphasizes GENUINE argumentation; whether role-played/LLM dissent qualifies is untested",
+      "graded-by": "top-level-agent",
+      "published": "2011",
+      "retrieved": "2026-06-07",
+      "sha256": "f89ae699b9cfaca7e74afbb708e42f8c4e680d215e9cfe38aed28490e7d72156",
+      "acquired": "url",
+      "via": "mcp__kagi-ken__kagi_search_fetch(queries: ['Mercier Sperber 2011 argumentative theory of reasoning Behavioral and Brain Sciences pdf'])"
+   },
+   "B-shi-multipersona-2024": {
+      "url": "https://arxiv.org/pdf/2412.04629",
+      "grading-certainty": "-0:SUSPECT",
+      "grading-reasoning": "not-A: arXiv preprint (not peer-reviewed), single within-subjects study n=40, controversial-topic info-seeking not problem-solving, modest effects; not-C: careful mixed-methods with objective eye-tracking + GLMM, directly on the LLM mechanism, fully read top-level",
+      "relevance-certainty": "-0:SUSPECT",
+      "relevance-description": "closest LLM-mechanism analogue: human receiving LLM-generated multi-persona debate. Eye-tracking shows significantly MORE attention to attitude-inconsistent content + buffered individual confirmation-bias tendency + modest drop in conviction; qualitatively novel perspective-shifting angles. PRO for the LLM form, but adjacent construct (engage-with-opposing-views, not find-new-angles-in-a-problem); multi-persona not binary; preprint",
+      "graded-by": "top-level-agent",
+      "published": "2024-12",
+      "retrieved": "2026-06-07",
+      "sha256": "b8c8e03002f5ad41ac0b1d9dcd987342d39243a94768ee89a91b7df782273dcd",
+      "acquired": "url",
+      "via": "mcp__kagi-ken__kagi_search_fetch(queries: ['LLM model-generated counterarguments reduce human confirmation bias broaden perspectives study'])"
    }
 }
