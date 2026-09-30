@@ -18,7 +18,11 @@
 // stash drop/clear (the stash stack is SHARED across worktrees and sessions),
 // clean -f (untracked files have no reflog), filter-branch/filter-repo,
 // update-ref, tag deletion, and branch -D (force-delete kills the reflog).
-
+//
+// 2026-09-29 relaxation (user-directed): one push shape is permitted, in any mode — an ai/* branch
+// onto an ai/* remote branch, the remote and both refs spelled in full, nothing chained after it;
+// either unforced, or forced only with a lease on the destination ref. A lease names the remote tip
+// the push expects (empty: the branch must not exist yet), so it cannot overwrite unseen work.
 
 import { readFileSync, existsSync } from "node:fs"
 import { execSync } from "node:child_process"
@@ -53,10 +57,26 @@ const isAutonomous = () => {
    return false
 }
 
+// Global options may sit between `git` and the subcommand (`git -C <dir> push`), and a bare
+// `git\s+push` misses every such spelling.
+const pushPattern =
+   /\bgit(?:\s+(?:-[Cc]\s+(?:"[^"]*"|'[^']*'|\S+)|--[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?|-[a-zA-Z]))*\s+push\b/
+
+// Anchored at both ends, so no second command can ride along; no `+` refspec, no
+// `--all`/`--tags`/`--mirror`/`--delete`, no URL remotes. Group 1 is the lease's ref, group 2 the
+// destination: a lease on any other ref would guard nothing.
+const aiPush =
+   /^git(?:\s+-C\s+(?:"[^"]*"|\S+))?\s+push(?:\s+--force-with-lease=(refs\/heads\/ai\/[\w./-]+):(?:[0-9a-f]{40})?)?\s+[\w.-]+\s+refs\/heads\/ai\/[\w./-]+:(refs\/heads\/ai\/[\w./-]+)(?:\s+2>&1)?\s*$/
+
+const isPermittedPush = (command) => {
+   const m = aiPush.exec(command)
+   return m !== null && (m[1] === undefined || m[1] === m[2])
+}
+
 const alwaysDeny = [
    [
-      /\bgit\s+push\b/,
-      "git push reserved for the user; remote state is not Claude-managed.",
+      pushPattern,
+      "git push reserved for the user; remote state is not Claude-managed (the one exception: an ai/* branch onto an ai/* remote branch, unforced or leased on the destination, remote and both refs spelled in full).",
    ],
    [
       /\bgit\s+stash\s+drop\b/,
@@ -106,7 +126,10 @@ const interactiveOnlyDeny = [
    ],
 ]
 
+const pushPermitted = isPermittedPush(cmd)
+
 for (const [pattern, reason] of alwaysDeny) {
+   if (pattern === pushPattern && pushPermitted) continue
    if (pattern.test(cmd)) deny(reason)
 }
 
