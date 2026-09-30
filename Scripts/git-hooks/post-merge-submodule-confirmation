@@ -3,47 +3,30 @@
 # Original source:
 #    <https://github.com/chaitanyagupta/gitutils/blob/master/submodule-hooks/post-merge-checkout>
 
-# Check if any submodule has been updated in HEAD after a merge (or
-# pull) or a branch checkout. If so, ask if user wants to run
-# git-submodule update.
-# --Chaitanya Gupta
+# After a merge (or pull) or branch checkout that moved any submodule's recorded commit, offer to
+# update just those; submodules deliberately checked out elsewhere aren't touched.
 
-SCRIPT_NAME=$(basename "$0")
+case "$(basename "$0")" in
+    post-checkout*)
+        # A file checkout, or HEAD didn't move
+        [[ "$3" = 0 || "$1" = "$2" ]] && exit 0
+        from=$1 to=$2 ;;
+    *)  from=ORIG_HEAD to=HEAD ;;
+esac
 
-# If run as a post-checkout script hook, and the previous and current
-# HEAD are the same or if its a file checkout, don't proceed
-if [[ "$SCRIPT_NAME" = "post-checkout" && "$1" = "$2" || "$3" = "0" ]]; then
+moved=$(git diff --raw --no-renames "$from" "$to" 2>/dev/null | awk -F'\t' '$1 ~ / 160000 / { print $2 }')
+[[ -z "$moved" ]] && exit 0
+
+echo "The following submodules have been updated in HEAD:"
+echo "$moved"
+echo -n "Update them? [y/N] "
+if ! read -r -n 1 reply 2>/dev/null </dev/tty; then
+    echo
+    echo "(No terminal. To update: git submodule update --init --" $moved ")"
     exit 0
 fi
-
-# Jump to the current project's root directory (the one containing
-# .git/)
-ROOT_DIR=$(git rev-parse --show-cdup)
-
-# Finding existing submodules that have been modified
-SUBMODULES=$(grep path ${ROOT_DIR}.gitmodules | sed 's/^.*path = //')
-MOD_SUBMODULES=$(git diff --name-only --ignore-submodules=dirty | grep -F "$SUBMODULES")
-
-# Find new submodules
-NEW_SUBMODULES=$(git submodule status | egrep '^-' | cut -f2 -d' ')
-
-# If no changed submodules, exit with status code 0, else prompt the
-# user and exit accordingly
-if [[ -n "$MOD_SUBMODULES" || -n "$NEW_SUBMODULES" ]]; then
-    echo "The following submodules have been updated in HEAD:"
-    if [[ -n "$MOD_SUBMODULES" ]]; then
-        echo "$MOD_SUBMODULES"
-    fi
-    if [[ -n "$NEW_SUBMODULES" ]]; then
-        echo "$NEW_SUBMODULES"
-    fi
-    echo -n "Update local submodules? [y/N] "
-    read -n 1 reply </dev/tty
-    echo
-    if [[ "$reply" == "y" || "$reply" == "Y" ]]; then
-        if [[ -n "$NEW_SUBMODULES" ]]; then
-            git submodule init
-        fi
-        git submodule update
-    fi
+echo
+if [[ "$reply" == "y" || "$reply" == "Y" ]]; then
+    IFS=$'\n'
+    git submodule update --init -- $moved
 fi
