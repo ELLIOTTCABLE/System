@@ -17,3 +17,6 @@ tags
 
 *.code-workspace
 .vscode/
+
+# The human's authorization for agent git autonomy (see the claude `commit` skill); never commit it.
+.human-authorizes-git-bypass

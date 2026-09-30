@@ -12,7 +12,7 @@
 //    <https://github.com/anthropics/claude-code/issues/48722> "PreToolUse 'if: Bash(foo*)' falsely matches Bash commands containing $()"
 //
 // 2026-07-19 relaxation (user-directed): in AUTONOMOUS MODE (ai/* branch, a
-// worktree-* branch under .claude/worktrees/, or a .claude-commit sentinel),
+// worktree-* branch under .claude/worktrees/, or a .human-authorizes-git-bypass sentinel),
 // branch-scoped reflog-recoverable surgery (rebase, merge, reset --hard, safe
 // branch-delete) is permitted — the user reviews-and-rebases AI branches anyway.
 // Irrecoverable or repo-global ops stay blocked everywhere: push (global law),
@@ -50,7 +50,7 @@ const sh = (args) => {
 const isAutonomous = () => {
    const root = sh("rev-parse --show-toplevel")
    const branch = sh("branch --show-current")
-   if (root && existsSync(`${root}/.claude-commit`)) return true
+   if (root && existsSync(`${root}/.human-authorizes-git-bypass`)) return true
    if (/^ai\//.test(branch)) return true
    // Claude worktrees are autonomous like ai/*, but require BOTH the dedicated
    // `worktree-*` branch AND a `.claude/worktrees/` path — neither signal alone suffices.
@@ -108,7 +108,7 @@ const alwaysDeny = [
 const interactiveOnlyDeny = [
    [
       git(/rebase\b/),
-      "git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or .claude-commit sentinel).",
+      "git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or .human-authorizes-git-bypass sentinel).",
    ],
    [git(/merge(?![\w-])/), "git merge reserved for the user outside autonomous mode."],
    [
@@ -135,7 +135,7 @@ if ((touchesInteractiveOnly || needsCommitGate) && !isAutonomous()) {
    if (needsCommitGate) {
       const branch = sh("branch --show-current")
       deny(
-         `git commit on '${branch}' (autonomous mode requires an ai/* branch, a worktree-* branch under .claude/worktrees/, or a .claude-commit sentinel). Produce the message and let the user run the commit.`,
+         `git commit on '${branch}' (autonomous mode requires an ai/* branch, a worktree-* branch under .claude/worktrees/, or a .human-authorizes-git-bypass sentinel). Produce the message and let the user run the commit.`,
       )
    }
 }
