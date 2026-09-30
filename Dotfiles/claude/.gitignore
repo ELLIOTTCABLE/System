@@ -3,12 +3,16 @@ keybindings.json
 
 daemon*
 
+**/research/*/sources/
+
 .credentials.json
 .last-cleanup
 .last-update-result.json
 history.jsonl
 mcp-needs-auth-cache.json
 stats-cache.json
+
+chrome/chrome-native-host.bat
 
 plugins/.last_inuse_sweep
 plugins/blocklist.json
@@ -21,7 +25,7 @@ plugins/data/
 plugins/marketplaces/
 plugins/synced/
 
-chrome/chrome-native-host.bat
+skills/synced/
 
 backups/
 cache/
