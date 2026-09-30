@@ -12,7 +12,8 @@
 //    <https://github.com/anthropics/claude-code/issues/48722> "PreToolUse 'if: Bash(foo*)' falsely matches Bash commands containing $()"
 //
 // 2026-07-19 relaxation (user-directed): in AUTONOMOUS MODE (ai/* branch, a
-// worktree-* branch under .claude/worktrees/, or a .human-authorizes-git-bypass sentinel),
+// worktree-* branch under .claude/worktrees/, or a human `date > .human-authorizes-git-bypass`
+// ack under two days old),
 // branch-scoped reflog-recoverable surgery (rebase, merge, reset --hard, safe
 // branch-delete) is permitted — the user reviews-and-rebases AI branches anyway.
 // Irrecoverable or repo-global ops stay blocked everywhere: push (global law),
@@ -47,15 +48,42 @@ const sh = (args) => {
    }
 }
 
-const isAutonomous = () => {
+const SENTINEL = ".human-authorizes-git-bypass"
+const HOUR_MS = 60 * 60 * 1000
+
+// The human acks with `date > .human-authorizes-git-bypass`, and the ack lapses after two days so a
+// forgotten sentinel can't grant autonomy indefinitely; a future date would never lapse. PowerShell's
+// `>` writes UTF-16, and V8 rejects zone abbreviations it doesn't know (CEST, BST), so retry without
+// the zone: a few hours of error don't matter against a two-day window.
+const sentinelProblem = (path) => {
+   let text
+   try {
+      const raw = readFileSync(path)
+      text = raw.toString(raw[0] === 0xff && raw[1] === 0xfe ? "utf16le" : "utf8").trim()
+   } catch {
+      return "is unreadable"
+   }
+   const stamp = Date.parse(text) || Date.parse(text.replace(/\s[A-Z]{2,5}(?=\s+\d{4}$)/, ""))
+   if (Number.isNaN(stamp)) return "holds no parseable date"
+   const age = Date.now() - stamp
+   if (age > 48 * HOUR_MS) return "is more than two days old"
+   if (age < -HOUR_MS) return "is dated in the future"
+   return null
+}
+
+// `note` explains a present-but-rejected sentinel; it's appended to deny reasons.
+const autonomy = () => {
    const root = sh("rev-parse --show-toplevel")
    const branch = sh("branch --show-current")
-   if (root && existsSync(`${root}/.human-authorizes-git-bypass`)) return true
-   if (/^ai\//.test(branch)) return true
+   if (/^ai\//.test(branch)) return { ok: true, note: "" }
    // Claude worktrees are autonomous like ai/*, but require BOTH the dedicated
    // `worktree-*` branch AND a `.claude/worktrees/` path — neither signal alone suffices.
-   if (/^worktree-/.test(branch) && root.includes("/.claude/worktrees/")) return true
-   return false
+   if (/^worktree-/.test(branch) && root.includes("/.claude/worktrees/")) return { ok: true, note: "" }
+   const sentinel = `${root}/${SENTINEL}`
+   if (!root || !existsSync(sentinel)) return { ok: false, note: "" }
+   const problem = sentinelProblem(sentinel)
+   if (!problem) return { ok: true, note: "" }
+   return { ok: false, note: ` ${SENTINEL} ${problem}; ask the human to re-ack with \`date > ${SENTINEL}\`.` }
 }
 
 // Global options may sit between `git` and the subcommand (`git -C <dir> push`), and a bare
@@ -108,7 +136,7 @@ const alwaysDeny = [
 const interactiveOnlyDeny = [
    [
       git(/rebase\b/),
-      "git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or .human-authorizes-git-bypass sentinel).",
+      `git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or a fresh ${SENTINEL} ack).`,
    ],
    [git(/merge(?![\w-])/), "git merge reserved for the user outside autonomous mode."],
    [
@@ -128,14 +156,15 @@ for (const [pattern, reason] of alwaysDeny) {
 const touchesInteractiveOnly = interactiveOnlyDeny.some(([pattern]) => pattern.test(cmd))
 const needsCommitGate = git(/commit\b/).test(cmd)
 
-if ((touchesInteractiveOnly || needsCommitGate) && !isAutonomous()) {
-   for (const [pattern, reason] of interactiveOnlyDeny) {
-      if (pattern.test(cmd)) deny(reason)
-   }
-   if (needsCommitGate) {
+if (touchesInteractiveOnly || needsCommitGate) {
+   const { ok, note } = autonomy()
+   if (!ok) {
+      for (const [pattern, reason] of interactiveOnlyDeny) {
+         if (pattern.test(cmd)) deny(reason + note)
+      }
       const branch = sh("branch --show-current")
       deny(
-         `git commit on '${branch}' (autonomous mode requires an ai/* branch, a worktree-* branch under .claude/worktrees/, or a .human-authorizes-git-bypass sentinel). Produce the message and let the user run the commit.`,
+         `git commit on '${branch}' (autonomous mode requires an ai/* branch, a worktree-* branch under .claude/worktrees/, or a ${SENTINEL} ack under two days old). Produce the message and let the user run the commit.${note}`,
       )
    }
 }

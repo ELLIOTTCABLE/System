@@ -16,9 +16,9 @@ The user runs in one of two 'modes'; check which is active *before* deciding whe
 
 **Mode is determined by:**
 1. Run `git branch --show-current` to get the active branch.
-2. Check for a `.human-authorizes-git-bypass` sentinel file at the repo root (`git rev-parse --show-toplevel`).
+2. Check for a `.human-authorizes-git-bypass` sentinel file at the repo root (`git rev-parse --show-toplevel`), and read the date it holds.
 
-**Autonomous mode** — the current branch matches `ai/*`, *or* it matches `worktree-*` with the repo root under `.claude/worktrees/` (a Claude-created worktree; both must hold), *or* a `.human-authorizes-git-bypass` sentinel exists at the repo root. That sentinel is the human's authorization alone: never create, touch, or delete it yourself. The user is using this branch as a working space and will review/rebase your commits later. → After authoring the message, **you may run `git commit` yourself.**
+**Autonomous mode** — the current branch matches `ai/*`, *or* it matches `worktree-*` with the repo root under `.claude/worktrees/` (a Claude-created worktree; both must hold), *or* a `.human-authorizes-git-bypass` sentinel at the repo root holds a date under two days old (the human acks with `date > .human-authorizes-git-bypass`). That sentinel is the human's authorization alone: never create, write, or delete it yourself; if it has lapsed, ask. The user is using this branch as a working space and will review/rebase your commits later. → After authoring the message, **you may run `git commit` yourself.**
 
 **Restricted mode (default)** — anything else. → Produce the commit message and the exact `git commit -m '...'` invocation; **do not execute it.** Present it to the user to run.
 
@@ -120,7 +120,7 @@ Brief, scannable, often telegraphic. Imperative ("Add", "Repair") where possible
 # Procedure
 
 1. Read what's about to commit: `git status`, `git diff --staged` (or `git diff` if not yet staged).
-2. **Determine the mode.** Run `git branch --show-current` and `git rev-parse --show-toplevel`, and check whether `.human-authorizes-git-bypass` exists at that root. Any autonomous-mode condition above puts you in autonomous mode; otherwise restricted.
+2. **Determine the mode.** Run `git branch --show-current` and `git rev-parse --show-toplevel`, and check whether `.human-authorizes-git-bypass` at that root holds a date under two days old. Any autonomous-mode condition above puts you in autonomous mode; otherwise restricted.
 3. If a `.gitlabels` exists in the repo root, read it for project-specific labels.
 4. Pick labels: at least one of `new`/`fix`/`re` (or `doc`/`meta`/`style`/`tests` for those categories), plus any qualifiers, plus `AI`.
 5. Write a brief description that complements — does not duplicate — the file list.
