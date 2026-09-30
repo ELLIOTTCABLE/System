@@ -5,6 +5,8 @@
 node_modules/
 .neon
 
+**/.claude-commit
+
 **/config.local
 **/*.local.json
 **/*.local.csv
