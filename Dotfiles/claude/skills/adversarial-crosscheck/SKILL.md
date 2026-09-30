@@ -1,15 +1,13 @@
 ---
 name: adversarial-crosscheck
 description: >-
-  Take a prompt or task the user is about to give Claude — especially a judgment they're invested
-  in ("is this plan sound?", "review my design", "should we adopt X?", "poke holes in this",
-  "am I fooling myself here?") — and run it through two opposing rewrites in clean contexts (a
-  neutralised pass and a disowned-and-inverted adversarial pass), then present both for the user
-  to reconcile. Use this whenever the user wants to pressure-test their own thinking, worries
-  they're being flattered or agreed-with, asks to "red-team", "cross-check", "steelman against",
-  or "sanity-check" something, or hands over work they clearly want to succeed and asks for an
-  honest assessment. It counters sycophancy by widening coverage — it does NOT produce a single
-  "unbiased" or "debiased" answer, and it deliberately refuses tasks it can't honestly automate.
+  UPON EXPLICIT REQUEST ONLY. Run a deliberately expensive neutral-and-adversarial crosscheck in independent clean contexts,
+  optionally across model lineages, and present both passes for the user to reconcile. Use only on an
+  explicit request for this methodology. Do NOT load
+  for routine requests for honest feedback, ordinary code/design review, local implementation choices,
+  ongoing stateful work, or merely because the user wants pushback or wants the work to succeed. This
+  widens coverage rather than producing an "unbiased" answer, and it refuses tasks that cannot be
+  cleanly crosschecked.
 ---
 
 # adversarial-crosscheck
