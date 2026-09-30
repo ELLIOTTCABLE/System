@@ -1,1 +1,1 @@
-/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/post_embedhtml.py
+../IPython-notebook-extensions/extensions/post_embedhtml.py

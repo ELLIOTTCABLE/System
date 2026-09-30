@@ -1,1 +1,1 @@
-/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/pre_collapsible_headings.py
+../IPython-notebook-extensions/extensions/pre_collapsible_headings.py

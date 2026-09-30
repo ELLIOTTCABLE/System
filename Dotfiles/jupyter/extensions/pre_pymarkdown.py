@@ -1,1 +1,1 @@
-/Users/ec/Library/Jupyter/IPython-notebook-extensions/extensions/pre_pymarkdown.py
+../IPython-notebook-extensions/extensions/pre_pymarkdown.py

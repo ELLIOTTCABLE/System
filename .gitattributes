@@ -3,3 +3,7 @@ bun.lock text eol=lf -diff
 
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
+
+# Git for Windows types each symlink by its target at checkout; these targets live in a submodule
+# that isn't populated yet at that point.
+Dotfiles/jupyter/nbextensions/* symlink=dir

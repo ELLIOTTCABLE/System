@@ -1,1 +1,1 @@
-/Users/ec/Library/Jupyter/IPython-notebook-extensions/templates/highlighter.tpl
+../IPython-notebook-extensions/templates/highlighter.tpl
