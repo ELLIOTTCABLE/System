@@ -11,6 +11,7 @@ winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id Mozilla.Firefox
 winget install -e --id Notion.Notion
 winget install -e --id RandyRants.SharpKeys
+winget install -e --id Syncthing.Syncthing # turn off 'built-in syncthing' in SyncthingTray
 winget install -e --id Yubico.Authenticator
 winget install -e --id glzr-io.glazewm
 winget install -e --id jdx.mise
