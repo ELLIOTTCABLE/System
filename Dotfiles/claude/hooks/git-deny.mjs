@@ -109,7 +109,7 @@ const interactiveOnlyDeny = [
       git(/rebase\b/),
       "git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or .claude-commit sentinel).",
    ],
-   [git(/merge\b/), "git merge reserved for the user outside autonomous mode."],
+   [git(/merge(?![\w-])/), "git merge reserved for the user outside autonomous mode."],
    [
       git(/reset\s+--hard\b/),
       "git reset --hard discards working state. Reserved for the user outside autonomous mode.",
