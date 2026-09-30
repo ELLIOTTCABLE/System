@@ -31,6 +31,8 @@ Session Storage/
 Shared Dictionary/
 VideoDecodeStats/
 WebStorage/
+agent-host/
+agentSessionData/
 databases/
 logs/
 shared_proto_db/
