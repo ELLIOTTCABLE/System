@@ -1,0 +1,9 @@
+agent/bin/*.exe
+agent/sessions/
+
+agent/auth.json
+agent/models-store.json
+agent/session-summary.json
+agent/trust.json
+
+web-search-cache/

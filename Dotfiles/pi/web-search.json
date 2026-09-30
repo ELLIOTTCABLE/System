@@ -1,0 +1,7 @@
+{
+   "fetch": {
+      "timeout": 30,
+      "answerProvider": "anthropic",
+      "answerModel": "claude-sonnet-5"
+   }
+}

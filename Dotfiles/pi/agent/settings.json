@@ -1,0 +1,47 @@
+{
+  "lastChangelogVersion": "0.87.1",
+  "theme": "dark",
+  "packages": [
+    "npm:@mjakl/pi-kagi-search",
+    "..\\..\\Sync\\Code\\Source\\pi-quotas",
+    "..\\..\\Sync\\Code\\Source\\pi-vim",
+    "npm:pi-vim",
+    "npm:@championswimmer/pi-speedometer",
+    "npm:@tintinweb/pi-subagents",
+    "npm:pi-web-access",
+    "npm:pi-mcp-adapter",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-session-summary",
+    "npm:pi-effort"
+  ],
+  "enabledModels": [
+    "anthropic/claude-fable-5",
+    "anthropic/claude-opus-5-5",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-haiku-4-5",
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-terra",
+    "openai-codex/gpt-5.6-luna",
+    "openai-codex/gpt-6-astra",
+    "opencode-go/kimi-k3"
+  ],
+  "compaction": {
+    "enabled": false
+  },
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "transport": "auto",
+  "showCacheMissNotices": true,
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
+  "doubleEscapeAction": "none",
+  "warnings": {
+    "anthropicExtraUsage": false
+  },
+  "hideThinkingBlock": false,
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6-astra"
+}

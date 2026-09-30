@@ -1,0 +1,26 @@
+{
+   "providers": {
+      "anthropic": {
+         "baseUrl": "http://127.0.0.1:3456",
+         "apiKey": "x",
+         "headers": {
+            "x-meridian-agent": "pi"
+         }
+      },
+      "openai-codex": {
+         "modelOverrides": {
+            "gpt-6-astra": { "contextWindow": 920000 },
+            "gpt-5.6-sol": { "contextWindow": 920000 },
+            "gpt-5.6-terra": { "contextWindow": 920000 },
+            "gpt-5.6-luna": { "contextWindow": 920000 }
+         }
+      },
+      "opencode-go": {
+         "modelOverrides": {
+            "kimi-k3": {
+               "thinkingLevelMap": { "low": "low", "high": "high" }
+            }
+         }
+      }
+   }
+}
