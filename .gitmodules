@@ -110,3 +110,6 @@
 [submodule "Infrastructure/Vendor/HTSALSWA"]
 	path = Infrastructure/Vendor/HTSALSWA
 	url = https://github.com/ELLIOTTCABLE/How-To-Secure-A-Linux-Server-With-Ansible.git
+[submodule "Dotfiles/claude/skills/asd-ste100"]
+	path = Dotfiles/claude/skills/asd-ste100
+	url = https://github.com/danyuchn/asd-ste100-skill.git
