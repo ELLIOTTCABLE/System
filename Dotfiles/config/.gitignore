@@ -44,6 +44,10 @@ coc/suggest.txt
 
 neonctl/credentials.json
 
+# platform-specific hardcoded value; see plugins.example.json
+meridian/plugins.json
+meridian/sdk-features.json
+
 colima/_store
 colima/_lima
 colima/ssh_config

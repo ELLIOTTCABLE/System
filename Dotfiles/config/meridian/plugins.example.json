@@ -1,0 +1,6 @@
+// this needs to be an absolute path, and thus must be created per-platform. /=
+{
+  "plugins": [
+    { "path": "C:\\Users\\ec\\.config\\meridian\\node_modules\\@rynfar\\meridian-plugin-pi-scrub\\dist\\index.js", "enabled": true }
+  ]
+}
