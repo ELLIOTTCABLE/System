@@ -1,7 +1,7 @@
 ---
 name: foreign-models
 description: >-
-   Dispatch a foreign (non-Anthropic) model as a subagent — OpenAI Codex/GPT-5.6-Sol, DeepSeek V4-Pro,
+   UPON REQUEST ONLY. Dispatch a foreign (non-Anthropic) model as a subagent — OpenAI Codex/GPT-5.6-Sol, DeepSeek V4-Pro,
    or Google Antigravity — either as a write-authorized agentic worker in a worktree or a read-only
    reviewer. Codex and DeepSeek explore, edit when authorized, and self-report; Antigravity is a
    single-packet headless reviewer. Use when you (the conductor) want to offload agentic work to another
