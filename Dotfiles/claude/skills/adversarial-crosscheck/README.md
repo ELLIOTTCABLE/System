@@ -1,27 +1,51 @@
 # adversarial-crosscheck
 
-Use this to explore the regions of your problem that machine-learning RLHF
-sycophancy ([Sharma et al., 2023][A-sharma-sycophancy]; [PDF][sharma-pdf])
-blinds a model to.
+Use this to explore the regions of your problem that machine-learning sycophancy
+([Sharma et al., 2023][A-sharma-sycophancy]; [PDF][sharma-pdf])
 
-**Please understand:** This skill does not, and *can not*, find the truth.
-Truth-calibration is not attainable ([Wilson & Brekke, 1994][A-wilson-brekke-1994],
+> fun fact, I'd personally attributed that to RLHF; but Messrs. Sharma
+> attributes it to a variety of factors, and shows it present *even before
+> explicit human-reinforcement*. Mysterious pretraining artifact!)
+
+**Please understand:** This skill does not, and almost certainly *can not*, find
+the truth. Self-driven bias-correction provides *very* limited and inconsistent
+drive towards absolute-truth (as opposed to either undercorrection or
+overcorrection - [Wilson & Brekke, 1994][A-wilson-brekke-1994],
 [PDF][wilson-pdf]; [Wegener & Petty, 1997][A-wegener-petty-fcm-1997],
-[PDF][wegener-pdf]) by vapid devil's-advocacy ([Nemeth et al., 2001][A-nemeth-2001];
-[PDF][nemeth-pdf]) - this is a real, reproduced-in-the-literature impossibility.
-This skill, despite the naming, exists to *find new angles on a problem, to
-ensure it's been fully explored* ([Schwenk, 1990][A-schwenk-1990],
-[PDF][schwenk-pdf]; [Lord et al., 1984][A-lord-lepper-preston-1984],
-[PDF][lord-pdf]) - not to answer the core questions your problem poses.
+[PDF][wegener-pdf]); especially when it's vapid devil's-advocacy performed by a
+colleague/compatriot ([Nemeth et al., 2001][A-nemeth-2001]; [PDF][nemeth-pdf].)
+This is a real, reproduced-in-the-literature limitation. This skill, despite the
+naming, exists to *find new angles on a problem, to ensure it's been fully
+explored* ([Lord et al., 1984][A-lord-lepper-preston-1984]; [PDF][lord-pdf]) -
+not to answer the core questions your problem poses.
 
-(In fact, the *opposite* has been weakly shown - again, [Nemeth][A-nemeth-2001]
-- at least when humans attempt this upon themselves. It's somewhat arguable that
-using this skill might *reduce* the overall truth-value you attain, if you're
-not careful.)
+(In fact, the *opposite* has been weakly shown (a later [follow-up by Nemeth et
+al., 2001][B-nemeth-connell-2001]; [PDF][nemeth-connell-pdf]) - at least when
+humans attempt this amongst themselves. It's somewhat arguable that using this
+skill might *reduce* the overall truth-value you attain, if you're not careful;
+the reasoning being that it will convince you you've "done your due diligence",
+and any remaining, surviving bias you have is *strengthened* by surviving that
+wilted cross-check.)
 
-**Those are real, human-checked citations;** please click them. They're about how
-*you* will fail, they are old, and they are well-studied; this is not
-AI-generated slop, and it *will* bite you.
+However, despite that, structured opposition *can* make your conclusions richer
+and better ([Schwenk, 1990][A-schwenk-1990]; [PDF][schwenk-pdf]), so it's worth
+trying nonetheless.
+
+Hence, this skill.
+
+> **Those are real, human-checked citations;** please click them. They're about
+> how *you* will fail, they are old, and they are well-studied; this is not
+> AI-generated slop, and it *will* bite you.
+>
+> However, to be clear, research is thin or non-existent on this *exact*
+> approach; my style here is a synthesis of those findings, but I cannot show it
+> effective. (Want to sponsor some research, lol?)
+>
+> In particular, it's an open question, as far as I can see, as to whether an
+> adversarially-prompted agent functions closer to a 'vapid compatriot' as
+> above, or closer to 'authentic dissent'. My (potentially unearned) suspicion
+> is that it's somewhere in-between; and may both depend heavily on the user's
+> opinions on LLMs *and* how, precisely, they're prompted.
 
 ----
 
@@ -145,6 +169,8 @@ The full argument and citations are in `METHODOLOGY.md` (slop-formatted, though,
    [wegener-pdf]: <https://richardepetty.com/wp-content/uploads/2019/01/1997-advances-fcm-wegener-petty-2.pdf> "open PDF, author-hosted, for Wegener & Petty"
    [A-nemeth-2001]: <https://doi.org/10.1002/ejsp.58> "Nemeth, Brown & Rogers (2001), 'Devil's Advocate versus Authentic Dissent: Stimulating Quantity and Quality'. European Journal of Social Psychology 31(6), pp. 707–720"
    [nemeth-pdf]: <https://sci-hub.st/10.1002/ejsp.58> "sci-hub page for Nemeth, Brown & Rogers"
+   [B-nemeth-connell-2001]: <https://doi.org/10.1111/j.1559-1816.2001.tb02481.x> "Nemeth, Connell, Rogers & Brown (2001), 'Improving Decision Making by Means of Dissent'. Journal of Applied Social Psychology 31(1), pp. 48–58"
+   [nemeth-connell-pdf]: <https://sci-hub.st/10.1111/j.1559-1816.2001.tb02481.x> "sci-hub page for Nemeth, Connell, Rogers & Brown"
    [A-schwenk-1990]: <https://doi.org/10.1016/0749-5978(90)90051-A> "Schwenk (1990), 'Effects of Devil's Advocacy and Dialectical Inquiry on Decision Making: A Meta-Analysis.' Organizational Behavior and Human Decision Processes 47(1), pp. 161–176"
    [schwenk-pdf]: <https://sci-hub.st/10.1016/0749-5978(90)90051-A> "sci-hub page for Schwenk"
    [A-lord-lepper-preston-1984]: <https://doi.org/10.1037/0022-3514.47.6.1231> "Lord, Lepper & Preston (1984), 'Considering the Opposite: A Corrective Strategy for Social Judgment.' Journal of Personality and Social Psychology 47(6), pp. 1231–1243"
