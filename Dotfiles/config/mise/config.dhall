@@ -55,9 +55,16 @@ let tools-to-keep-updated =
       , "dotnet"
       , "github:joevt/AllRez"
       , "go"
+      , "jq"
+      , "npm:@moonshot-ai/kimi-code"
+      , "npm:@openai/codex"
+      , "npm:@tobilu/qmd"
+      , "opencode"
+      , "pi"
       , "ruby"
       , "usage"
       , "uv"
+      , "vultr-cli"
       , "yamlfmt"
       ]
 
@@ -136,7 +143,30 @@ let -- Tools whose mise config is a table rather than a bare version
               , field "version_list_url" (str "${claude-base}/latest")
               ]
           )
+      , field
+          "gemini-cli"
+          ( json.object
+              [ field "version" (str "latest")
+              , field
+                  "allow_builds"
+                  (json.array [ str "@github/keytar", str "node-pty" ])
+              ]
+          )
+      , field
+          "npm:@rynfar/meridian"
+          ( json.object
+              [ field "version" (str "latest")
+              , field "allow_builds" (json.bool True)
+              ]
+          )
+      , field
+          "ocv"
+          ( json.object
+              [ field "version" (str "latest"), field "rename_exe" (str "ocv") ]
+          )
       ]
+
+let tool_alias = { ocv = "github:leohenon/opencode-vim" }
 
 let simple-tools =
       Prelude.List.map
@@ -171,4 +201,4 @@ let settings =
         }
       }
 
-in  { plugins, tools, env, settings }
+in  { plugins, tools, tool_alias, env, settings }
