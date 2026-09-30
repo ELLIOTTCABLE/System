@@ -1,7 +1,17 @@
 ---
 name: interactive-research
-description: Deep, source-graded investigation for substantial questions — casts a wide net of primary sources, grades each for quality and relevance, and works from the graded base instead of guessing. A good default for most questions worth more than a snap answer: tool/library/architecture choices, approach tradeoffs, trustworthiness or maintenance judgments, root-causing unfamiliar behaviour, or any "which way and why" that rewards real evidence.
-when_to_use: Load whenever a question rewards evidence over recall — substantial decisions, investigations into why something behaves as it does, or most any research-shaped task. Expensive by design (many sources, much grading, many tool-calls); the user stops it when that's more than the question needs. Skip only for truly trivial lookups.
+description: >-
+  USE UPON EXPLICIT REQUEST ONLY. Deep, source-graded investigation for substantial questions —
+  casts a wide net of primary sources, grades each for quality and relevance, and works from the
+  graded base instead of guessing. A good default for most questions worth more than a snap
+  answer: tool/library/architecture choices, approach tradeoffs, trustworthiness or maintenance
+  judgments, root-causing unfamiliar behaviour, or any "which way and why" that rewards real
+  evidence.
+when_to_use: >-
+  Load whenever a question rewards evidence over recall — substantial decisions, investigations
+  into why something behaves as it does, or most any research-shaped task. Expensive by design
+  (many sources, much grading, many tool-calls); the user stops it when that's more than the
+  question needs. Skip only for truly trivial lookups.
 ---
 
 # Building a graded source-base: find, triage, grade
