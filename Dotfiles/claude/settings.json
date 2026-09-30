@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$j=[Console]::In.ReadToEnd()|ConvertFrom-Json; $cmd=$j.tool_input.command; $blocked=@('\\bgit\\s+push\\b','\\bgit\\s+rebase\\b','\\bgit\\s+merge\\b','\\bgit\\s+reset\\s+--hard\\b','\\bgit\\s+clean\\s+-[a-zA-Z]*f','\\bgit\\s+branch\\s+(-D|-d|--delete)\\b','\\bgit\\s+stash\\s+(drop|clear)\\b','\\bgit\\s+tag\\s+(-d|--delete)\\b','\\bgit\\s+filter-branch\\b','\\bgit\\s+filter-repo\\b','\\bgit\\s+update-ref\\b'); foreach($p in $blocked){ if($cmd -match $p){ [Console]::Error.WriteLine('Blocked: mutative git operation reserved for the user.'); exit 2 } }; if($cmd -match '(?i)\\bgit\\s+commit\\b'){ $root=(git rev-parse --show-toplevel 2>$null); $branch=(git branch --show-current 2>$null); if((Test-Path \"$root/.claude-commit\") -or ($branch -match '^ai/')){exit 0}; [Console]::Error.WriteLine(\"Blocked: git commit on '$branch' (requires ai/* branch or .claude-commit sentinel).\"); exit 2 }",
+            "command": "node \"$HOME/.claude/hooks/git-deny.mjs\"; exit $LASTEXITCODE",
             "shell": "powershell"
           }
         ]
