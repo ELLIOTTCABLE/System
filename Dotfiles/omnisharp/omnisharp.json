@@ -1,4 +1,7 @@
 // vim: ft=jsonc
+// This file churns constantly; I advise:
+//
+//     git update-index --assume-unchanged Dotfiles/omnisharp/omnisharp.json
 {
    // Byeeeee, bitch. Getchur Microsoft-flavour out muh mouth.
    "FormattingOptions": {
