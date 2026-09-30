@@ -71,26 +71,29 @@ let tools-to-keep-updated =
 let slow-tools = [ "purescript" ]
 
 let -- fd and hk stopped publishing x86_64-apple-darwin binaries; Intel macs
-    -- build from crates.io instead (whose crate name can differ: fd → fd-find)
+    -- build from crates.io instead (whose crate name can differ: fd → fd-find).
+    -- Pin a version when no release at all has Intel-mac builds (hk): mise still
+    -- resolves `latest` for a tool its `os` filter excludes, and warns every run.
     cargo-on-intel-mac =
       \(tool : Text) ->
       \(crate : Text) ->
+      \(version : Text) ->
         [ field
             tool
             ( json.object
-                [ field "version" (str "latest")
+                [ field "version" (str version)
                 , field
                     "os"
                     ( json.array
-                        [ str "windows", str "linux", str "darwin/arm64" ]
+                        [ str "windows", str "linux", str "macos/arm64" ]
                     )
                 ]
             )
         , field
             "cargo:${crate}"
             ( json.object
-                [ field "version" (str "latest")
-                , field "os" (json.array [ str "darwin/amd64" ])
+                [ field "version" (str version)
+                , field "os" (json.array [ str "macos/x64" ])
                 ]
             )
         ]
@@ -182,8 +185,8 @@ let tools =
       json.object
         (   simple-tools
           # structured-tools
-          # cargo-on-intel-mac "hk" "hk"
-          # cargo-on-intel-mac "fd" "fd-find"
+          # cargo-on-intel-mac "hk" "hk" "1.53.0"
+          # cargo-on-intel-mac "fd" "fd-find" "latest"
         )
 
 let xdg-config = "{{ get_env(name='XDG_CONFIG_HOME', default='~/.config') }}"

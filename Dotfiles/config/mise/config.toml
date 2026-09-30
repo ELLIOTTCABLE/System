@@ -38,12 +38,12 @@ vultr-cli = "latest"
 yamlfmt = "latest"
 
 [tools."cargo:fd-find"]
-os = ["darwin/amd64"]
+os = ["macos/x64"]
 version = "latest"
 
 [tools."cargo:hk"]
-os = ["darwin/amd64"]
-version = "latest"
+os = ["macos/x64"]
+version = "1.53.0"
 
 [tools.claude-code]
 bin = "claude"
@@ -56,7 +56,7 @@ bin = "claude.exe"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/{{ version }}/win32-x64/claude.exe"
 
 [tools.fd]
-os = ["windows", "linux", "darwin/arm64"]
+os = ["windows", "linux", "macos/arm64"]
 version = "latest"
 
 [tools.gemini-cli]
@@ -64,8 +64,8 @@ allow_builds = ["@github/keytar", "node-pty"]
 version = "latest"
 
 [tools.hk]
-os = ["windows", "linux", "darwin/arm64"]
-version = "latest"
+os = ["windows", "linux", "macos/arm64"]
+version = "1.53.0"
 
 [tools.lua]
 os = ["linux", "macos"]
