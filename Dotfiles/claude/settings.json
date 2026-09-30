@@ -1,6 +1,5 @@
 {
   "env": {
-    "CLAUDE_CODE_EFFORT_LEVEL": "max",
     "MISE_AUTO_INSTALL": "false"
   },
   "permissions": {
@@ -24,10 +23,15 @@
       "WebFetch(domain:neon.tech)",
       "WebFetch(domain:neon.com)",
       "Read(//c/Users/ec/.claude/skills/prompt-review/**)",
-      "Read(//c/Users/ec/System/Dotfiles/claude/skills/prompt-review/**)"
+      "Read(C:/Users/ec/.claude/skills/prompt-review/**)",
+      "Read(//c/Users/ec/System/Dotfiles/claude/skills/prompt-review/**)",
+      "Read(C:/Users/ec/System/Dotfiles/claude/skills/prompt-review/**)",
+      "Bash(ds-review *)",
+      "Bash(C:/Users/ec/.claude/bin/ds-review *)"
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -52,6 +56,13 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "workflowKeywordTriggerEnabled": false,
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
       "source": {
@@ -66,14 +77,24 @@
       }
     }
   },
+  "effortLevel": "xhigh",
   "promptSuggestionEnabled": false,
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.138",
+  "askUserQuestionTimeout": "10m",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "editorMode": "vim",
   "verbose": true,
+  "autoCompactEnabled": false,
+  "precomputeCompactionEnabled": true,
+  "switchModelsOnFlag": false,
   "remoteControlAtStartup": true,
-  "inputNeededNotifEnabled": false,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
+  }
 }
