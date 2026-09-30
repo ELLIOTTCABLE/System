@@ -9,3 +9,13 @@ bun = "1"
 jq = "latest"
 python = "3"
 uv = "latest"
+
+# For Dotfiles/bin/dhall-to-toml-via-yq; drop along with Dhall. It needs
+# kislyuk's jq-wrapping `yq` for `--toml-output`; the registry's bare `yq` is
+# mikefarah's.
+[tools."pipx:yq"]
+version = "latest"
+
+[tools."github:dhall-lang/dhall-haskell"]
+version = "latest"
+matching = "dhall-json"
