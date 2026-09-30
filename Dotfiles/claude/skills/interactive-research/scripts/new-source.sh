@@ -22,6 +22,21 @@ set -eu
 die() { printf 'new-source: %s\n' "$*" >&2; exit 1; }
 matches() { printf '%s\n' "$1" | grep -Eq -- "$2"; }
 
+# The manifest is read-modify-write, and parallel research lanes register concurrently. mkdir is
+# the one atomic primitive that works on msys, WSL, and macOS alike. The lock covers ONLY the
+# manifest append (never the download), so one slow fetch cannot stall every other registrant.
+lock=""
+manifest_lock() {
+   lock="$1/.manifest.lock"; waited=0
+   until mkdir "$lock" 2>/dev/null; do
+      waited=$((waited + 1))
+      [ "$waited" -lt 120 ] || die "manifest lock held for 120s: $lock (stale from a killed run? rmdir it)"
+      sleep 1
+   done
+   trap 'manifest_unlock' EXIT
+}
+manifest_unlock() { [ -n "$lock" ] && rmdir "$lock" 2>/dev/null; lock=""; }
+
 if ! command -v jq >/dev/null 2>&1 && command -v mise >/dev/null 2>&1 && [ -z "${_IR_VIA_MISE:-}" ]; then
    exec env _IR_VIA_MISE=1 mise exec -- sh "$0" "$@"
 fi
@@ -79,7 +94,7 @@ if [ -n "$artifact_in" ]; then
 else
    acquired=url
    tmp=$(mktemp); trap 'rm -f "$tmp"' EXIT
-   curl -fsSL --retry 2 "$url" > "$tmp" || die "download failed: $url"
+   curl -fsSL --retry 2 --max-time 120 "$url" > "$tmp" || die "download failed: $url"
    [ -s "$tmp" ] || die "downloaded nothing from $url"
    case "$(head -c 4 "$tmp")" in
       %PDF) ext=pdf ;;
@@ -111,7 +126,11 @@ full=$(printf '%s' "$entry" | jq --arg r "$(date +%F)" --arg sha "$sha" --arg ac
 }')
 
 out="$src.tmp"
+manifest_lock "$dir"
+# Re-check under the lock: another registrant may have landed this slug since the check above.
+[ "$(jq -r --arg s "$slug" 'has($s)' "$src")" = false ] || die "slug '$slug' was registered concurrently (append-only)"
 jq --arg s "$slug" --argjson e "$full" '.[$s] = $e' "$src" > "$out" && mv "$out" "$src"
+manifest_unlock
 
 jq -n --arg s "$slug" --argjson e "$full" '{($s): $e}'
 printf 'new-source: archived %s (%s)\n' "$artifact" "$acquired" >&2
