@@ -273,7 +273,7 @@ case "$SYSTEM" in
 esac
 
 # This is a *horrible* hack to get ahold of the default `$OPAM_SWITCH_PREFIX`.
-eval "$(head -n2 ~/.opam/opam-init/variables.sh)"
+eval "$(head -n2 ~/.opam/opam-init/variables.sh 2>/dev/null)"
 
 # $PATH setup
 # ===========
