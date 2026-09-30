@@ -58,9 +58,12 @@ const isAutonomous = () => {
 }
 
 // Global options may sit between `git` and the subcommand (`git -C <dir> push`), and a bare
-// `git\s+push` misses every such spelling.
-const pushPattern =
-   /\bgit(?:\s+(?:-[Cc]\s+(?:"[^"]*"|'[^']*'|\S+)|--[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?|-[a-zA-Z]))*\s+push\b/
+// `git\s+<subcommand>` misses every such spelling.
+const globalOpts =
+   /(?:\s+(?:-[Cc]\s+(?:"[^"]*"|'[^']*'|\S+)|--[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?|-[a-zA-Z]))*/.source
+const git = (subcommand) => new RegExp(`\\bgit${globalOpts}\\s+${subcommand.source}`)
+
+const pushPattern = git(/push\b/)
 
 // Anchored at both ends, so no second command can ride along; no `+` refspec, no
 // `--all`/`--tags`/`--mirror`/`--delete`, no URL remotes. Group 1 is the lease's ref, group 2 the
@@ -79,51 +82,39 @@ const alwaysDeny = [
       "git push reserved for the user; remote state is not Claude-managed (the one exception: an ai/* branch onto an ai/* remote branch, unforced or leased on the destination, remote and both refs spelled in full).",
    ],
    [
-      /\bgit\s+stash\s+drop\b/,
+      git(/stash\s+drop\b/),
       "git stash drop loses stashed work (the stash stack is shared across worktrees). Reserved for the user.",
    ],
    [
-      /\bgit\s+stash\s+clear\b/,
+      git(/stash\s+clear\b/),
       "git stash clear loses all stashed work (the stash stack is shared across worktrees). Reserved for the user.",
    ],
    [
-      /\bgit\s+clean\s+-[a-zA-Z]*f/,
+      git(/clean\s+-[a-zA-Z]*f/),
       "git clean -f discards untracked files (no reflog can recover them). Reserved for the user.",
    ],
    [
-      /\bgit\s+branch\s+-D\b/,
+      git(/branch\s+-D\b/),
       "git branch -D force-deletes branches and their reflogs. Reserved for the user.",
    ],
-   [/\bgit\s+tag\s+-d\b/, "git tag -d reserved for the user (tags are repo-global)."],
-   [
-      /\bgit\s+tag\s+--delete\b/,
-      "git tag --delete reserved for the user (tags are repo-global).",
-   ],
-   [
-      /\bgit\s+filter-branch\b/,
-      "git filter-branch rewrites repo-wide history. Reserved for the user.",
-   ],
-   [
-      /\bgit\s+filter-repo\b/,
-      "git filter-repo rewrites repo-wide history. Reserved for the user.",
-   ],
-   [/\bgit\s+update-ref\b/, "git update-ref is raw ref surgery. Reserved for the user."],
+   [git(/tag\s+-d\b/), "git tag -d reserved for the user (tags are repo-global)."],
+   [git(/tag\s+--delete\b/), "git tag --delete reserved for the user (tags are repo-global)."],
+   [git(/filter-branch\b/), "git filter-branch rewrites repo-wide history. Reserved for the user."],
+   [git(/filter-repo\b/), "git filter-repo rewrites repo-wide history. Reserved for the user."],
+   [git(/update-ref\b/), "git update-ref is raw ref surgery. Reserved for the user."],
 ]
 
 const interactiveOnlyDeny = [
    [
-      /\bgit\s+rebase\b/,
+      git(/rebase\b/),
       "git rebase reserved for the user outside autonomous mode (ai/* branch, worktree, or .claude-commit sentinel).",
    ],
-   [/\bgit\s+merge\b/, "git merge reserved for the user outside autonomous mode."],
+   [git(/merge\b/), "git merge reserved for the user outside autonomous mode."],
    [
-      /\bgit\s+reset\s+--hard\b/,
+      git(/reset\s+--hard\b/),
       "git reset --hard discards working state. Reserved for the user outside autonomous mode.",
    ],
-   [
-      /\bgit\s+branch\s+(-d|--delete)\b/,
-      "git branch deletion reserved for the user outside autonomous mode.",
-   ],
+   [git(/branch\s+(-d|--delete)\b/), "git branch deletion reserved for the user outside autonomous mode."],
 ]
 
 const pushPermitted = isPermittedPush(cmd)
@@ -134,7 +125,7 @@ for (const [pattern, reason] of alwaysDeny) {
 }
 
 const touchesInteractiveOnly = interactiveOnlyDeny.some(([pattern]) => pattern.test(cmd))
-const needsCommitGate = /\bgit\s+commit\b/.test(cmd)
+const needsCommitGate = git(/commit\b/).test(cmd)
 
 if ((touchesInteractiveOnly || needsCommitGate) && !isAutonomous()) {
    for (const [pattern, reason] of interactiveOnlyDeny) {
