@@ -1,0 +1,414 @@
+{
+  "_meta": {
+    "topic": "decision-grounding-prior-art (stage-1 survey, ephemeral)",
+    "retrieved-all": "2026-06-01",
+    "sha256-status": "DEFERRED to stage-3. Per the user-scoped ephemeral stage-1, raw-source collection into sources/ and tool-generated sha256 happen in the public skill build (stage 3), where the prompt mandates them. sha256 is null here rather than fabricated.",
+    "grade-convention": "letter grade is the slug's first letter (A best .. F worst); reflects SOURCE trustworthiness, not the acid-test verdict (the verdict for bucket-(b) systems is in relevance-description).",
+    "qc-flags": "Several primaries un-extractable/robots/paywall-blocked; recovered via mirrors/secondaries (noted per-entry). Resolve before any SKILL-verbatim citation: klein-roodman body, heuer, rand, gallie (keystone), chang body, basili-gqm, kitchenham-ebse."
+  },
+
+  "A-reference-hallucination-dr": {
+    "url": "https://arxiv.org/html/2604.03173v1",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "rigorous empirical measurement (221k+ URLs, bootstrap CIs, conservative lower-bound def, adversarial self-audit); headline numbers re-verified in main context",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "best quantitative evidence that the deep-research-agent class fails the ground-truth-anchor leg; vindicates 'no-URL=hallucination' discipline; the paper itself PASSES the acid test",
+    "published": "2026-04-03", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(deep-research) + main-context-verify"
+  },
+  "B-deep-research-agents-survey": {
+    "url": "https://arxiv.org/html/2506.18096v1",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "comprehensive taxonomy/survey (40+ systems), honest about limits; relies partly on vendor marketing for closed systems (flagged)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "canonical map of what the DR-agent class does; its §6 benchmark-misalignment critique is the key contribution; verdict: class is science-shaped-prose",
+    "published": "2025-06-24", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(deep-research)"
+  },
+  "B-openai-deep-research": {
+    "url": "https://openai.com/index/introducing-deep-research/",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party primary about its own product; trustworthy re: behavior, but promotional",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "canonical exemplar; 'pivoting as needed in reaction to information' = adaptive plan = inverse of pre-registration; verdict science-shaped-prose",
+    "published": "2025-02-02", "retrieved": "2026-06-01", "sha256": null,
+    "via": "subagent(deep-research)"
+  },
+  "B-gemini-deep-research": {
+    "url": "https://ai.google.dev/gemini-api/docs/interactions/deep-research",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party API docs; behavior explicit in the API surface",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "'collaborative planning' is the closest any vendor comes to frame-definition, but stops at scoping; verdict science-shaped-prose",
+    "published": "2026 (preview docs)", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(deep-research)"
+  },
+  "B-perplexity-deep-research": {
+    "url": "https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party announcement; promotional",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "'refining its research plan as it learns' = the anti-pattern; weakest scoping of the three; verdict science-shaped-prose",
+    "published": "2025-02-14", "retrieved": "2026-06-01", "sha256": null,
+    "via": "subagent(deep-research)"
+  },
+  "B-sakana-ai-scientist": {
+    "url": "https://sakana.ai/ai-scientist/",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party + GitHub READMEs (read directly via octocode); trustworthy re: what the system does, promotional re: significance",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "success metric = 'passes our automated reviewer'; v2 ships k_fold_validation/expose_prediction but DISABLED; verdict science-shaped-prose",
+    "published": "2024-08-13", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(sakana)"
+  },
+  "A-sakana-ai-scientist-critique": {
+    "url": "https://arxiv.org/html/2502.14297v1",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "independent empirical eval, reproducible (repo+container), honest about n=1-domain scope; authors are AI-optimists so negative findings disconfirm their own priors",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "worked example of the discipline our skill wants (ran it against a known-correct baseline, caught 'impossible' inflated result); verdict forces-rigor",
+    "published": "2025-02-20", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(sakana)"
+  },
+  "B-sakana-first-publication": {
+    "url": "https://sakana.ai/ai-scientist-first-publication/",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party but unusually candid disclosure (IRB, withdrawal protocol, internal review)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "the 'peer-reviewed' headline = 1/3 accepted at a 60-70%-accept ICLR workshop, no meta-review, withdrawn by design; team itself said none passed conference bar",
+    "published": "2025-03-12", "retrieved": "2026-06-01", "sha256": null,
+    "via": "subagent(sakana)"
+  },
+  "B-google-coscientist-arxiv": {
+    "url": "https://arxiv.org/abs/2502.18864",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "detailed 81pp technical preprint, read in full via ar5iv; honest — repeatedly self-flags the Elo limitation",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "self-improvement optimizes an Elo 'not based on independent ground truth'; 'learning without back-propagation' = prompt-appending; thin real wet-lab layer; verdict partial→science-shaped-prose",
+    "published": "2025-02-26", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(coscientist)"
+  },
+  "B-google-coscientist-blog": {
+    "url": "https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party blog; promotional, defers heavy claims to other papers",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "states Elo 'is an auto-evaluation and is not based on an independent ground truth'; AlphaGo analogy misleading (Go has hard reward; hypothesis debate does not)",
+    "published": "2025-02-19", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(coscientist)"
+  },
+  "C-google-coscientist-nature": {
+    "url": "https://www.nature.com/articles/s41586-026-10644-y",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "peer-reviewed, but body PAYWALLED and NOT read; graded from abstract + arXiv twin only",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "peer review NARROWED the abstract to foreground only AML as in-vitro validated; Nature ran companion editorial 'Why AI cannot do good science without humans'",
+    "published": "2026-05-19", "retrieved": "2026-06-01", "sha256": null,
+    "via": "subagent(coscientist) — paywall noted, not fabricated"
+  },
+  "B-react": {
+    "url": "https://arxiv.org/abs/2210.03629",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "ICLR 2023 primary; read abstract+method+eval",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "the one reasoning pattern with a genuine EXTERNAL anchor (real retrieval/environment); but no pre-commit, no adversary; verdict partial",
+    "published": "2023 (ICLR)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "C-reflexion": {
+    "url": "https://arxiv.org/abs/2303.11366",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "NeurIPS 2023 primary",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "external-anchored ONLY when evaluator is a real compiler/test; reduces to self-critique otherwise; authors admit 'no formal guarantee'; verdict partial",
+    "published": "2023 (NeurIPS)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "C-cove": {
+    "url": "https://arxiv.org/abs/2309.11495",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "primary; read full method+results",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "'the model is used to check its own work'; post-hoc verification of an already-drafted answer; factored-context-decorrelation is the one useful trick; verdict reasoning-shaped-prose",
+    "published": "2023", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "D-self-consistency": {
+    "url": "https://arxiv.org/abs/2203.11171",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "ICLR 2023 primary, but as epistemic-rigor evidence it self-incriminates",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "consistency != correctness; authors concede the model 'cannot distinguish well between correct and wrong solutions'; verdict reasoning-shaped-prose",
+    "published": "2023 (ICLR)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "C-tree-of-thoughts": {
+    "url": "https://arxiv.org/abs/2305.10601",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "NeurIPS 2023 primary",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "LLM self-evaluation steering; gives the 'define a search frame up front' idea; wins ride on intrinsically-checkable toy tasks; verdict partial→reasoning-shaped-prose",
+    "published": "2023 (NeurIPS)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "A-potemkin-understanding": {
+    "url": "https://arxiv.org/abs/2506.21521",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "ICML 2025; formal framework + two empirical procedures w/ contamination-resistant gold; read in full",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "theoretical backbone of form-vs-substance: 94.2% correct definitions but 0.40-0.55 mis-application, 22% self-incoherence => self-verification cannot certify correctness; verdict forces-rigor",
+    "published": "2025 (ICML)", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(reasoning-patterns)"
+  },
+  "A-leaderboard-illusion": {
+    "url": "https://arxiv.org/abs/2504.20879",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "NeurIPS 2025 D&B; abstract+proceedings line read, full 68pp not exhaustively read",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "hard evidence of Goodhart/benchmark-gaming (private testing, selective retraction, +112% arena-overfit); grounds 'benchmark wins overstate capability'",
+    "published": "2025 (NeurIPS D&B)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(reasoning-patterns)"
+  },
+  "D-generalcompute-reasoning-cost": {
+    "url": "https://www.generalcompute.com/blog/react-reflexion-and-chain-of-thought-the-inference-cost-of-reasoning-patterns",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "vendor blog, post-cutoff (2026-05), author/provenance unverifiable, illustrative not measured numbers",
+    "relevance-certainty": "-1:GUESS",
+    "relevance-description": "off-axis (inference COST not epistemics); one useful corollary: gate self-critique on an external signal. QUARANTINE",
+    "published": "2026-05-10", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(reasoning-patterns)"
+  },
+  "A-anthropic-agent-skills": {
+    "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "first-party canonical docs for the artifact format we build (SKILL.md/progressive disclosure)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "says ~nothing on epistemic rigor; 'build evaluations first' validates the artifact not the decision; exemplar analysis skill is a bare prose checklist (house style = prose scaffold)",
+    "published": "2025-10 (+ ongoing)", "retrieved": "2026-06-01", "sha256": null,
+    "via": "kagi-phase0 + subagent(agent-skills); also anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills + .../best-practices"
+  },
+  "A-mythos-skill": {
+    "url": "https://github.com/filipdopita-tech/mythos-skill",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "community skill read in full; sophisticated but bilingual-CZ, security-tuned, fictional-persona framing dents credibility",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "NEAREST NEIGHBOUR overall: reference-class base rates + ACH matrix + calibrated confidence + anti-laundering ('absence of evidence != evidence', 'strongest H != confirmed H'); but self-run adversary, no refuse-by-type, anchor is a prior not a gold set",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "B-idea-evaluation-skill": {
+    "url": "https://github.com/dvy1987/agent-loom",
+    "grading-certainty": "-0:SUSPECT", "grading-reasoning": "community skill read in full",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "cleanest pre-registered kill-thresholds: 'State what specific evidence would falsify the GO decision within 90 days'; adversarial step optional+in-context; no separate-context check",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "B-redteaming-analysis-skill": {
+    "url": "https://github.com/alexander-newton/anacatalyst",
+    "grading-certainty": "-0:SUSPECT", "grading-reasoning": "community skill read in full; ports IC/Heuer canon faithfully",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "most mature adversarial skill: 'must survive a hostile reading by someone with the same evidence and a different prior'; but post-hoc, SAME context, no anchor; NB it ports the empirically-unvalidated SAT tradition",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "C-llm-council-skill": {
+    "url": "https://github.com/aiwithremy/claude-skills-llm-council",
+    "grading-certainty": "-0:SUSPECT", "grading-reasoning": "popular community skill (375*), read in full",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "anonymized peer-review kills positional bias (real bias-control) but all in-session, same model, no anchor; the 'decision' skill our artifact will most be compared to; verdict partial",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "C-superpowers-skills": {
+    "url": "https://github.com/obra/superpowers",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "well-engineered skill collection, read several SKILL.md in full",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "verification-before-completion (C), systematic-debugging (C+, 'Form Single Hypothesis... Write it down'), requesting-code-review (C, context-isolated SUB-AGENT 'never your session's history' = nearest analogue to separate-context, but programmatic not human-run)",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "B-solve-skill": {
+    "url": "https://github.com/magidandrew/claude-solve-skill",
+    "grading-certainty": "-0:SUSPECT", "grading-reasoning": "community skill read in full",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "genuine falsification discipline: 'form a falsifiable working hypothesis... include the cheapest experiment that would disprove it'; no anchor, no independent adversary; verdict partial",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+  "D-claude-pm-skills": {
+    "url": "https://github.com/pratikshadake/claude-product-management-skills",
+    "grading-certainty": "-0:SUSPECT", "grading-reasoning": "community skill set, sampled",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "has the VOCABULARY of pre-registration (experiment-design hypothesis/decision-rule; outcome-definition baseline) but ~15-line templates with zero enforcement; verdict prose-scaffold",
+    "published": "2025 (repo)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(agent-skills) octocode"
+  },
+
+  "A-platt-strong-inference": {
+    "url": "https://www.science.org/doi/10.1126/science.146.3642.347",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "Science 1964 classic; full clean text recovered (official WHOI/Harvard PDFs are scans => garbage; used Duke mirror courses.cs.duke.edu/cps296.2/fall04/science_platt.html)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "survey keystone: alternative hypotheses + crucial-experiment-to-exclude + 'what experiment could disprove your hypothesis?'; written for a cross-disciplinary audience",
+    "published": "1964", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(pre-commitment) [mirror: Duke]"
+  },
+  "A-chamberlin-multiple-hypotheses": {
+    "url": "https://www.science.org/doi/10.1126/science.148.3671.754",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "1890/1897 classic; full clean text (official PDF=scan; used judithcurry.com reprint, cross-checked vs Platt's embedded quotes)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "origin of 'family of hypotheses'; names the enemy — 'parental affection' for a theory => 'ruling theory'; 'pressing the facts to make them fit the theory'",
+    "published": "1890 (Science o.s.); 1897 (J.Geology); 1965 (Science reprint)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(pre-commitment) [mirror: judithcurry]"
+  },
+  "A-cos-preregistration": {
+    "url": "https://www.cos.io/initiatives/prereg",
+    "grading-certainty": "+1:SURE", "grading-reasoning": "canonical first-party resource for the practice; clean HTML",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "most operationalized 'commit before data'; 'the same data cannot be used to generate and test a hypothesis'; 'a plan, not a prison'; decision-tree + split-sample tactics are engineer-usable",
+    "published": "living resource", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(pre-commitment)"
+  },
+  "A-nosek-preregistration-revolution": {
+    "url": "https://www.pnas.org/doi/10.1073/pnas.1708274114",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "PNAS 2018, peer-reviewed; clean article-of-record (PMC mirror CAPTCHA-blocked)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "modern synthesis hub; enumerates the cross-disciplinary synonyms (exploratory/confirmatory, discovery/justification, prediction/postdiction) and cites Gelman-Loken",
+    "published": "2018", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(pre-commitment) [mirror: pnas.org]"
+  },
+  "B-klein-roodman-blind-analysis": {
+    "url": "https://www.slac.stanford.edu/pubs/slacpubs/12000/slac-pub-12051.pdf",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "Annu.Rev.Nucl.Part.Sci. 2005 peer-reviewed (A-quality source) BUT body PDF would not decompress in any tool; abstract verbatim, body PARAPHRASE only => can't claim a verified read",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "cleanest independent (physics) reinvention; most engineer-shaped tactic — hidden offset / sealed signal box; fix cuts while BLIND, unblind once frozen. QC: re-extract before SKILL-verbatim cite",
+    "published": "2005", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(pre-commitment) [arXiv physics/0312102 is the shorter precursor]"
+  },
+  "A-gelman-loken-forking-paths": {
+    "url": "https://sites.stat.columbia.edu/gelman/research/unpublished/p_hacking.pdf",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "widely-cited WORKING PAPER (not peer-reviewed journal); two canonical lines verbatim via index + corroborated by Nosek's quotation; PDF body extraction failed",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "the structural WHY pre-commitment beats good intentions: 'researcher degrees of freedom do not feel like degrees of freedom because, conditional on the data, each choice appears deterministic'",
+    "published": "2013/2014 (working paper)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(pre-commitment)"
+  },
+  "B-tukey-eda": {
+    "url": "https://en.wikipedia.org/wiki/John_Tukey",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "SECONDARY (Tukey 1977 EDA book not online); EDA/CDA attribution uncontroversial",
+    "relevance-certainty": "-0:SUSPECT",
+    "relevance-description": "supplies the exploratory-vs-confirmatory VOCABULARY later sources inherit; note Tukey was DEFENDING exploration — the bias-control framing is downstream",
+    "published": "primary 1962/1977; secondary current", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(pre-commitment)"
+  },
+
+  "A-heuer-psych-intel": {
+    "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "foundational primary (CIA 1999) but PDF is image/binary — NOT read directly; ACH procedure + quotes from corroborating secondaries (Wikipedia, Davis foreword)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "defines ACH; Heuer concedes awareness of bias 'does little by itself to help' (undercuts the awareness-debiasing rationale while asserting the procedure helps, without proof). QC: read primary",
+    "published": "1999", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(bias-control) [secondaries]"
+  },
+  "B-cia-tradecraft-primer": {
+    "url": "https://www.cia.gov/resources/csi/static/Tradecraft-Primer-apr09.pdf",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "first-party doctrine (CIA 2009); primary PDF un-extractable, key line quoted verbatim via Chang(2018) n.63 (a hostile witness, which raises confidence in accuracy)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "self-hedge: techniques are 'no guarantee of analytic precision or accuracy of judgments', only improve 'sophistication and credibility' — the issuing body declines to claim accuracy",
+    "published": "2009-03", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(bias-control) [via Chang n.63]"
+  },
+  "A-rand-sat-assessment": {
+    "url": "https://www.rand.org/pubs/research_reports/RR1408.html",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "RAND 2017, quality-assured; rand.org robots-blocked (not bypassed) => report read via Kagi summary + search snippets, NOT primary",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "commissioned BECAUSE SAT validation is absent; argues for building an eval program. WARNING: 'no evidence they reduce biases' is a Semantic-Scholar PARAPHRASE, not verified RAND text — do not quote as RAND",
+    "published": "2017", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(bias-control) [Kagi summary; robots-blocked]"
+  },
+  "A-chang-restructuring-sats": {
+    "url": "https://www.tandfonline.com/doi/full/10.1080/02684527.2017.1400230",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "peer-reviewed (Inman award), top JDM authors; abstract verbatim but BODY paywalled — beyond-abstract claims read via Dhami's citations, not primary",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "strongest scholarly non-validation: 'SATs have not been subject to sustained scientific testing of the sort that could reveal when they are helping or harming'; decomposition 'may add noise'",
+    "published": "2018 (online 2017)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(bias-control) [open preprint: hsdl.org docid=804875]"
+  },
+  "A-dhami-ach-rct": {
+    "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/acp.3550",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "OPEN ACCESS RCT; read in full by subagent AND re-verified in main context (Table 1 + Summary + §5.1.5)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "DECISIVE self-critique evidence: ACH no accuracy gain (36% vs 33%), 'may increase judgement inconsistency and error', base-rate use 12% vs 52% (p=.002), only 20% performed ACH's defining step; 'consider alternatives'",
+    "published": "2019", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(bias-control) + main-context-verify [not on original target list — subagent-added]"
+  },
+
+  "A-snowden-cynefin": {
+    "url": "https://hbr.org/2007/11/a-leaders-framework-for-decision-making",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "canonical HBR 2007; body paywalled, domain verbs quoted verbatim via citation-anchored Wikipedia reproduction (matches PubMed abstract PMID 18159787)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "router spine: match method to clear/complicated/complex/chaotic; complex = 'cause and effect can only be deduced in retrospect, no right answers'; disorder = 'break down and assign to the other four' (= the router)",
+    "published": "2007-11", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(routing) [via Wikipedia]"
+  },
+  "A-amazon-one-way-door": {
+    "url": "https://aws.amazon.com/executive-insights/content/how-amazon-defines-and-operationalizes-a-day-1-culture/",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "first-party (AWS) operationalization of Bezos shareholder letters; clean HTML; commercial source",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "rigor dial: irreversible(one-way)=deep analysis; reversible(two-way)=act on ~70% of data ('waiting for 90%... moving too slow'); A/B test = canonical two-way door",
+    "published": "n/a (concept from 2015/2016 letters)", "retrieved": "2026-06-01", "sha256": null, "via": "kagi-phase0 + subagent(routing)"
+  },
+  "A-gallie-essentially-contested": {
+    "url": "https://www.jstor.org/stable/4544562",
+    "grading-certainty": "-1:GUESS",
+    "grading-reasoning": "1956 Aristotelian Society classic; BOTH primary PDF (Columbia) and Collier review (Berkeley) un-extractable; phrase corroborated across 5 secondaries but primary NOT read",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "values/NOT-MEASURABLE anchor: disputes 'not resolvable by argument'; contestation at the CORE; + discriminator checklist (catachresis/homonymy/resolvable?) to avoid over-refusing. KEYSTONE — QC: read primary (doi:10.1093/aristotelian/56.1.167) before SKILL cite",
+    "published": "1956", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(routing) [secondaries]"
+  },
+  "A-mchugh-kappa": {
+    "url": "https://www.biochemia-medica.com/en/journal/22/3/10.11613/BM.2012.031",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "peer-reviewed methods paper; clean publisher HTML (PMC mirror CAPTCHA-blocked)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "operational gate for 'low agreement => not measurable': kappa<0.60 inadequate ('half the data may be incorrect'); >=30 comparisons; caveat kappa can UNDER-state => report kappa AND % agreement, don't over-refuse",
+    "published": "2012-10-15", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(routing) [publisher mirror]"
+  },
+  "A-hammerton-munafo-causal": {
+    "url": "https://www.cambridge.org/core/journals/psychological-medicine/article/causal-inference-with-observational-data-the-need-for-triangulation-of-evidence/AF5F7918753DF50F26B1D49561F0DF83",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "peer-reviewed OA; clean publisher HTML (body truncated mid-design-methods, but the causal-underdetermination argument fully captured)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "causal REFUSE anchor: individual causal effects unidentifiable from observational data (missing-data problem); 'No single study or method... can provide a definite answer to a causal question'; escape hatch = needs DESIGN",
+    "published": "2021-03-08", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(routing) [Cambridge mirror]"
+  },
+  "A-ganann-rapid-reviews": {
+    "url": "https://implementationscience.biomedcentral.com/articles/10.1186/1748-5908-5-56",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "peer-reviewed OA, 2010 (field has since standardized further); clean HTML",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "already-answered anchor: time-boxed synthesis legit IF methods stated + conclusions interim + DON'T drop quality assessment (costliest shortcut); priority quality > breadth",
+    "published": "2010-07-19", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(routing) [BMC mirror]"
+  },
+
+  "A-hubbard-measure-anything": {
+    "url": "https://www.lesswrong.com/posts/ybYBCK9D7MZCcdArB/how-to-measure-anything",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "faithful long-form SUMMARY (full-book PDFs are pirated => deliberately avoided per legal/clean-room); primary book not read",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "estimation protocol: measurement=uncertainty reduction; 5-step AIE (define->calibrated 90% CIs->VoI->measure highest-VoI->decide); Fermi decompose; Rule of Five; calibration trainability corroborated by GJP",
+    "published": "summary 2013; book 2007", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(estimation) [legit summary only]"
+  },
+  "A-gjp-superforecasting": {
+    "url": "https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project/",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "careful secondary citing Mellers et al. 2015 w/ page numbers; corroborated by fs.blog Ten Commandments",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "THE one RCT-backed leg: 1-hr training improved accuracy, persisted >=1yr; aggregate beat control >60%, beat classified analysts 25-30%; skill is a trait (0.65 yr-over-yr); reference-class forecasting = highest-yield. Limit: geopolitical, months-2yr horizon",
+    "published": "c.2019 (page); 2015 (book); 2011-2015 (tournament)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(estimation)"
+  },
+  "B-basili-gqm": {
+    "url": "https://www.cs.umd.edu/~mvz/handouts/gqm.pdf",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "primary author PDF but un-extractable (FlateDecode); content via Kagi summarizer + Wikipedia (mutually consistent)",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "engineer bridge: top-down Goal->Question->Metric; only collect data that answers a question serving a goal. Methodology, never RCT'd",
+    "published": "1994", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(estimation) [summary + Wikipedia]"
+  },
+  "B-kitchenham-ebse": {
+    "url": "https://web-backend.simula.no/sites/default/files/publications/SE.5.Kitchenham.2004.pdf",
+    "grading-certainty": "-0:SUSPECT",
+    "grading-reasoning": "ICSE 2004 paper + book preview (preview PDF image-encoded, un-extractable); 5-step + SLR corroborated across paper/slides/EBP source",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "engineer bridge: the 'Five A's' (Ask/Acquire/Appraise/Apply/Assess) from evidence-based medicine; SLR cornerstone; SE evidence weaker than medicine (skill/lifecycle factors, no Cochrane)",
+    "published": "2004 (paper); 2015 (book)", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(estimation)"
+  },
+  "A-shadish-cook-campbell-validity": {
+    "url": "https://link.springer.com/article/10.1007/s12564-024-09955-4",
+    "grading-certainty": "+1:SURE",
+    "grading-reasoning": "peer-reviewed 2024 primer; clean HTML; verbatim canonical definitions + worked checks",
+    "relevance-certainty": "+1:SURE",
+    "relevance-description": "transferable validity checklist: statistical-conclusion / internal / construct / external — 4 one-line checks for any grounding result. Durable classification, not an effect-size intervention",
+    "published": "2024-03-30 (primer); SCC 2002", "retrieved": "2026-06-01", "sha256": null, "via": "subagent(estimation)"
+  }
+}
