@@ -42,7 +42,19 @@ When you do need a git mutation, use the modern delineated commands rather than 
 
 `git switch` refuses to clobber uncommitted changes by default, which matches the user's safety preferences. The old `git checkout` made branch-switching and file-discarding share a verb; avoid the ambiguity entirely.
 
-## Format
+## When to commit
+
+I prefer 'granular committing'. Your training will greatly resist this; do not yield.
+
+In particular, **stop** before reaching for patch-add or `git add -- single-path.ext`. (These are not verboten, you may use them, but they're a signal that you're about to behave wrongly.)
+
+You *should not* be attempting to form 'whole' or 'logical' commits that present complete work. The goal is instead for your commit-history to show an *honest accounting of your work*: decisions that changed direction; surprising bugs hit; additional work you decided to undertake after reviewing your own work, and the like.
+
+Do not use `--no-verify`, ever; situations where your local tooling is broken should be raised to the human - but if the project provides one, a *focused* way to intentionally commit broken code should be used (i.e. a `BROKEN=true` env-flag for its pre-commit tooling, or similar.) If the project doesn't allow non-compiling commits, then you may relax this rule *just* far enough to reach a compiling state that pre-commit will swallow.
+
+Your most-honest and most-useful git-history-output will be a chronological ledger of your work, your dead-ends, and your mistakes. That's *valuable*, not noise; as it's the precise surface a reviewer will use to understand your work and your choices.
+
+# Message format
 
 ```
 (lbl1 lbl2 ...) Do thing to code
@@ -55,10 +67,8 @@ Labels should be sourced from `.gitlabels` in the repo, if present; or `git log 
 ## Importance markers
 
 - *no importance marker* — normal commit. **This is the default for AI commits.**
-- `(-)` — minor / unimportant (typo, README touchup, single small ignore-add). Combined with substantive labels: `(- doc fix)`, `(- meta new)`.
+- `(-)` — minor / unimportant (typo, README touchup, single small ignore-add). Combined with substantive labels: `(- AI doc fix)`, `(- AI meta new)`.
 - `(!!)` — major / widespread / "landing a huge refactor". Rare.
-
-You will almost never produce a `(-)` commit (those are usually tiny tweaks the user usually does manually; AIs tend to land all work at once) or a `(!!)` commit (those are sweeping landings that can't be safely broken into standalone work-units; the user drives these).
 
 ## The mandatory `AI` label
 
@@ -94,7 +104,7 @@ Most commits use one or two of these. **At least one of `new`, `fix`, or `re` sh
 
 For project-specific labels (e.g. `nsib`, `VSC`, `MLm`, `Mac`, `Win`, `FF ext`, `dsgn`, `prsr`, `lex`, `JSintf`, `reactor`): **read the project's `.gitlabels` file** before committing in any project that has one. Use existing project labels rather than inventing new ones. If no `.gitlabels` exists, best to stick to the core labels above or ones you can find in the git-history that are clearly relevant to your work.
 
-Aim for 2-3 labels inc `(AI)`, 4 at most.
+Aim for 3-4 labels inc `(AI)`, 5 at most.
 
 ## Voice
 
@@ -107,7 +117,7 @@ Brief, scannable, often telegraphic. Imperative ("Add", "Repair") where possible
 - **Ceremony words.** "This commit", "introduces", "adds support for". Drop them.
 - **Prose bodies.** Almost never warranted.
 
-## Procedure
+# Procedure
 
 1. Read what's about to commit: `git status`, `git diff --staged` (or `git diff` if not yet staged).
 2. **Determine the mode.** Run `git branch --show-current` and check whether `.claude-commit` exists at the repo root. Either condition (matching branch pattern or sentinel file present) puts you in autonomous mode; otherwise restricted.
