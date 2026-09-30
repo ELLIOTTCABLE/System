@@ -17,11 +17,16 @@ inkscape/
 karabiner/assets
 karabiner/automatic_backups
 keybase/
-raycast*/config.json
-raycast*/extensions
 swiftpm/
 wireshark/
 yarn/link/
+
+raycast*/extensions/
+raycast*/node-compile-cache/
+
+# only contains secrets?
+raycast*/aster-endpoint.json
+raycast*/config.json
 
 # what a stupid name -_-
 software/
