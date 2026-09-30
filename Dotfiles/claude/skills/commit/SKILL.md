@@ -1,6 +1,6 @@
 ---
 name: commit
-description: The user's idiosyncratic commit-message style — `(label1 label2) terse message` with the mandatory `AI` tag for AI-authored commits, using the `.gitlabels` convention. Two-mode operation — autonomous-commit on `ai/*` branches (or with a `.claude-commit` sentinel), message-only on others. Read whenever drafting a commit message, staging a commit, or finishing a chunk of work that will produce a commit.
+description: The user's idiosyncratic commit-message style — `(label1 label2) terse message` with the mandatory `AI` tag for AI-authored commits, using the `.gitlabels` convention. Two-mode operation — autonomous-commit on `ai/*` branches (or in a Claude worktree, or with a `.claude-commit` sentinel), message-only on others. Read whenever drafting a commit message, staging a commit, or finishing a chunk of work that will produce a commit.
 when_to_use: Load when the user asks to "commit", "make a commit", "stage and commit", "wrap this up", or otherwise signals a commit is imminent; or when deciding to make commits during an autonomous chunk of work.
 ---
 
@@ -18,7 +18,7 @@ The user runs in one of two 'modes'; check which is active *before* deciding whe
 1. Run `git branch --show-current` to get the active branch.
 2. Check for a `.claude-commit` sentinel file at the repo root (`git rev-parse --show-toplevel`).
 
-**Autonomous mode** — the current branch matches `ai/*`, *or* a `.claude-commit` sentinel exists at the repo root. The user is using this branch as a working space and will review/rebase your commits later. → After authoring the message, **you may run `git commit` yourself.**
+**Autonomous mode** — the current branch matches `ai/*`, *or* it matches `worktree-*` with the repo root under `.claude/worktrees/` (a Claude-created worktree; both must hold), *or* a `.claude-commit` sentinel exists at the repo root. The user is using this branch as a working space and will review/rebase your commits later. → After authoring the message, **you may run `git commit` yourself.**
 
 **Restricted mode (default)** — anything else. → Produce the commit message and the exact `git commit -m '...'` invocation; **do not execute it.** Present it to the user to run.
 
@@ -120,7 +120,7 @@ Brief, scannable, often telegraphic. Imperative ("Add", "Repair") where possible
 # Procedure
 
 1. Read what's about to commit: `git status`, `git diff --staged` (or `git diff` if not yet staged).
-2. **Determine the mode.** Run `git branch --show-current` and check whether `.claude-commit` exists at the repo root. Either condition (matching branch pattern or sentinel file present) puts you in autonomous mode; otherwise restricted.
+2. **Determine the mode.** Run `git branch --show-current` and `git rev-parse --show-toplevel`, and check whether `.claude-commit` exists at that root. Any autonomous-mode condition above puts you in autonomous mode; otherwise restricted.
 3. If a `.gitlabels` exists in the repo root, read it for project-specific labels.
 4. Pick labels: at least one of `new`/`fix`/`re` (or `doc`/`meta`/`style`/`tests` for those categories), plus any qualifiers, plus `AI`.
 5. Write a brief description that complements — does not duplicate — the file list.

@@ -101,7 +101,7 @@ report — that's what `log/` is for.
 ### 4. Apply per session mode
 
 - interactive: present proposed edits; let the user accept individually
-- autonomous (`ai/*` branch or `.claude-commit` sentinel): apply
+- autonomous (the `commit` skill's autonomous mode): apply
   directly, but include the citations in the final report so the user
   can audit during rebase
 

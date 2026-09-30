@@ -114,9 +114,9 @@ AI-authored commits); the foreign shims append the commit skill to the model's p
 
 Two enablers make worker SELF-commit actually work — without them the model dumps *suggested* commits
 into its final message and commits nothing (observed on both foreign lanes):
-- **Autonomous-commit sentinel.** Harness worker branches are `worktree-agent-*`, NOT `ai/`-prefixed, so
-  the commit skill defaults to message-only mode. The shim `touch`es a `.claude-commit` sentinel in the
-  worktree to switch it into autonomous-commit mode (untracked scratch; never staged).
+- **Autonomous mode from the worktree.** Harness worker branches are `worktree-agent-*` under
+  `.claude/worktrees/`, which the commit skill (and the git-deny hook) already treat as autonomous — no
+  sentinel needed.
 - **Writable gitdir (Windows Codex).** A linked worktree's real gitdir is at `<main>/.git/worktrees/<name>`,
   OUTSIDE the worktree — the Codex sandbox can't write its `index.lock` there and fails every commit. The
   shim ACL-grants the sandbox users write to the gitdir too, not just the worktree.
@@ -152,7 +152,7 @@ neither of the two forbidden paths; abort if not (an un-isolated shim running a 
 shared tree once reset the human's main checkout). Then base the worktree: if HEAD already equals <SHA>
 do nothing, else `git switch -C <its-branch> <SHA>` — NEVER `git reset --hard` (the git-deny hook blocks
 it, reserved for the human; a blocked reset also signals you may be in the wrong tree). Then AUTHORIZE —
-`mise trust`, the Windows codex `icacls` grant on worktree AND gitdir, the `.claude-commit` sentinel
+`mise trust` and the Windows codex `icacls` grant on worktree AND gitdir
 (the conductor states the desired end-state; the shim does the tool-calls); (2) extract the one section
 between `=== DISPATCH: <key> …` and `=== END DISPATCH: <key> ===`, verbatim, to a tempfile (or stdin),
 and ASSERT it is non-empty (its key matched) — abort if the section is missing rather than falling back
@@ -320,7 +320,7 @@ each gets its own worktree/branch. Conventions:
   `git reset --hard` is blocked by the git-deny hook (reserved for the human) — and a shim that skips the
   self-check and resets an un-isolated tree is exactly what once clobbered the human's main checkout.
 - **Workers self-commit granularly; the shim only backstops.** The worker commits its own work as it
-  goes, enabled by the `.claude-commit` sentinel + (Windows Codex) the gitdir ACL grant (see "Worker
+  goes, enabled by the worktree's autonomous mode + (Windows Codex) the gitdir ACL grant (see "Worker
   commit discipline"). The shim commits on the worker's behalf ONLY as a last resort when self-commit
   still failed — and prepends that failure to its return. `ds-write` restricted mode is the common
   last-resort case; native Fable always self-commits.

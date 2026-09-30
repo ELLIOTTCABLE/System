@@ -26,7 +26,7 @@ Steps:
    b. Point it at the base: if `git rev-parse HEAD` already equals <SHA>, do nothing; else `git switch -C "$(git branch --show-current)" <SHA>`. NEVER `git reset --hard` — the repo's git-deny hook blocks it (it is reserved for the human), and a blocked reset is itself a sign you may be in the wrong tree.
 2. Authorize the worktree AND its gitdir, and enable autonomous commits — all fail-soft, IGNORE errors:
    - `mise trust .config/mise.toml` if one is present.
-   - `touch .claude-commit` — the worker branch is not `ai/`-prefixed, so WITHOUT this sentinel the `commit` skill stays in message-only mode and Codex hands back *suggested* commits instead of committing. (Untracked scratch; never stage it.)
+   - No sentinel needed: the `worktree-agent-*` branch under `.claude/worktrees/` already puts the `commit` skill in autonomous mode, so Codex commits rather than handing back *suggested* commits.
    - Native Windows only: ACL-grant the Codex sandbox users write access to BOTH the worktree AND its linked gitdir. A linked worktree's real gitdir sits at `<main>/.git/worktrees/<name>`, OUTSIDE the worktree — without this grant Codex hits `index.lock: Permission denied` and CANNOT self-commit. Use Windows-style paths (NOT `$(pwd)`, whose POSIX form icacls can't parse):
      `WT="$(cygpath -w "$(pwd)")"; GD="$(cygpath -w "$(git rev-parse --git-dir)")"`
      `MSYS_NO_PATHCONV=1 icacls "$WT" /grant "CodexSandboxOffline:(OI)(CI)(M)" /grant "CodexSandboxOnline:(OI)(CI)(M)"`
