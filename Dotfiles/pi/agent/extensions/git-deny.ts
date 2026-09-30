@@ -10,13 +10,18 @@ export default function (pi: ExtensionAPI) {
    pi.on("tool_call", async (event, ctx) => {
       if (event.toolName !== "bash" && event.toolName !== "powershell") return undefined
       const command = event.input.command as string
-      const r = spawnSync(process.execPath, [hook], {
+      // Not process.execPath: a compiled pi binary (Bun) is its own execPath, and would start a
+      // nested pi session with the hook's input as its prompt.
+      const r = spawnSync("node", [hook], {
          cwd: ctx.cwd,
          input: JSON.stringify({ tool_input: { command } }),
          encoding: "utf8",
       })
       if (r.status === 2) return { block: true, reason: r.stderr.trim() }
-      if (r.status !== 0) ctx.ui.notify(`git-deny hook failed (exit ${r.status}); command not checked`, "warning")
+      if (r.status !== 0) {
+         const why = r.error ? r.error.message : `exit ${r.status}: ${r.stderr.trim()}`
+         ctx.ui.notify(`git-deny hook failed (${why}); command not checked`, "warning")
+      }
       return undefined
    })
 }
