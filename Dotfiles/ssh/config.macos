@@ -1,0 +1,3 @@
+ControlMaster auto
+ControlPath ~/.ssh/controls/%r@%h:%p.sock
+ControlPersist 30

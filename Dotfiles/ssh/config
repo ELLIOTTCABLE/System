@@ -1,3 +1,4 @@
+IgnoreUnknown UseKeychain
 Include /Users/ec/.config/colima/ssh_config
 
 HashKnownHosts yes
@@ -8,9 +9,8 @@ Compression yes
 # Binary transparency
 EscapeChar none
 
-ControlMaster auto
-ControlPath ~/.ssh/controls/%r@%h:%p.sock
-ControlPersist 30
+Match exec "test -d /Library"
+   Include config.macos
 
 Host *
    UseKeychain yes
