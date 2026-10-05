@@ -91,6 +91,13 @@ test("conditional reads are never batched, and are inlined only when likely and 
    assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=7)`])
 })
 
+test("an unlikely conditional read stays un-inlined even where inlining is cheap, to spare the context window", () => {
+   const call = `read(path="${short}") when: the human asks about X`
+   const { output } = expand(`${call}\n`, { pickupPath: pickup })
+
+   assert.equal(output, `${call}\n`)
+})
+
 test("indented lines below a read annotate it, and its inlined result follows them", () => {
    const conditional = `Read(file_path="${long}", offset=1, limit=300)`
    const mandatory = `Read(file_path="${short}", offset=1, limit=2)`

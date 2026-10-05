@@ -9,7 +9,6 @@ const DEFAULT_PRICE = { output: 5, cacheRead: 0.1, cacheWrite5m: 1.25 }
 // 1h cache writes bill 2x input, 5m ones 1.25x; pi's store lists 5m
 const ONE_HOUR_WRITE_FACTOR = 2 / 1.25
 const DEFAULT_HORIZON_REQUESTS = 150
-const CONTEXT_AT_CONDITIONAL_READ = 400_000
 const DEFAULT_CONDITIONAL_LIKELIHOOD = 0.3
 const CHARS_PER_TOKEN = 4
 // tool-use id and block, plus result wrapper, beyond the call's visible text
@@ -238,8 +237,8 @@ const tokens = (text: string) => Math.ceil(text.length / CHARS_PER_TOKEN)
 
 type Price = { output: number; cacheRead: number; cacheWrite: number }
 
-// content is carried either way; inlining adds page line numbers, issuing adds the call (paid as
-// output, then carried) and, for a conditional read, one more request
+// mandatory: content is carried either way, so page line numbers weigh against the call (paid as
+// output, then carried). conditional: an unneeded read wastes context window, which outweighs price
 function cheaperInlined(
    call: ReadCall,
    body: string[],
@@ -248,14 +247,12 @@ function cheaperInlined(
    price: Price,
    horizon: number,
 ): boolean {
-   const carried = price.cacheWrite + price.cacheRead * horizon
    const callTokens = tokens(call.text) + CALL_FRAMING_TOKENS
-   const inlined = (tokens(result.join("\n")) + result.length * harness.lineNumberTokens) * carried
-   const issued =
-      callTokens * price.output +
-      (callTokens + tokens(body.join("\n"))) * carried +
-      (call.conditional ? price.cacheRead * CONTEXT_AT_CONDITIONAL_READ : 0)
-   return inlined < call.likelihood * issued
+   const inlinedTokens = tokens(result.join("\n")) + result.length * harness.lineNumberTokens
+   const issuedTokens = callTokens + tokens(body.join("\n"))
+   if (call.conditional) return inlinedTokens < call.likelihood * issuedTokens
+   const carried = price.cacheWrite + price.cacheRead * horizon
+   return inlinedTokens * carried < callTokens * price.output + issuedTokens * carried
 }
 
 type Decision = { inline?: string[]; warning?: string }
