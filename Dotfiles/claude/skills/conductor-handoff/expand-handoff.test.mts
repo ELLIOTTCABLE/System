@@ -9,10 +9,12 @@ const dir = mkdtempSync(join(tmpdir(), "expand-handoff-"))
 const numberedLines = (count: number) => Array.from({ length: count }, (_, i) => `line ${i + 1}`).join("\n") + "\n"
 const short = join(dir, "short.md")
 const long = join(dir, "long.md")
+const other = join(dir, "other.md")
 const agents = join(dir, "sub", "AGENTS.md")
 const pickup = join(dir, "pickup.md")
 writeFileSync(short, numberedLines(10))
 writeFileSync(long, numberedLines(400))
+writeFileSync(other, numberedLines(400))
 mkdirSync(join(dir, "sub"))
 writeFileSync(agents, numberedLines(3))
 
@@ -111,7 +113,7 @@ test("indented lines below a read annotate it, and its inlined result follows th
 
 test("short text between issued reads shares a page with them; long prose gets its own", () => {
    const a = `Read(file_path="${long}", offset=1, limit=100)`
-   const b = `Read(file_path="${long}", offset=101, limit=100)`
+   const b = `Read(file_path="${other}", offset=101, limit=100)`
    const c = `Read(file_path="${long}", offset=201, limit=100)`
    const prose = "word ".repeat(400).trim()
    const { batch } = expand(`${a}\n-- a short label --\n${b}\n${prose}\n${c}\n`, { pickupPath: pickup })
@@ -123,6 +125,31 @@ test("short text between issued reads shares a page with them; long prose gets i
       `Read(file_path="${pickup}", offset=4, limit=2)`,
       c,
    ])
+})
+
+test("nearby reads of one file become one issued read when that's cheaper, the handoff untouched", () => {
+   const a = `Read(file_path="${long}", offset=1, limit=30)`
+   const b = `Read(file_path="${long}", offset=34, limit=30)`
+   const handoff = `${a}\n-- a short label --\n${b}\n`
+   const { output, batch, merged } = expand(handoff, { pickupPath: pickup, horizon: 40 })
+
+   assert.equal(output, handoff)
+   assert.equal(merged, 2)
+   assert.deepEqual(batch, [
+      `Read(file_path="${pickup}", offset=1, limit=3)`,
+      `Read(file_path="${long}", offset=1, limit=63)`,
+   ])
+})
+
+test("a read already covered by an earlier one is neither inlined nor batched again", () => {
+   const first = `Read(file_path="${long}", offset=1, limit=300)`
+   const again = `Read(file_path="${long}", offset=40, limit=10)`
+   const prose = "word ".repeat(400).trim()
+   const { output, batch, dropped } = expand(`${first}\n${prose}\n${again}\n`, { pickupPath: pickup })
+
+   assert.equal(output, `${first}\n${prose}\n${again}\n`)
+   assert.equal(dropped, 1)
+   assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=1)`, first, `Read(file_path="${pickup}", offset=2, limit=2)`])
 })
 
 test("broken reads are reported against their handoff line and otherwise left alone", () => {
