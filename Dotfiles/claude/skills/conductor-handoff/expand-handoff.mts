@@ -78,10 +78,11 @@ A read is a line that holds one read call, optionally bulleted or in backticks:
   Read({"file_path": "C:\\\\notes\\\\a.md", "offset": 10})
 Its annotation is the rest of that line plus any indented lines directly below it. An inlined
 result goes after the annotation. The annotation stays as written, and may carry:
-  when: <trigger>  a conditional read, issued only if the trigger fires, so never batched
-  p=0.2            the chance a conditional read's trigger fires (default ${DEFAULT_CONDITIONAL_LIKELIHOOD})
-  [inline]         inline even where the cost model says not to
-  [no-inline]      never inline
+  [when] <trigger>  a conditional read, issued only if the trigger fires, so never batched
+                    (a plain "when:" counts too)
+  [p=0.2]           the chance a conditional read's trigger fires (default ${DEFAULT_CONDITIONAL_LIKELIHOOD})
+  [inline]          inline even where the cost model says not to
+  [no-inline]       never inline
 ${NEVER_INLINE.join(" and ")} are never inlined, as the harness loads them by itself.
 `
 
@@ -117,7 +118,7 @@ function parseCall(lines: string[], index: number): ReadCall | "malformed" | und
    while (/^\s+\S/.test(lines[annotationEnd + 1] ?? "") && !readCallStart(lines[annotationEnd + 1])) annotationEnd++
    const annotation = [line.slice(close + 1), ...lines.slice(index + 1, annotationEnd + 1)].join("\n")
    const likelihood = /\bp\s*=\s*(1(?:\.0*)?|0?\.\d+|0)\b/.exec(annotation)?.[1]
-   const conditional = likelihood !== undefined || /\bwhen\s*:/i.test(annotation)
+   const conditional = likelihood !== undefined || /\[when\]|\bwhen\s*:/i.test(annotation)
    return {
       line: index,
       annotationEnd,

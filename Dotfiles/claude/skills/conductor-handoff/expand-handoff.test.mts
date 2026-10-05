@@ -81,8 +81,8 @@ test("harness-loaded files and [no-inline] are never inlined; [inline] overrides
 })
 
 test("conditional reads are never batched, and are inlined only when likely and cheap", () => {
-   const unlikely = `Read(file_path="${long}", offset=1, limit=300) when: the human asks about X, p=0.05`
-   const likely = `Read(file_path="${short}", offset=1, limit=2) p=0.9`
+   const unlikely = `Read(file_path="${long}", offset=1, limit=300) [when] the human asks about X [p=0.05]`
+   const likely = `Read(file_path="${short}", offset=1, limit=2) [p=0.9]`
    const { output, batch } = expand(`${unlikely}\n${likely}\n`, { pickupPath: pickup })
 
    const lines = output.split("\n")
@@ -92,7 +92,7 @@ test("conditional reads are never batched, and are inlined only when likely and 
 })
 
 test("an unlikely conditional read stays un-inlined even where inlining is cheap, to spare the context window", () => {
-   const call = `read(path="${short}") when: the human asks about X`
+   const call = `read(path="${short}") [when] the human asks about X`
    const { output } = expand(`${call}\n`, { pickupPath: pickup })
 
    assert.equal(output, `${call}\n`)
