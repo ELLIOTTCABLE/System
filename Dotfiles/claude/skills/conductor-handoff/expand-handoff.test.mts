@@ -193,7 +193,7 @@ test("expanding an already-expanded pickup changes nothing", () => {
 })
 
 test("pages stay within budget and never split a call from its inlined result", () => {
-   const tiny = { ...HARNESSES.claude, pageBudget: 400 }
+   const tiny = { ...HARNESSES.claude, readBudget: 400 }
    const prose = Array.from({ length: 12 }, (_, i) => `Some prose, paragraph ${i + 1}.`)
    const reads = Array.from({ length: 4 }, (_, i) => `Read(file_path="${short}", offset=${i + 1}, limit=2)`)
    const handoff = [...prose.slice(0, 4), reads[0], ...prose.slice(4, 8), reads[1], reads[2], ...prose.slice(8), reads[3]]
@@ -213,7 +213,7 @@ test("pages stay within budget and never split a call from its inlined result", 
       if (index > 0) assert.equal(first, pages[index - 1][1] + 1)
       assert.ok(!forbiddenEnds.has(last), `page ${index + 1} ends inside an inlined result, at line ${last}`)
       const size = lines.slice(first - 1, last).reduce((sum, line) => sum + line.length + 8, 0)
-      assert.ok(size <= tiny.pageBudget, `page ${index + 1} is ${size} over a ${tiny.pageBudget} budget`)
+      assert.ok(size <= tiny.readBudget, `page ${index + 1} is ${size} over a ${tiny.readBudget} budget`)
    }
    assert.equal(pages.at(-1)![1], lines.length - 1)
 })

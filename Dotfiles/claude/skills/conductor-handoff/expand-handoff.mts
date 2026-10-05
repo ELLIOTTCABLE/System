@@ -27,9 +27,9 @@ export type Harness = {
    defaultStyle: CallStyle
    numbered: boolean // `N<TAB>line`, so reading a page numbers its inlined lines a second time
    lineNumberTokens: number
-   pageBudget: number
-   pageUnit: "chars" | "bytes"
-   pageMaxLines: number
+   readBudget: number
+   readUnit: "chars" | "bytes"
+   readMaxLines: number
    cacheTtl: "5m" | "1h"
    moreLinesNotice: boolean
 }
@@ -39,10 +39,10 @@ export const HARNESSES: Record<string, Harness> = {
       defaultStyle: { kind: "kwargs", name: "Read", pathKey: "file_path", quote: '"' },
       numbered: true,
       lineNumberTokens: 2,
-      pageBudget: 60_000, // Read refuses results over 25k tokens; chars only track that loosely
+      readBudget: 60_000, // Read refuses results over 25k tokens; chars only track that loosely
 
-      pageUnit: "chars",
-      pageMaxLines: 2000,
+      readUnit: "chars",
+      readMaxLines: 2000,
       cacheTtl: "1h",
       moreLinesNotice: false,
    },
@@ -50,9 +50,9 @@ export const HARNESSES: Record<string, Harness> = {
       defaultStyle: { kind: "kwargs", name: "read", pathKey: "path", quote: '"' },
       numbered: false,
       lineNumberTokens: 0,
-      pageBudget: 48_000, // pi truncates reads at 50KB
-      pageUnit: "bytes",
-      pageMaxLines: 2000,
+      readBudget: 48_000, // pi truncates reads at 50KB
+      readUnit: "bytes",
+      readMaxLines: 2000,
       cacheTtl: "5m",
       moreLinesNotice: true,
    },
@@ -232,7 +232,7 @@ function wrap(name: string, body: string[]): string[] {
 }
 
 function lineCost(line: string, harness: Harness): number {
-   const size = harness.pageUnit === "bytes" ? Buffer.byteLength(line) : line.length
+   const size = harness.readUnit === "bytes" ? Buffer.byteLength(line) : line.length
    return size + 1 + (harness.numbered ? 7 : 0)
 }
 
@@ -271,7 +271,7 @@ function weigh(text: string, name: string, selection: Selection, harness: Harnes
    const size = result.reduce((sum, line) => sum + lineCost(line, harness), lineCost(text, harness))
    return {
       result,
-      fits: size <= harness.pageBudget && result.length < harness.pageMaxLines,
+      fits: size <= harness.readBudget && result.length < harness.readMaxLines,
       callTokens,
       inlinedTokens: tokens(result.join("\n")) + result.length * harness.lineNumberTokens,
       issuedTokens: callTokens + tokens(body.join("\n")),
@@ -449,7 +449,7 @@ function paginate(
    }
    for (let i = 0; i <= last; i++) {
       const cost = lineCost(out[i], harness)
-      if (i > start && (size + cost > harness.pageBudget || i - start >= harness.pageMaxLines)) {
+      if (i > start && (size + cost > harness.readBudget || i - start >= harness.readMaxLines)) {
          let end = i - 1
          while (end > start && noPageBreakAfter.has(end)) end--
          closePage(end)
@@ -464,7 +464,7 @@ function paginate(
       let gapSize = 0
       for (let k = i + 1; k <= last; k++) {
          if (issued.has(k)) {
-            if (size + gapSize + lineCost(out[k], harness) > harness.pageBudget) break
+            if (size + gapSize + lineCost(out[k], harness) > harness.readBudget) break
             run.push(issued.get(k)!)
             end = k
             size += gapSize + lineCost(out[k], harness)
