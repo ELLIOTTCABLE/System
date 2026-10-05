@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFileSync } from "node:child_process"
 import { existsSync, fstatSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
@@ -75,6 +76,12 @@ un-inlined. Stderr gets any warnings and a summary.
                        running this, from PI_MODEL or the Claude Code session's transcript)
   --horizon <n>        requests the successor makes after standing up (default ${DEFAULT_HORIZON_REQUESTS})
   --cache-ttl 5m|1h    the successor's prompt-cache lifetime (default: 1h for claude, 5m for pi)
+  --paths windows|posix
+                       the path form the harness reads; set it when this runs on the other side
+                       of Windows/WSL from the harness (default: the form of the side running this)
+
+Paths in either form are accepted anywhere: C:\\x and \\\\wsl.localhost\\<distro>\\x on the Windows
+side are /mnt/c/x and /x on the WSL side.
 
 A read is a line that holds one read call, optionally bulleted or in backticks:
   Read(file_path="C:\\notes\\a.md", offset=10, limit=20)
@@ -212,16 +219,71 @@ function isLineCount(value: string | undefined): boolean {
    return value === undefined || /^\d+$/.test(value)
 }
 
-// handoff paths may be written for another shell or OS than this one
+export type PathForm = "windows" | "posix"
+
+const DRIVE_PATH = /^([A-Za-z]):[\\/](.*)$/
+const WSL_SHARE = /^\\\\wsl(?:\.localhost|\$)\\[^\\]+\\(.*)$/i
+const MOUNTED_DRIVE = /^\/(?:mnt\/)?([A-Za-z])\/(.*)$/ // WSL's /mnt/c/x, Git Bash's /c/x
+
+function localForm(): PathForm {
+   return process.platform === "win32" ? "windows" : "posix"
+}
+
+// the same file as Windows (C:\x, \\wsl.localhost\Ubuntu\x) or WSL (/mnt/c/x, /x) sees it
+export function inForm(path: string, form: PathForm, distro?: string): string {
+   if (form === "posix") {
+      const drive = DRIVE_PATH.exec(path)
+      if (drive) return `/mnt/${drive[1].toLowerCase()}/${drive[2].replace(/\\/g, "/")}`
+      const share = WSL_SHARE.exec(path)
+      if (share) return `/${share[1].replace(/\\/g, "/")}`
+      return path
+   }
+   if (!path.startsWith("/")) return path
+   const mounted = MOUNTED_DRIVE.exec(path)
+   if (mounted) return `${mounted[1].toUpperCase()}:\\${mounted[2].replace(/\//g, "\\")}`
+   const name = distro ?? wslDistro()
+   return name ? `\\\\wsl.localhost\\${name}${path.replace(/\//g, "\\")}` : path
+}
+
+let listedDistro: { name?: string } | undefined
+
+function wslDistro(): string | undefined {
+   if (process.env.WSL_DISTRO_NAME) return process.env.WSL_DISTRO_NAME
+   if (process.platform !== "win32") return undefined
+   listedDistro ??= { name: defaultDistro() }
+   return listedDistro.name
+}
+
+// `wsl --list` puts the default distro first, in UTF-16
+function defaultDistro(): string | undefined {
+   try {
+      const listing = execFileSync("wsl.exe", ["--list", "--quiet"], { encoding: "utf16le", timeout: 10_000 })
+      return listing
+         .split(/\r?\n/)
+         .map((line) => line.trim())
+         .find((line) => line !== "")
+   } catch {
+      return undefined
+   }
+}
+
+// JSON-style calls keep their escapes in `path`
+function writtenPath(call: ReadCall): string {
+   return call.style.kind === "json" ? call.path.replace(/\\\\/g, "\\") : call.path
+}
+
+function harnessCall(call: ReadCall, form: PathForm): string {
+   const written = writtenPath(call)
+   const converted = inForm(written, form)
+   if (converted === written) return call.text
+   const replacement = call.style.kind === "json" ? JSON.stringify(converted).slice(1, -1) : converted
+   return call.text.replace(call.path, () => replacement)
+}
+
 function locate(path: string): string | undefined {
-   const unescaped = path.replace(/\\\\/g, "\\")
-   const candidates = [path, unescaped]
-   const posixDrive = /^\/(?:mnt\/)?([a-zA-Z])\/(.*)$/.exec(unescaped)
-   if (posixDrive && process.platform === "win32") candidates.push(`${posixDrive[1]}:/${posixDrive[2]}`)
-   const windowsDrive = /^([a-zA-Z]):[\\/](.*)$/.exec(unescaped)
-   if (windowsDrive && process.platform !== "win32")
-      candidates.push(`/mnt/${windowsDrive[1].toLowerCase()}/${windowsDrive[2].replace(/\\/g, "/")}`)
-   if (/^~[\\/]/.test(unescaped)) candidates.push(join(homedir(), unescaped.slice(2)))
+   const spellings = [path, path.replace(/\\\\/g, "\\")]
+   const candidates = spellings.flatMap((spelling) => [spelling, inForm(spelling, localForm())])
+   if (/^~[\\/]/.test(path)) candidates.push(join(homedir(), path.slice(2)))
    return candidates.map((c) => resolve(c)).find((c) => existsSync(c) && statSync(c).isFile())
 }
 
@@ -325,16 +387,19 @@ function splitToFit(span: Selection, harness: Harness): Selection[] {
    return pieces
 }
 
-function readsFor(group: Target[], harness: Harness): Read[] {
+type Settings = { harness: Harness; price: Price; horizon: number; form: PathForm }
+
+function readsFor(group: Target[], { harness, form }: Settings): Read[] {
    const first = group[0]
    if (group.length === 1 && fitsOneRead(first.selection!, harness))
-      return [{ text: first.call.text, selection: first.selection! }]
+      return [{ text: harnessCall(first.call, form), selection: first.selection! }]
    const start = Math.min(...group.map((t) => t.selection!.start))
    const end = Math.max(...group.map((t) => t.selection!.end))
    const span = select(first.file!, start, end - start + 1) as Selection
    const style = styleWithRange(first.call.style, harness)
+   const path = inForm(writtenPath(first.call), form)
    return splitToFit(span, harness).map((selection) => ({
-      text: formatCall(style, first.call.path, selection.start, selection.lines.length),
+      text: formatCall(style, path, selection.start, selection.lines.length),
       selection,
    }))
 }
@@ -359,14 +424,8 @@ type Action = { issue?: string[]; inline?: string[] }
 type Plan = { actions: Map<number, Action>; inlined: number; merged: number; split: number; dropped: number }
 type Price = { output: number; cacheRead: number; cacheWrite: number }
 
-function planReads(
-   targets: Target[],
-   lines: string[],
-   harness: Harness,
-   price: Price,
-   horizon: number,
-   warnings: string[],
-): Plan {
+function planReads(targets: Target[], lines: string[], settings: Settings, warnings: string[]): Plan {
+   const { harness, price, horizon, form } = settings
    const carried = price.cacheWrite + price.cacheRead * horizon
    // content is carried either way, so page line numbers weigh against the call (paid as output, then carried)
    const inlineCost = (w: Weighing) => w.inlinedTokens * carried
@@ -379,7 +438,7 @@ function planReads(
       group[0].call.force !== "no-inline" &&
       !neverInline(group[0].call)
    const cost = (group: Target[]) => {
-      const reads = readsFor(group, harness)
+      const reads = readsFor(group, settings)
       const weighings = reads.map((read) => weigh(read, group[0].call.style.name, harness))
       const issue = weighings.reduce((sum, w) => sum + issueCost(w), 0)
       return mayInline(group, reads, weighings[0]) ? Math.min(issue, inlineCost(weighings[0])) : issue
@@ -401,10 +460,10 @@ function planReads(
       const anchor = group.at(-1)!.call.annotationEnd
       if (expanded) continue
       if (!selection) {
-         if (!call.conditional) plan.actions.set(anchor, { issue: [call.text] })
+         if (!call.conditional) plan.actions.set(anchor, { issue: [harnessCall(call, form)] })
          continue
       }
-      const reads = readsFor(group, harness)
+      const reads = readsFor(group, settings)
       const range = { file: file!, start: reads[0].selection.start, end: reads.at(-1)!.selection.end }
       if (covered.some((c) => c.file === range.file && c.start <= range.start && range.end <= c.end)) {
          plan.dropped += group.length
@@ -575,6 +634,7 @@ export type ExpandOptions = {
    model?: string
    cacheTtl?: "5m" | "1h"
    horizon?: number
+   paths?: PathForm
 }
 
 export type Expansion = {
@@ -612,10 +672,14 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
 
    const harness =
       typeof options.harness === "object" ? options.harness : HARNESSES[options.harness ?? guessHarness(calls)]
-   const price = loadPrice(options.model, options.cacheTtl ?? harness.cacheTtl, warnings)
-   const horizon = options.horizon ?? DEFAULT_HORIZON_REQUESTS
+   const settings: Settings = {
+      harness,
+      price: loadPrice(options.model, options.cacheTtl ?? harness.cacheTtl, warnings),
+      horizon: options.horizon ?? DEFAULT_HORIZON_REQUESTS,
+      form: options.paths ?? localForm(),
+   }
    const targets = calls.map((call) => resolveTarget(call, lines, warnings))
-   const plan = planReads(targets, lines, harness, price, horizon, warnings)
+   const plan = planReads(targets, lines, settings, warnings)
 
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
@@ -628,7 +692,7 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
 
    const steps = paginate(out, issued, resultSpans(out), harness)
    const style = mirrorStyle(calls, harness)
-   const pickup = resolve(options.pickupPath)
+   const pickup = inForm(resolve(options.pickupPath), settings.form)
    const batch = steps.map((step) =>
       typeof step === "string" ? step : formatCall(style, pickup, step.start + 1, step.end - step.start + 1),
    )
@@ -699,6 +763,7 @@ function main(): void {
             model: { type: "string" },
             horizon: { type: "string" },
             "cache-ttl": { type: "string" },
+            paths: { type: "string" },
             help: { type: "boolean", short: "h" },
          },
       })
@@ -718,8 +783,10 @@ function main(): void {
    const horizon = values.horizon === undefined ? undefined : Number(values.horizon)
    if (horizon !== undefined && !(Number.isInteger(horizon) && horizon >= 0))
       fail("--horizon must be a whole number of requests")
+   const paths = values.paths
+   if (paths !== undefined && paths !== "windows" && paths !== "posix") fail("--paths must be windows or posix")
    if (process.stdin.isTTY) fail("redirect the handoff into stdin")
-   const pickupPath = resolve(positionals[0])
+   const pickupPath = resolve(inForm(positionals[0], localForm()))
    if (isStdin(pickupPath)) fail("<pickup-path> is the handoff itself; give the pickup a path of its own")
    const handoff = readFileSync(0, "utf8")
    if (!handoff.trim()) fail("stdin was empty; redirect the handoff into it")
@@ -730,6 +797,7 @@ function main(): void {
       model: values.model ?? callingModel(),
       cacheTtl: ttl as "5m" | "1h" | undefined,
       horizon,
+      paths: paths as PathForm | undefined,
    })
    writeFileSync(pickupPath, result.output)
 

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { test } from "node:test"
 import { fileURLToPath } from "node:url"
-import { callingHarness, callingModel, expand, HARNESSES } from "./expand-handoff.mts"
+import { callingHarness, callingModel, expand, HARNESSES, inForm } from "./expand-handoff.mts"
 
 const script = fileURLToPath(new URL("./expand-handoff.mts", import.meta.url))
 // the CLI defaults to whichever harness runs the tests
@@ -323,4 +323,29 @@ test("the calling model comes from pi's env, else the newest real model in Claud
    assert.equal(callingHarness({ PI_SESSION_ID: "x", CLAUDECODE: "1" }), "pi")
    assert.equal(callingHarness({ CLAUDECODE: "1" }), "claude")
    assert.equal(callingHarness({}), undefined)
+})
+
+test("paths convert between the Windows and WSL views of the same file", () => {
+   assert.equal(inForm("C:\\Users\\ec\\a.md", "posix"), "/mnt/c/Users/ec/a.md")
+   assert.equal(inForm("C:/Users/ec/a.md", "posix"), "/mnt/c/Users/ec/a.md")
+   assert.equal(inForm("\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md", "posix"), "/home/ec/a.md")
+   assert.equal(inForm("\\\\wsl$\\Ubuntu\\home\\ec\\a.md", "posix"), "/home/ec/a.md")
+   assert.equal(inForm("/mnt/c/Users/ec/a.md", "windows"), "C:\\Users\\ec\\a.md")
+   assert.equal(inForm("/c/Users/ec/a.md", "windows"), "C:\\Users\\ec\\a.md")
+   assert.equal(inForm("/home/ec/a.md", "windows", "Ubuntu"), "\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md")
+   assert.equal(inForm("/home/ec/a.md", "posix"), "/home/ec/a.md")
+   assert.equal(inForm("C:\\Users\\ec\\a.md", "windows"), "C:\\Users\\ec\\a.md")
+   assert.equal(inForm("notes/a.md", "windows"), "notes/a.md")
+})
+
+test("batched reads are printed in the harness's path form, whichever form the handoff used", () => {
+   const kwargs = `Read(file_path="C:\\nowhere\\a.md", offset=1, limit=5)`
+   const json = `Read({"file_path": "C:\\\\nowhere\\\\b.md"})`
+   const { batch } = expand(`${kwargs}\n${json}\n`, { pickupPath: pickup, paths: "posix" })
+
+   assert.match(batch[0], /^Read\(file_path="\/.*pickup\.md", offset=1, limit=2\)$/)
+   assert.deepEqual(batch.slice(1), [
+      `Read(file_path="/mnt/c/nowhere/a.md", offset=1, limit=5)`,
+      `Read({"file_path": "/mnt/c/nowhere/b.md"})`,
+   ])
 })
