@@ -101,6 +101,27 @@ test("conditional reads are never batched, and are inlined only when likely and 
    assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=7)`])
 })
 
+test("a garbled [p=…] still marks a read conditional", () => {
+   const { batch } = expand(`Read(file_path="${long}", offset=1, limit=300) [p=often]\n`, { pickupPath: pickup })
+
+   assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=1)`])
+})
+
+test("[inline] on a read too large to inline warns, and the read is issued instead", () => {
+   const { batch, warnings } = expand(`Read(file_path="${huge}") [inline]\n`, { pickupPath: pickup })
+
+   assert.equal(warnings.length, 1)
+   assert.match(warnings[0], /^line 1: .*too large to inline; issued instead$/)
+   assert.equal(batch.length, 3)
+})
+
+test("a CRLF handoff stays CRLF, inlined results included", () => {
+   const call = `Read(file_path="${short}", offset=1, limit=1)`
+   const { output } = expand(`Intro.\r\n${call}\r\n`, { pickupPath: pickup })
+
+   assert.equal(output, `Intro.\r\n${call}\r\n<result>\r\n<name>Read</name>\r\n<output>1\tline 1</output>\r\n</result>\r\n`)
+})
+
 test("an unlikely conditional read stays un-inlined even where inlining is cheap, to spare the context window", () => {
    const call = `read(path="${short}") [when] the human asks about X`
    const { output } = expand(`${call}\n`, { pickupPath: pickup })
