@@ -100,10 +100,19 @@ test("an unlikely conditional read stays un-inlined even where inlining is cheap
    assert.equal(output, `${call}\n`)
 })
 
+test("prose that merely mentions a condition never makes a read conditional", () => {
+   const call = `Read(file_path="${long}", offset=1, limit=300)`
+   const { batch } = expand(`${call}\n   holds: what applies when: the flag is set; p=0.1 of cases\n`, {
+      pickupPath: pickup,
+   })
+
+   assert.ok(batch.includes(call))
+})
+
 test("indented lines below a read annotate it, and its inlined result follows them", () => {
    const conditional = `Read(file_path="${long}", offset=1, limit=300)`
    const mandatory = `Read(file_path="${short}", offset=1, limit=2)`
-   const handoff = `${conditional}\n   when: the human asks about X.\n${mandatory}\n   holds: the first two lines.\nAfter.\n`
+   const handoff = `${conditional}\n   [when] the human asks about X.\n${mandatory}\n   holds: the first two lines.\nAfter.\n`
    const { output, batch } = expand(handoff, { pickupPath: pickup })
 
    const lines = output.split("\n")
