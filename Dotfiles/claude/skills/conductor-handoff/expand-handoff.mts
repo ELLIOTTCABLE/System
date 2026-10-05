@@ -80,8 +80,8 @@ un-inlined. Stderr gets any warnings and a summary.
                        the path form the harness reads; set it when this runs on the other side
                        of Windows/WSL from the harness (default: the form of the side running this)
 
-Paths in either form are accepted anywhere: C:\\x and \\\\wsl.localhost\\<distro>\\x on the Windows
-side are /mnt/c/x and /x on the WSL side.
+Paths in either form are accepted anywhere, translated by WSL's wslpath: C:\\x and
+\\\\wsl.localhost\\<distro>\\x on the Windows side are /mnt/c/x and /x on the WSL side.
 
 A read is a line that holds one read call, optionally bulleted or in backticks:
   Read(file_path="C:\\notes\\a.md", offset=10, limit=20)
@@ -221,47 +221,34 @@ function isLineCount(value: string | undefined): boolean {
 
 export type PathForm = "windows" | "posix"
 
-const DRIVE_PATH = /^([A-Za-z]):[\\/](.*)$/
-const WSL_SHARE = /^\\\\wsl(?:\.localhost|\$)\\[^\\]+\\(.*)$/i
-const MOUNTED_DRIVE = /^\/(?:mnt\/)?([A-Za-z])\/(.*)$/ // WSL's /mnt/c/x, Git Bash's /c/x
-
 function localForm(): PathForm {
    return process.platform === "win32" ? "windows" : "posix"
 }
 
-// the same file as Windows (C:\x, \\wsl.localhost\Ubuntu\x) or WSL (/mnt/c/x, /x) sees it
-export function inForm(path: string, form: PathForm, distro?: string): string {
-   if (form === "posix") {
-      const drive = DRIVE_PATH.exec(path)
-      if (drive) return `/mnt/${drive[1].toLowerCase()}/${drive[2].replace(/\\/g, "/")}`
-      const share = WSL_SHARE.exec(path)
-      if (share) return `/${share[1].replace(/\\/g, "/")}`
-      return path
-   }
-   if (!path.startsWith("/")) return path
-   const mounted = MOUNTED_DRIVE.exec(path)
-   if (mounted) return `${mounted[1].toUpperCase()}:\\${mounted[2].replace(/\//g, "\\")}`
-   const name = distro ?? wslDistro()
-   return name ? `\\\\wsl.localhost\\${name}${path.replace(/\//g, "\\")}` : path
+function formOf(path: string): PathForm | undefined {
+   if (/^[A-Za-z]:[\\/]|^\\\\/.test(path)) return "windows"
+   if (path.startsWith("/")) return "posix"
+   return undefined
 }
 
-let listedDistro: { name?: string } | undefined
+const converted = new Map<string, string>()
 
-function wslDistro(): string | undefined {
-   if (process.env.WSL_DISTRO_NAME) return process.env.WSL_DISTRO_NAME
-   if (process.platform !== "win32") return undefined
-   listedDistro ??= { name: defaultDistro() }
-   return listedDistro.name
+// the same file as the other side of Windows/WSL sees it; unchanged where there's no WSL to ask
+export function inForm(path: string, form: PathForm): string {
+   if (formOf(path) === undefined || formOf(path) === form) return path
+   const key = `${form} ${path}`
+   if (!converted.has(key)) converted.set(key, wslpath(path, form) ?? path)
+   return converted.get(key)!
 }
 
-// `wsl --list` puts the default distro first, in UTF-16
-function defaultDistro(): string | undefined {
+// WSL's own translator knows the drive mount root and this distro's share name
+function wslpath(path: string, form: PathForm): string | undefined {
+   const args = [form === "windows" ? "-w" : "-u", path]
+   const [command, commandArgs] =
+      process.platform === "win32" ? ["wsl.exe", ["-e", "wslpath", ...args]] : ["wslpath", args]
    try {
-      const listing = execFileSync("wsl.exe", ["--list", "--quiet"], { encoding: "utf16le", timeout: 10_000 })
-      return listing
-         .split(/\r?\n/)
-         .map((line) => line.trim())
-         .find((line) => line !== "")
+      const output = execFileSync(command, commandArgs, { encoding: "utf8", timeout: 10_000, stdio: "pipe" })
+      return output.trim() || undefined
    } catch {
       return undefined
    }

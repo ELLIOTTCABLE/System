@@ -325,27 +325,34 @@ test("the calling model comes from pi's env, else the newest real model in Claud
    assert.equal(callingHarness({}), undefined)
 })
 
-test("paths convert between the Windows and WSL views of the same file", () => {
-   assert.equal(inForm("C:\\Users\\ec\\a.md", "posix"), "/mnt/c/Users/ec/a.md")
-   assert.equal(inForm("C:/Users/ec/a.md", "posix"), "/mnt/c/Users/ec/a.md")
-   assert.equal(inForm("\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md", "posix"), "/home/ec/a.md")
-   assert.equal(inForm("\\\\wsl$\\Ubuntu\\home\\ec\\a.md", "posix"), "/home/ec/a.md")
-   assert.equal(inForm("/mnt/c/Users/ec/a.md", "windows"), "C:\\Users\\ec\\a.md")
-   assert.equal(inForm("/c/Users/ec/a.md", "windows"), "C:\\Users\\ec\\a.md")
-   assert.equal(inForm("/home/ec/a.md", "windows", "Ubuntu"), "\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md")
-   assert.equal(inForm("/home/ec/a.md", "posix"), "/home/ec/a.md")
+test("paths already in the asked-for form, and relative paths, are never translated", () => {
    assert.equal(inForm("C:\\Users\\ec\\a.md", "windows"), "C:\\Users\\ec\\a.md")
+   assert.equal(inForm("\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md", "windows"), "\\\\wsl.localhost\\Ubuntu\\home\\ec\\a.md")
+   assert.equal(inForm("/home/ec/a.md", "posix"), "/home/ec/a.md")
    assert.equal(inForm("notes/a.md", "windows"), "notes/a.md")
+   assert.equal(inForm("notes/a.md", "posix"), "notes/a.md")
 })
 
-test("batched reads are printed in the harness's path form, whichever form the handoff used", () => {
+const noWsl = inForm("C:\\x", "posix") === "C:\\x" && "no wslpath reachable here"
+
+test("paths cross between the Windows and WSL views of a file, there and back", { skip: noWsl }, () => {
+   const drive = inForm("C:\\Users\\ec\\a.md", "posix")
+   const native = inForm("/home/ec/a.md", "windows")
+
+   assert.match(drive, /^\/.*\/Users\/ec\/a\.md$/)
+   assert.match(native, /^\\\\wsl(\.localhost|\$)\\[^\\]+\\home\\ec\\a\.md$/)
+   assert.equal(inForm(drive, "windows"), "C:\\Users\\ec\\a.md")
+   assert.equal(inForm(native, "posix"), "/home/ec/a.md")
+})
+
+test("batched reads are printed in the harness's path form, whichever form the handoff used", { skip: noWsl }, () => {
    const kwargs = `Read(file_path="C:\\nowhere\\a.md", offset=1, limit=5)`
    const json = `Read({"file_path": "C:\\\\nowhere\\\\b.md"})`
    const { batch } = expand(`${kwargs}\n${json}\n`, { pickupPath: pickup, paths: "posix" })
 
    assert.match(batch[0], /^Read\(file_path="\/.*pickup\.md", offset=1, limit=2\)$/)
    assert.deepEqual(batch.slice(1), [
-      `Read(file_path="/mnt/c/nowhere/a.md", offset=1, limit=5)`,
-      `Read({"file_path": "/mnt/c/nowhere/b.md"})`,
+      `Read(file_path="${inForm("C:\\nowhere\\a.md", "posix")}", offset=1, limit=5)`,
+      `Read({"file_path": "${inForm("C:\\nowhere\\b.md", "posix")}"})`,
    ])
 })
