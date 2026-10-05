@@ -261,7 +261,7 @@ function target(call: ReadCall, lines: string[], warnings: string[]): Target {
 const neverInline = (call: ReadCall) => NEVER_INLINE.includes(call.path.split(/[\\/]/).at(-1)!)
 
 const mergeable = (t: Target) =>
-   t.selection !== undefined && !t.expanded && !t.call.conditional && !t.call.force && !neverInline(t.call)
+   t.selection !== undefined && !t.expanded && !t.call.conditional && t.call.force !== "inline"
 
 type Weighing = { result: string[]; fits: boolean; callTokens: number; inlinedTokens: number; issuedTokens: number }
 
@@ -279,22 +279,49 @@ function weigh(text: string, name: string, selection: Selection, harness: Harnes
    }
 }
 
-function unite(group: Target[], harness: Harness): { text: string; selection: Selection; weighing: Weighing } {
-   const first = group[0]
-   let text = first.call.text
-   let selection = first.selection!
-   if (group.length > 1) {
-      const start = Math.min(...group.map((t) => t.selection!.start))
-      const end = Math.max(...group.map((t) => t.selection!.end))
-      const style = first.call.style.kind === "positional" ? { ...harness.defaultStyle, name: first.call.style.name } : first.call.style
-      text = formatCall(style, first.call.path, start, end - start + 1)
-      selection = select(first.file!, start, end - start + 1) as Selection
+const fitsOneRead = (selection: Selection, harness: Harness) =>
+   selection.lines.length <= harness.readMaxLines &&
+   selection.lines.reduce((sum, line) => sum + lineCost(line, harness), 0) <= harness.readBudget
+
+// greedy, so a span takes as few reads as the harness allows
+function splitToFit(span: Selection, harness: Harness): Selection[] {
+   const pieces: Selection[] = []
+   for (let first = 0; first < span.lines.length; ) {
+      let last = first
+      let size = lineCost(span.lines[first], harness)
+      while (last + 1 < span.lines.length && last + 2 - first <= harness.readMaxLines) {
+         const grown = size + lineCost(span.lines[last + 1], harness)
+         if (grown > harness.readBudget) break
+         size = grown
+         last++
+      }
+      const lines = span.lines.slice(first, last + 1)
+      pieces.push({ ...span, lines, start: span.start + first, end: span.start + last, limited: true })
+      first = last + 1
    }
-   return { text, selection, weighing: weigh(text, first.call.style.name, selection, harness) }
+   return pieces
 }
 
-type Action = { issue?: string; inline?: string[] }
-type Plan = { actions: Map<number, Action>; inlined: number; merged: number; dropped: number }
+type Read = { text: string; selection: Selection }
+
+// a lone read that fits keeps its call as written; anything else is re-cut into reads that each fit
+function readsFor(group: Target[], harness: Harness): Read[] {
+   const first = group[0]
+   if (group.length === 1 && fitsOneRead(first.selection!, harness))
+      return [{ text: first.call.text, selection: first.selection! }]
+   const start = Math.min(...group.map((t) => t.selection!.start))
+   const end = Math.max(...group.map((t) => t.selection!.end))
+   const span = select(first.file!, start, end - start + 1) as Selection
+   const style =
+      first.call.style.kind === "positional" ? { ...harness.defaultStyle, name: first.call.style.name } : first.call.style
+   return splitToFit(span, harness).map((selection) => ({
+      text: formatCall(style, first.call.path, selection.start, selection.lines.length),
+      selection,
+   }))
+}
+
+type Action = { issue?: string[]; inline?: string[] }
+type Plan = { actions: Map<number, Action>; inlined: number; merged: number; split: number; dropped: number }
 
 function planReads(
    targets: Target[],
@@ -308,19 +335,22 @@ function planReads(
    // content is carried either way, so page line numbers weigh against the call (paid as output, then carried)
    const inlineCost = (w: Weighing) => w.inlinedTokens * carried
    const issueCost = (w: Weighing) => w.callTokens * price.output + w.issuedTokens * carried
-   // merges are always issued: inlined, a merge's own call line would outweigh the wrapper it saves
+   const weighed = (read: Read, t: Target) => weigh(read.text, t.call.style.name, read.selection, harness)
+   // merges stay issued: inlined, a merge's own call line would outweigh the wrapper it saves
+   const inlinable = (group: Target[], reads: Read[]) =>
+      group.length === 1 && reads.length === 1 && group[0].call.force !== "read" && !neverInline(group[0].call)
    const cost = (group: Target[]) => {
-      const { weighing } = unite(group, harness)
-      const issue = issueCost(weighing)
-      return group.length > 1 || !weighing.fits ? issue : Math.min(issue, inlineCost(weighing))
+      const reads = readsFor(group, harness)
+      const issue = reads.reduce((sum, read) => sum + issueCost(weighed(read, group[0])), 0)
+      const weighing = weighed(reads[0], group[0])
+      return inlinable(group, reads) && weighing.fits ? Math.min(issue, inlineCost(weighing)) : issue
    }
    const joins = (group: Target[], t: Target) => {
       const last = group.at(-1)!
       if (!mergeable(group[0]) || !mergeable(t) || t.file !== last.file) return false
       if (t.selection!.start < last.selection!.start) return false
       if (tokens(lines.slice(last.call.annotationEnd + 1, t.call.line).join("\n")) > MERGE_GAP_TOKENS) return false
-      const merged = [...group, t]
-      return unite(merged, harness).weighing.fits && cost(merged) < cost(group) + cost([t])
+      return cost([...group, t]) < cost(group) + cost([t])
    }
    const groups: Target[][] = []
    for (const t of targets) {
@@ -333,37 +363,35 @@ function planReads(
    const covered: Range[] = targets
       .filter((t) => t.expanded && t.selection)
       .map((t) => ({ file: t.file!, start: t.selection!.start, end: t.selection!.end }))
-   const plan: Plan = { actions: new Map(), inlined: 0, merged: 0, dropped: 0 }
+   const plan: Plan = { actions: new Map(), inlined: 0, merged: 0, split: 0, dropped: 0 }
    for (const group of groups) {
       const { call, selection: own, expanded } = group[0]
       const anchor = group.at(-1)!.call.annotationEnd
       if (expanded) continue
       if (!own) {
-         if (!call.conditional) plan.actions.set(anchor, { issue: call.text })
+         if (!call.conditional) plan.actions.set(anchor, { issue: [call.text] })
          continue
       }
-      const { text, selection, weighing } = unite(group, harness)
-      const range = { file: group[0].file!, start: selection.start, end: selection.end }
+      const reads = readsFor(group, harness)
+      const range = { file: group[0].file!, start: reads[0].selection.start, end: reads.at(-1)!.selection.end }
       if (covered.some((c) => c.file === range.file && c.start <= range.start && range.end <= c.end)) {
          plan.dropped += group.length
          continue
       }
-      if (!weighing.fits)
-         warnings.push(
-            `line ${call.line + 1}: ${call.path} lines ${selection.start}-${selection.end} may be more than one read ` +
-               `returns, so the successor may get it truncated`,
-         )
+      const weighing = weighed(reads[0], group[0])
       let inline = false
-      if (group.length === 1 && weighing.fits && call.force !== "read" && !neverInline(call)) {
+      if (inlinable(group, reads) && weighing.fits) {
          if (call.force === "inline") inline = true
          // an unneeded read wastes context window, which outweighs its price
          else if (call.conditional) inline = weighing.inlinedTokens < call.likelihood * weighing.issuedTokens
          else inline = inlineCost(weighing) < issueCost(weighing)
-      }
+      } else if (call.force === "inline" && !neverInline(call))
+         warnings.push(`line ${call.line + 1}: ${call.path} is too large to inline; issued instead`)
       if (call.conditional && !inline) continue
       covered.push(range)
       if (group.length > 1) plan.merged += group.length
-      if (!inline) plan.actions.set(anchor, { issue: text })
+      else if (reads.length > 1) plan.split++
+      if (!inline) plan.actions.set(anchor, { issue: reads.map((read) => read.text) })
       else {
          plan.actions.set(anchor, { inline: weighing.result })
          plan.inlined++
@@ -440,7 +468,7 @@ type Page = { start: number; end: number }
 // break where the successor issues a read itself, so results arrive in document order
 function paginate(
    out: string[],
-   issued: Map<number, string>,
+   issued: Map<number, string[]>,
    noPageBreakAfter: Set<number>,
    harness: Harness,
 ): (Page | string)[] {
@@ -463,14 +491,14 @@ function paginate(
       }
       size += cost
       if (!issued.has(i)) continue
-      const run = [issued.get(i)!]
+      const run = [...issued.get(i)!]
       let end = i
       let gapTokens = 0
       let gapSize = 0
       for (let k = i + 1; k <= last; k++) {
          if (issued.has(k)) {
             if (size + gapSize + lineCost(out[k], harness) > harness.readBudget) break
-            run.push(issued.get(k)!)
+            run.push(...issued.get(k)!)
             end = k
             size += gapSize + lineCost(out[k], harness)
             gapTokens = gapSize = 0
@@ -504,6 +532,7 @@ export type Expansion = {
    reads: number
    inlined: number
    merged: number
+   split: number
    dropped: number
    pages: number
    estimatedTokens: number
@@ -534,10 +563,10 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const price = loadPrice(options.model, options.cacheTtl ?? harness.cacheTtl, warnings)
    const horizon = options.horizon ?? DEFAULT_HORIZON_REQUESTS
    const targets = calls.map((call) => target(call, lines, warnings))
-   const { actions, inlined, merged, dropped } = planReads(targets, lines, harness, price, horizon, warnings)
+   const { actions, inlined, merged, split, dropped } = planReads(targets, lines, harness, price, horizon, warnings)
 
    const out: string[] = []
-   const issued = new Map<number, string>() // keyed by output line
+   const issued = new Map<number, string[]>() // keyed by output line
    for (let i = 0; i < lines.length; i++) {
       out.push(lines[i])
       const action = actions.get(i)
@@ -559,6 +588,7 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       reads: calls.length,
       inlined,
       merged,
+      split,
       dropped,
       pages: plan.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
@@ -613,6 +643,7 @@ function main(): void {
       ...result.warnings.map((warning) => `expand-handoff: warning: ${warning}`),
       `expand-handoff: inlined ${result.inlined} of ${result.reads} reads; ` +
          (result.merged ? `merged ${result.merged} into fewer; ` : "") +
+         (result.split ? `split ${result.split} too large for one read; ` : "") +
          (result.dropped ? `dropped ${result.dropped} already covered; ` : "") +
          `${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens.`,
    ]

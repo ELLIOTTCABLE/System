@@ -156,20 +156,35 @@ test("nearby reads of one file become one issued read when that's cheaper, the h
    ])
 })
 
-test("reads split to stay under the harness's per-read cap are never merged past it", () => {
-   const a = `Read(file_path="${huge}", offset=1, limit=1000)`
-   const b = `Read(file_path="${huge}", offset=1001, limit=1200)`
-   const { batch, merged } = expand(`${a}\n${b}\n`, { pickupPath: pickup })
+test("an unbounded read of a large file becomes reads that each fit, in its own call style", () => {
+   const { batch, warnings, split } = expand(`Read(file_path="${huge}")\n`, { pickupPath: pickup })
 
-   assert.equal(merged, 0)
-   assert.deepEqual(batch.slice(1), [a, b])
+   assert.deepEqual(warnings, [])
+   assert.equal(split, 1)
+   assert.deepEqual(batch.slice(1), [
+      `Read(file_path="${huge}", offset=1, limit=2000)`,
+      `Read(file_path="${huge}", offset=2001, limit=1000)`,
+   ])
 })
 
-test("a read too large for one read is flagged, since it would arrive truncated", () => {
-   const { warnings } = expand(`Read(file_path="${huge}")\n`, { pickupPath: pickup })
+test("a run of hand-split reads is re-cut into as few reads as the harness allows", () => {
+   const reads = [
+      [1, 500],
+      [501, 500],
+      [1001, 500],
+      [1501, 1000],
+   ].map(([offset, limit]) => `Read(file_path="${huge}", offset=${offset}, limit=${limit})`)
+   const { batch } = expand(reads.join("\n") + "\n", { pickupPath: pickup })
 
-   assert.equal(warnings.length, 1)
-   assert.match(warnings[0], /^line 1: .*huge\.md lines 1-3000 may be more than one read returns/)
+   const spans = batch.slice(1).map((call) => {
+      const [, offset, limit] = /offset=(\d+), limit=(\d+)/.exec(call)!
+      return [+offset, +offset + +limit - 1]
+   })
+   assert.equal(spans.length, 2)
+   assert.equal(spans[0][0], 1)
+   assert.equal(spans[1][0], spans[0][1] + 1)
+   assert.equal(spans[1][1], 2500)
+   assert.ok(spans.every(([first, last]) => last - first + 1 <= 2000))
 })
 
 test("a read already covered by an earlier one is neither inlined nor batched again", () => {
