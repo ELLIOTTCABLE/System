@@ -283,7 +283,6 @@ const fitsOneRead = (selection: Selection, harness: Harness) =>
    selection.lines.length <= harness.readMaxLines &&
    selection.lines.reduce((sum, line) => sum + lineCost(line, harness), 0) <= harness.readBudget
 
-// greedy, so a span takes as few reads as the harness allows
 function splitToFit(span: Selection, harness: Harness): Selection[] {
    const pieces: Selection[] = []
    for (let first = 0; first < span.lines.length; ) {
@@ -304,7 +303,6 @@ function splitToFit(span: Selection, harness: Harness): Selection[] {
 
 type Read = { text: string; selection: Selection }
 
-// a lone read that fits keeps its call as written; anything else is re-cut into reads that each fit
 function readsFor(group: Target[], harness: Harness): Read[] {
    const first = group[0]
    if (group.length === 1 && fitsOneRead(first.selection!, harness))
