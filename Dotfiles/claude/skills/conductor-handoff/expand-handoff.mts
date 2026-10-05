@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, fstatSync, readFileSync, statSync, writeFileSync } from "node:fs"
+import { existsSync, fstatSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
@@ -67,8 +67,10 @@ reads that delivers the whole document in order: its pages, interleaved with the
 un-inlined. Stderr gets any warnings and a summary.
 
   <pickup-path>        where to write the pickup document; the page reads point at it
-  --harness claude|pi  the harness that will read the pickup (default: guessed from the reads)
-  --model <id>         price ratios for this model, from pi's model store
+  --harness claude|pi  the harness that will read the pickup (default: the one running this,
+                       else guessed from the reads)
+  --model <id>         price ratios for this model, from pi's model store (default: the model
+                       running this, from PI_MODEL or the Claude Code session's transcript)
   --horizon <n>        requests the successor makes after standing up (default ${DEFAULT_HORIZON_REQUESTS})
   --cache-ttl 5m|1h    the successor's prompt-cache lifetime (default: 1h for claude, 5m for pi)
 
@@ -631,8 +633,8 @@ function main(): void {
 
    const result = expand(handoff, {
       pickupPath,
-      harness: values.harness,
-      model: values.model,
+      harness: values.harness ?? callingHarness(),
+      model: values.model ?? callingModel(),
       cacheTtl: ttl as "5m" | "1h" | undefined,
       horizon,
    })
@@ -647,6 +649,37 @@ function main(): void {
    ]
    process.stderr.write(report.join("\n") + "\n")
    process.stdout.write(["Read all these in a single turn:", ...result.batch].join("\n") + "\n")
+}
+
+export function callingHarness(env = process.env): string | undefined {
+   if (env.PI_SESSION_ID) return "pi"
+   if (env.CLAUDECODE) return "claude"
+   return undefined
+}
+
+// pi exports the model; Claude Code doesn't, but logs the call running this before running it
+export function callingModel(env = process.env): string | undefined {
+   if (env.PI_MODEL) return env.PI_MODEL
+   const session = env.CLAUDE_CODE_SESSION_ID
+   if (!session) return undefined
+   const projects = join(env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"), "projects")
+   if (!existsSync(projects)) return undefined
+   for (const project of readdirSync(projects)) {
+      const transcript = join(projects, project, `${session}.jsonl`)
+      if (!existsSync(transcript)) continue
+      const entries = readFileSync(transcript, "utf8").trimEnd().split("\n")
+      for (const entry of entries.reverse()) {
+         let model: unknown
+         try {
+            model = JSON.parse(entry).message?.model
+         } catch {
+            continue
+         }
+         // Claude Code logs its own notices as "<synthetic>"
+         if (typeof model === "string" && !model.startsWith("<")) return model
+      }
+   }
+   return undefined
 }
 
 function isStdin(path: string): boolean {

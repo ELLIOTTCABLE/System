@@ -5,9 +5,11 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { test } from "node:test"
 import { fileURLToPath } from "node:url"
-import { expand, HARNESSES } from "./expand-handoff.mts"
+import { callingHarness, callingModel, expand, HARNESSES } from "./expand-handoff.mts"
 
 const script = fileURLToPath(new URL("./expand-handoff.mts", import.meta.url))
+// the CLI defaults to whichever harness runs the tests
+const hermetic = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(PI_|CLAUDE)/.test(key)))
 
 const dir = mkdtempSync(join(tmpdir(), "expand-handoff-"))
 const numberedLines = (count: number) => Array.from({ length: count }, (_, i) => `line ${i + 1}`).join("\n") + "\n"
@@ -259,7 +261,7 @@ test("the CLI writes the pickup itself, the batch to stdout, and diagnostics to 
    const cliPickup = join(dir, "cli-pickup.md")
    const longCall = `Read(file_path="${long}", offset=1, limit=300)`
    const handoff = `Intro.\n${longCall}\n`
-   const run = spawnSync(process.execPath, [script, cliPickup], { input: handoff, encoding: "utf8" })
+   const run = spawnSync(process.execPath, [script, cliPickup], { input: handoff, encoding: "utf8", env: hermetic })
 
    assert.equal(run.status, 0, run.stderr)
    assert.equal(readFileSync(cliPickup, "utf8"), handoff)
@@ -275,10 +277,29 @@ test("the CLI refuses to overwrite the handoff it is reading", () => {
    const handoffPath = join(dir, "handoff.md")
    writeFileSync(handoffPath, "Intro.\n")
    const stdin = openSync(handoffPath, "r")
-   const run = spawnSync(process.execPath, [script, handoffPath], { stdio: [stdin, "pipe", "pipe"], encoding: "utf8" })
+   const run = spawnSync(process.execPath, [script, handoffPath], { stdio: [stdin, "pipe", "pipe"], encoding: "utf8", env: hermetic })
    closeSync(stdin)
 
    assert.equal(run.status, 2)
    assert.match(run.stderr, /is the handoff itself/)
    assert.equal(readFileSync(handoffPath, "utf8"), "Intro.\n")
+})
+
+test("the calling model comes from pi's env, else the newest real model in Claude Code's transcript", () => {
+   const config = join(dir, "claude-config")
+   mkdirSync(join(config, "projects", "some-project"), { recursive: true })
+   const entries = [
+      { type: "assistant", message: { model: "claude-older" } },
+      { type: "user", message: { content: "hi" } },
+      { type: "assistant", message: { model: "claude-newer" } },
+      { type: "assistant", message: { model: "<synthetic>" } },
+   ]
+   writeFileSync(join(config, "projects", "some-project", "abc.jsonl"), entries.map((e) => JSON.stringify(e)).join("\n") + "\n")
+
+   assert.equal(callingModel({ CLAUDE_CONFIG_DIR: config, CLAUDE_CODE_SESSION_ID: "abc" }), "claude-newer")
+   assert.equal(callingModel({ PI_MODEL: "pi-model", CLAUDE_CONFIG_DIR: config, CLAUDE_CODE_SESSION_ID: "abc" }), "pi-model")
+   assert.equal(callingModel({}), undefined)
+   assert.equal(callingHarness({ PI_SESSION_ID: "x", CLAUDECODE: "1" }), "pi")
+   assert.equal(callingHarness({ CLAUDECODE: "1" }), "claude")
+   assert.equal(callingHarness({}), undefined)
 })
