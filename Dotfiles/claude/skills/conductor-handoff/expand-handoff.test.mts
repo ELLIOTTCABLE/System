@@ -10,11 +10,13 @@ const numberedLines = (count: number) => Array.from({ length: count }, (_, i) =>
 const short = join(dir, "short.md")
 const long = join(dir, "long.md")
 const other = join(dir, "other.md")
+const huge = join(dir, "huge.md")
 const agents = join(dir, "sub", "AGENTS.md")
 const pickup = join(dir, "pickup.md")
 writeFileSync(short, numberedLines(10))
 writeFileSync(long, numberedLines(400))
 writeFileSync(other, numberedLines(400))
+writeFileSync(huge, numberedLines(3000))
 mkdirSync(join(dir, "sub"))
 writeFileSync(agents, numberedLines(3))
 
@@ -148,6 +150,22 @@ test("nearby reads of one file become one issued read when that's cheaper, the h
       `Read(file_path="${pickup}", offset=1, limit=3)`,
       `Read(file_path="${long}", offset=1, limit=63)`,
    ])
+})
+
+test("reads split to stay under the harness's per-read cap are never merged past it", () => {
+   const a = `Read(file_path="${huge}", offset=1, limit=1000)`
+   const b = `Read(file_path="${huge}", offset=1001, limit=1200)`
+   const { batch, merged } = expand(`${a}\n${b}\n`, { pickupPath: pickup })
+
+   assert.equal(merged, 0)
+   assert.deepEqual(batch.slice(1), [a, b])
+})
+
+test("a read too large for one read is flagged, since it would arrive truncated", () => {
+   const { warnings } = expand(`Read(file_path="${huge}")\n`, { pickupPath: pickup })
+
+   assert.equal(warnings.length, 1)
+   assert.match(warnings[0], /^line 1: .*huge\.md lines 1-3000 may be more than one read returns/)
 })
 
 test("a read already covered by an earlier one is neither inlined nor batched again", () => {

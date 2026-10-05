@@ -318,7 +318,8 @@ function planReads(
       if (!mergeable(group[0]) || !mergeable(t) || t.file !== last.file) return false
       if (t.selection!.start < last.selection!.start) return false
       if (tokens(lines.slice(last.call.annotationEnd + 1, t.call.line).join("\n")) > MERGE_GAP_TOKENS) return false
-      return cost([...group, t]) < cost(group) + cost([t])
+      const merged = [...group, t]
+      return unite(merged, harness).weighing.fits && cost(merged) < cost(group) + cost([t])
    }
    const groups: Target[][] = []
    for (const t of targets) {
@@ -346,11 +347,14 @@ function planReads(
          plan.dropped += group.length
          continue
       }
+      if (!weighing.fits)
+         warnings.push(
+            `line ${call.line + 1}: ${call.path} lines ${selection.start}-${selection.end} may be more than one read ` +
+               `returns, so the successor may get it truncated`,
+         )
       let inline = false
-      if (group.length === 1 && call.force !== "read" && !neverInline(call)) {
-         if (!weighing.fits) {
-            if (call.force === "inline") warnings.push(`line ${call.line + 1}: ${call.path} is too large for one page; left to read`)
-         } else if (call.force === "inline") inline = true
+      if (group.length === 1 && weighing.fits && call.force !== "read" && !neverInline(call)) {
+         if (call.force === "inline") inline = true
          // an unneeded read wastes context window, which outweighs its price
          else if (call.conditional) inline = weighing.inlinedTokens < call.likelihood * weighing.issuedTokens
          else inline = inlineCost(weighing) < issueCost(weighing)
