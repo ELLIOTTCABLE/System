@@ -1,9 +1,13 @@
 import assert from "node:assert/strict"
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { spawnSync } from "node:child_process"
+import { closeSync, mkdirSync, mkdtempSync, openSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { test } from "node:test"
+import { fileURLToPath } from "node:url"
 import { expand, HARNESSES } from "./expand-handoff.mts"
+
+const script = fileURLToPath(new URL("./expand-handoff.mts", import.meta.url))
 
 const dir = mkdtempSync(join(tmpdir(), "expand-handoff-"))
 const numberedLines = (count: number) => Array.from({ length: count }, (_, i) => `line ${i + 1}`).join("\n") + "\n"
@@ -234,4 +238,32 @@ test("pages stay within budget and never split a call from its inlined result", 
       assert.ok(size <= tiny.readBudget, `page ${index + 1} is ${size} over a ${tiny.readBudget} budget`)
    }
    assert.equal(pages.at(-1)![1], lines.length - 1)
+})
+
+test("the CLI writes the pickup itself, the batch to stdout, and diagnostics to stderr", () => {
+   const cliPickup = join(dir, "cli-pickup.md")
+   const longCall = `Read(file_path="${long}", offset=1, limit=300)`
+   const handoff = `Intro.\n${longCall}\n`
+   const run = spawnSync(process.execPath, [script, cliPickup], { input: handoff, encoding: "utf8" })
+
+   assert.equal(run.status, 0, run.stderr)
+   assert.equal(readFileSync(cliPickup, "utf8"), handoff)
+   assert.deepEqual(run.stdout.trimEnd().split("\n"), [
+      "Read all these in a single turn:",
+      `Read(file_path="${cliPickup}", offset=1, limit=2)`,
+      longCall,
+   ])
+   assert.match(run.stderr, /^expand-handoff: inlined 0 of 1 reads; 1 page\(s\)/)
+})
+
+test("the CLI refuses to overwrite the handoff it is reading", () => {
+   const handoffPath = join(dir, "handoff.md")
+   writeFileSync(handoffPath, "Intro.\n")
+   const stdin = openSync(handoffPath, "r")
+   const run = spawnSync(process.execPath, [script, handoffPath], { stdio: [stdin, "pipe", "pipe"], encoding: "utf8" })
+   closeSync(stdin)
+
+   assert.equal(run.status, 2)
+   assert.match(run.stderr, /is the handoff itself/)
+   assert.equal(readFileSync(handoffPath, "utf8"), "Intro.\n")
 })

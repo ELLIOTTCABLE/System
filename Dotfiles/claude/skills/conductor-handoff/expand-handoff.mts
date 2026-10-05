@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, statSync } from "node:fs"
+import { existsSync, fstatSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
@@ -58,14 +58,15 @@ export const HARNESSES: Record<string, Harness> = {
    },
 }
 
-const USAGE = `Usage: node expand-handoff.mts <pickup-path> [options] < <handoff> > <pickup-path>
+const USAGE = `Usage: node expand-handoff.mts <pickup-path> [options] < <handoff>
 
-Copies a handoff from stdin to stdout. Where the handoff dictates a read, the read's result is
-inlined after it if carrying the result pre-read costs the successor less than issuing the read.
-Nothing else in the handoff changes. Stderr gets any warnings, then the one batch of reads that
-delivers the whole document in order: its pages, interleaved with the reads left un-inlined.
+Copies a handoff from stdin into a pickup document at <pickup-path>. Where the handoff dictates
+a read, the read's result is inlined after it if carrying the result pre-read costs the successor
+less than issuing the read. Nothing else in the handoff changes. Stdout gets the one batch of
+reads that delivers the whole document in order: its pages, interleaved with the reads left
+un-inlined. Stderr gets any warnings and a summary.
 
-  <pickup-path>        where stdout is being saved; the page reads point at it
+  <pickup-path>        where to write the pickup document; the page reads point at it
   --harness claude|pi  the harness that will read the pickup (default: guessed from the reads)
   --model <id>         price ratios for this model, from pi's model store
   --horizon <n>        requests the successor makes after standing up (default ${DEFAULT_HORIZON_REQUESTS})
@@ -586,7 +587,7 @@ function main(): void {
    }
    const { values, positionals } = parsed
    if (values.help) return void process.stdout.write(USAGE)
-   if (positionals.length !== 1) fail("give exactly one argument: the path stdout is being saved to")
+   if (positionals.length !== 1) fail("give exactly one argument: the path to write the pickup document to")
    if (values.harness !== undefined && !(values.harness in HARNESSES))
       fail(`--harness must be one of: ${Object.keys(HARNESSES).join(", ")}`)
    const ttl = values["cache-ttl"]
@@ -595,29 +596,35 @@ function main(): void {
    if (horizon !== undefined && !(Number.isInteger(horizon) && horizon >= 0))
       fail("--horizon must be a whole number of requests")
    if (process.stdin.isTTY) fail("redirect the handoff into stdin")
+   const pickupPath = resolve(positionals[0])
+   if (isStdin(pickupPath)) fail("<pickup-path> is the handoff itself; give the pickup a path of its own")
    const handoff = readFileSync(0, "utf8")
-   if (!handoff.trim())
-      fail("stdin was empty (a shell empties a file you redirect stdout onto before reading it, so never reuse the handoff's path)")
+   if (!handoff.trim()) fail("stdin was empty; redirect the handoff into it")
 
    const result = expand(handoff, {
-      pickupPath: positionals[0],
+      pickupPath,
       harness: values.harness,
       model: values.model,
       cacheTtl: ttl as "5m" | "1h" | undefined,
       horizon,
    })
-   process.stdout.write(result.output)
+   writeFileSync(pickupPath, result.output)
    const report = [
       ...result.warnings.map((warning) => `expand-handoff: warning: ${warning}`),
       `expand-handoff: inlined ${result.inlined} of ${result.reads} reads; ` +
          (result.merged ? `merged ${result.merged} into fewer; ` : "") +
          (result.dropped ? `dropped ${result.dropped} already covered; ` : "") +
          `${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens.`,
-      "",
-      "Read all these in a single turn:",
-      ...result.batch,
    ]
    process.stderr.write(report.join("\n") + "\n")
+   process.stdout.write(["Read all these in a single turn:", ...result.batch].join("\n") + "\n")
+}
+
+function isStdin(path: string): boolean {
+   if (!existsSync(path)) return false
+   const stdin = fstatSync(0, { bigint: true })
+   const file = statSync(path, { bigint: true })
+   return stdin.ino !== 0n && stdin.ino === file.ino && stdin.dev === file.dev
 }
 
 if (import.meta.main) main()
