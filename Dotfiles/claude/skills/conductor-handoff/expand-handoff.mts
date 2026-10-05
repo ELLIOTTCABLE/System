@@ -276,7 +276,6 @@ function weigh(text: string, name: string, selection: Selection, harness: Harnes
    }
 }
 
-// one read spanning every member; a lone member keeps its call as written
 function unite(group: Target[], harness: Harness): { text: string; selection: Selection; weighing: Weighing } {
    const first = group[0]
    let text = first.call.text
