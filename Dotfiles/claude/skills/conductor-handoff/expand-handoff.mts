@@ -26,6 +26,7 @@ type CallStyle = { kind: "kwargs" | "json" | "positional"; name: string; pathKey
 export type Harness = {
    defaultStyle: CallStyle
    numbered: boolean // `N<TAB>line`, so reading a page numbers its inlined lines a second time
+   lineNumberChars: number
    lineNumberTokens: number
    readBudget: number
    readUnit: "chars" | "bytes"
@@ -38,9 +39,9 @@ export const HARNESSES: Record<string, Harness> = {
    claude: {
       defaultStyle: { kind: "kwargs", name: "Read", pathKey: "file_path", quote: '"' },
       numbered: true,
+      lineNumberChars: 7,
       lineNumberTokens: 2,
       readBudget: 60_000, // Read refuses results over 25k tokens; chars only track that loosely
-
       readUnit: "chars",
       readMaxLines: 2000,
       cacheTtl: "1h",
@@ -49,6 +50,7 @@ export const HARNESSES: Record<string, Harness> = {
    pi: {
       defaultStyle: { kind: "kwargs", name: "read", pathKey: "path", quote: '"' },
       numbered: false,
+      lineNumberChars: 0,
       lineNumberTokens: 0,
       readBudget: 48_000, // pi truncates reads at 50KB
       readUnit: "bytes",
@@ -99,7 +101,7 @@ type ReadCall = {
    limit?: number
    conditional: boolean
    likelihood: number
-   force?: "inline" | "read"
+   force?: "inline" | "no-inline"
 }
 
 const CALL_START = /^(\s*(?:[-*+]\s+|\d+[.)]\s+)?`*)([A-Za-z_]\w*)\s*\(/
@@ -107,6 +109,10 @@ const CALL_START = /^(\s*(?:[-*+]\s+|\d+[.)]\s+)?`*)([A-Za-z_]\w*)\s*\(/
 function readCallStart(line: string): RegExpExecArray | undefined {
    const start = CALL_START.exec(line)
    return start && READ_TOOL_NAMES.includes(start[2]) ? start : undefined
+}
+
+function isAnnotation(line: string | undefined): boolean {
+   return line !== undefined && /^\s+\S/.test(line) && !readCallStart(line)
 }
 
 function parseCall(lines: string[], index: number): ReadCall | "malformed" | undefined {
@@ -117,13 +123,24 @@ function parseCall(lines: string[], index: number): ReadCall | "malformed" | und
    const close = closingParen(line, open)
    const args = close < 0 ? undefined : parseArguments(line.slice(open + 1, close).trim())
    if (!args) return "malformed"
+
    let annotationEnd = index
-   while (/^\s+\S/.test(lines[annotationEnd + 1] ?? "") && !readCallStart(lines[annotationEnd + 1])) annotationEnd++
+   while (isAnnotation(lines[annotationEnd + 1])) annotationEnd++
    const annotation = [line.slice(close + 1), ...lines.slice(index + 1, annotationEnd + 1)].join("\n")
+
    // only explicit tags: a mandatory read mistaken for conditional leaves the successor reasoning from a
    // partial foundation, which is far worse than an unneeded read
-   const likelihood = /\[p\s*=\s*(1(?:\.0*)?|0?\.\d+|0)\]/i.exec(annotation)?.[1]
-   const conditional = likelihood !== undefined || /\[when\]/i.test(annotation)
+   const likelihoodTag = /\[p\s*=\s*([^\]]*)\]/i.exec(annotation)
+   const conditional = likelihoodTag !== null || /\[when\]/i.test(annotation)
+   let likelihood = 1
+   if (conditional) {
+      const tagged = Number(likelihoodTag?.[1])
+      likelihood = tagged >= 0 && tagged <= 1 ? tagged : DEFAULT_CONDITIONAL_LIKELIHOOD
+   }
+   let force: ReadCall["force"]
+   if (/\[no-inline\]/i.test(annotation)) force = "no-inline"
+   else if (/\[inline\]/i.test(annotation)) force = "inline"
+
    return {
       line: index,
       annotationEnd,
@@ -133,8 +150,8 @@ function parseCall(lines: string[], index: number): ReadCall | "malformed" | und
       offset: args.offset,
       limit: args.limit,
       conditional,
-      likelihood: conditional ? Number(likelihood ?? DEFAULT_CONDITIONAL_LIKELIHOOD) : 1,
-      force: /\[no-inline\]/i.test(annotation) ? "read" : /\[inline\]/i.test(annotation) ? "inline" : undefined,
+      likelihood,
+      force,
    }
 }
 
@@ -179,17 +196,20 @@ function pairs(args: string, pattern: RegExp): Pair[] {
 function fromPairs(kind: "kwargs" | "json", found: Pair[]): Arguments | undefined {
    const byKey = new Map(found.map((pair) => [pair.key, pair]))
    const pathKey = PATH_KEYS.find((key) => byKey.has(key))
-   const offset = lineCount(byKey.get("offset")?.value)
-   const limit = lineCount(byKey.get("limit")?.value)
-   if (!pathKey || offset === null || limit === null) return undefined
+   const offset = byKey.get("offset")?.value
+   const limit = byKey.get("limit")?.value
+   if (!pathKey || !isLineCount(offset) || !isLineCount(limit)) return undefined
    const path = byKey.get(pathKey)!
-   return { style: { kind, pathKey, quote: path.quote }, path: path.value, offset, limit }
+   return {
+      style: { kind, pathKey, quote: path.quote },
+      path: path.value,
+      offset: offset === undefined ? undefined : Number(offset),
+      limit: limit === undefined ? undefined : Number(limit),
+   }
 }
 
-function lineCount(value: string | undefined): number | undefined | null {
-   if (value === undefined) return undefined
-   const n = Number(value)
-   return Number.isInteger(n) && n >= 0 ? n : null
+function isLineCount(value: string | undefined): boolean {
+   return value === undefined || /^\d+$/.test(value)
 }
 
 // handoff paths may be written for another shell or OS than this one
@@ -236,16 +256,20 @@ function wrap(name: string, body: string[]): string[] {
 
 function lineCost(line: string, harness: Harness): number {
    const size = harness.readUnit === "bytes" ? Buffer.byteLength(line) : line.length
-   return size + 1 + (harness.numbered ? 7 : 0)
+   return size + 1 + harness.lineNumberChars
 }
 
-const tokens = (text: string) => Math.ceil(text.length / CHARS_PER_TOKEN)
+function sizeOf(lines: string[], harness: Harness): number {
+   return lines.reduce((sum, line) => sum + lineCost(line, harness), 0)
+}
 
-type Price = { output: number; cacheRead: number; cacheWrite: number }
+function tokens(text: string): number {
+   return Math.ceil(text.length / CHARS_PER_TOKEN)
+}
 
 type Target = { call: ReadCall; file?: string; selection?: Selection; expanded: boolean }
 
-function target(call: ReadCall, lines: string[], warnings: string[]): Target {
+function resolveTarget(call: ReadCall, lines: string[], warnings: string[]): Target {
    const expanded = lines[call.annotationEnd + 1]?.trim() === "<result>"
    const file = locate(call.path)
    if (!file) {
@@ -260,34 +284,32 @@ function target(call: ReadCall, lines: string[], warnings: string[]): Target {
    return { call, file, selection, expanded }
 }
 
-const neverInline = (call: ReadCall) => NEVER_INLINE.includes(call.path.split(/[\\/]/).at(-1)!)
-
-const mergeable = (t: Target) =>
-   t.selection !== undefined && !t.expanded && !t.call.conditional && t.call.force !== "inline"
-
-type Weighing = { result: string[]; fits: boolean; callTokens: number; inlinedTokens: number; issuedTokens: number }
-
-function weigh(text: string, name: string, selection: Selection, harness: Harness): Weighing {
-   const body = renderBody(selection, harness)
-   const result = wrap(name, body)
-   const callTokens = tokens(text) + CALL_FRAMING_TOKENS
-   const size = result.reduce((sum, line) => sum + lineCost(line, harness), lineCost(text, harness))
-   return {
-      result,
-      fits: size <= harness.readBudget && result.length < harness.readMaxLines,
-      callTokens,
-      inlinedTokens: tokens(result.join("\n")) + result.length * harness.lineNumberTokens,
-      issuedTokens: callTokens + tokens(body.join("\n")),
-   }
+function neverInline(call: ReadCall): boolean {
+   return NEVER_INLINE.includes(call.path.split(/[\\/]/).at(-1)!)
 }
 
-const fitsOneRead = (selection: Selection, harness: Harness) =>
-   selection.lines.length <= harness.readMaxLines &&
-   selection.lines.reduce((sum, line) => sum + lineCost(line, harness), 0) <= harness.readBudget
+function mergeable(t: Target): boolean {
+   return t.selection !== undefined && !t.expanded && !t.call.conditional && t.call.force !== "inline"
+}
+
+function canJoin(group: Target[], t: Target, lines: string[]): boolean {
+   const last = group.at(-1)!
+   if (!mergeable(group[0]) || !mergeable(t) || t.file !== last.file) return false
+   if (t.selection!.start < last.selection!.start) return false
+   const gap = lines.slice(last.call.annotationEnd + 1, t.call.line).join("\n")
+   return tokens(gap) <= MERGE_GAP_TOKENS
+}
+
+type Read = { text: string; selection: Selection }
+
+function fitsOneRead(selection: Selection, harness: Harness): boolean {
+   return selection.lines.length <= harness.readMaxLines && sizeOf(selection.lines, harness) <= harness.readBudget
+}
 
 function splitToFit(span: Selection, harness: Harness): Selection[] {
    const pieces: Selection[] = []
-   for (let first = 0; first < span.lines.length; ) {
+   let first = 0
+   while (first < span.lines.length) {
       let last = first
       let size = lineCost(span.lines[first], harness)
       while (last + 1 < span.lines.length && last + 2 - first <= harness.readMaxLines) {
@@ -303,8 +325,6 @@ function splitToFit(span: Selection, harness: Harness): Selection[] {
    return pieces
 }
 
-type Read = { text: string; selection: Selection }
-
 function readsFor(group: Target[], harness: Harness): Read[] {
    const first = group[0]
    if (group.length === 1 && fitsOneRead(first.selection!, harness))
@@ -312,16 +332,32 @@ function readsFor(group: Target[], harness: Harness): Read[] {
    const start = Math.min(...group.map((t) => t.selection!.start))
    const end = Math.max(...group.map((t) => t.selection!.end))
    const span = select(first.file!, start, end - start + 1) as Selection
-   const style =
-      first.call.style.kind === "positional" ? { ...harness.defaultStyle, name: first.call.style.name } : first.call.style
+   const style = styleWithRange(first.call.style, harness)
    return splitToFit(span, harness).map((selection) => ({
       text: formatCall(style, first.call.path, selection.start, selection.lines.length),
       selection,
    }))
 }
 
+type Weighing = { result: string[]; inlineFits: boolean; callTokens: number; inlinedTokens: number; issuedTokens: number }
+
+function weigh(read: Read, name: string, harness: Harness): Weighing {
+   const body = renderBody(read.selection, harness)
+   const result = wrap(name, body)
+   const callTokens = tokens(read.text) + CALL_FRAMING_TOKENS
+   const pageSize = lineCost(read.text, harness) + sizeOf(result, harness)
+   return {
+      result,
+      inlineFits: pageSize <= harness.readBudget && result.length < harness.readMaxLines,
+      callTokens,
+      inlinedTokens: tokens(result.join("\n")) + result.length * harness.lineNumberTokens,
+      issuedTokens: callTokens + tokens(body.join("\n")),
+   }
+}
+
 type Action = { issue?: string[]; inline?: string[] }
 type Plan = { actions: Map<number, Action>; inlined: number; merged: number; split: number; dropped: number }
+type Price = { output: number; cacheRead: number; cacheWrite: number }
 
 function planReads(
    targets: Target[],
@@ -335,84 +371,69 @@ function planReads(
    // content is carried either way, so page line numbers weigh against the call (paid as output, then carried)
    const inlineCost = (w: Weighing) => w.inlinedTokens * carried
    const issueCost = (w: Weighing) => w.callTokens * price.output + w.issuedTokens * carried
-   const weighed = (read: Read, t: Target) => weigh(read.text, t.call.style.name, read.selection, harness)
    // merges stay issued: inlined, a merge's own call line would outweigh the wrapper it saves
-   const inlinable = (group: Target[], reads: Read[]) =>
-      group.length === 1 && reads.length === 1 && group[0].call.force !== "read" && !neverInline(group[0].call)
+   const mayInline = (group: Target[], reads: Read[], w: Weighing) =>
+      group.length === 1 &&
+      reads.length === 1 &&
+      w.inlineFits &&
+      group[0].call.force !== "no-inline" &&
+      !neverInline(group[0].call)
    const cost = (group: Target[]) => {
       const reads = readsFor(group, harness)
-      const issue = reads.reduce((sum, read) => sum + issueCost(weighed(read, group[0])), 0)
-      const weighing = weighed(reads[0], group[0])
-      return inlinable(group, reads) && weighing.fits ? Math.min(issue, inlineCost(weighing)) : issue
+      const weighings = reads.map((read) => weigh(read, group[0].call.style.name, harness))
+      const issue = weighings.reduce((sum, w) => sum + issueCost(w), 0)
+      return mayInline(group, reads, weighings[0]) ? Math.min(issue, inlineCost(weighings[0])) : issue
    }
-   const joins = (group: Target[], t: Target) => {
-      const last = group.at(-1)!
-      if (!mergeable(group[0]) || !mergeable(t) || t.file !== last.file) return false
-      if (t.selection!.start < last.selection!.start) return false
-      if (tokens(lines.slice(last.call.annotationEnd + 1, t.call.line).join("\n")) > MERGE_GAP_TOKENS) return false
-      return cost([...group, t]) < cost(group) + cost([t])
-   }
+
    const groups: Target[][] = []
    for (const t of targets) {
       const group = groups.at(-1)
-      if (group && joins(group, t)) group.push(t)
+      if (group && canJoin(group, t, lines) && cost([...group, t]) < cost(group) + cost([t])) group.push(t)
       else groups.push([t])
    }
 
-   type Range = { file: string; start: number; end: number }
-   const covered: Range[] = targets
+   const covered = targets
       .filter((t) => t.expanded && t.selection)
       .map((t) => ({ file: t.file!, start: t.selection!.start, end: t.selection!.end }))
    const plan: Plan = { actions: new Map(), inlined: 0, merged: 0, split: 0, dropped: 0 }
    for (const group of groups) {
-      const { call, selection: own, expanded } = group[0]
+      const { call, file, selection, expanded } = group[0]
       const anchor = group.at(-1)!.call.annotationEnd
       if (expanded) continue
-      if (!own) {
+      if (!selection) {
          if (!call.conditional) plan.actions.set(anchor, { issue: [call.text] })
          continue
       }
       const reads = readsFor(group, harness)
-      const range = { file: group[0].file!, start: reads[0].selection.start, end: reads.at(-1)!.selection.end }
+      const range = { file: file!, start: reads[0].selection.start, end: reads.at(-1)!.selection.end }
       if (covered.some((c) => c.file === range.file && c.start <= range.start && range.end <= c.end)) {
          plan.dropped += group.length
          continue
       }
-      const weighing = weighed(reads[0], group[0])
+
+      const weighing = weigh(reads[0], call.style.name, harness)
       let inline = false
-      if (inlinable(group, reads) && weighing.fits) {
+      if (mayInline(group, reads, weighing)) {
          if (call.force === "inline") inline = true
          // an unneeded read wastes context window, which outweighs its price
          else if (call.conditional) inline = weighing.inlinedTokens < call.likelihood * weighing.issuedTokens
          else inline = inlineCost(weighing) < issueCost(weighing)
-      } else if (call.force === "inline" && !neverInline(call))
+      } else if (call.force === "inline" && !neverInline(call)) {
          warnings.push(`line ${call.line + 1}: ${call.path} is too large to inline; issued instead`)
+      }
       if (call.conditional && !inline) continue
+
       covered.push(range)
       if (group.length > 1) plan.merged += group.length
       else if (reads.length > 1) plan.split++
-      if (!inline) plan.actions.set(anchor, { issue: reads.map((read) => read.text) })
-      else {
+      if (inline) {
          plan.actions.set(anchor, { inline: weighing.result })
          plan.inlined++
+      } else {
+         plan.actions.set(anchor, { issue: reads.map((read) => read.text) })
       }
    }
    return plan
-}
-
-// never break between a result and the call it answers
-function resultSpans(out: string[]): Set<number> {
-   const spans = new Set<number>()
-   for (let r = 0; r < out.length; r++) {
-      if (out[r].trim() !== "<result>") continue
-      let from = r - 1
-      while (from > 0 && /^\s+\S/.test(out[from]) && !readCallStart(out[from])) from--
-      let close = r
-      while (close < out.length - 1 && out[close].trim() !== "</result>") close++
-      for (let k = from; k < close; k++) spans.add(k)
-      r = close
-   }
-   return spans
 }
 
 function loadPrice(model: string | undefined, ttl: "5m" | "1h", warnings: string[]): Price {
@@ -451,9 +472,14 @@ function guessHarness(calls: ReadCall[]): string {
    return piStyled.length * 2 > calls.length ? "pi" : "claude"
 }
 
+// a positional call has no syntax for offset and limit to copy
+function styleWithRange(style: CallStyle, harness: Harness): CallStyle {
+   return style.kind === "positional" ? { ...harness.defaultStyle, name: style.name } : style
+}
+
 function mirrorStyle(calls: ReadCall[], harness: Harness): CallStyle {
-   const keyed = calls.find((c) => c.style.kind !== "positional")
-   return keyed?.style ?? { ...harness.defaultStyle, name: calls[0]?.style.name ?? harness.defaultStyle.name }
+   const style = calls.find((c) => c.style.kind !== "positional")?.style ?? calls[0]?.style ?? harness.defaultStyle
+   return styleWithRange(style, harness)
 }
 
 function formatCall(style: CallStyle, path: string, offset: number, limit: number): string {
@@ -461,6 +487,21 @@ function formatCall(style: CallStyle, path: string, offset: number, limit: numbe
       return `${style.name}({"${style.pathKey}": ${JSON.stringify(path)}, "offset": ${offset}, "limit": ${limit}})`
    const quote = style.quote || (/\s/.test(path) ? '"' : "")
    return `${style.name}(${style.pathKey}=${quote}${path}${quote}, offset=${offset}, limit=${limit})`
+}
+
+// never break a page between a result and the call it answers
+function resultSpans(out: string[]): Set<number> {
+   const spans = new Set<number>()
+   for (let r = 0; r < out.length; r++) {
+      if (out[r].trim() !== "<result>") continue
+      let from = r - 1
+      while (from > 0 && isAnnotation(out[from])) from--
+      let close = r
+      while (close < out.length - 1 && out[close].trim() !== "</result>") close++
+      for (let k = from; k < close; k++) spans.add(k)
+      r = close
+   }
+   return spans
 }
 
 type Page = { start: number; end: number }
@@ -481,40 +522,51 @@ function paginate(
       start = end + 1
    }
    for (let i = 0; i <= last; i++) {
-      const cost = lineCost(out[i], harness)
-      if (i > start && (size + cost > harness.readBudget || i - start >= harness.readMaxLines)) {
+      if (i > start && (size + lineCost(out[i], harness) > harness.readBudget || i - start >= harness.readMaxLines)) {
          let end = i - 1
          while (end > start && noPageBreakAfter.has(end)) end--
          closePage(end)
-         size = 0
-         for (let k = start; k < i; k++) size += lineCost(out[k], harness)
+         size = sizeOf(out.slice(start, i), harness)
       }
-      size += cost
+      size += lineCost(out[i], harness)
       if (!issued.has(i)) continue
-      const run = [...issued.get(i)!]
-      let end = i
-      let gapTokens = 0
-      let gapSize = 0
-      for (let k = i + 1; k <= last; k++) {
-         if (issued.has(k)) {
-            if (size + gapSize + lineCost(out[k], harness) > harness.readBudget) break
-            run.push(...issued.get(k)!)
-            end = k
-            size += gapSize + lineCost(out[k], harness)
-            gapTokens = gapSize = 0
-            continue
-         }
-         gapTokens += tokens(out[k])
-         gapSize += lineCost(out[k], harness)
-         if (gapTokens > MERGE_GAP_TOKENS) break
-      }
-      closePage(end)
-      plan.push(...run)
-      i = end
+      const run = issuedRun(out, issued, i, last, harness.readBudget - size, harness)
+      closePage(run.end)
+      plan.push(...run.reads)
+      i = run.end
       size = 0
    }
    if (start <= last) closePage(last)
    return plan
+}
+
+function issuedRun(
+   out: string[],
+   issued: Map<number, string[]>,
+   first: number,
+   last: number,
+   room: number,
+   harness: Harness,
+): { reads: string[]; end: number } {
+   const reads = [...issued.get(first)!]
+   let end = first
+   let gapTokens = 0
+   let gapSize = 0
+   for (let k = first + 1; k <= last; k++) {
+      gapSize += lineCost(out[k], harness)
+      if (gapSize > room) break
+      if (issued.has(k)) {
+         reads.push(...issued.get(k)!)
+         end = k
+         room -= gapSize
+         gapTokens = 0
+         gapSize = 0
+      } else {
+         gapTokens += tokens(out[k])
+         if (gapTokens > MERGE_GAP_TOKENS) break
+      }
+   }
+   return { reads, end }
 }
 
 export type ExpandOptions = {
@@ -550,9 +602,9 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
          continue
       }
       const call = parseCall(lines, i)
-      if (call === "malformed")
+      if (call === "malformed") {
          warnings.push(`line ${i + 1} looks like a read but doesn't parse; left as written, not batched: ${lines[i].trim()}`)
-      else if (call) {
+      } else if (call) {
          calls.push(call)
          i = call.annotationEnd
       }
@@ -562,22 +614,22 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       typeof options.harness === "object" ? options.harness : HARNESSES[options.harness ?? guessHarness(calls)]
    const price = loadPrice(options.model, options.cacheTtl ?? harness.cacheTtl, warnings)
    const horizon = options.horizon ?? DEFAULT_HORIZON_REQUESTS
-   const targets = calls.map((call) => target(call, lines, warnings))
-   const { actions, inlined, merged, split, dropped } = planReads(targets, lines, harness, price, horizon, warnings)
+   const targets = calls.map((call) => resolveTarget(call, lines, warnings))
+   const plan = planReads(targets, lines, harness, price, horizon, warnings)
 
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
    for (let i = 0; i < lines.length; i++) {
       out.push(lines[i])
-      const action = actions.get(i)
+      const action = plan.actions.get(i)
       if (action?.issue) issued.set(out.length - 1, action.issue)
       if (action?.inline) out.push(...action.inline)
    }
 
-   const plan = paginate(out, issued, resultSpans(out), harness)
+   const steps = paginate(out, issued, resultSpans(out), harness)
    const style = mirrorStyle(calls, harness)
    const pickup = resolve(options.pickupPath)
-   const batch = plan.map((step) =>
+   const batch = steps.map((step) =>
       typeof step === "string" ? step : formatCall(style, pickup, step.start + 1, step.end - step.start + 1),
    )
    const output = out.join(eol)
@@ -586,69 +638,13 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       batch,
       warnings,
       reads: calls.length,
-      inlined,
-      merged,
-      split,
-      dropped,
-      pages: plan.filter((step) => typeof step !== "string").length,
+      inlined: plan.inlined,
+      merged: plan.merged,
+      split: plan.split,
+      dropped: plan.dropped,
+      pages: steps.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
    }
-}
-
-function main(): void {
-   const fail = (message: string): never => {
-      process.stderr.write(`expand-handoff: ${message}\n\n${USAGE}`)
-      process.exit(2)
-   }
-   let parsed
-   try {
-      parsed = parseArgs({
-         allowPositionals: true,
-         options: {
-            harness: { type: "string" },
-            model: { type: "string" },
-            horizon: { type: "string" },
-            "cache-ttl": { type: "string" },
-            help: { type: "boolean", short: "h" },
-         },
-      })
-   } catch (error) {
-      return fail((error as Error).message)
-   }
-   const { values, positionals } = parsed
-   if (values.help) return void process.stdout.write(USAGE)
-   if (positionals.length !== 1) fail("give exactly one argument: the path to write the pickup document to")
-   if (values.harness !== undefined && !(values.harness in HARNESSES))
-      fail(`--harness must be one of: ${Object.keys(HARNESSES).join(", ")}`)
-   const ttl = values["cache-ttl"]
-   if (ttl !== undefined && ttl !== "5m" && ttl !== "1h") fail("--cache-ttl must be 5m or 1h")
-   const horizon = values.horizon === undefined ? undefined : Number(values.horizon)
-   if (horizon !== undefined && !(Number.isInteger(horizon) && horizon >= 0))
-      fail("--horizon must be a whole number of requests")
-   if (process.stdin.isTTY) fail("redirect the handoff into stdin")
-   const pickupPath = resolve(positionals[0])
-   if (isStdin(pickupPath)) fail("<pickup-path> is the handoff itself; give the pickup a path of its own")
-   const handoff = readFileSync(0, "utf8")
-   if (!handoff.trim()) fail("stdin was empty; redirect the handoff into it")
-
-   const result = expand(handoff, {
-      pickupPath,
-      harness: values.harness ?? callingHarness(),
-      model: values.model ?? callingModel(),
-      cacheTtl: ttl as "5m" | "1h" | undefined,
-      horizon,
-   })
-   writeFileSync(pickupPath, result.output)
-   const report = [
-      ...result.warnings.map((warning) => `expand-handoff: warning: ${warning}`),
-      `expand-handoff: inlined ${result.inlined} of ${result.reads} reads; ` +
-         (result.merged ? `merged ${result.merged} into fewer; ` : "") +
-         (result.split ? `split ${result.split} too large for one read; ` : "") +
-         (result.dropped ? `dropped ${result.dropped} already covered; ` : "") +
-         `${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens.`,
-   ]
-   process.stderr.write(report.join("\n") + "\n")
-   process.stdout.write(["Read all these in a single turn:", ...result.batch].join("\n") + "\n")
 }
 
 export function callingHarness(env = process.env): string | undefined {
@@ -687,6 +683,64 @@ function isStdin(path: string): boolean {
    const stdin = fstatSync(0, { bigint: true })
    const file = statSync(path, { bigint: true })
    return stdin.ino !== 0n && stdin.ino === file.ino && stdin.dev === file.dev
+}
+
+function main(): void {
+   const fail = (message: string): never => {
+      process.stderr.write(`expand-handoff: ${message}\n\n${USAGE}`)
+      process.exit(2)
+   }
+   let parsed
+   try {
+      parsed = parseArgs({
+         allowPositionals: true,
+         options: {
+            harness: { type: "string" },
+            model: { type: "string" },
+            horizon: { type: "string" },
+            "cache-ttl": { type: "string" },
+            help: { type: "boolean", short: "h" },
+         },
+      })
+   } catch (error) {
+      return fail((error as Error).message)
+   }
+   const { values, positionals } = parsed
+   if (values.help) {
+      process.stdout.write(USAGE)
+      return
+   }
+   if (positionals.length !== 1) fail("give exactly one argument: the path to write the pickup document to")
+   if (values.harness !== undefined && !(values.harness in HARNESSES))
+      fail(`--harness must be one of: ${Object.keys(HARNESSES).join(", ")}`)
+   const ttl = values["cache-ttl"]
+   if (ttl !== undefined && ttl !== "5m" && ttl !== "1h") fail("--cache-ttl must be 5m or 1h")
+   const horizon = values.horizon === undefined ? undefined : Number(values.horizon)
+   if (horizon !== undefined && !(Number.isInteger(horizon) && horizon >= 0))
+      fail("--horizon must be a whole number of requests")
+   if (process.stdin.isTTY) fail("redirect the handoff into stdin")
+   const pickupPath = resolve(positionals[0])
+   if (isStdin(pickupPath)) fail("<pickup-path> is the handoff itself; give the pickup a path of its own")
+   const handoff = readFileSync(0, "utf8")
+   if (!handoff.trim()) fail("stdin was empty; redirect the handoff into it")
+
+   const result = expand(handoff, {
+      pickupPath,
+      harness: values.harness ?? callingHarness(),
+      model: values.model ?? callingModel(),
+      cacheTtl: ttl as "5m" | "1h" | undefined,
+      horizon,
+   })
+   writeFileSync(pickupPath, result.output)
+
+   const summary = [`inlined ${result.inlined} of ${result.reads} reads`]
+   if (result.merged) summary.push(`merged ${result.merged} into fewer`)
+   if (result.split) summary.push(`split ${result.split} too large for one read`)
+   if (result.dropped) summary.push(`dropped ${result.dropped} already covered`)
+   summary.push(`${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens`)
+   for (const warning of result.warnings) process.stderr.write(`expand-handoff: warning: ${warning}\n`)
+   process.stderr.write(`expand-handoff: ${summary.join("; ")}.\n`)
+   process.stdout.write(["Read all these in a single turn:", ...result.batch].join("\n") + "\n")
 }
 
 if (import.meta.main) main()
