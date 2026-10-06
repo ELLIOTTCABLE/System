@@ -9,7 +9,14 @@ Give each piece of context one-or-more deliberate home. Don't restate what a led
 1. If you've been keeping a running ledger: bring it up to date the way you've been using it; being asked for a handoff authorizes that.
 2. Else, if you have no appropriate, LLM-focused, running, durable home for your context: read `mining-context.md` now; and follow those instructions. Your context will *all* be in your temporary handoff.
 
-In the handoff, mark claims about facts, goals or rulings ~SUSPECT at most. (For durables, follow project praxis.) Leave file contents to the read-calls; don't manually inline, this tool will handle that.
+In the handoff, mark claims about facts, goals or rulings ~SUSPECT at most. (For durables, follow project praxis.) Again, subject to project practice, differentiate:
+
+- `[TYPED]` (by the human, a literal quotation)
+- `[ACKED]` (by the human, but worded by you)
+- `[PRESENTED]` (theoretically seen by the human, no response)
+- `[AGENT]` (from you, not seen by a human, nor acked)
+
+Leave file contents to the read-calls; don't manually inline, this tool will handle that.
 
 ## Ordering content
 
@@ -31,3 +38,13 @@ Finish by giving the human this command, with this skill's directory and your tw
 ```sh
 node "<this skill's directory>/expand-handoff.mts" "handoff.out.md" <"<dir>/r31-world-relations-naming-sitting.handoff.md"
 ```
+
+## What to include
+
+This is mostly up to you and should be treated carefully; the human will likely include tunes when invoking this skill, but if you have no idea and no context for why it's being invoked, lean towards including more context over being brief.
+
+These are only seeds, they are not an exhaustive list; and they're probably less-important than the *actual* local context you already know of:
+
+- probably not durable: subagent IDs for resumption/messaging if they're intended to be reused / are in-flight
+- probably not durable: worktree(s) (or branches if there's no worktree) in-flight; and/or similar things needing reuse or eventual clean-up
+- probably durable/ledger: human's tabled/punted/let's-return-to-this
