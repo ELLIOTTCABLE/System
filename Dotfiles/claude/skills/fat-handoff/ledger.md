@@ -325,3 +325,44 @@ Second run: a rewind, then a fresh `/fat-handoff` under the split skill. It wrot
 - **Cache miss despite the timing.** It came 51 minutes after run 1, inside the 1-hour window, yet still re-wrote 865,746 tokens; only the ~19k system prompt was a cache hit.
   - ~SUSPECT: after a rewind, the only live cache entries end inside the abandoned branch, not at the point rewound to.
   - If so, each rewind-and-reinvoke on a long session costs a full re-write: about 1.7M input-token equivalents at ~880k.
+
+## 8. Pages break at prose; Claude Code's re-read dedup; `--last-saw` (2026-10-06)
+
+**Pages break at prose** (`46d904d`, `b88b77b`, `3979732`; 47 of 47 tests pass).
+
+- Two reads share a page, or two reads of the same file merge, only if everything between them is blank lines, read calls (`[when]` lines included) or a read's indented annotation.
+- Any other text, or an inlined `<result>`, starts a new page.
+- `MERGE_GAP_TOKENS` is gone, and no new size heuristic replaced it.
+- On run 3 this gives 6 pages, where it gave 3. Line 24's ledger lead-in and line 28's "Background" heading now land after the reads above them.
+- Now pinned by a test: the pickup equals the handoff once its `<result>` blocks are removed, and the pages cover the whole file with no gaps or overlaps.
+- Human ruling: the read lines, `[when]` lines and prose must stay visible, in position and as written, in the pages the successor reads. The stdout batch may rewrite calls.
+
+**Third run.** The `fat-pickup` happened in a rewound and resumed fork (`aed06c03`), back at the end of the original stand-up. It re-read the stand-up's foundation documents in full, about 60–70k tokens of duplicates. The human interrupted it. The human then added a stdout line (`a3f1bf1`) saying a partly rewound agent may omit reads unlikely to have changed. With that, a later test skipped most of the duplicates.
+
+**Claude Code's re-read dedup** (a research subagent; the 2.1.292 binary, the 2.1.88 source, the changelog, issues, and five headless runs).
+
+- Since 2.1.86, a re-read can return a stub instead of content: "Wasted call — file unchanged since your last Read. Refer to that earlier tool_result instead." +SURE. It does so only if all of these hold:
+  - the offset and limit exactly match the cached read;
+  - the file's mtime exactly matches the cached timestamp;
+  - the cached entry came from a Read, not an Edit or Write.
+- The cache keeps one entry per path; the last read wins.
+- ~SUSPECT the cache is still an LRU of about 100 entries, as in 2.1.88.
+- When the cache is rebuilt or cleared:
+  - **Resume:** rebuilt from the transcript, using message timestamps rather than mtimes, so the first re-read of every file comes back full. `/branch` and `--fork-session` behave like resume.
+  - **Rewind:** drops the paths touched in the discarded turns (2.1.260).
+  - **Compaction:** clears the cache and re-attaches a few files.
+- The doubled reads in run 3 were therefore expected: the process changed from 2.1.289 to 2.1.292 between the rewind and the pickup.
+- No setting keeps the dedup across these events, and no issue is filed about duplicates coming back in full.
+- Nested `CLAUDE.md`/`AGENTS.md` loading checks the same cache and also compares content. None were re-injected. The 15k `instructions` attachment after the rewind was the Dorc `MEMORY.md`, which had changed since the stand-up.
+
+**Decision: `--last-saw <sha|datetime>`.** The harness's dedup can't be relied on, so deduplication moves to us.
+
+- **Rejected:** looking reads up in the session transcript. It is exact even across rewind and branch trees, but fragile across teleport, pi, other machines and compaction.
+- **Rejected:** dates the agent sees. It sees only the session date, and that date is rebuilt on resume, so it can be newer than its reads.
+- **The anchor:** a commit SHA visible above the reads in the agent's window. It predates those reads, so it can only be too old, which is safe. The human may instead put a datetime they can see in the harness into their prompt.
+- **Annotate, never drop.** The tool knows whether a file changed; only the agent knows what is in its window.
+  - The tool appends `# unchanged (same content as at <sha|datetime>)` to batch reads of tracked files that are unchanged since the anchor.
+  - The agent skips those it can see above.
+  - Untracked and ignored files go unannotated. The human cares less about them, since the heavy, stable documents are all committed.
+- **Implementation preference:** a git library if it's tractable, and if not, a few batched git CLI calls, without mechanizing many shell calls. The human will tune the stdout steering line.
+- Context: `core.autocrlf=input` in System and Dorc; their working trees are LF.
