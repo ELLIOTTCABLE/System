@@ -167,16 +167,20 @@ What `expand-handoff` does with the model:
 
 1. A read of a file the harness loaded at launch is skipped. That covers case 1 of the request: an explicit whole read takes the file out of the at-risk set.
 2. A file the harness may load by itself is never inlined. Otherwise a later real read would load it a second time.
-3. A partial read of such a file is inlined as a slice, never read for real, because a real one would suppress the full load. The harness still loads the whole file if the successor works in that directory. A slice too large to inline is widened to the whole file. On Dorc this kept a 71-line slice of `spike/AGENTS.md` from becoming the whole 1,476-line file.
+3. Ranges on such a file are ignored: the read loads the whole file, keeping whatever `[when]` or mandatory status the outgoing agent gave it.
+   - The human's reasoning: the outgoing agent couldn't control the harness either. Without this tool, "read only the first paragraph" would still be followed by the harness loading the whole file once the successor works in that directory.
+   - Putting instructions where the harness loads them is the project's own intent, and a model shouldn't override it.
+   - A real partial read would also suppress the full load for good.
+   - A `[when]` read can't be widened without editing the handoff text, so it's left as written with a warning to read the whole file if it fires.
+   - Superseded: `a618928` briefly inlined slices instead, which the human rejected (`5982a64`). On Dorc this now reads all 1,476 lines of `spike/AGENTS.md` where the handoff asked for 71.
 4. Where inlining would skip instruction files the harness loads on a real read, the fewest reads covering them all are kept real.
 
 Dependencies `yaml`, `ignore` and `braces` are declared in `System/package.json`. All three were already installed through zx, so `bun install` only needs to record them in `bun.lock`.
 
 Open or unverified:
 
-- ~SUSPECT the `AGENTS.md` hook also treats an earlier *partial* read as loaded. That's untested; the tool assumes so and inlines slices anyway.
+- ~SUSPECT the `AGENTS.md` hook also treats an earlier *partial* read as loaded. That's untested; it doesn't matter, since ranges are now dropped.
 - Imports in project files that resolve outside the launch directory need a one-time approval whose state the tool can't see. It treats them as not loaded, so explicit reads of them are kept.
-- Partial reads tagged `[when]` stay as written, because the handoff text is never edited. If one fires later, it can still suppress the full load.
 - Path-scoped rules from managed settings are not modelled.
 
-Commits: `0d95fb7`, `a618928`.
+Commits: `0d95fb7`, `a618928`, `5982a64`.
