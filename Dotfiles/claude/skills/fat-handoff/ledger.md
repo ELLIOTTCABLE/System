@@ -297,3 +297,31 @@ Human ruling: fix both. The tool takes explicit `--in` and `--out` flags, with n
 - `fat-pickup/README.md` is a relative symlink to `fat-handoff/README.md`, which is empty for now. It was created as a native Windows symlink (`MSYS=winsymlinks:nativestrict`) and recorded as mode 120000 with target `../fat-handoff/README.md`. It passed the portable-symlink pre-commit guard and resolves from WSL.
 - `outgoing.md` and `incoming.md` are gone. `mining-context.md` stays in `fat-handoff` as its one conditional read.
 - Commits: `e82ce42`, `9fcde3f`, `8692ef4`.
+
+## 7. Tags narrowed to the call's own line; second run (2026-10-06)
+
+Human ruling: the rule that tags reach beyond their read is rescinded, because a misplaced tag turns a mandatory read conditional. A tag now counts only on the read call's own line, after the call. A tag anywhere else is prose, and the read stays mandatory. This applies to `[when]`, `[p=…]`, `[inline]` and `[no-inline]`, and it is narrower than the original rule: the indented annotation lines below a read no longer carry tags. They still decide where an inlined `<result>` goes.
+
+- The builder reverted §6's tag-reach work as one labelled revert, then narrowed in separate commits: `e487d72`, `ec8b785`, `8f6b094`, `e99830d`. The suite passes 44 of 44.
+- On the 314a handoff, its five bullet-line `[when]` reads are mandatory again. The tool's output matches the original pre-fix summary and batch.
+- §6's description of how far a tag reaches is superseded. Its `--in`/`--out` part stands.
+- Not yet in the prose: neither `SKILL.md` says a tag must sit on the call's own line. Only the example shows it.
+
+Human ruling: no shared tag legend for now. Whether to explain the claim tags is left to the handoff agent.
+
+Second run: a rewind, then a fresh `/fat-handoff` under the split skill. It wrote `.tmp/r31-world-relations-naming-sitting.handoff.md`, 151 lines.
+
+- **Two requests:** the Write, then the reply. The split removed the routing read.
+- **The example shaped the output:**
+  - Every `[when]` sits on the same line as its read.
+  - The filename is the example command's placeholder, copied, and the file's title was its path. The human then dropped the example's path-title (`492b871`).
+  - It still didn't copy the example's order: it put the ledger near the top, as permanent material.
+- **What it carried:**
+  - It restated ledgered conduct "because they govern every action".
+  - It included both resumable subagent IDs.
+  - It quoted the whole remit as `[TYPED]`.
+  - It dropped the "Load these skills" line.
+  - The mandatory reads total about 38k tokens, the same thin-foundation question as run 1.
+- **Cache miss despite the timing.** It came 51 minutes after run 1, inside the 1-hour window, yet still re-wrote 865,746 tokens; only the ~19k system prompt was a cache hit.
+  - ~SUSPECT: after a rewind, the only live cache entries end inside the abandoned branch, not at the point rewound to.
+  - If so, each rewind-and-reinvoke on a long session costs a full re-write: about 1.7M input-token equivalents at ~880k.
