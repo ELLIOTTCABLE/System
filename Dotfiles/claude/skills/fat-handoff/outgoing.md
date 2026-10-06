@@ -48,3 +48,29 @@ These are only seeds, they are not an exhaustive list; and they're probably less
 - probably not durable: subagent IDs for resumption/messaging if they're intended to be reused / are in-flight
 - probably not durable: worktree(s) (or branches if there's no worktree) in-flight; and/or similar things needing reuse or eventual clean-up
 - probably durable/ledger: human's tabled/punted/let's-return-to-this
+
+## Example
+
+An illustration, not a template:
+
+```markdown
+# Handoff: cache-eviction design sitting, mid-review
+
+Goal [TYPED]: "evictions must never drop a dirty entry." Stay a reviewer: propose changes, and edit `src/` only after an ack [ACKED].
+
+Read(file_path="/src/widget/README.md")
+Read(file_path="/src/widget/DESIGN.md")
+Read(file_path="/src/widget/.claude/skills/reviewer/SKILL.md")
+
+The two eviction paths under discussion, and the note comparing them:
+
+Read(file_path="/src/widget/src/cache/evict.rs", offset=120, limit=60)
+Read(file_path="/src/widget/docs/notes/07-lru-vs-clock.md", offset=40, limit=35)
+
+Read(file_path="/src/widget/bench/RESULTS.md") [when] benchmarks come up
+Read(file_path="/src/widget/docs/notes/05-write-back.md") [when] the human reopens write-back
+
+Read(file_path="/src/widget/docs/eviction-ledger.md")
+
+In flight [AGENT]: a CLOCK variant, uncommitted, in worktree `.worktrees/clock`. Whether pinned entries count toward capacity is [PRESENTED], unanswered. The human's last words [TYPED]: "show me the dirty-bit path before we touch eviction order."
+```
