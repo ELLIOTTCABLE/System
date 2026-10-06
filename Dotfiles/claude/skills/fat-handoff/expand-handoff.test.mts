@@ -237,6 +237,108 @@ test("issued reads with only blank lines between share a page; any other text, h
    ])
 })
 
+test("run 3's shape: every line between issued reads lands after the read above's result and before the next's", () => {
+   const read = (name: string) => {
+      const path = join(dir, `run3-${name}.md`)
+      writeFileSync(path, numberedLines(300))
+      return `Read(file_path="${path}")`
+   }
+   const skills = ["conductor", "architect", "session", "ste", "commit"].map(read)
+   const ledger = read("ledger")
+   const background = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"].map(read)
+   const spec = read("spec")
+   const handoffLines = [
+      "# Handoff: the r31 world-side naming sitting",
+      "",
+      "You are picking up a design sitting with the human.",
+      "",
+      "## Remit and conduct (stays important all session)",
+      "",
+      "- Remit: act as a teacher, collaborator, and design-duck.",
+      "- Format: plain prose and simple lists.",
+      "",
+      ...skills,
+      "",
+      "The ledger of this sitting, whole:",
+      "",
+      ledger,
+      "",
+      "## Background (least important; read once)",
+      "",
+      ...background,
+      "",
+      "Caution: 315 and 314 were written before this sitting's renames.",
+      "",
+      `${read("horizon")} [when] the horizon discussion resumes`,
+      `${read("praxis")} [when] about to edit spec text`,
+      "",
+      "## The specification, current state (in flight)",
+      "",
+      "The spec's opening and its rename tables:",
+      "",
+      spec,
+      "",
+      "## The human's last words",
+      "",
+      "Wait for the human's direction.",
+   ]
+   const handoff = handoffLines.join("\n") + "\n"
+   const { output, batch } = expand(handoff, { pickupPath: pickup })
+
+   const lineOf = (text: string) => handoffLines.indexOf(text) + 1
+   const page = (first: number, last: number) => `Read(file_path="${pickup}", offset=${first}, limit=${last - first + 1})`
+   assert.equal(output, handoff)
+   assert.deepEqual(batch, [
+      page(1, lineOf(skills[4])),
+      ...skills,
+      page(lineOf(skills[4]) + 1, lineOf(ledger)),
+      ledger,
+      page(lineOf(ledger) + 1, lineOf(background[9])),
+      ...background,
+      page(lineOf(background[9]) + 1, lineOf(spec)),
+      spec,
+      page(lineOf(spec) + 1, handoffLines.length),
+   ])
+
+   const issued = [...skills, ledger, ...background, spec]
+   const pageHolding = (line: number) =>
+      batch.findIndex((call) => {
+         const [, offset, limit] = /offset=(\d+), limit=(\d+)/.exec(call) ?? []
+         return call.includes(pickup) && +offset <= line && line < +offset + +limit
+      })
+   handoffLines.forEach((text, i) => {
+      if (text === "" || issued.includes(text)) return
+      const above = issued.findLast((call) => lineOf(call) < i + 1)
+      const below = issued.find((call) => lineOf(call) > i + 1)
+      if (above) assert.ok(batch.indexOf(above) < pageHolding(i + 1), `line ${i + 1} lands before the result above it`)
+      if (below) assert.ok(pageHolding(i + 1) < batch.indexOf(below), `line ${i + 1} lands after the result below it`)
+   })
+})
+
+test("the pickup is the handoff with result blocks inserted, and its pages tile it whole", () => {
+   const handoff = [
+      "# Handoff",
+      "Intro prose.",
+      `Read(file_path="${short}", offset=1, limit=3)`,
+      "   why: the opening.",
+      `- Read(file_path="${long}")`,
+      `- Read(file_path="${other}", offset=1, limit=300) [when] the human asks about X`,
+      "",
+      "## Later",
+      `Read(file_path="${huge}")`,
+      "Closing prose.",
+   ].join("\n") + "\n"
+   const { output, batch, inlined } = expand(handoff, { pickupPath: pickup })
+
+   const withoutResults = output.replace(/<result>\n<name>\w+<\/name>\n<output>[\s\S]*?<\/output>\n<\/result>\n/g, "")
+   const pages = batch.filter((call) => call.includes(pickup)).map((call) => /offset=(\d+), limit=(\d+)/.exec(call)!)
+   assert.equal(inlined, 1)
+   assert.equal(withoutResults, handoff)
+   assert.equal(+pages[0][1], 1)
+   for (let k = 1; k < pages.length; k++) assert.equal(+pages[k][1], +pages[k - 1][1] + +pages[k - 1][2])
+   assert.equal(+pages.at(-1)![1] + +pages.at(-1)![2] - 1, output.split("\n").length - 1)
+})
+
 test("nearby reads of one file become one issued read when that's cheaper, the handoff untouched", () => {
    const a = `Read(file_path="${long}", offset=1, limit=30)`
    const b = `Read(file_path="${long}", offset=34, limit=30)`
