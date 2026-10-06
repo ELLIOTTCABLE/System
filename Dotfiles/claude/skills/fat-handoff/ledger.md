@@ -259,3 +259,41 @@ Human ruling: fix both. The tool takes explicit `--in` and `--out` flags, with n
 - **Drift and staleness.** The human added a line to `SKILL.md` (`72ba9f5`) saying handoffs are immediate: ignore git and disk TOCTOU, and lean toward trusting the other side's recency. This answers the agent's notes about line-number drift.
 
 **Data for carrying every human message:** in this design session the human typed about 52k characters (~13k tokens) over 50 messages, against about 170k characters of visible assistant text, roughly 1:3.3. Carrying every message verbatim would cost about 13k tokens.
+
+## 6. Tool fixes, routing test, and the split (2026-10-06)
+
+**Tool fixes**, done by a builder subagent in commits `0af1fd0` through `8eadb85`. The suite passes 48 of 48.
+
+- **Reach of a tag.** A tag still applies through its read's own line and the indented lines under it. It now also applies to every later read in the same block:
+  - A tag on a bullet reaches that bullet's deeper-indented lines.
+  - A tag on a plain line reaches the lines after it at its indent or deeper.
+  - A blank line, an ATX heading, a sibling bullet or a dedent ends the reach.
+  - A heading never makes a read conditional, even with a bracket tag in it.
+  - A read's own lines never tag another read.
+  - Inlined `<result>` blocks are skipped over, so running the tool again on its own output gives the same result.
+  - `[inline]` and `[no-inline]` reach the same way. The nearest tag of each kind wins.
+- **Flags.** Required `--in` and `--out` replace the positional argument and stdin. Either path form is accepted.
+- **Re-run on the 314a handoff:** "inlined 0 of 13 reads; 3 page(s)". The five `[when]` reads are gone from the batch, and the census is no longer split.
+- **Open risks the builder flagged.** The first two make a read conditional by mistake, the costly direction:
+  - An indented tag line directly under a read attaches to that read, not to the next one.
+  - A legend paragraph mentioning `[when]` tags a read on the very next line. Possible fix: ignore tags inside backticks.
+  - Calls that don't start their line are still not recognized.
+  - Each tab counts as one column of indent.
+
+**Routing test** (subagent, Claude Code 2.1.292, 20 headless runs; pi from source at 0.84.3, 1.0.0 and 1.0.4).
+
+- **Claude Code** can route on an argument at no extra request. The skill body line `@${CLAUDE_SKILL_DIR}/$0.md` attaches the chosen file in the same step as the skill text. +SURE for project and plugin skills.
+  - Typed command: 1 request instead of 2. Model-invoked with `args`: 2 requests instead of 3.
+  - With no argument, `$0` stays literal and the file is silently missing.
+  - Shell injection (``!`cat …`​``) is unsafe: the argument is pasted raw into the shell command. It is also brittle: it needs Bash, it is blocked outside the working directory, and any failure aborts the whole skill load.
+- **pi** expands `/skill:name args` with no substitution and no includes. A model-invoked skill is a plain `read` of `SKILL.md`. Getting another file in with zero extra requests would need an extension (an `input` hook).
+
+**Human ruling: split the skill.**
+
+- The human briefly considered routing on the argument: an empty `$0` for outgoing, `incoming` for picking up. They chose to split instead, because they use pi too, and a split is bullet-proof and tab-completes.
+- `fat-handoff` is authoritative and holds the outgoing instructions in its `SKILL.md`, so the outgoing agent's only read is that one file. It also keeps the tool, the tests and this ledger: the outgoing agent has its own skill directory in hand when it prints the command.
+- `fat-pickup` holds the incoming instructions.
+- Both `SKILL.md` files open with the same shared section, everything before the first `#` heading. The human keeps the two copies in sync by hand.
+- `fat-pickup/README.md` is a relative symlink to `fat-handoff/README.md`, which is empty for now. It was created as a native Windows symlink (`MSYS=winsymlinks:nativestrict`) and recorded as mode 120000 with target `../fat-handoff/README.md`. It passed the portable-symlink pre-commit guard and resolves from WSL.
+- `outgoing.md` and `incoming.md` are gone. `mining-context.md` stays in `fat-handoff` as its one conditional read.
+- Commits: `e82ce42`, `9fcde3f`, `8692ef4`.
