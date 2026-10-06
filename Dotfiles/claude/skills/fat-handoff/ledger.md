@@ -1,4 +1,6 @@
-# conductor-handoff ledger
+# fat-handoff ledger
+
+Named `conductor-handoff` until 2026-10-06. The human renamed it so it reads as a handoff for any agent, not just a conductor. The sections below keep the old wording, as written at the time.
 
 ## 1. Research and design, before any code (2026-10-05)
 
