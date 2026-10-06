@@ -361,6 +361,21 @@ test("expanding an already-expanded pickup changes nothing", () => {
    assert.deepEqual(twice.batch, once.batch)
 })
 
+test("re-expanding a pickup keeps a tag's reach across the results inlined inside it", () => {
+   const handoff = [
+      "- [p=0.9] the human asks about X:",
+      `  Read(file_path="${short}", offset=1, limit=2)`,
+      `  Read(file_path="${long}", offset=1, limit=300)`,
+   ].join("\n") + "\n"
+   const once = expand(handoff, { pickupPath: pickup })
+   const twice = expand(once.output, { pickupPath: pickup })
+
+   assert.equal(once.inlined, 1)
+   assert.equal(twice.output, once.output)
+   assert.deepEqual(twice.batch, once.batch)
+   assert.equal(twice.batch.length, 1)
+})
+
 test("pages stay within budget and never split a call from its inlined result", () => {
    const tiny = { ...HARNESSES.claude, readBudget: 400 }
    const prose = Array.from({ length: 12 }, (_, i) => `Some prose, paragraph ${i + 1}.`)
