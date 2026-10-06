@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process"
-import { existsSync, fstatSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
@@ -63,15 +63,16 @@ export const HARNESSES: Record<string, Harness> = {
    },
 }
 
-const USAGE = `Usage: node expand-handoff.mts <pickup-path> [options] < <handoff>
+const USAGE = `Usage: node expand-handoff.mts --in <handoff-path> --out <pickup-path> [options]
 
-Copies a handoff from stdin into a pickup document at <pickup-path>. Where the handoff dictates
-a read, the read's result is inlined after it if carrying the result pre-read costs the successor
-less than issuing the read. Nothing else in the handoff changes. Stdout gets the one batch of
-reads that delivers the whole document in order: its pages, interleaved with the reads left
-un-inlined. Stderr gets any warnings and a summary.
+Copies the handoff at <handoff-path> into a pickup document at <pickup-path>. Where the handoff
+dictates a read, the read's result is inlined after it if carrying the result pre-read costs the
+successor less than issuing the read. Nothing else in the handoff changes. Stdout gets the one
+batch of reads that delivers the whole document in order: its pages, interleaved with the reads
+left un-inlined. Stderr gets any warnings and a summary.
 
-  <pickup-path>        where to write the pickup document; the page reads point at it
+  --in <handoff-path>  the handoff to expand; it is only read
+  --out <pickup-path>  where to write the pickup document; the page reads point at it
   --harness claude|pi  the harness that will read the pickup (default: the one running this,
                        else guessed from the reads)
   --model <id>         price ratios for this model, from pi's model store (default: the model
@@ -883,11 +884,12 @@ export function callingModel(env = process.env): string | undefined {
    return undefined
 }
 
-function isStdin(path: string): boolean {
-   if (!existsSync(path)) return false
-   const stdin = fstatSync(0, { bigint: true })
-   const file = statSync(path, { bigint: true })
-   return stdin.ino !== 0n && stdin.ino === file.ino && stdin.dev === file.dev
+// Windows paths are case-blind, and links give one file several paths
+function sameFile(a: string, b: string): boolean {
+   if (a === b) return true
+   if (!existsSync(a) || !existsSync(b)) return false
+   const [x, y] = [a, b].map((path) => statSync(path, { bigint: true }))
+   return x.ino !== 0n && x.ino === y.ino && x.dev === y.dev
 }
 
 function main(): void {
@@ -898,8 +900,9 @@ function main(): void {
    let parsed
    try {
       parsed = parseArgs({
-         allowPositionals: true,
          options: {
+            in: { type: "string" },
+            out: { type: "string" },
             harness: { type: "string" },
             model: { type: "string" },
             horizon: { type: "string" },
@@ -911,12 +914,12 @@ function main(): void {
    } catch (error) {
       return fail((error as Error).message)
    }
-   const { values, positionals } = parsed
+   const { values } = parsed
    if (values.help) {
       process.stdout.write(USAGE)
       return
    }
-   if (positionals.length !== 1) fail("give exactly one argument: the path to write the pickup document to")
+   if (values.in === undefined || values.out === undefined) fail("give both --in <handoff-path> and --out <pickup-path>")
    if (values.harness !== undefined && !(values.harness in HARNESSES))
       fail(`--harness must be one of: ${Object.keys(HARNESSES).join(", ")}`)
    const ttl = values["cache-ttl"]
@@ -926,11 +929,16 @@ function main(): void {
       fail("--horizon must be a whole number of requests")
    const paths = values.paths
    if (paths !== undefined && paths !== "windows" && paths !== "posix") fail("--paths must be windows or posix")
-   if (process.stdin.isTTY) fail("redirect the handoff into stdin")
-   const pickupPath = resolve(inForm(positionals[0], localForm()))
-   if (isStdin(pickupPath)) fail("<pickup-path> is the handoff itself; give the pickup a path of its own")
-   const handoff = readFileSync(0, "utf8")
-   if (!handoff.trim()) fail("stdin was empty; redirect the handoff into it")
+   const handoffPath = resolve(inForm(values.in!, localForm()))
+   const pickupPath = resolve(inForm(values.out!, localForm()))
+   if (sameFile(handoffPath, pickupPath)) fail("--out is the handoff itself; give the pickup a path of its own")
+   let handoff = ""
+   try {
+      handoff = readFileSync(handoffPath, "utf8")
+   } catch (error) {
+      fail(`can't read --in: ${(error as Error).message}`)
+   }
+   if (!handoff.trim()) fail(`--in is empty: ${handoffPath}`)
 
    const result = expand(handoff, {
       pickupPath,

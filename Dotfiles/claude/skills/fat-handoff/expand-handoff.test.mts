@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
-import { closeSync, mkdirSync, mkdtempSync, openSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { test } from "node:test"
@@ -388,12 +388,15 @@ test("pages stay within budget and never split a call from its inlined result", 
 })
 
 test("the CLI writes the pickup itself, the batch to stdout, and diagnostics to stderr", () => {
+   const cliHandoff = join(dir, "cli-handoff.md")
    const cliPickup = join(dir, "cli-pickup.md")
    const longCall = `Read(file_path="${long}", offset=1, limit=300)`
    const handoff = `Intro.\n${longCall}\n`
-   const run = spawnSync(process.execPath, [script, cliPickup], { input: handoff, encoding: "utf8", env: hermetic })
+   writeFileSync(cliHandoff, handoff)
+   const run = spawnSync(process.execPath, [script, "--in", cliHandoff, "--out", cliPickup], { encoding: "utf8", env: hermetic })
 
    assert.equal(run.status, 0, run.stderr)
+   assert.equal(readFileSync(cliHandoff, "utf8"), handoff)
    assert.equal(readFileSync(cliPickup, "utf8"), handoff)
    assert.deepEqual(run.stdout.trimEnd().split("\n"), [
       "Read all these in a single turn:",
@@ -406,9 +409,7 @@ test("the CLI writes the pickup itself, the batch to stdout, and diagnostics to 
 test("the CLI refuses to overwrite the handoff it is reading", () => {
    const handoffPath = join(dir, "handoff.md")
    writeFileSync(handoffPath, "Intro.\n")
-   const stdin = openSync(handoffPath, "r")
-   const run = spawnSync(process.execPath, [script, handoffPath], { stdio: [stdin, "pipe", "pipe"], encoding: "utf8", env: hermetic })
-   closeSync(stdin)
+   const run = spawnSync(process.execPath, [script, "--in", handoffPath, "--out", handoffPath], { encoding: "utf8", env: hermetic })
 
    assert.equal(run.status, 2)
    assert.match(run.stderr, /is the handoff itself/)
