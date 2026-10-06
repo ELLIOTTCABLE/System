@@ -392,26 +392,26 @@ test("a read is still inlined when another real read already loads its directory
    assert.equal(output.split("\n")[2], "<result>")
 })
 
-test("a partial read of an instruction file is inlined, since a real one would stop the harness loading the rest", () => {
+test("a range on an instruction file is dropped, since the harness loads it whole", () => {
    const root = project({ "part/CLAUDE.md": numberedLines(30) })
-   const partial = `Read(file_path="${join(root, "part", "CLAUDE.md")}", offset=1, limit=5)`
-   const { output, batch, slices } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root })
+   const file = join(root, "part", "CLAUDE.md")
+   const partial = `Read(file_path="${file}", offset=1, limit=5)`
+   const { output, batch, widened } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root })
 
-   assert.equal(slices, 1)
-   assert.equal(output.split("\n")[1], "<result>")
-   assert.equal(batch.length, 1)
+   assert.equal(widened, 1)
+   assert.equal(output, `${partial}\n`)
+   assert.deepEqual(batch.slice(1), [`Read(file_path="${file}", offset=1, limit=30)`])
 })
 
-test("a partial read of an instruction file too large to inline is widened to the whole file", () => {
+test("a [when] read of an instruction file with a range is left as written, with a warning", () => {
    const root = project({ "part/CLAUDE.md": numberedLines(30) })
-   const partial = `Read(file_path="${join(root, "part", "CLAUDE.md")}", offset=1, limit=25)`
-   const tiny = { ...HARNESSES.claude, readBudget: 300 }
-   const { batch, widened } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root, harness: tiny })
+   const partial = `Read(file_path="${join(root, "part", "CLAUDE.md")}", offset=1, limit=5) [when] asked about parts`
+   const { output, batch, warnings } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root })
 
-   const spans = batch.slice(1).map((call) => /offset=(\d+), limit=(\d+)/.exec(call)!.slice(1).map(Number))
-   assert.equal(widened, 1)
-   assert.equal(spans[0][0], 1)
-   assert.equal(spans.at(-1)![0] + spans.at(-1)![1] - 1, 30)
+   assert.equal(output, `${partial}\n`)
+   assert.equal(batch.length, 1)
+   assert.equal(warnings.length, 1)
+   assert.match(warnings[0], /^line 1: .*instruction file.*read the whole file$/)
 })
 
 test("pi, which loads nothing on reads, inlines what Claude Code keeps real", () => {
