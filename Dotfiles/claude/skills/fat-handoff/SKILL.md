@@ -47,10 +47,10 @@ Attention is consistently strongest at the start (and temporarily at the end); a
 
 Dictate each read as exactly your harness's file-read call. You may include a specific range or not, as you see fit. You may include multiple read-calls with different line ranges at different parts of the handoff. You may include information about why it matters if you want, but that will usually be excessive; it's likely to be obvious from context. (i.e. a common pattern for simple handoffs will be an short initial block of critical prose/context; a simple block of harness-read-calls for relevant files; and then a rundown of what's in-flight and recent.) Skills the successor needs are reads of their SKILL files.
 
-Finish by giving the human this command, with this skill's directory and your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
+Finish by giving the human this command, pointing to the script in this skill's directory, and with your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
 
 ```sh
-node "<this skill's directory>/expand-handoff.mts" --out "handoff.out.md" --in "<dir>/r31-world-relations-naming-sitting.handoff.md"
+node "<fat-handoff skill's directory>/expand-handoff.mts" --out ".tmp/_handoff.out.md" --in ".tmp/r31-world-relations-naming-sitting.handoff.md"
 ```
 
 ## What to include
@@ -68,7 +68,6 @@ These are only seeds, they are not an exhaustive list; and they're probably less
 A very short illustration, not a template; and yours will probably be much, much longer than this, with a variety of sections and contents sorted carefully according to priority and successor-context-window-ordering.
 
 ```markdown
-# .tmp/my-topic.handoff.md
 Goal [TYPED]: "evictions must never drop a dirty entry." Stay a reviewer: propose changes, and edit `src/` only after an ack [ACKED].
 
 Read(file_path="README.md")
