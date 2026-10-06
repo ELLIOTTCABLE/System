@@ -139,31 +139,28 @@ function indentOf(line: string): number {
    return line.search(/\S/)
 }
 
-// The prose lines above a read that enclose it, nearest first: its list item's lines, or its
-// paragraph's outside any item. Earlier inlined results are looked through; another read's own lines
-// tag only that read.
-function enclosingLines(lines: string[], at: number, results: Set<number>, owned: Set<number>): string[] {
+function enclosingLines(lines: string[], at: number, resultLines: Set<number>, ownedByReads: Set<number>): string[] {
    const block = [at]
    for (let k = at - 1; k >= 0; k--) {
-      if (results.has(k)) continue
+      // skipped, not a break, so re-expanding a pickup scopes tags the same
+      if (resultLines.has(k)) continue
       if (BLANK_OR_HEADING.test(lines[k])) break
       block.unshift(k)
    }
    const text = block.map((k) => lines[k])
    const enclosing: string[] = []
    for (let j = block.length - 2; j >= 0; j--)
-      if (!owned.has(block[j]) && reaches(text[j], text.slice(0, j), text.slice(j + 1))) enclosing.push(text[j])
+      if (!ownedByReads.has(block[j]) && reaches(text[j], text.slice(0, j), text.slice(j + 1))) enclosing.push(text[j])
    return enclosing
 }
 
-// A bullet reaches the lines indented below it. A prose line reaches what follows at its indent or
-// deeper, short of a sibling item: level with an item above it, it continues that item.
 function reaches(line: string, above: string[], below: string[]): boolean {
    const indent = indentOf(line)
    if (BULLET.test(line)) return below.every((next) => indentOf(next) > indent)
    const item = above.findLast((prev) => BULLET.test(prev) && indentOf(prev) <= indent)
-   const inItem = item !== undefined && indentOf(item) === indent
-   const ends = (next: string) => indentOf(next) < indent || (inItem && indentOf(next) === indent && BULLET.test(next))
+   const continuesItem = item !== undefined && indentOf(item) === indent
+   const ends = (next: string) =>
+      indentOf(next) < indent || (continuesItem && indentOf(next) === indent && BULLET.test(next))
    return !below.some(ends)
 }
 
@@ -188,7 +185,7 @@ function parseCall(lines: string[], index: number, enclosing: () => string[]): R
 
    // only explicit tags: a mandatory read mistaken for conditional leaves the successor reasoning from a
    // partial foundation, which is far worse than an unneeded read
-   const tagged = [annotation, ...enclosing()] // most specific first, so the nearest tag wins
+   const tagged = [annotation, ...enclosing()] // nearest first: the first tag found wins
    const likelihoodTag = tagged.map((text) => /\[p\s*=\s*([^\]]*)\]/i.exec(text)).find((tag) => tag !== null)
    const conditional = likelihoodTag !== undefined || tagged.some((text) => /\[when\]/i.test(text))
    let likelihood = 1
@@ -787,23 +784,23 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const lines = handoff.split(/\r?\n/)
    const warnings: string[] = []
    const calls: ReadCall[] = []
-   const results = new Set<number>()
-   const owned = new Set<number>() // each read's call and annotation lines
+   const resultLines = new Set<number>()
+   const ownedByReads = new Set<number>()
    for (let i = 0; i < lines.length; i++) {
       // an earlier run's inlined results may quote reads
       if (lines[i].trim() === "<result>") {
          const open = i
          while (i < lines.length - 1 && lines[i].trim() !== "</result>") i++
-         for (let k = open; k <= i; k++) results.add(k)
+         for (let k = open; k <= i; k++) resultLines.add(k)
          continue
       }
-      const call = parseCall(lines, i, () => enclosingLines(lines, i, results, owned))
+      const call = parseCall(lines, i, () => enclosingLines(lines, i, resultLines, ownedByReads))
       if (call === "malformed") {
          warnings.push(`line ${i + 1} looks like a read but doesn't parse; left as written, not batched: ${lines[i].trim()}`)
-         owned.add(i)
+         ownedByReads.add(i)
       } else if (call) {
          calls.push(call)
-         for (let k = call.line; k <= call.annotationEnd; k++) owned.add(k)
+         for (let k = call.line; k <= call.annotationEnd; k++) ownedByReads.add(k)
          i = call.annotationEnd
       }
    }
@@ -884,7 +881,6 @@ export function callingModel(env = process.env): string | undefined {
    return undefined
 }
 
-// Windows paths are case-blind, and links give one file several paths
 function sameFile(a: string, b: string): boolean {
    if (a === b) return true
    if (!existsSync(a) || !existsSync(b)) return false
