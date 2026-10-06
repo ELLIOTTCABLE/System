@@ -92,7 +92,8 @@ A read is a line that holds one read call, optionally bulleted or in backticks:
   Read(notes/a.md)
   Read({"file_path": "C:\\\\notes\\\\a.md", "offset": 10})
 Its annotation is the rest of that line plus any indented lines directly below it. An inlined
-result goes after the annotation. The annotation stays as written, and may carry:
+result goes after the annotation, which stays as written. Tags count only on the call's own line,
+after the call; anywhere else they are prose, and the read stays mandatory:
   [when] <trigger>  a conditional read, issued only if the trigger fires, so never batched;
                     only this tag (or [p=…]) makes a read conditional, never prose like "when:"
   [p=0.2]           the chance a conditional read's trigger fires (default ${DEFAULT_CONDITIONAL_LIKELIHOOD})
@@ -141,20 +142,20 @@ function parseCall(lines: string[], index: number): ReadCall | "malformed" | und
 
    let annotationEnd = index
    while (isAnnotation(lines[annotationEnd + 1])) annotationEnd++
-   const annotation = [line.slice(close + 1), ...lines.slice(index + 1, annotationEnd + 1)].join("\n")
 
-   // only explicit tags: a mandatory read mistaken for conditional leaves the successor reasoning from a
-   // partial foundation, which is far worse than an unneeded read
-   const likelihoodTag = /\[p\s*=\s*([^\]]*)\]/i.exec(annotation)
-   const conditional = likelihoodTag !== null || /\[when\]/i.test(annotation)
+   // only explicit tags, only on the call's own line: a mandatory read mistaken for conditional leaves the
+   // successor reasoning from a partial foundation, which is far worse than an unneeded read
+   const tags = line.slice(close + 1)
+   const likelihoodTag = /\[p\s*=\s*([^\]]*)\]/i.exec(tags)
+   const conditional = likelihoodTag !== null || /\[when\]/i.test(tags)
    let likelihood = 1
    if (conditional) {
       const tagged = Number(likelihoodTag?.[1])
       likelihood = tagged >= 0 && tagged <= 1 ? tagged : DEFAULT_CONDITIONAL_LIKELIHOOD
    }
    let force: ReadCall["force"]
-   if (/\[no-inline\]/i.test(annotation)) force = "no-inline"
-   else if (/\[inline\]/i.test(annotation)) force = "inline"
+   if (/\[no-inline\]/i.test(tags)) force = "no-inline"
+   else if (/\[inline\]/i.test(tags)) force = "inline"
 
    return {
       line: index,
