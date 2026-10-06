@@ -137,3 +137,46 @@ Open or unverified:
   - linking the predecessor's session file, which is now cheap via `CLAUDE_CODE_SESSION_ID` / `PI_SESSION_FILE`
 
 Commits: `6bd9ab9` through `5d188ea` on System `main`.
+
+## 3. Instruction files the harness loads by itself (2026-10-06)
+
+`steering.mts` models what each harness loads into context with no read from the model. The per-harness profiles at its top hold the names, recursion and import settings. `expand-handoff` uses the model to avoid both double loads, since steering files are long and dense, and lost invariants.
+
+Claude Code, as verified on 2.1.291 against its docs (code.claude.com/docs/en/memory), its leaked March source (`claudemd.ts`, `attachments.ts`) and live headless runs:
+
+- **At launch**, it loads:
+  - the managed `CLAUDE.md`
+  - `~/.claude/CLAUDE.md` and `~/.claude/rules`
+  - `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md` and unconditional `.claude/rules/**/*.md` in every directory from the filesystem root down to the launch directory
+- **On a read** of a file below the launch directory, it loads the same names, plus rules whose `paths` match, for every directory strictly between the launch directory and the file. Ancestors contribute only matching path-scoped rules. Rules match gitignore-style (the `ignore` package), relative to the folder containing `.claude`, with braces expanded and a trailing `/**` dropped.
+- **`@` imports** are expanded:
+  - from prose only, outside code and comments
+  - relative to the importing file, up to depth 5
+  - text extensions only
+  - nested files skip imports that resolve outside the launch directory
+- **`AGENTS.md`** is read directly (2.1.277+), in default mode only when no `CLAUDE*` file exists at or above the launch directory; `~/.claude/CLAUDE.md` doesn't count. Nested ones arrive through a `PostToolUse` hook. Dorc instead uses `CLAUDE.md` = `@AGENTS.md`.
+- **Dedupe:**
+  - The harness skips any file already in its read-file cache, so an explicit whole read in the same batch prevents a double load (verified).
+  - **A partial read also enters that cache, suppressing the harness's full load for good** (verified).
+- **Worktrees:** from a worktree nested inside its main repo, the main repo's checked-in files are skipped and its `CLAUDE.local.md` is kept.
+- **`claudeMdExcludes`** settings apply.
+
+pi, from its `resource-loader.ts`: at launch it loads one file per directory, the first that exists of `AGENTS.override.md`, `AGENTS.md`, `AGENTS.MD`, `CLAUDE.md`, `CLAUDE.MD`. It does so in the agent directory and from the launch directory upward, skipping a main-repo file shadowed by a nested worktree's own copy. It has no imports and loads nothing on reads.
+
+What `expand-handoff` does with the model:
+
+1. A read of a file the harness loaded at launch is skipped. That covers case 1 of the request: an explicit whole read takes the file out of the at-risk set.
+2. A file the harness may load by itself is never inlined. Otherwise a later real read would load it a second time.
+3. A partial read of such a file is inlined as a slice, never read for real, because a real one would suppress the full load. The harness still loads the whole file if the successor works in that directory. A slice too large to inline is widened to the whole file. On Dorc this kept a 71-line slice of `spike/AGENTS.md` from becoming the whole 1,476-line file.
+4. Where inlining would skip instruction files the harness loads on a real read, the fewest reads covering them all are kept real.
+
+Dependencies `yaml`, `ignore` and `braces` are declared in `System/package.json`. All three were already installed through zx, so `bun install` only needs to record them in `bun.lock`.
+
+Open or unverified:
+
+- ~SUSPECT the `AGENTS.md` hook also treats an earlier *partial* read as loaded. That's untested; the tool assumes so and inlines slices anyway.
+- Imports in project files that resolve outside the launch directory need a one-time approval whose state the tool can't see. It treats them as not loaded, so explicit reads of them are kept.
+- Partial reads tagged `[when]` stay as written, because the handoff text is never edited. If one fires later, it can still suppress the full load.
+- Path-scoped rules from managed settings are not modelled.
+
+Commits: `0d95fb7`, `a618928`.
