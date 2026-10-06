@@ -285,7 +285,7 @@ Human ruling: fix both. The tool takes explicit `--in` and `--out` flags, with n
 - **Claude Code** can route on an argument at no extra request. The skill body line `@${CLAUDE_SKILL_DIR}/$0.md` attaches the chosen file in the same step as the skill text. +SURE for project and plugin skills.
   - Typed command: 1 request instead of 2. Model-invoked with `args`: 2 requests instead of 3.
   - With no argument, `$0` stays literal and the file is silently missing.
-  - Shell injection (``!`cat …`​``) is unsafe: the argument is pasted raw into the shell command. It is also brittle: it needs Bash, it is blocked outside the working directory, and any failure aborts the whole skill load.
+  - Shell injection (`` !`cat …` ``) is unsafe: the argument is pasted raw into the shell command. It is also brittle: it needs Bash, it is blocked outside the working directory, and any failure aborts the whole skill load.
 - **pi** expands `/skill:name args` with no substitution and no includes. A model-invoked skill is a plain `read` of `SKILL.md`. Getting another file in with zero extra requests would need an extension (an `input` hook).
 
 **Human ruling: split the skill.**
