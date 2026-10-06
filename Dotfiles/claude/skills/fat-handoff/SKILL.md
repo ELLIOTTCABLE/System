@@ -34,7 +34,7 @@ Leave file contents to the read-calls; don't manually inline, this tool will han
 
 The associated script in this skill will *unfold* your handoff: read-calls will be, as appropriate, possibly inlined, or dictated-as-reads to the successor, *before your other text*. That means "hello\nread(somefile.md)\nworld" will result in 'hello' at the start of the agent's context-window; but 'world' *after* the entire contents of somefile.md. This is true whether or not it is inlined; this SKILL's tool maintains the ordering carefully.
 
-In a handoff, a read marked `[when] <circumstance>` is made only if that circumstance arises. Claims in the handoff's own prose are ~SUSPECT at most; the successor verifies them before relying on them.
+In a handoff, a read marked `[when] <circumstance>` is made only if that circumstance arises. Claims in the handoff's own prose are ~SUSPECT at most; the successor verifies them before relying on them. The `[when]` must appear at the end of the line containing the harness-read-call.
 
 Every read not marked `[when]` is mandatory: they will all be consumed during the successor agent's first turn. (Do not undershoot: if the human booted *you* up with lots of must-read context at the start of your session, it's clearly appropriate to dictate a lot of context for your successor. Be judicious about what's necessary; reason through which of the documents you read during your session turned out useful, and which turned out to be duds. Consider the arc of upcoming work and only mark `[when]` for files that are genuinely a distraction until some trigger-point.)
 
