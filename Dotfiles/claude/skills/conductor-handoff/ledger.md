@@ -184,3 +184,38 @@ Open or unverified:
 - Path-scoped rules from managed settings are not modelled.
 
 Commits: `0d95fb7`, `a618928`, `5982a64`.
+
+## 4. The SKILL's prose (2026-10-06)
+
+Human rulings for `SKILL.md` and its sibling files:
+
+- **Invocation.** The human usually asks for skills in prose ("…then proceed into the handoff skill") rather than opening with `/name`.
+  - Tested on Claude Code 2.1.292: `disable-model-invocation: true` is a hard block, not steering.
+  - The skill drops out of the model's list. A forced Skill call errors, telling the model to ask the human to type `/name`.
+  - So it isn't used. The description carries the request-only steering.
+- **Layout.** A near-empty `SKILL.md` holds only what both sides share and routes to `outgoing.md` or `incoming.md`, so neither side spends attention on the other's text.
+- **Mining the session for context** is only for outgoing conductors that haven't been ledgering. Ledgering exists to manage window attention as the work goes.
+  - It gets its own file, chained from `outgoing.md`.
+  - Alternatively the outgoing side splits into ledgering and plain variants; undecided.
+  - `[TYPED]` / `[ACKED]` belong to ledgering practice, so they appear only in that file.
+- **Ledgering stays soft**; there's no global ledgering skill yet. If a ledger is running, invoking this skill authorizes bringing it up to date the way it has been used. The handoff doesn't repeat it.
+- **Durable versus not** gets one paragraph. Part of the point is carrying forward what isn't authorized, or isn't important enough, to make durable: work in flight, unsettled questions, things the human hasn't acked, anything the project's own practice keeps out of what it saves.
+- **Naming.** The document is "the handoff". "Residue" only ever meant the part that couldn't be made durable.
+- **Headline: reference, don't copy.** Each piece of context gets one deliberate home. Don't restate what a ledger or a dictated read already says. Add to it only where there's something it can't hold.
+- **Ordering.** The prose says that ordering matters and leaves the choice to the outgoing conductor. The shape, from first to last:
+  1. Steering that stays important for the whole session. Mostly the human's own prompt, which they write and tune.
+  2. Material that stays important, at the top of the U.
+  3. The least important material, in the middle.
+  4. Material important only for the work in flight, at the bottom.
+  5. Short-lived steering, last: what was just being done, what the human last asked.
+- **Read-line format is not specified.** The tool keeps every read line, inserts results after it, and should cope with whatever a model writes (e.g. `Read(doc.md) # why`).
+  - +SURE from its parser: a call is recognized only at the start of a line, optionally bulleted or in backticks. A call mid-sentence is missed.
+  - If that matters, fixing it is the code's job, not the prose's.
+- **The outgoing conductor never reads or runs the tool.** By then its window may be down to 20–50k, and most of that should go into the handoff, ideally as one final write. Its only contact with the tool is one command for the human to copy, with its filenames filled in.
+- **Filenames** are the outgoing conductor's choice, with no steering. Examples use long descriptive names, never `handoff.md`.
+- **No successor prompt.** The human writes their own prompt, possibly naming skills of their own. The top of the handoff is what follows that prompt. The tool's one printed line ("Read all these in a single turn:") is the only other steering.
+- **Invocation documentation stays light:** one example code block. `--help` is a last resort; don't steer toward it.
+- **Punted:**
+  - Prior-session data. The tool will add it.
+  - Successor skills. For now they're plain reads of their files. Open idea: load skills in a separate turn so each arrives with its supplements.
+- **The first draft is minimal.** Anything questionable is left out; this section records it for later.
