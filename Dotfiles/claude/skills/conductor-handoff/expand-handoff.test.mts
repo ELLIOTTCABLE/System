@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
 import { closeSync, mkdirSync, mkdtempSync, openSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
 import { test } from "node:test"
 import { fileURLToPath } from "node:url"
 import { callingHarness, callingModel, expand, HARNESSES, inForm } from "./expand-handoff.mts"
@@ -17,14 +17,21 @@ const short = join(dir, "short.md")
 const long = join(dir, "long.md")
 const other = join(dir, "other.md")
 const huge = join(dir, "huge.md")
-const agents = join(dir, "sub", "AGENTS.md")
 const pickup = join(dir, "pickup.md")
 writeFileSync(short, numberedLines(10))
 writeFileSync(long, numberedLines(400))
 writeFileSync(other, numberedLines(400))
 writeFileSync(huge, numberedLines(3000))
-mkdirSync(join(dir, "sub"))
-writeFileSync(agents, numberedLines(3))
+
+// a throwaway project to launch the successor in, holding `files`
+function project(files: Record<string, string>): string {
+   const root = mkdtempSync(join(tmpdir(), "expand-handoff-project-"))
+   for (const [path, text] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, path)), { recursive: true })
+      writeFileSync(join(root, path), text)
+   }
+   return root
+}
 
 test("a short Claude Code read is inlined as the harness would return it", () => {
    const call = `Read(file_path="${short}", offset=2, limit=3)`
@@ -72,21 +79,19 @@ test("pi inlines even a long read, since its pages carry no line numbers", () =>
    assert.match(output, /<output>line 1\n/)
 })
 
-test("harness-loaded files and [no-inline] are never inlined; [inline] overrides the cost model", () => {
-   const agentsCall = `Read(file_path="${agents}")`
+test("[no-inline] keeps a read real, and [inline] overrides the cost model", () => {
    const shortCall = `Read(file_path="${short}")`
    const longCall = `Read(file_path="${long}", offset=1, limit=300)`
-   const handoff = `${agentsCall}\n${shortCall} [no-inline]\n${longCall} [inline]\n`
+   const handoff = `${shortCall} [no-inline]\n${longCall} [inline]\n`
    const { output, batch } = expand(handoff, { pickupPath: pickup })
 
    const lines = output.split("\n")
-   assert.equal(lines[3], "<result>")
+   assert.equal(lines[2], "<result>")
    assert.equal(lines.filter((line) => line === "<result>").length, 1)
    assert.deepEqual(batch, [
-      `Read(file_path="${pickup}", offset=1, limit=2)`,
-      agentsCall,
+      `Read(file_path="${pickup}", offset=1, limit=1)`,
       shortCall,
-      `Read(file_path="${pickup}", offset=3, limit=304)`,
+      `Read(file_path="${pickup}", offset=2, limit=304)`,
    ])
 })
 
@@ -355,4 +360,65 @@ test("batched reads are printed in the harness's path form, whichever form the h
       `Read(file_path="${inForm("C:\\nowhere\\a.md", "posix")}", offset=1, limit=5)`,
       `Read({"file_path": "${inForm("C:\\nowhere\\b.md", "posix")}"})`,
    ])
+})
+
+test("a read of an instruction file the harness loaded at launch is skipped", () => {
+   const root = project({ "CLAUDE.md": "@AGENTS.md\n", "AGENTS.md": numberedLines(10) })
+   const call = `Read(file_path="${join(root, "AGENTS.md")}")`
+   const { output, batch, loadedAtLaunch } = expand(`Prose.\n${call}\n`, { pickupPath: pickup, cwd: root })
+
+   assert.equal(output, `Prose.\n${call}\n`)
+   assert.equal(loadedAtLaunch, 1)
+   assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=2)`])
+})
+
+test("a read stays real where inlining it would skip its directory's instruction files", () => {
+   const root = project({ "sub/CLAUDE.md": "@NOTES.md\n", "sub/NOTES.md": "notes\n", "sub/a.md": "a\n" })
+   const call = `Read(file_path="${join(root, "sub", "a.md")}")`
+   const { output, batch, keptForSteering } = expand(`${call}\n`, { pickupPath: pickup, cwd: root })
+
+   assert.equal(output, `${call}\n`)
+   assert.equal(keptForSteering, 1)
+   assert.deepEqual(batch.slice(1), [call])
+})
+
+test("a read is still inlined when another real read already loads its directory's instruction files", () => {
+   const root = project({ "sub/CLAUDE.md": "rules\n", "sub/a.md": "a\n", "sub/big.md": numberedLines(300) })
+   const small = `Read(file_path="${join(root, "sub", "a.md")}")`
+   const big = `Read(file_path="${join(root, "sub", "big.md")}")`
+   const { output, keptForSteering } = expand(`${big}\n${small}\n`, { pickupPath: pickup, cwd: root })
+
+   assert.equal(keptForSteering, 0)
+   assert.equal(output.split("\n")[2], "<result>")
+})
+
+test("a partial read of an instruction file is inlined, since a real one would stop the harness loading the rest", () => {
+   const root = project({ "part/CLAUDE.md": numberedLines(30) })
+   const partial = `Read(file_path="${join(root, "part", "CLAUDE.md")}", offset=1, limit=5)`
+   const { output, batch, slices } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root })
+
+   assert.equal(slices, 1)
+   assert.equal(output.split("\n")[1], "<result>")
+   assert.equal(batch.length, 1)
+})
+
+test("a partial read of an instruction file too large to inline is widened to the whole file", () => {
+   const root = project({ "part/CLAUDE.md": numberedLines(30) })
+   const partial = `Read(file_path="${join(root, "part", "CLAUDE.md")}", offset=1, limit=25)`
+   const tiny = { ...HARNESSES.claude, readBudget: 300 }
+   const { batch, widened } = expand(`${partial}\n`, { pickupPath: pickup, cwd: root, harness: tiny })
+
+   const spans = batch.slice(1).map((call) => /offset=(\d+), limit=(\d+)/.exec(call)!.slice(1).map(Number))
+   assert.equal(widened, 1)
+   assert.equal(spans[0][0], 1)
+   assert.equal(spans.at(-1)![0] + spans.at(-1)![1] - 1, 30)
+})
+
+test("pi, which loads nothing on reads, inlines what Claude Code keeps real", () => {
+   const root = project({ "sub/AGENTS.md": "rules\n", "sub/a.md": "a\n" })
+   const call = `read(path="${join(root, "sub", "a.md")}")`
+   const { output, keptForSteering } = expand(`${call}\n`, { pickupPath: pickup, cwd: root, harness: "pi" })
+
+   assert.equal(keptForSteering, 0)
+   assert.equal(output.split("\n")[1], "<result>")
 })

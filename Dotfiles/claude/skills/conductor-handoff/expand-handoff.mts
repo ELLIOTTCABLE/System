@@ -4,6 +4,7 @@ import { existsSync, fstatSync, readdirSync, readFileSync, statSync, writeFileSy
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
+import { fileKey, STEERING, type SteeringModel, type SteeringProfile, steeringModel } from "./steering.mts"
 
 // per token, relative to uncached input; `--model` reads real ones from pi's store
 const DEFAULT_PRICE = { output: 5, cacheRead: 0.1, cacheWrite5m: 1.25 }
@@ -19,8 +20,6 @@ const CALL_FRAMING_TOKENS = 25
 const MERGE_GAP_TOKENS = 300
 const READ_TOOL_NAMES = ["Read", "read"]
 const PATH_KEYS = ["file_path", "path", "filePath", "file"]
-// harness injects these on entering their directory; inlining would carry them twice
-const NEVER_INLINE = ["CLAUDE.md", "CLAUDE.local.md", "AGENTS.md"]
 
 type CallStyle = { kind: "kwargs" | "json" | "positional"; name: string; pathKey: string; quote: string }
 
@@ -34,6 +33,7 @@ export type Harness = {
    readMaxLines: number
    cacheTtl: "5m" | "1h"
    moreLinesNotice: boolean
+   steering: SteeringProfile
 }
 
 export const HARNESSES: Record<string, Harness> = {
@@ -47,6 +47,7 @@ export const HARNESSES: Record<string, Harness> = {
       readMaxLines: 2000,
       cacheTtl: "1h",
       moreLinesNotice: false,
+      steering: STEERING.claude,
    },
    pi: {
       defaultStyle: { kind: "kwargs", name: "read", pathKey: "path", quote: '"' },
@@ -58,6 +59,7 @@ export const HARNESSES: Record<string, Harness> = {
       readMaxLines: 2000,
       cacheTtl: "5m",
       moreLinesNotice: true,
+      steering: STEERING.pi,
    },
 }
 
@@ -95,7 +97,12 @@ result goes after the annotation. The annotation stays as written, and may carry
   [p=0.2]           the chance a conditional read's trigger fires (default ${DEFAULT_CONDITIONAL_LIKELIHOOD})
   [inline]          inline even where the cost model says not to
   [no-inline]       never inline
-${NEVER_INLINE.join(" and ")} are never inlined, as the harness loads them by itself.
+
+Instruction files (CLAUDE.md, AGENTS.md, rules, and what they import) are treated as the harness
+loads them: a read of one it loaded at launch is skipped; a whole one is never inlined; a partial
+read of one is inlined, since a real one would stop the harness ever loading the rest (or widened,
+if too large to inline); and a read is kept real where inlining it would skip instruction files the
+harness loads for that file's directory.
 `
 
 type ReadCall = {
@@ -316,29 +323,40 @@ function tokens(text: string): number {
    return Math.ceil(text.length / CHARS_PER_TOKEN)
 }
 
-type Target = { call: ReadCall; file?: string; selection?: Selection; expanded: boolean }
+type Target = {
+   call: ReadCall
+   file?: string
+   selection?: Selection
+   expanded: boolean
+   loadedAtLaunch: boolean
+   slice: boolean
+   widened: boolean
+}
 
 function resolveTarget(call: ReadCall, lines: string[], warnings: string[]): Target {
    const expanded = lines[call.annotationEnd + 1]?.trim() === "<result>"
    const file = locate(call.path)
    if (!file) {
       warnings.push(`line ${call.line + 1}: can't find ${call.path}; left for the successor to read as written`)
-      return { call, expanded }
+      return { call, expanded, loadedAtLaunch: false, slice: false, widened: false }
    }
    const selection = select(file, call.offset, call.limit)
    if (typeof selection === "string") {
       warnings.push(`line ${call.line + 1}: ${call.path}: ${selection}; left as written`)
-      return { call, expanded }
+      return { call, expanded, loadedAtLaunch: false, slice: false, widened: false }
    }
-   return { call, file, selection, expanded }
-}
-
-function neverInline(call: ReadCall): boolean {
-   return NEVER_INLINE.includes(call.path.split(/[\\/]/).at(-1)!)
+   return { call, file, selection, expanded, loadedAtLaunch: false, slice: false, widened: false }
 }
 
 function mergeable(t: Target): boolean {
-   return t.selection !== undefined && !t.expanded && !t.call.conditional && t.call.force !== "inline"
+   return (
+      t.selection !== undefined &&
+      !t.expanded &&
+      !t.loadedAtLaunch &&
+      !t.slice &&
+      !t.call.conditional &&
+      t.call.force !== "inline"
+   )
 }
 
 function canJoin(group: Target[], t: Target, lines: string[]): boolean {
@@ -374,11 +392,11 @@ function splitToFit(span: Selection, harness: Harness): Selection[] {
    return pieces
 }
 
-type Settings = { harness: Harness; price: Price; horizon: number; form: PathForm }
+type Settings = { harness: Harness; price: Price; horizon: number; form: PathForm; steering: SteeringModel }
 
 function readsFor(group: Target[], { harness, form }: Settings): Read[] {
    const first = group[0]
-   if (group.length === 1 && fitsOneRead(first.selection!, harness))
+   if (group.length === 1 && !first.widened && fitsOneRead(first.selection!, harness))
       return [{ text: harnessCall(first.call, form), selection: first.selection! }]
    const start = Math.min(...group.map((t) => t.selection!.start))
    const end = Math.max(...group.map((t) => t.selection!.end))
@@ -408,22 +426,98 @@ function weigh(read: Read, name: string, harness: Harness): Weighing {
 }
 
 type Action = { issue?: string[]; inline?: string[] }
-type Plan = { actions: Map<number, Action>; inlined: number; merged: number; split: number; dropped: number }
+type Plan = {
+   actions: Map<number, Action>
+   inlined: number
+   merged: number
+   split: number
+   dropped: number
+   loadedAtLaunch: number
+   slices: number
+   widened: number
+   keptForSteering: number
+}
 type Price = { output: number; cacheRead: number; cacheWrite: number }
 
-function planReads(targets: Target[], lines: string[], settings: Settings, warnings: string[]): Plan {
-   const { harness, price, horizon, form } = settings
+// Reads of instruction files the harness loaded at launch are skipped. A real partial read of one it
+// loads on reads would stop it ever loading the rest, so that slice is inlined instead: the harness
+// still loads the whole file if the successor works in its directory.
+function steerTargets(targets: Target[], { harness, steering }: Settings, plan: Plan): void {
+   for (const t of targets) {
+      if (!t.file || !t.selection || t.expanded) continue
+      if (steering.launch.has(fileKey(t.file))) {
+         t.loadedAtLaunch = true
+         if (!t.call.conditional) plan.loadedAtLaunch++
+         continue
+      }
+      if (!harness.steering.onRead || t.call.conditional || !steering.loadable(t.file)) continue
+      const whole = select(t.file, undefined, undefined) as Selection
+      t.slice = whole.start !== t.selection.start || whole.end !== t.selection.end
+   }
+}
+
+// a slice too large to inline is read whole, rather than partially and so cut short for good
+function widen(t: Target): void {
+   t.selection = select(t.file!, undefined, undefined) as Selection
+   t.slice = false
+   t.widened = true
+}
+
+type Decision = { group: Target[]; reads: Read[]; weighing: Weighing; inline: boolean; anchor: number }
+
+// inlined content skips the harness's on-read loading, so keep enough reads real to load the same
+// instruction files, preferring the reads that cover the most of them
+function keepSteeringLoaded(decisions: Decision[], { steering }: Settings, pickup: string, plan: Plan): void {
+   const conditional = (d: Decision) => d.group[0].call.conditional
+   // a slice of an instruction file needs no more of it now; the harness loads it all where it's needed
+   const loads = (d: Decision) => (d.group[0].slice ? [] : d.group.flatMap((t) => steering.onRead(t.file!)))
+   const missing = () => {
+      const loaded = new Set(steering.onRead(pickup))
+      for (const d of decisions) {
+         if (d.inline || conditional(d)) continue
+         for (const key of [...loads(d), ...d.group.map((t) => fileKey(t.file!))]) loaded.add(key)
+      }
+      const delivered = decisions.filter((d) => d.inline || !conditional(d))
+      return new Set(delivered.flatMap(loads).filter((key) => !loaded.has(key)))
+   }
+   for (let gap = missing(); gap.size > 0; gap = missing()) {
+      const gain = (d: Decision) => loads(d).filter((key) => gap.has(key)).length
+      const candidates = decisions.filter((d) => d.inline && gain(d) > 0)
+      const real = candidates.filter((d) => !conditional(d))
+      const pool = real.length > 0 ? real : candidates
+      if (pool.length === 0) return
+      const best = pool.reduce((top, d) => (gain(d) > gain(top) ? d : top))
+      best.inline = false
+      plan.keptForSteering++
+   }
+}
+
+function planReads(targets: Target[], lines: string[], settings: Settings, pickup: string, warnings: string[]): Plan {
+   const { harness, price, horizon, form, steering } = settings
+   const plan: Plan = {
+      actions: new Map(),
+      inlined: 0,
+      merged: 0,
+      split: 0,
+      dropped: 0,
+      loadedAtLaunch: 0,
+      slices: 0,
+      widened: 0,
+      keptForSteering: 0,
+   }
+   steerTargets(targets, settings, plan)
    const carried = price.cacheWrite + price.cacheRead * horizon
    // content is carried either way, so page line numbers weigh against the call (paid as output, then carried)
    const inlineCost = (w: Weighing) => w.inlinedTokens * carried
    const issueCost = (w: Weighing) => w.callTokens * price.output + w.issuedTokens * carried
-   // merges stay issued: inlined, a merge's own call line would outweigh the wrapper it saves
+   // merges stay issued: inlined, a merge's own call line would outweigh the wrapper it saves; and an
+   // instruction file inlined would be loaded again by the harness on a later read
    const mayInline = (group: Target[], reads: Read[], w: Weighing) =>
       group.length === 1 &&
       reads.length === 1 &&
       w.inlineFits &&
       group[0].call.force !== "no-inline" &&
-      !neverInline(group[0].call)
+      !steering.loadable(group[0].file!)
    const cost = (group: Target[]) => {
       const reads = readsFor(group, settings)
       const weighings = reads.map((read) => weigh(read, group[0].call.style.name, harness))
@@ -441,41 +535,55 @@ function planReads(targets: Target[], lines: string[], settings: Settings, warni
    const covered = targets
       .filter((t) => t.expanded && t.selection)
       .map((t) => ({ file: t.file!, start: t.selection!.start, end: t.selection!.end }))
-   const plan: Plan = { actions: new Map(), inlined: 0, merged: 0, split: 0, dropped: 0 }
+   const decisions: Decision[] = []
    for (const group of groups) {
-      const { call, file, selection, expanded } = group[0]
+      const { call, file, selection, expanded, loadedAtLaunch } = group[0]
       const anchor = group.at(-1)!.call.annotationEnd
-      if (expanded) continue
+      if (expanded || loadedAtLaunch) continue
       if (!selection) {
          if (!call.conditional) plan.actions.set(anchor, { issue: [harnessCall(call, form)] })
          continue
       }
-      const reads = readsFor(group, settings)
+      let reads = readsFor(group, settings)
+      let weighing = weigh(reads[0], call.style.name, harness)
+      if (group[0].slice && !weighing.inlineFits) {
+         widen(group[0])
+         plan.widened++
+         reads = readsFor(group, settings)
+         weighing = weigh(reads[0], call.style.name, harness)
+      }
       const range = { file: file!, start: reads[0].selection.start, end: reads.at(-1)!.selection.end }
       if (covered.some((c) => c.file === range.file && c.start <= range.start && range.end <= c.end)) {
          plan.dropped += group.length
          continue
       }
 
-      const weighing = weigh(reads[0], call.style.name, harness)
       let inline = false
-      if (mayInline(group, reads, weighing)) {
+      if (group[0].slice) {
+         inline = true
+         plan.slices++
+      } else if (mayInline(group, reads, weighing)) {
          if (call.force === "inline") inline = true
          // an unneeded read wastes context window, which outweighs its price
          else if (call.conditional) inline = weighing.inlinedTokens < call.likelihood * weighing.issuedTokens
          else inline = inlineCost(weighing) < issueCost(weighing)
-      } else if (call.force === "inline" && !neverInline(call)) {
-         warnings.push(`line ${call.line + 1}: ${call.path} is too large to inline; issued instead`)
+      } else if (call.force === "inline") {
+         const why = steering.loadable(file!) ? "the harness loads it by itself" : "it is too large to inline"
+         warnings.push(`line ${call.line + 1}: ${call.path}: ${why}; issued instead`)
       }
       if (call.conditional && !inline) continue
-
       covered.push(range)
+      decisions.push({ group, reads, weighing, inline, anchor })
+   }
+
+   if (harness.steering.onRead) keepSteeringLoaded(decisions, settings, pickup, plan)
+   for (const { group, reads, weighing, inline, anchor } of decisions) {
       if (group.length > 1) plan.merged += group.length
       else if (reads.length > 1) plan.split++
       if (inline) {
          plan.actions.set(anchor, { inline: weighing.result })
          plan.inlined++
-      } else {
+      } else if (!group[0].call.conditional) {
          plan.actions.set(anchor, { issue: reads.map((read) => read.text) })
       }
    }
@@ -622,6 +730,8 @@ export type ExpandOptions = {
    cacheTtl?: "5m" | "1h"
    horizon?: number
    paths?: PathForm
+   cwd?: string
+   env?: NodeJS.ProcessEnv
 }
 
 export type Expansion = {
@@ -633,6 +743,10 @@ export type Expansion = {
    merged: number
    split: number
    dropped: number
+   loadedAtLaunch: number
+   slices: number
+   widened: number
+   keptForSteering: number
    pages: number
    estimatedTokens: number
 }
@@ -664,9 +778,10 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       price: loadPrice(options.model, options.cacheTtl ?? harness.cacheTtl, warnings),
       horizon: options.horizon ?? DEFAULT_HORIZON_REQUESTS,
       form: options.paths ?? localForm(),
+      steering: steeringModel(harness.steering, options.cwd ?? process.cwd(), options.env ?? process.env),
    }
    const targets = calls.map((call) => resolveTarget(call, lines, warnings))
-   const plan = planReads(targets, lines, settings, warnings)
+   const plan = planReads(targets, lines, settings, resolve(options.pickupPath), warnings)
 
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
@@ -693,6 +808,10 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       merged: plan.merged,
       split: plan.split,
       dropped: plan.dropped,
+      loadedAtLaunch: plan.loadedAtLaunch,
+      slices: plan.slices,
+      widened: plan.widened,
+      keptForSteering: plan.keptForSteering,
       pages: steps.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
    }
@@ -792,6 +911,10 @@ function main(): void {
    if (result.merged) summary.push(`merged ${result.merged} into fewer`)
    if (result.split) summary.push(`split ${result.split} too large for one read`)
    if (result.dropped) summary.push(`dropped ${result.dropped} already covered`)
+   if (result.loadedAtLaunch) summary.push(`skipped ${result.loadedAtLaunch} instruction files loaded at launch`)
+   if (result.slices) summary.push(`inlined ${result.slices} partial instruction-file reads, which would cut the file short if real`)
+   if (result.widened) summary.push(`widened ${result.widened} partial instruction-file reads too large to inline`)
+   if (result.keptForSteering) summary.push(`kept ${result.keptForSteering} reads real so their instruction files load`)
    summary.push(`${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens`)
    for (const warning of result.warnings) process.stderr.write(`expand-handoff: warning: ${warning}\n`)
    process.stderr.write(`expand-handoff: ${summary.join("; ")}.\n`)
