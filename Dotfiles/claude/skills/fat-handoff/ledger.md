@@ -221,3 +221,41 @@ Human rulings for `SKILL.md` and its sibling files:
   - Prior-session data. The tool will add it.
   - Successor skills. For now they're plain reads of their files. Open idea: load skills in a separate turn so each arrives with its supplements.
 - **The first draft is minimal.** Anything questionable is left out; this section records it for later.
+
+## 5. First live run (2026-10-06)
+
+The run happened at the tail of Dorc session `730ea7c3…`. Only the outgoing side ran. It wrote `_tmp-314a-handoff.md`, 197 lines, about 3k tokens.
+
+**Outgoing requests.** Three requests at about 880k of context: read `outgoing.md`, one Write, then the command.
+
+- Human ruling: the extra routing request matters on the outgoing side, not the incoming. One more ~900k cache read isn't ruinous, but it is waste.
+- To test: can a skill invocation in Claude Code or pi go straight to a sibling file, with no agent turn in between?
+- If not, the skill may split in two, `fat-handoff` and something like `fat-pickup`, so the outgoing agent reads only one `SKILL.md`. The human dislikes that option.
+
+**Cold cache.** `/fat-handoff` came 80 minutes after the previous turn, so the 1-hour cache had expired.
+
+- The first request re-wrote 866,848 tokens: about 1.7M input-token equivalents, roughly 2.8× the whole original stand-up.
+- Writing the handoff itself took one request and 7.7k output tokens.
+
+**Fidelity:**
+
+- All ten `[TYPED]` quotes were checked against the human's 50 messages. Nine are verbatim; one is cut short mid-sentence with a period added, otherwise word for word.
+- The agent wrote its own tag legend into the handoff header, since only `outgoing.md` defines the tags.
+- Where its edits had shifted line numbers, it gave grep anchors instead. Idea: the tool could turn anchor text into a current range at stand-up.
+
+**Trial expansion** (into a temp dir): "inlined 0 of 13 reads; split 1 too large for one read; 4 page(s), about 3k tokens". It found two bugs:
+
+- All five `[when]` reads were batched as mandatory. Each tag sat on a bullet line, with the reads on that bullet's indented continuation lines, outside the tool's annotation scope.
+  - That's about 118k characters (~30k tokens), landing just before the handoff's closing section.
+  - It includes an 82k-character census split into two reads, though conditional reads are never to be split.
+- The command's `<` redirect is a parse error in Windows PowerShell 5.1, and that session ran its shell commands through PowerShell.
+
+Human ruling: fix both. The tool takes explicit `--in` and `--out` flags, with no positional arguments and no stdin, so the command needs no explanation.
+
+**Punted while the human experiments:**
+
+- **The foundation may be thin.** The handoff's mandatory reads total about 43k tokens. They re-dictate none of the ~250k foundation the session was stood up on; the original reading list survives only as a 40-line conditional read.
+- **Skills may load twice.** The handoff says "Load these skills before working" and also dictates reads of their `SKILL.md` files. ~SUSPECT the successor would load them twice.
+- **Drift and staleness.** The human added a line to `SKILL.md` (`72ba9f5`) saying handoffs are immediate: ignore git and disk TOCTOU, and lean toward trusting the other side's recency. This answers the agent's notes about line-number drift.
+
+**Data for carrying every human message:** in this design session the human typed about 52k characters (~13k tokens) over 50 messages, against about 170k characters of visible assistant text, roughly 1:3.3. Carrying every message verbatim would cost about 13k tokens.
