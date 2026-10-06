@@ -128,8 +128,7 @@ function isAnnotation(line: string | undefined): boolean {
    return line !== undefined && /^\s+\S/.test(line) && !readCallStart(line)
 }
 
-// what may sit between two reads without landing before the first one's result: other reads' own
-// lines and blank lines; any other text must follow that result
+// any other text between two reads must land between their results
 function readsOnly(gap: string[]): boolean {
    let annotating = false
    for (const line of gap) {
