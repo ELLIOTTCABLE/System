@@ -914,7 +914,9 @@ function main(): void {
    summary.push(`${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens`)
    for (const warning of result.warnings) process.stderr.write(`expand-handoff: warning: ${warning}\n`)
    process.stderr.write(`expand-handoff: ${summary.join("; ")}.\n`)
-   process.stdout.write(["Read all these in a single turn:", ...result.batch].join("\n") + "\n")
+   process.stdout.write(`Read all these in a single turn.\n`)
+   process.stdout.write(`(If you've been partially-rewound, and have some in-context above, you may omit any such that are unlikely to have changed.)\n`)
+   process.stdout.write(result.batch.join("\n") + "\n")
 }
 
 if (import.meta.main) main()
