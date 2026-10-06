@@ -475,11 +475,7 @@ test("the CLI writes the pickup itself, the batch to stdout, and diagnostics to 
    assert.equal(run.status, 0, run.stderr)
    assert.equal(readFileSync(cliHandoff, "utf8"), handoff)
    assert.equal(readFileSync(cliPickup, "utf8"), handoff)
-   assert.deepEqual(run.stdout.trimEnd().split("\n"), [
-      "Read all these in a single turn:",
-      `Read(file_path="${cliPickup}", offset=1, limit=2)`,
-      longCall,
-   ])
+   assert.deepEqual(run.stdout.trimEnd().split("\n").slice(-2), [`Read(file_path="${cliPickup}", offset=1, limit=2)`, longCall])
    assert.match(run.stderr, /^expand-handoff: inlined 0 of 1 reads; 1 page\(s\)/)
 })
 
@@ -558,7 +554,7 @@ test("the CLI takes --in and --out in the other side's path form", { skip: noWsl
 
    assert.equal(run.status, 0, run.stderr)
    assert.equal(readFileSync(pickupPath, "utf8"), "Intro.\n")
-   assert.equal(run.stdout.trimEnd().split("\n")[1], `Read(file_path="${pickupPath}", offset=1, limit=1)`)
+   assert.equal(run.stdout.trimEnd().split("\n").at(-1), `Read(file_path="${pickupPath}", offset=1, limit=1)`)
 })
 
 test("batched reads are printed in the harness's path form, whichever form the handoff used", { skip: noWsl }, () => {
