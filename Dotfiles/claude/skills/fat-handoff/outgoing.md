@@ -36,7 +36,7 @@ Dictate each read as exactly your harness's file-read call. You may include a sp
 Finish by giving the human this command, with this skill's directory and your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
 
 ```sh
-node "<this skill's directory>/expand-handoff.mts" "handoff.out.md" <"<dir>/r31-world-relations-naming-sitting.handoff.md"
+node "<this skill's directory>/expand-handoff.mts" --out "handoff.out.md" --in "<dir>/r31-world-relations-naming-sitting.handoff.md"
 ```
 
 ## What to include
