@@ -1,8 +1,8 @@
 ---
-name: conductor-handoff
+name: fat-handoff
 description: >-
-   UPON EXPLICIT REQUEST ONLY. Hand a conductor's working context to a successor in a fresh
-   context window, during a transition the human is managing: the outgoing conductor writes a
+   UPON EXPLICIT REQUEST ONLY. Hand an agent's working context to a successor in a fresh
+   context window, during a transition the human is managing: the outgoing agent writes a
    handoff document, and the incoming one stands up from it. Not for routine summaries or
    compaction.
 ---
