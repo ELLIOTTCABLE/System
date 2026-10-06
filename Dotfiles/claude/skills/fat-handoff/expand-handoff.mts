@@ -91,7 +91,10 @@ A read is a line that holds one read call, optionally bulleted or in backticks:
   Read(notes/a.md)
   Read({"file_path": "C:\\\\notes\\\\a.md", "offset": 10})
 Its annotation is the rest of that line plus any indented lines directly below it. An inlined
-result goes after the annotation. The annotation stays as written, and may carry:
+result goes after the annotation, which stays as written. A tag applies to a read when it is in
+the read's annotation, or above the read in the same list item (a bullet and the lines indented
+below it) or the same paragraph. A blank line or a heading ends a tag's reach; a tag in one read's
+annotation applies to that read alone; the nearest tag wins. The tags:
   [when] <trigger>  a conditional read, issued only if the trigger fires, so never batched;
                     only this tag (or [p=…]) makes a read conditional, never prose like "when:"
   [p=0.2]           the chance a conditional read's trigger fires (default ${DEFAULT_CONDITIONAL_LIKELIHOOD})
@@ -119,6 +122,8 @@ type ReadCall = {
 }
 
 const CALL_START = /^(\s*(?:[-*+]\s+|\d+[.)]\s+)?`*)([A-Za-z_]\w*)\s*\(/
+const BULLET = /^\s*(?:[-*+]|\d+[.)])\s/
+const BLANK_OR_HEADING = /^\s*$|^\s{0,3}#{1,6}(?:\s|$)/
 
 function readCallStart(line: string): RegExpExecArray | undefined {
    const start = CALL_START.exec(line)
@@ -129,7 +134,45 @@ function isAnnotation(line: string | undefined): boolean {
    return line !== undefined && /^\s+\S/.test(line) && !readCallStart(line)
 }
 
-function parseCall(lines: string[], index: number): ReadCall | "malformed" | undefined {
+function indentOf(line: string): number {
+   return line.search(/\S/)
+}
+
+// The prose lines above a read that enclose it, nearest first: its list item's lines, or its
+// paragraph's outside any item. Earlier inlined results are looked through; another read's own lines
+// tag only that read.
+function enclosingLines(lines: string[], at: number, results: Set<number>, owned: Set<number>): string[] {
+   const block = [at]
+   for (let k = at - 1; k >= 0; k--) {
+      if (results.has(k)) continue
+      if (BLANK_OR_HEADING.test(lines[k])) break
+      block.unshift(k)
+   }
+   const text = block.map((k) => lines[k])
+   const enclosing: string[] = []
+   for (let j = block.length - 2; j >= 0; j--)
+      if (!owned.has(block[j]) && reaches(text[j], text.slice(0, j), text.slice(j + 1))) enclosing.push(text[j])
+   return enclosing
+}
+
+// A bullet reaches the lines indented below it. A prose line reaches what follows at its indent or
+// deeper, short of a sibling item: level with an item above it, it continues that item.
+function reaches(line: string, above: string[], below: string[]): boolean {
+   const indent = indentOf(line)
+   if (BULLET.test(line)) return below.every((next) => indentOf(next) > indent)
+   const item = above.findLast((prev) => BULLET.test(prev) && indentOf(prev) <= indent)
+   const inItem = item !== undefined && indentOf(item) === indent
+   const ends = (next: string) => indentOf(next) < indent || (inItem && indentOf(next) === indent && BULLET.test(next))
+   return !below.some(ends)
+}
+
+function forcedIn(text: string): ReadCall["force"] {
+   if (/\[no-inline\]/i.test(text)) return "no-inline"
+   if (/\[inline\]/i.test(text)) return "inline"
+   return undefined
+}
+
+function parseCall(lines: string[], index: number, enclosing: () => string[]): ReadCall | "malformed" | undefined {
    const line = lines[index]
    const start = readCallStart(line)
    if (!start) return undefined
@@ -144,16 +187,15 @@ function parseCall(lines: string[], index: number): ReadCall | "malformed" | und
 
    // only explicit tags: a mandatory read mistaken for conditional leaves the successor reasoning from a
    // partial foundation, which is far worse than an unneeded read
-   const likelihoodTag = /\[p\s*=\s*([^\]]*)\]/i.exec(annotation)
-   const conditional = likelihoodTag !== null || /\[when\]/i.test(annotation)
+   const tagged = [annotation, ...enclosing()] // most specific first, so the nearest tag wins
+   const likelihoodTag = tagged.map((text) => /\[p\s*=\s*([^\]]*)\]/i.exec(text)).find((tag) => tag !== null)
+   const conditional = likelihoodTag !== undefined || tagged.some((text) => /\[when\]/i.test(text))
    let likelihood = 1
    if (conditional) {
-      const tagged = Number(likelihoodTag?.[1])
-      likelihood = tagged >= 0 && tagged <= 1 ? tagged : DEFAULT_CONDITIONAL_LIKELIHOOD
+      const given = Number(likelihoodTag?.[1])
+      likelihood = given >= 0 && given <= 1 ? given : DEFAULT_CONDITIONAL_LIKELIHOOD
    }
-   let force: ReadCall["force"]
-   if (/\[no-inline\]/i.test(annotation)) force = "no-inline"
-   else if (/\[inline\]/i.test(annotation)) force = "inline"
+   const force = tagged.map(forcedIn).find((forced) => forced !== undefined)
 
    return {
       line: index,
@@ -744,17 +786,23 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const lines = handoff.split(/\r?\n/)
    const warnings: string[] = []
    const calls: ReadCall[] = []
+   const results = new Set<number>()
+   const owned = new Set<number>() // each read's call and annotation lines
    for (let i = 0; i < lines.length; i++) {
       // an earlier run's inlined results may quote reads
       if (lines[i].trim() === "<result>") {
+         const open = i
          while (i < lines.length - 1 && lines[i].trim() !== "</result>") i++
+         for (let k = open; k <= i; k++) results.add(k)
          continue
       }
-      const call = parseCall(lines, i)
+      const call = parseCall(lines, i, () => enclosingLines(lines, i, results, owned))
       if (call === "malformed") {
          warnings.push(`line ${i + 1} looks like a read but doesn't parse; left as written, not batched: ${lines[i].trim()}`)
+         owned.add(i)
       } else if (call) {
          calls.push(call)
+         for (let k = call.line; k <= call.annotationEnd; k++) owned.add(k)
          i = call.annotationEnd
       }
    }
