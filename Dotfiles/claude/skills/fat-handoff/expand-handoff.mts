@@ -837,7 +837,6 @@ export function callingModel(env = process.env): string | undefined {
    return undefined
 }
 
-// Windows paths are case-blind, and links give one file several paths
 function sameFile(a: string, b: string): boolean {
    if (a === b) return true
    if (!existsSync(a) || !existsSync(b)) return false
