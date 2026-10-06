@@ -67,7 +67,7 @@ These are only seeds, they are not an exhaustive list; and they're probably less
 
 ## Your final message
 
-Finish by giving the human this command pointed to the script in this skill's directory (construct from memory appropriately, don't check with a tool-call), and with your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
+Finish by giving the human this command pointed to the script in this skill's directory (construct from memory appropriately, don't check with a tool-call; use whatever invocation/paths are correct for your platform), and with your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
 
 ```sh
 node "<fat-handoff skill's directory>/expand-handoff.mts" --out ".tmp/_handoff.out.md" --in ".tmp/r31-world-relations-naming-sitting.handoff.md"
