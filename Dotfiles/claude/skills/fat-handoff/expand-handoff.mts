@@ -4,6 +4,7 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
+import { unchangedSince } from "./last-saw.mts"
 import { fileKey, STEERING, type SteeringModel, type SteeringProfile, steeringModel } from "./steering.mts"
 
 // per token, relative to uncached input; `--model` reads real ones from pi's store
@@ -79,6 +80,10 @@ left un-inlined. Stderr gets any warnings and a summary.
   --paths windows|posix
                        the path form the harness reads; set it when this runs on the other side
                        of Windows/WSL from the harness (default: the form of the side running this)
+  --last-saw <commit|time>
+                       a commit, or a time like "2026-10-05 17:30" (local unless zoned), at or before
+                       the reads the successor already holds (too new is unsafe); batch reads of
+                       tracked files unchanged since then get "# unchanged (…)", never dropped
 
 Paths in either form are accepted anywhere, translated by WSL's wslpath: C:\\x and
 \\\\wsl.localhost\\<distro>\\x on the Windows side are /mnt/c/x and /x on the WSL side.
@@ -432,7 +437,8 @@ function weigh(read: Read, name: string, harness: Harness): Weighing {
    }
 }
 
-type Action = { issue?: string[]; inline?: string[] }
+type Issued = { text: string; file?: string }
+type Action = { issue?: Issued[]; inline?: string[] }
 type Plan = {
    actions: Map<number, Action>
    inlined: number
@@ -548,7 +554,7 @@ function planReads(targets: Target[], lines: string[], settings: Settings, picku
       const anchor = group.at(-1)!.call.annotationEnd
       if (expanded || loadedAtLaunch) continue
       if (!selection) {
-         if (!call.conditional) plan.actions.set(anchor, { issue: [harnessCall(call, form)] })
+         if (!call.conditional) plan.actions.set(anchor, { issue: [{ text: harnessCall(call, form) }] })
          continue
       }
       const reads = readsFor(group, settings)
@@ -582,7 +588,7 @@ function planReads(targets: Target[], lines: string[], settings: Settings, picku
          plan.actions.set(anchor, { inline: weighing.result })
          plan.inlined++
       } else if (!group[0].call.conditional) {
-         plan.actions.set(anchor, { issue: reads.map((read) => read.text) })
+         plan.actions.set(anchor, { issue: reads.map((read) => ({ text: read.text, file: group[0].file })) })
       }
    }
    return plan
@@ -723,6 +729,7 @@ export type ExpandOptions = {
    cacheTtl?: "5m" | "1h"
    horizon?: number
    paths?: PathForm
+   lastSaw?: string
    cwd?: string
    env?: NodeJS.ProcessEnv
 }
@@ -739,6 +746,7 @@ export type Expansion = {
    loadedAtLaunch: number
    widened: number
    keptForSteering: number
+   unchanged: number
    pages: number
    estimatedTokens: number
 }
@@ -775,12 +783,21 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const targets = calls.map((call) => resolveTarget(call, lines, warnings))
    const plan = planReads(targets, lines, settings, resolve(options.pickupPath), warnings)
 
+   let unchanged = new Set<string>()
+   if (options.lastSaw !== undefined) {
+      const files = [...plan.actions.values()].flatMap((action) => action.issue ?? []).flatMap((read) => read.file ?? [])
+      if (settings.form === localForm()) unchanged = unchangedSince(options.lastSaw, files, warnings)
+      else warnings.push("--last-saw needs this run on the harness's side of Windows/WSL; nothing is marked unchanged")
+   }
+   const unchangedNote = ` # unchanged (same content as at ${options.lastSaw})`
+   const mark = ({ text, file }: Issued) => (file !== undefined && unchanged.has(file) ? text + unchangedNote : text)
+
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
    for (let i = 0; i < lines.length; i++) {
       out.push(lines[i])
       const action = plan.actions.get(i)
-      if (action?.issue) issued.set(out.length - 1, action.issue)
+      if (action?.issue) issued.set(out.length - 1, action.issue.map(mark))
       if (action?.inline) out.push(...action.inline)
    }
 
@@ -803,6 +820,7 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       loadedAtLaunch: plan.loadedAtLaunch,
       widened: plan.widened,
       keptForSteering: plan.keptForSteering,
+      unchanged: batch.filter((read) => read.endsWith(unchangedNote)).length,
       pages: steps.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
    }
@@ -862,6 +880,7 @@ function main(): void {
             horizon: { type: "string" },
             "cache-ttl": { type: "string" },
             paths: { type: "string" },
+            "last-saw": { type: "string" },
             help: { type: "boolean", short: "h" },
          },
       })
@@ -901,6 +920,7 @@ function main(): void {
       cacheTtl: ttl as "5m" | "1h" | undefined,
       horizon,
       paths: paths as PathForm | undefined,
+      lastSaw: values["last-saw"],
    })
    writeFileSync(pickupPath, result.output)
 
@@ -911,6 +931,7 @@ function main(): void {
    if (result.loadedAtLaunch) summary.push(`skipped ${result.loadedAtLaunch} instruction files loaded at launch`)
    if (result.widened) summary.push(`read ${result.widened} range-limited instruction files whole`)
    if (result.keptForSteering) summary.push(`kept ${result.keptForSteering} reads real so their instruction files load`)
+   if (result.unchanged) summary.push(`marked ${result.unchanged} unchanged since ${values["last-saw"]}`)
    summary.push(`${result.pages} page(s), about ${Math.round(result.estimatedTokens / 1000)}k tokens`)
    for (const warning of result.warnings) process.stderr.write(`expand-handoff: warning: ${warning}\n`)
    process.stderr.write(`expand-handoff: ${summary.join("; ")}.\n`)
