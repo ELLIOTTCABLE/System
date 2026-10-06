@@ -260,7 +260,7 @@ export function steeringModel(profile: SteeringProfile, cwd: string, env: NodeJS
       profile.agents !== undefined &&
       (mode === "claude-md-and-agents-md" || (mode === "claude-md-or-agents-md" && !claudeAtOrAbove))
 
-   // a file and everything it imports, imports first
+   // a file and everything it imports
    const closure = (path: string, allowExternal: boolean, seen: Set<string>, depth = 0): string[] => {
       const key = fileKey(path)
       const extension = extname(path).toLowerCase()
