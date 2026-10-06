@@ -21,7 +21,6 @@ function repo(): string {
    return root
 }
 
-// commits `files` at `date`, returning the commit's full SHA
 function commit(root: string, files: Record<string, string>, date: string): string {
    for (const [name, text] of Object.entries(files)) writeFileSync(join(root, name), text)
    git(root, ["add", "--", ...Object.keys(files)])

@@ -1,13 +1,11 @@
-// Which files a successor already read are still the same: unchanged in git since a commit or time at
-// or before those reads. See ledger.md § 8.
+// Whether files a successor already read have changed in git since; see ledger.md § 8.
 import { execFileSync } from "node:child_process"
 import { existsSync, realpathSync } from "node:fs"
 import { dirname, join, relative, sep } from "node:path"
 
 const TIME = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?\s*(Z|[+-]\d{2}:?\d{2})?$/i
 
-// git's own parser reads unparseable text as now, the unsafe direction, so only strict forms are taken;
-// local time unless a zone is given
+// strict on purpose: git's approxidate reads garbage as now, the unsafe direction
 export function parseTime(text: string): number | undefined {
    const match = TIME.exec(text.trim())
    if (!match) return undefined
@@ -36,9 +34,7 @@ function repoOf(file: string): string | undefined {
    }
 }
 
-// Of `files`, those tracked in a repo where `lastSaw` resolves and the same in the working tree as there.
-// `lastSaw` is a commit if it names one in any of their repos, else a time, which picks each repo's last
-// commit by then. Whatever git can't answer stays out.
+// a commit if it names one in any of the files' repos, else a time: each repo's last commit by then
 export function unchangedSince(lastSaw: string, files: string[], warnings: string[]): Set<string> {
    const repos = new Map<string, Map<string, string[]>>() // top -> repo-relative path -> files as given
    for (const file of new Set(files)) {
@@ -76,7 +72,7 @@ export function unchangedSince(lastSaw: string, files: string[], warnings: strin
       const listed = (output: string | undefined) => output?.split("\0").filter(Boolean)
       const tracked = listed(git(top, ["ls-files", "-z", "--", ...paths.keys()]))
       if (!tracked?.length) continue
-      // against the working tree, so uncommitted edits count, compared through git's own line-ending filters
+      // vs the working tree, so uncommitted edits count; git's own filters handle line endings
       const changed = listed(git(top, ["diff", "--name-only", "-z", anchor, "--", ...tracked]))
       if (!changed) continue
       for (const path of tracked) if (!changed.includes(path)) for (const file of paths.get(path) ?? []) unchanged.add(file)
