@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { test } from "node:test"
@@ -416,6 +416,22 @@ test("the CLI refuses to overwrite the handoff it is reading", () => {
    assert.equal(readFileSync(handoffPath, "utf8"), "Intro.\n")
 })
 
+test("the CLI takes no positional arguments and no stdin, only both --in and --out", () => {
+   const handoffPath = join(dir, "flags-handoff.md")
+   const pickupPath = join(dir, "flags-pickup.md")
+   writeFileSync(handoffPath, "Intro.\n")
+   const positional = spawnSync(process.execPath, [script, pickupPath], { input: "Intro.\n", encoding: "utf8", env: hermetic })
+   const inOnly = spawnSync(process.execPath, [script, "--in", handoffPath], { encoding: "utf8", env: hermetic })
+   const outOnly = spawnSync(process.execPath, [script, "--out", pickupPath], { input: "Intro.\n", encoding: "utf8", env: hermetic })
+
+   assert.equal(positional.status, 2)
+   assert.match(positional.stderr, /positional/)
+   assert.equal(inOnly.status, 2)
+   assert.equal(outOnly.status, 2)
+   assert.match(outOnly.stderr, /give both --in <handoff-path> and --out <pickup-path>/)
+   assert.equal(existsSync(pickupPath), false)
+})
+
 test("the calling model comes from pi's env, else the newest real model in Claude Code's transcript", () => {
    const config = join(dir, "claude-config")
    mkdirSync(join(config, "projects", "some-project"), { recursive: true })
@@ -453,6 +469,19 @@ test("paths cross between the Windows and WSL views of a file, there and back", 
    assert.match(native, /^\\\\wsl(\.localhost|\$)\\[^\\]+\\home\\ec\\a\.md$/)
    assert.equal(inForm(drive, "windows"), "C:\\Users\\ec\\a.md")
    assert.equal(inForm(native, "posix"), "/home/ec/a.md")
+})
+
+test("the CLI takes --in and --out in the other side's path form", { skip: noWsl }, () => {
+   const otherSide = process.platform === "win32" ? "posix" : "windows"
+   const handoffPath = join(dir, "cross-handoff.md")
+   const pickupPath = join(dir, "cross-pickup.md")
+   writeFileSync(handoffPath, "Intro.\n")
+   const args = [script, "--in", inForm(handoffPath, otherSide), "--out", inForm(pickupPath, otherSide)]
+   const run = spawnSync(process.execPath, args, { encoding: "utf8", env: hermetic })
+
+   assert.equal(run.status, 0, run.stderr)
+   assert.equal(readFileSync(pickupPath, "utf8"), "Intro.\n")
+   assert.equal(run.stdout.trimEnd().split("\n")[1], `Read(file_path="${pickupPath}", offset=1, limit=1)`)
 })
 
 test("batched reads are printed in the harness's path form, whichever form the handoff used", { skip: noWsl }, () => {
