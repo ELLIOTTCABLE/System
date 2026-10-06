@@ -65,26 +65,27 @@ These are only seeds, they are not an exhaustive list; and they're probably less
 
 ## Example
 
-An illustration, not a template:
+A very short illustration, not a template; and yours will probably be much, much longer than this, with a variety of sections and contents sorted carefully according to priority and successor-context-window-ordering.
 
 ```markdown
-# Handoff: cache-eviction design sitting, mid-review
-
+# .tmp/my-topic.handoff.md
 Goal [TYPED]: "evictions must never drop a dirty entry." Stay a reviewer: propose changes, and edit `src/` only after an ack [ACKED].
 
-Read(file_path="/src/widget/README.md")
-Read(file_path="/src/widget/DESIGN.md")
-Read(file_path="/src/widget/.claude/skills/reviewer/SKILL.md")
+Read(file_path="README.md")
+Read(file_path="DESIGN.md", offset=100, limit=2000)
+Read(file_path=".claude/skills/critical-context/SKILL.md")
 
 The two eviction paths under discussion, and the note comparing them:
 
-Read(file_path="/src/widget/src/cache/evict.rs", offset=120, limit=60)
-Read(file_path="/src/widget/docs/notes/07-lru-vs-clock.md", offset=40, limit=35)
+Read(file_path="/src/evict.rs", offset=120, limit=60)
+Read(file_path="/notes/07-lru-vs-clock.md", offset=40, limit=35)
 
-Read(file_path="/src/widget/bench/RESULTS.md") [when] benchmarks come up
-Read(file_path="/src/widget/docs/notes/05-write-back.md") [when] the human reopens write-back
+Read(file_path="/bench/RESULTS.md") [when] we resume working on benchmarks
+Read(file_path="/notes/05-write-back.md") [when] the human reopens write-back
 
-Read(file_path="/src/widget/docs/eviction-ledger.md")
+Read(file_path="/ledgers/20261006-eviction-ledger.md")
 
-In flight [AGENT]: a CLOCK variant, uncommitted, in worktree `.worktrees/clock`. Whether pinned entries count toward capacity is [PRESENTED], unanswered. The human's last words [TYPED]: "show me the dirty-bit path before we touch eviction order."
+- In flight [AGENT]: a CLOCK variant, uncommitted, in worktree `.worktrees/clock`.
+- Whether pinned entries count toward capacity is [PRESENTED], unanswered.
+- The human's last words [TYPED]: "show me the dirty-bit path before we touch eviction order."
 ```
