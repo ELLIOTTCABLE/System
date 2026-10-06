@@ -8,8 +8,6 @@ description: >-
 
 This SKILL is explicitly used only in immediate handoffs: ignore git/disk TOCTOU, you may lean towards trusting the recency of your predecessor/successor.
 
-In a handoff, a read marked `[when] <circumstance>` is made only if that circumstance arises. Claims in the handoff's own prose are ~SUSPECT at most; the successor verifies them before relying on them.
-
 NOTE: This SKILL is new; mention (in chat) if anything chafes (particularly, enumerate the number of turns involved in your in-chat reply - if you had to take multiple turns to construct/consume the handoff.)
 
 # Handing off
@@ -32,11 +30,17 @@ In the handoff, mark claims about facts, goals or rulings ~SUSPECT at most. (For
 
 Leave file contents to the read-calls; don't manually inline, this tool will handle that.
 
+## How the handoff-process & script works
+
+The associated script in this skill will *unfold* your handoff: read-calls will be, as appropriate, possibly inlined, or dictated-as-reads to the successor, *before your other text*. That means "hello\nread(somefile.md)\nworld" will result in 'hello' at the start of the agent's context-window; but 'world' *after* the entire contents of somefile.md. This is true whether or not it is inlined; this SKILL's tool maintains the ordering carefully.
+
+In a handoff, a read marked `[when] <circumstance>` is made only if that circumstance arises. Claims in the handoff's own prose are ~SUSPECT at most; the successor verifies them before relying on them.
+
+Every read not marked `[when]` is mandatory: they will all be consumed during the successor agent's first turn. (Do not undershoot: if the human booted *you* up with lots of must-read context at the start of your session, it's clearly appropriate to dictate a lot of context for your successor. Be judicious about what's necessary; reason through which of the documents you read during your session turned out useful, and which turned out to be duds. Consider the arc of upcoming work and only mark `[when]` for files that are genuinely a distraction until some trigger-point.)
+
 ## Ordering content
 
 The successor's context starts with the human's own prompt, possibly with some auto-loaded SKILLs the human manually dictated; then the handoff-loading command. The immediate next turn (the invocation) will result in your handoff top to bottom, each dictated read landing where you put it.
-
-(The associated script in this skill will *unfold* your handoff: read-calls will be, as appropriate, possibly inlined, or dictated-as-reads to the successor, *before your other text*. That means "hello\nread(somefile.md)\nworld" will result in 'hello' at the start of the agent's context-window; but 'world' *after* the entire contents of somefile.md. This is true whether or not it is inlined; this SKILL's tool maintains the ordering carefully.)
 
 Attention is consistently strongest at the start (and temporarily at the end); and weakest in the middle. The end's hold fades as the work moves on, the start's does not. So, roughly:
 
@@ -47,12 +51,6 @@ Attention is consistently strongest at the start (and temporarily at the end); a
 
 Dictate each read as exactly your harness's file-read call. You may include a specific range or not, as you see fit. You may include multiple read-calls with different line ranges at different parts of the handoff. You may include information about why it matters if you want, but that will usually be excessive; it's likely to be obvious from context. (i.e. a common pattern for simple handoffs will be an short initial block of critical prose/context; a simple block of harness-read-calls for relevant files; and then a rundown of what's in-flight and recent.) Skills the successor needs are reads of their SKILL files.
 
-Finish by giving the human this command, pointing to the script in this skill's directory, and with your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
-
-```sh
-node "<fat-handoff skill's directory>/expand-handoff.mts" --out ".tmp/_handoff.out.md" --in ".tmp/r31-world-relations-naming-sitting.handoff.md"
-```
-
 ## What to include
 
 This is mostly up to you and should be treated carefully; the human will likely include tunes when invoking this skill, but if you have no idea and no context for why it's being invoked, lean towards including more context over being brief.
@@ -62,6 +60,14 @@ These are only seeds, they are not an exhaustive list; and they're probably less
 - probably not durable: subagent IDs for resumption/messaging if they're intended to be reused / are in-flight
 - probably not durable: worktree(s) (or branches if there's no worktree) in-flight; and/or similar things needing reuse or eventual clean-up
 - probably durable/ledger: human's tabled/punted/let's-return-to-this
+
+## Your final message
+
+Finish by giving the human this command pointed to the script in this skill's directory (construct from memory appropriately, don't check with a tool-call), and with your two paths filled in: first where the successor's pickup document will be written, then your handoff. You will not run the command, the successor will.
+
+```sh
+node "<fat-handoff skill's directory>/expand-handoff.mts" --out ".tmp/_handoff.out.md" --in ".tmp/r31-world-relations-naming-sitting.handoff.md"
+```
 
 ## Example
 
