@@ -38,6 +38,10 @@ In a handoff, a read marked `[when] <circumstance>` is made only if that circums
 
 Every read not marked `[when]` is mandatory: they will all be consumed during the successor agent's first turn. (Do not undershoot: if the human booted *you* up with lots of must-read context at the start of your session, it's clearly appropriate to dictate a lot of context for your successor. Be judicious about what's necessary; reason through which of the documents you read during your session turned out useful, and which turned out to be duds. Consider the arc of upcoming work and only mark `[when]` for files that are genuinely a distraction until some trigger-point.)
 
+The script can only see, inline, and reorder reads *written into your handoff*. Gently avoid multiple-step redirects (i.e. if you read a handoff at the start, don't assume it's still there or say 'read the reads in that file'; re-enumerate the files you, yourself, indeed, read. You may also have different/new/tuned opinions about what's relevant and when, don't simply regurgitate; again, consider the relevance of each source to the work.)
+
+One exception is SKILL supplements: for SKILLs that have rules/conditions for loading their supplements, you may omit their supplements if the successor may need to choose a different supplement. That, however, should be the only case where a successor issuses an additional turn / *separate* file-read not enumerated in your handoff.
+
 ## Ordering content
 
 The successor's context starts with the human's own prompt, possibly with some auto-loaded SKILLs the human manually dictated; then the handoff-loading command. The immediate next turn (the invocation) will result in your handoff top to bottom, each dictated read landing where you put it.
