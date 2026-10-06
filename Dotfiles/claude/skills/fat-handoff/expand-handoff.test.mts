@@ -154,110 +154,6 @@ test("indented lines below a read annotate it, and its inlined result follows th
    assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=10)`])
 })
 
-test("[when] on a bullet reaches the reads on its continuation lines, as the first live handoff wrote them", () => {
-   const handoff = [
-      "## Lower-value context: use only if the circumstance arises",
-      "",
-      "- [when] adjudicating anything the Fable reviewer said:",
-      `  Read(file_path="${long}") and`,
-      `  Read(file_path="${other}").`,
-      "  Both are as delivered; ledger §§ 2.4 and 2.7 record what was acted on.",
-      `- [when] touching the spec's uses of "reach" again:`,
-      `  Read(file_path="${huge}").`,
-      "  It was taken at `63e08859`, so its line numbers are stale.",
-      "- [when] the time model, loops, or line-varying reach comes up: § 3.3 of the held-work file,",
-      "  where I added two entries and two ADVANCED pointers:",
-      `  Read(file_path="${long}", offset=232, limit=200)`,
-      "- [when] you need the sitting's original reading map:",
-      `  Read(file_path="${other}", offset=1, limit=40)`,
-      "",
-      "## Housekeeping state [AGENT]",
-   ].join("\n") + "\n"
-   const { output, batch, split, inlined } = expand(handoff, { pickupPath: pickup })
-
-   assert.equal(output, handoff)
-   assert.equal(inlined, 0)
-   assert.equal(split, 0)
-   assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=16)`])
-})
-
-test("a tag reaches no further than its list item or paragraph, nor past a heading or another read", () => {
-   const read = (name: string) => {
-      const path = join(dir, `reach-${name}.md`)
-      writeFileSync(path, numberedLines(300))
-      return `Read(file_path="${path}")`
-   }
-   const [a, b, c, d, e, f, g, h, i, j] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].map(read)
-   const handoff = [
-      "- [when] the human asks about X:",
-      `  - ${a}`,
-      `  - ${b}`,
-      `- ${c}`,
-      "- Always:",
-      "  - [when] the human asks about Y:",
-      `    ${d}`,
-      `  - ${e}`,
-      `  ${f}`,
-      "[when] the human asks about Z:",
-      "",
-      g,
-      "## [when] the human asks about W",
-      h,
-      `${i} [when] the human asks about V`,
-      j,
-   ].join("\n") + "\n"
-   const { batch } = expand(handoff, { pickupPath: pickup })
-
-   assert.deepEqual(batch.filter((call) => !call.includes(pickup)), [c, e, f, g, h, j])
-})
-
-test("a tagged line level with a list item continues that item; indented under one, it reaches the sub-list", () => {
-   const read = (name: string) => {
-      const path = join(dir, `level-${name}.md`)
-      writeFileSync(path, numberedLines(300))
-      return `Read(file_path="${path}")`
-   }
-   const [a, b, c] = ["a", "b", "c"].map(read)
-   const handoff = [
-      `- ${a}`,
-      "[when] the human asks about X:",
-      `- ${b}`,
-      "- Then:",
-      "  [when] the human asks about Y:",
-      `  - ${c}`,
-   ].join("\n") + "\n"
-   const { batch } = expand(handoff, { pickupPath: pickup })
-
-   assert.deepEqual(batch.filter((call) => !call.includes(pickup)), [a, b])
-})
-
-test("a tag above plain reads reaches its paragraph, and a read's own tag beats it", () => {
-   const handoff = [
-      "Only if the human asks about caching [p=0.9]:",
-      `Read(file_path="${long}", offset=1, limit=300)`,
-      `Read(file_path="${short}", offset=1, limit=2)`,
-      `Read(file_path="${short}", offset=5, limit=2) [p=0.05]`,
-   ].join("\n") + "\n"
-   const { output, batch } = expand(handoff, { pickupPath: pickup })
-
-   const lines = output.split("\n")
-   assert.equal(lines.filter((line) => line === "<result>").length, 1)
-   assert.equal(lines[3], "<result>")
-   assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=9)`])
-})
-
-test("a tag in a paragraph reaches the list below it, and [inline] reaches like [when]", () => {
-   const handoff = [
-      "[inline] the successor needs these up front:",
-      `- Read(file_path="${long}", offset=1, limit=300)`,
-      `- Read(file_path="${other}", offset=1, limit=300)`,
-   ].join("\n") + "\n"
-   const { batch, inlined } = expand(handoff, { pickupPath: pickup })
-
-   assert.equal(inlined, 2)
-   assert.ok(batch.every((call) => call.includes(pickup)))
-})
-
 test("short text between issued reads shares a page with them; long prose gets its own", () => {
    const a = `Read(file_path="${long}", offset=1, limit=100)`
    const b = `Read(file_path="${other}", offset=101, limit=100)`
@@ -359,21 +255,6 @@ test("expanding an already-expanded pickup changes nothing", () => {
 
    assert.equal(twice.output, once.output)
    assert.deepEqual(twice.batch, once.batch)
-})
-
-test("re-expanding a pickup keeps a tag's reach across the results inlined inside it", () => {
-   const handoff = [
-      "- [p=0.9] the human asks about X:",
-      `  Read(file_path="${short}", offset=1, limit=2)`,
-      `  Read(file_path="${long}", offset=1, limit=300)`,
-   ].join("\n") + "\n"
-   const once = expand(handoff, { pickupPath: pickup })
-   const twice = expand(once.output, { pickupPath: pickup })
-
-   assert.equal(once.inlined, 1)
-   assert.equal(twice.output, once.output)
-   assert.deepEqual(twice.batch, once.batch)
-   assert.equal(twice.batch.length, 1)
 })
 
 test("pages stay within budget and never split a call from its inlined result", () => {
