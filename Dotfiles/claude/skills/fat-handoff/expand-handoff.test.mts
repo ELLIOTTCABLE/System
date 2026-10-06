@@ -205,37 +205,42 @@ test("tags on the bullet above, as the first live handoff wrote them, leave its 
    assert.equal(output, handoff)
    assert.equal(split, 1)
    assert.deepEqual(batch, [
-      `Read(file_path="${pickup}", offset=1, limit=14)`,
+      `Read(file_path="${pickup}", offset=1, limit=6)`,
       `Read(file_path="${long}")`,
       `Read(file_path="${other}")`,
+      `Read(file_path="${pickup}", offset=7, limit=3)`,
       `Read(file_path="${huge}", offset=1, limit=2000)`,
       `Read(file_path="${huge}", offset=2001, limit=1000)`,
+      `Read(file_path="${pickup}", offset=10, limit=3)`,
       `Read(file_path="${heldWork}", offset=232, limit=200)`,
+      `Read(file_path="${pickup}", offset=13, limit=2)`,
       `Read(file_path="${readingMap}", offset=1, limit=40)`,
       `Read(file_path="${pickup}", offset=15, limit=2)`,
    ])
 })
 
-test("short text between issued reads shares a page with them; long prose gets its own", () => {
+test("issued reads with only blank lines between share a page; any other text, however short, gets its own", () => {
    const a = `Read(file_path="${long}", offset=1, limit=100)`
    const b = `Read(file_path="${other}", offset=101, limit=100)`
    const c = `Read(file_path="${long}", offset=201, limit=100)`
-   const prose = "word ".repeat(400).trim()
-   const { batch } = expand(`${a}\n-- a short label --\n${b}\n${prose}\n${c}\n`, { pickupPath: pickup })
+   const d = `Read(file_path="${other}", offset=201, limit=100)`
+   const { batch } = expand(`${a}\n-- a short label --\n${b}\n\n${c}\nOne line of prose.\n${d}\n`, { pickupPath: pickup })
 
    assert.deepEqual(batch, [
-      `Read(file_path="${pickup}", offset=1, limit=3)`,
+      `Read(file_path="${pickup}", offset=1, limit=1)`,
       a,
+      `Read(file_path="${pickup}", offset=2, limit=4)`,
       b,
-      `Read(file_path="${pickup}", offset=4, limit=2)`,
       c,
+      `Read(file_path="${pickup}", offset=6, limit=2)`,
+      d,
    ])
 })
 
 test("nearby reads of one file become one issued read when that's cheaper, the handoff untouched", () => {
    const a = `Read(file_path="${long}", offset=1, limit=30)`
    const b = `Read(file_path="${long}", offset=34, limit=30)`
-   const handoff = `${a}\n-- a short label --\n${b}\n`
+   const handoff = `${a}\n\n${b}\n`
    const { output, batch, merged } = expand(handoff, { pickupPath: pickup, horizon: 40 })
 
    assert.equal(output, handoff)
@@ -244,6 +249,18 @@ test("nearby reads of one file become one issued read when that's cheaper, the h
       `Read(file_path="${pickup}", offset=1, limit=3)`,
       `Read(file_path="${long}", offset=1, limit=63)`,
    ])
+})
+
+test("nearby reads of one file stay apart across text, so it lands between their contents", () => {
+   const a = `Read(file_path="${long}", offset=1, limit=30)`
+   const b = `Read(file_path="${long}", offset=34, limit=30)`
+   const { output, merged } = expand(`${a}\n-- a short label --\n${b}\n`, { pickupPath: pickup, horizon: 40 })
+
+   const lines = output.split("\n")
+   const label = lines.indexOf("-- a short label --")
+   assert.equal(merged, 0)
+   assert.ok(lines.indexOf("30\tline 30</output>") < label)
+   assert.ok(label < lines.indexOf("<output>34\tline 34"))
 })
 
 test("an unbounded read of a large file becomes reads that each fit, in its own call style", () => {

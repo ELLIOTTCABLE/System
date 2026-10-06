@@ -15,9 +15,6 @@ const DEFAULT_CONDITIONAL_LIKELIHOOD = 0.3
 const CHARS_PER_TOKEN = 4
 // tool-use id and block, plus result wrapper, beyond the call's visible text
 const CALL_FRAMING_TOKENS = 25
-// shorter text between issued reads rides the earlier read's page, landing before its result,
-// rather than costing a page read of its own
-const MERGE_GAP_TOKENS = 300
 const READ_TOOL_NAMES = ["Read", "read"]
 const PATH_KEYS = ["file_path", "path", "filePath", "file"]
 
@@ -129,6 +126,18 @@ function readCallStart(line: string): RegExpExecArray | undefined {
 
 function isAnnotation(line: string | undefined): boolean {
    return line !== undefined && /^\s+\S/.test(line) && !readCallStart(line)
+}
+
+// what may sit between two reads without landing before the first one's result: other reads' own
+// lines and blank lines; any other text must follow that result
+function readsOnly(gap: string[]): boolean {
+   let annotating = false
+   for (const line of gap) {
+      if (readCallStart(line)) annotating = true
+      else if (line.trim() === "") annotating = false
+      else if (!(annotating && isAnnotation(line))) return false
+   }
+   return true
 }
 
 function parseCall(lines: string[], index: number): ReadCall | "malformed" | undefined {
@@ -363,8 +372,7 @@ function canJoin(group: Target[], t: Target, lines: string[]): boolean {
    const last = group.at(-1)!
    if (!mergeable(group[0]) || !mergeable(t) || t.file !== last.file) return false
    if (t.selection!.start < last.selection!.start) return false
-   const gap = lines.slice(last.call.annotationEnd + 1, t.call.line).join("\n")
-   return tokens(gap) <= MERGE_GAP_TOKENS
+   return readsOnly(lines.slice(last.call.annotationEnd + 1, t.call.line))
 }
 
 type Read = { text: string; selection: Selection }
@@ -695,21 +703,16 @@ function issuedRun(
 ): { reads: string[]; end: number } {
    const reads = [...issued.get(first)!]
    let end = first
-   let gapTokens = 0
    let gapSize = 0
    for (let k = first + 1; k <= last; k++) {
       gapSize += lineCost(out[k], harness)
       if (gapSize > room) break
-      if (issued.has(k)) {
-         reads.push(...issued.get(k)!)
-         end = k
-         room -= gapSize
-         gapTokens = 0
-         gapSize = 0
-      } else {
-         gapTokens += tokens(out[k])
-         if (gapTokens > MERGE_GAP_TOKENS) break
-      }
+      if (!issued.has(k)) continue
+      if (!readsOnly(out.slice(end + 1, k + 1))) break
+      reads.push(...issued.get(k)!)
+      end = k
+      room -= gapSize
+      gapSize = 0
    }
    return { reads, end }
 }
