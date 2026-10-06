@@ -153,6 +153,69 @@ test("indented lines below a read annotate it, and its inlined result follows th
    assert.deepEqual(batch, [`Read(file_path="${pickup}", offset=1, limit=8)`])
 })
 
+test("a tag counts only on the read's own line; on a bullet, paragraph or indented line, the read stays mandatory", () => {
+   const read = (name: string) => {
+      const path = join(dir, `tag-line-${name}.md`)
+      writeFileSync(path, numberedLines(300))
+      return `Read(file_path="${path}")`
+   }
+   const [own, bullet, paragraph, below] = ["own", "bullet", "paragraph", "below"].map(read)
+   const handoff = [
+      `${own} [when] the human asks about W`,
+      "",
+      "- [when] the human asks about X:",
+      `  ${bullet}`,
+      "",
+      "[when] the human asks about Y:",
+      paragraph,
+      "",
+      below,
+      "   [when] the human asks about Z",
+   ].join("\n") + "\n"
+   const { batch } = expand(handoff, { pickupPath: pickup })
+
+   assert.deepEqual(batch.filter((call) => !call.includes(pickup)), [bullet, paragraph, below])
+})
+
+test("tags on the bullet above, as the first live handoff wrote them, leave its reads mandatory and batched", () => {
+   const heldWork = join(dir, "held-work.md")
+   const readingMap = join(dir, "reading-map.md")
+   writeFileSync(heldWork, numberedLines(500))
+   writeFileSync(readingMap, numberedLines(60))
+   const handoff = [
+      "## Lower-value context: use only if the circumstance arises",
+      "",
+      "- [when] adjudicating anything the Fable reviewer said:",
+      `  Read(file_path="${long}") and`,
+      `  Read(file_path="${other}").`,
+      "  Both are as delivered; ledger §§ 2.4 and 2.7 record what was acted on.",
+      `- [when] touching the spec's uses of "reach" again:`,
+      `  Read(file_path="${huge}").`,
+      "  It was taken at `63e08859`, so its line numbers are stale.",
+      "- [when] the time model, loops, or line-varying reach comes up: § 3.3 of the held-work file,",
+      "  where I added two entries and two ADVANCED pointers:",
+      `  Read(file_path="${heldWork}", offset=232, limit=200)`,
+      "- [when] you need the sitting's original reading map:",
+      `  Read(file_path="${readingMap}", offset=1, limit=40)`,
+      "",
+      "## Housekeeping state [AGENT]",
+   ].join("\n") + "\n"
+   const { output, batch, split } = expand(handoff, { pickupPath: pickup })
+
+   assert.equal(output, handoff)
+   assert.equal(split, 1)
+   assert.deepEqual(batch, [
+      `Read(file_path="${pickup}", offset=1, limit=14)`,
+      `Read(file_path="${long}")`,
+      `Read(file_path="${other}")`,
+      `Read(file_path="${huge}", offset=1, limit=2000)`,
+      `Read(file_path="${huge}", offset=2001, limit=1000)`,
+      `Read(file_path="${heldWork}", offset=232, limit=200)`,
+      `Read(file_path="${readingMap}", offset=1, limit=40)`,
+      `Read(file_path="${pickup}", offset=15, limit=2)`,
+   ])
+})
+
 test("short text between issued reads shares a page with them; long prose gets its own", () => {
    const a = `Read(file_path="${long}", offset=1, limit=100)`
    const b = `Read(file_path="${other}", offset=101, limit=100)`
