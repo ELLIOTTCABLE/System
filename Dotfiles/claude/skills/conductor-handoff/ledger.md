@@ -1,8 +1,87 @@
 # conductor-handoff ledger
 
-## 1. Research and design, before any code
+## 1. Research and design, before any code (2026-10-05)
 
-_(Open. To be filled in by the pre-code session.)_
+Session `e6152f07…` (renamed `skill-conductor-handoff-2`). The goal is a repeatable way for a conductor nearing ~850k to make its own state durable. It should be far more detailed than built-in compaction, and written by the same model while its context is still cached. It formalizes the human's existing practice: stand-ups of ~200–300k (up to ~500k) of core design documents and ledgers, and an outgoing conductor that writes its successor a reading list of exact `Read()` ranges.
+
+Built-in compaction, per leaked `compact.ts` (~v2.1.88, March 2026) and Piebald's prompt extractions (to v2.1.289). Either may have drifted since.
+
+- It is the same model, not a weaker one: a forked agent on `mainLoopModel` that shares the main prompt cache and thinking config.
+- It gets one turn with no tools ("Tool calls will be REJECTED") and fires near 95% full. The fallback path caps output at 20k tokens (`COMPACT_MAX_OUTPUT_TOKENS`).
+- Afterwards it re-attaches at most 5 recent files at 5k tokens each (50k budget), plus up to 25k of skills.
+- The prompt asks for "All user messages", but rulings come out paraphrased. One measurement, from an AI-run account: 54k → 2.5k tokens.
+
+Prior art. Every handoff skill found aims small; none builds a ranged reading list for a large stand-up.
+
+- `REMvisual/claude-handoff` is the closest. Worth taking: chunked chronological mining against lost-in-the-middle, a write-then-reread gap pass, and a required user-feedback section. Its parent-chain and stale-reference checks are currency checks, which are ruled out below.
+- `semikolon/ccdistill` deterministically distills a session JSONL, keeping human and assistant text and dropping tool output.
+- `anh-chu/claude-handoff-skills` records the predecessor's session file in the handoff.
+- `mattpocock/skills` (handoff):
+  - reference artifacts by path rather than copying them;
+  - "a belief written as a fact becomes a false premise."
+- `parcadei/Continuous-Claude-v3` uses `path:L-L` references rather than snippets. Its YAML handoffs are tiny, the opposite aim.
+- Anthropic's context-engineering post: maximize recall first, then precision.
+
+Human rulings:
+
+- There are two modes.
+  - Already keeping a ledger in git:
+    - The ledger must not be filled in after the fact.
+    - (A) Confirm the last ledger entry is written and committed.
+    - (B) Write a temporary handoff holding only what didn't, or shouldn't, go into durable ledgers.
+    - (C) Write the file list.
+  - Not keeping a ledger: the handoff carries more.
+  - Whether ledgering becomes its own skill is undecided.
+- No defence against staleness or TOCTOU. The skill runs only during a live transition that the human manages, and no handoff files are kept afterwards.
+- Certainty cap. In anything not going into durables, claims about facts, goals or rulings are ~SUSPECT at most, for the successor to verify before relying on them. File contents and git state go unmentioned.
+- Link the predecessor's session file. The human keeps them, since they `/branch` and `/rename` heavily and work on one machine.
+- `at10249`'s canary rule (every reply must open with the human's name) is rejected. A pattern repeated throughout the context tends to repeat in the output, so a word-level tripwire is unsound. A logic-based check might not be.
+- Stand-up order:
+  1. Core design documents, right after the prompt, so goals and limits stay at high attention.
+  2. The dictated reads.
+  3. The handoff, last, since it is only recently important.
+- Carrying every human message is left open; the human is torn. Design sessions run about 2:1 model-to-human text, against about 25–50:1 for coding, so a 500k design session holds too much human text to dump.
+- A deterministic outside tool fattens the handoff. It inlines a range's current contents wherever that beats the successor's read call. The human's prior: worth it up to ~30 lines.
+- Lower priority: point each read at the moment in the transcript where the predecessor read or wrote it.
+- `SKILL.md` and its description stay harness-general. The implementation may start Claude-Code-only.
+
+Stand-up measured on Dorc session `730ea7c3…`. The reading list was `_tmp-world-relations-naming-sitting-reading-list.md`, made by Dorc's `.tmp/reading-list/expand.sh`, the prototype for §2.
+
+- The stand-up took 7 requests: the three pages in one batch, two skill loads, four rounds of the remaining reads, then the reply.
+- One round plus the reply would have sufficed. Asked why, that session blamed two things, neither a prompt or setting:
+  - it read "BEFORE READING" literally;
+  - its own chunking habit.
+- Results landed in this order, which motivated §2's interleaved batch:
+  1. every inlined item, from all of START, MIDDLE and END;
+  2. the skill text;
+  3. START's long reads;
+  4. END's long reads.
+- The first real Read under `specs/` injected `specs/CLAUDE.md` and `specs/AGENTS.md` (`nested_memory`). Content inlined from `specs/` into the pages, read earlier, did not trigger it. §2 rules only on inlining those two files themselves. Not recorded: whether inlining from a subdirectory needs one real Read there to pull in its conventions.
+- A `silent_turn_reminder` ("The user hasn't heard from you…") fired after ~42 s of silent reads and drew a status line from the model. Fewer requests avoid it.
+
+Superseded pre-code cost analysis:
+
+- Priced relative to one uncached input token: output 5, one-hour cache write 2, cache read 0.1.
+- It concluded:
+  - inline every mandatory range;
+  - inline a conditional range only when `(1−p)·T·(2 + 0.1·N) < p·(250 + 0.1·C)`. Here `T` is the range's tokens, `p` the chance its trigger fires, `N` the requests left and `C` the context size when it would be read.
+- §2 made context use, not price, the objective.
+
+Proposed for the SKILL, not ruled on:
+
+- A residue checklist for (B):
+  - in-flight reasoning on the open question;
+  - leanings not yet put to the human;
+  - deferred threads;
+  - the human's apparent priorities and frustrations;
+  - framings dropped without a ledger entry;
+  - agents or worktrees still out;
+  - the next thing the conductor was about to say.
+- Carry rulings as short verbatim quotes. The tool would resolve each against the transcript and flag any it can't find verbatim. That makes Dorc's `[TYPED]` checkable, and lets the successor verify each ~SUSPECT claim with one call.
+- A tool-side lint that rejects `+SURE` in the handoff.
+- The successor deletes the handoff as its last stand-up step. Nothing is lost, because both sessions' transcripts hold it.
+
+Noted, not pursued, because transitions are human-managed: automatic triggering. Options were a SessionStart hook (`source: compact`) returning `additionalContext` (from josangel.com's handoff post), or an external listener using Claude Code's channels to inject a turn near the limit.
 
 ## 2. `expand-handoff.mts`, the deterministic helper (2026-10-05)
 
