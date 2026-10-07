@@ -84,9 +84,26 @@ function repoOf(file: string): string | undefined {
    }
 }
 
-// a commit if it names one in any of the files' repos, else a time: each repo's last commit by then;
-// undefined if it names neither in any of them
-export function unchangedSince(lastSaw: string, files: string[], warnings: string[]): Set<string> | undefined {
+const pad = (n: number) => String(n).padStart(2, "0")
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+export function localMinute(date: Date): string {
+   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+export function rightNow(now: Date, cwd: string): string {
+   const offset = -now.getTimezoneOffset()
+   const zone = `UTC${offset < 0 ? "-" : "+"}${pad(Math.floor(Math.abs(offset) / 60))}:${pad(Math.abs(offset) % 60)}`
+   const date = `${DAY_NAMES[now.getDay()]} ${localMinute(now)} ${zone}`
+   const [sha, branch] = git(cwd, ["rev-parse", "HEAD", "--abbrev-ref", "HEAD"])?.trim().split("\n") ?? []
+   if (!sha) return `(Right now: ${date}.)`
+   const onBranch = branch && branch !== "HEAD" ? ` (${branch})` : ""
+   return `(Right now: ${date}, HEAD at ${sha.slice(0, 8)}${onBranch}.)`
+}
+
+// a commit if it names one in any of the files' repos, else a time: each repo's last commit by then.
+// Maps each unchanged file to what it's unchanged since; undefined if `lastSaw` names neither anywhere.
+export function unchangedSince(lastSaw: string, files: string[], warnings: string[]): Map<string, string> | undefined {
    const repos = new Map<string, Map<string, string[]>>() // top -> repo-relative path -> files as given
    for (const file of new Set(files)) {
       let real: string
@@ -106,27 +123,27 @@ export function unchangedSince(lastSaw: string, files: string[], warnings: strin
    const anchors = new Map<string, string | undefined>()
    if (!lastSaw.startsWith("-"))
       for (const top of repos.keys()) anchors.set(top, firstLine(git(top, ["rev-parse", "--verify", "--quiet", `${lastSaw}^{commit}`])))
-   if (![...anchors.values()].some(Boolean)) {
-      const time = parseTime(lastSaw)
-      for (const top of repos.keys())
-         anchors.set(top, time === undefined ? undefined : firstLine(git(top, ["rev-list", "-1", `--before=@${Math.floor(time / 1000)}`, "HEAD"])))
-   }
+   const time = [...anchors.values()].some(Boolean) ? undefined : parseTime(lastSaw)
+   const minute = time === undefined ? undefined : Math.floor(time / 60_000) * 60_000
+   if (minute !== undefined)
+      for (const top of repos.keys()) anchors.set(top, firstLine(git(top, ["rev-list", "-1", `--before=@${minute / 1000}`, "HEAD"])))
    if (![...anchors.values()].some(Boolean)) {
       warnings.push(`--last-saw ${lastSaw} names no commit or time in the batch's repos; nothing is marked unchanged`)
       return undefined
    }
 
-   const unchanged = new Set<string>()
+   const unchanged = new Map<string, string>()
    for (const [top, paths] of repos) {
       const anchor = anchors.get(top)
       if (!anchor) continue
+      const since = minute === undefined ? anchor.slice(0, 8) : localMinute(new Date(minute))
       const listed = (output: string | undefined) => output?.split("\0").filter(Boolean)
       const tracked = listed(git(top, ["ls-files", "-z", "--", ...paths.keys()]))
       if (!tracked?.length) continue
       // vs the working tree, so uncommitted edits count; git's own filters handle line endings
       const changed = listed(git(top, ["diff", "--name-only", "-z", anchor, "--", ...tracked]))
       if (!changed) continue
-      for (const path of tracked) if (!changed.includes(path)) for (const file of paths.get(path) ?? []) unchanged.add(file)
+      for (const path of tracked) if (!changed.includes(path)) for (const file of paths.get(path) ?? []) unchanged.set(file, since)
    }
    return unchanged
 }

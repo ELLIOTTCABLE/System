@@ -38,7 +38,7 @@ test("a commit marks tracked files unchanged since it; committed, uncommitted an
    const files = ["same.md", "committed.md", "dirty.md", "untracked.md"].map((name) => join(root, name))
    const warnings: string[] = []
 
-   assert.deepEqual([...unchangedSince(anchor.slice(0, 8), files, warnings)], [join(root, "same.md")])
+   assert.deepEqual([...unchangedSince(anchor.slice(0, 8), files, warnings)!.keys()], [join(root, "same.md")])
    assert.deepEqual(warnings, [])
 })
 
@@ -48,9 +48,9 @@ test("a time picks the last commit by then", () => {
    commit(root, { "b.md": "2\n" }, "2026-01-03T10:00:00Z")
    const files = [join(root, "a.md"), join(root, "b.md")]
 
-   assert.deepEqual([...unchangedSince("2026-01-02T10:00:00Z", files, [])], [join(root, "a.md")])
-   assert.deepEqual([...unchangedSince("2026-01-02 10:00", files, [])], [join(root, "a.md")])
-   assert.deepEqual([...unchangedSince("2026-01-04", files, [])], files)
+   assert.deepEqual([...unchangedSince("2026-01-02T10:00:00Z", files, [])!.keys()], [join(root, "a.md")])
+   assert.deepEqual([...unchangedSince("2026-01-02 10:00", files, [])!.keys()], [join(root, "a.md")])
+   assert.deepEqual([...unchangedSince("2026-01-04", files, [])!.keys()], files)
 })
 
 test("a value naming no commit and no time, or a time before any commit, warns once and marks nothing", () => {
@@ -73,7 +73,7 @@ test("a commit from one repo marks nothing in another", () => {
    commit(second, { "b.md": "1\n" }, "2026-01-01T10:00:00Z")
    const files = [join(first, "a.md"), join(second, "b.md")]
 
-   assert.deepEqual([...unchangedSince(anchor, files, [])], [join(first, "a.md")])
+   assert.deepEqual([...unchangedSince(anchor, files, [])!.keys()], [join(first, "a.md")])
 })
 
 test("ISO times are taken strictly, local unless zoned, never guessed", () => {
@@ -166,7 +166,7 @@ test("stamps that don't read unambiguously are refused", () => {
       assert.equal(parseTime(text, now), undefined, text)
 })
 
-test("stdout says reads were checked only when --last-saw resolves", () => {
+test("stdout says what --last-saw marks only when it resolves, and always says what now is", () => {
    const script = fileURLToPath(new URL("./expand-handoff.mts", import.meta.url))
    const hermetic = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(PI_|CLAUDE)/.test(key)))
    const root = repo()
@@ -174,12 +174,16 @@ test("stdout says reads were checked only when --last-saw resolves", () => {
    const handoffPath = join(root, "handoff.md")
    writeFileSync(handoffPath, `Read(file_path="${join(root, "same.md")}")\n`)
    const run = (...extra: string[]) =>
-      spawnSync(process.execPath, [script, "--in", handoffPath, "--out", join(root, "pickup.md"), ...extra], { encoding: "utf8", env: hermetic })
-   const checked = `(files checked for recency, and annotated if they haven't changed since ${anchor.slice(0, 8)}.)`
+      spawnSync(process.execPath, [script, "--in", handoffPath, "--out", join(root, "pickup.md"), ...extra], { encoding: "utf8", env: hermetic, cwd: root })
+   const marks = `(Reads marked "unchanged" have the same content now as at your --last-saw ${anchor.slice(0, 8)}.)`
+   const rightNowLine = new RegExp(`^\\(Right now: \\w{3} [\\d-]{10} \\d\\d:\\d\\d UTC[+-]\\d\\d:\\d\\d, HEAD at ${anchor.slice(0, 8)} \\(\\S+\\)\\.\\)$`)
 
    const resolved = run("--last-saw", anchor.slice(0, 8)).stdout.trimEnd().split("\n")
-   assert.equal(resolved.at(-3), checked)
+   assert.equal(resolved.at(-4), marks)
+   assert.match(resolved.at(-3)!, rightNowLine)
    assert.match(resolved.at(-2)!, /pickup\.md", offset=1, limit=1\)$/)
-   assert.ok(!run().stdout.includes("files checked for recency"))
-   assert.ok(!run("--last-saw", "no-such-commit").stdout.includes("files checked for recency"))
+   for (const unmarked of [run(), run("--last-saw", "no-such-commit")]) {
+      assert.ok(!unmarked.stdout.includes(`Reads marked "unchanged"`))
+      assert.match(unmarked.stdout.trimEnd().split("\n").at(-3)!, rightNowLine)
+   }
 })

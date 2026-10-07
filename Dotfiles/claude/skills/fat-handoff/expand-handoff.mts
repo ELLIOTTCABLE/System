@@ -4,7 +4,7 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "
 import { homedir } from "node:os"
 import { join, resolve } from "node:path"
 import { parseArgs } from "node:util"
-import { unchangedSince } from "./last-saw.mts"
+import { rightNow, unchangedSince } from "./last-saw.mts"
 import { fileKey, STEERING, type SteeringModel, type SteeringProfile, steeringModel } from "./steering.mts"
 
 // per token, relative to uncached input; `--model` reads real ones from pi's store
@@ -786,14 +786,19 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const targets = calls.map((call) => resolveTarget(call, lines, warnings))
    const plan = planReads(targets, lines, settings, resolve(options.pickupPath), warnings)
 
-   let unchanged: Set<string> | undefined
+   let unchanged: Map<string, string> | undefined
    if (options.lastSaw !== undefined) {
       const files = [...plan.actions.values()].flatMap((action) => action.issue ?? []).flatMap((read) => read.file ?? [])
       if (settings.form === localForm()) unchanged = unchangedSince(options.lastSaw, files, warnings)
       else warnings.push("--last-saw needs this run on the harness's side of Windows/WSL; nothing is marked unchanged")
    }
-   const unchangedNote = ` # unchanged (same content as at ${options.lastSaw})`
-   const mark = ({ text, file }: Issued) => (file !== undefined && unchanged?.has(file) ? text + unchangedNote : text)
+   let marked = 0
+   const mark = ({ text, file }: Issued) => {
+      const since = file === undefined ? undefined : unchanged?.get(file)
+      if (since === undefined) return text
+      marked++
+      return `${text} # unchanged (same content as at ${since})`
+   }
 
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
@@ -823,7 +828,7 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       loadedAtLaunch: plan.loadedAtLaunch,
       widened: plan.widened,
       keptForSteering: plan.keptForSteering,
-      unchanged: batch.filter((read) => read.endsWith(unchangedNote)).length,
+      unchanged: marked,
       lastSawResolved: unchanged !== undefined,
       pages: steps.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
@@ -942,7 +947,8 @@ function main(): void {
    process.stdout.write(`Read all these in a single turn.\n`)
    process.stdout.write(`(If you've been partially-rewound, and have some in-context above, you may omit any such that are unlikely to have changed.)\n`)
    if (result.lastSawResolved)
-      process.stdout.write(`(files checked for recency, and annotated if they haven't changed since ${values["last-saw"]}.)\n`)
+      process.stdout.write(`(Reads marked "unchanged" have the same content now as at your --last-saw ${values["last-saw"]}.)\n`)
+   process.stdout.write(`${rightNow(new Date(), process.cwd())}\n`)
    process.stdout.write(result.batch.join("\n") + "\n")
 }
 
