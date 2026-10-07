@@ -102,7 +102,7 @@ export function rightNow(now: Date, cwd: string): string {
 }
 
 // a commit if it names one in any of the files' repos, else a time: each repo's last commit by then.
-// Maps each unchanged file to what it's unchanged since; undefined if `lastSaw` names neither anywhere.
+// Unchanged files map to their anchor's label; undefined if `lastSaw` names neither anywhere.
 export function unchangedSince(lastSaw: string, files: string[], warnings: string[]): Map<string, string> | undefined {
    const repos = new Map<string, Map<string, string[]>>() // top -> repo-relative path -> files as given
    for (const file of new Set(files)) {
