@@ -1,8 +1,9 @@
 import assert from "node:assert/strict"
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawnSync } from "node:child_process"
 import { mkdtempSync, realpathSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { test } from "node:test"
 import { expand } from "./expand-handoff.mts"
 import { parseTime, unchangedSince } from "./last-saw.mts"
@@ -118,4 +119,67 @@ test("--last-saw marks nothing when run on the other side of Windows/WSL from th
 
    assert.ok(batch.every((call) => !call.includes("# unchanged")))
    assert.ok(warnings.some((warning) => /--last-saw needs this run on the harness's side/.test(warning)))
+})
+
+// Tuesday 2026-10-06, 14:00 local
+const now = new Date(2026, 9, 6, 14, 0)
+const local = (month: number, date: number, hour: number, minute: number) => new Date(2026, month - 1, date, hour, minute).getTime()
+
+test("a bare time stamp is today's if already past, else yesterday's", () => {
+   assert.equal(parseTime("done 11:57", now), local(10, 6, 11, 57))
+   assert.equal(parseTime("done 18:58", now), local(10, 5, 18, 58))
+   assert.equal(parseTime("11:57 am", now), local(10, 6, 11, 57))
+   assert.equal(parseTime("done 6:58 pm", now), local(10, 5, 18, 58))
+})
+
+test("a weekday stamp is the latest such day already past, last week's if today's is still ahead", () => {
+   assert.equal(parseTime("done Monday 11:57", now), local(10, 5, 11, 57))
+   assert.equal(parseTime("done Tuesday 11:57", now), local(10, 6, 11, 57))
+   assert.equal(parseTime("done Tuesday 18:58", now), local(9, 29, 18, 58))
+   assert.equal(parseTime("done Wed 09:00", now), local(9, 30, 9, 0))
+})
+
+test("the turn length pasted with a stamp comes off it, floored to the minute", () => {
+   assert.equal(parseTime("Worked for 3m 44s · done Monday 11:57", now), local(10, 5, 11, 53))
+   assert.equal(parseTime("Worked for 1h 2m · done 11:57", now), local(10, 6, 10, 55))
+   assert.equal(parseTime("Worked for 45s · done 11:57", now), local(10, 6, 11, 56))
+})
+
+test("a month-day stamp is the latest such day already past", () => {
+   assert.equal(parseTime("done Oct 5, 11:57", now), local(10, 5, 11, 57))
+   assert.equal(parseTime("5 October 11:57", now), local(10, 5, 11, 57))
+   assert.equal(parseTime("Dec 25 09:00", now), new Date(2025, 11, 25, 9, 0).getTime())
+})
+
+test("stamps that don't read unambiguously are refused", () => {
+   for (const text of [
+      "done someday 11:57",
+      "Worked for a while · done 11:57",
+      "done 11:60",
+      "done 25:00",
+      "done 13:05 pm",
+      "done 0:30 am",
+      "done Feb 30 10:00",
+      "done Monday",
+      "done",
+   ])
+      assert.equal(parseTime(text, now), undefined, text)
+})
+
+test("stdout says reads were checked only when --last-saw resolves", () => {
+   const script = fileURLToPath(new URL("./expand-handoff.mts", import.meta.url))
+   const hermetic = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(PI_|CLAUDE)/.test(key)))
+   const root = repo()
+   const anchor = commit(root, { "same.md": numberedLines(300) }, "2026-01-01T10:00:00Z")
+   const handoffPath = join(root, "handoff.md")
+   writeFileSync(handoffPath, `Read(file_path="${join(root, "same.md")}")\n`)
+   const run = (...extra: string[]) =>
+      spawnSync(process.execPath, [script, "--in", handoffPath, "--out", join(root, "pickup.md"), ...extra], { encoding: "utf8", env: hermetic })
+   const checked = `(files checked for recency, and annotated if they haven't changed since ${anchor.slice(0, 8)}.)`
+
+   const resolved = run("--last-saw", anchor.slice(0, 8)).stdout.trimEnd().split("\n")
+   assert.equal(resolved.at(-3), checked)
+   assert.match(resolved.at(-2)!, /pickup\.md", offset=1, limit=1\)$/)
+   assert.ok(!run().stdout.includes("files checked for recency"))
+   assert.ok(!run("--last-saw", "no-such-commit").stdout.includes("files checked for recency"))
 })
