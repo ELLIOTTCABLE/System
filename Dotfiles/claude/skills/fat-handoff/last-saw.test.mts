@@ -6,7 +6,7 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { test } from "node:test"
 import { expand } from "./expand-handoff.mts"
-import { parseTime, unchangedSince } from "./last-saw.mts"
+import { parseTime, rightNow, unchangedSince } from "./last-saw.mts"
 
 const numberedLines = (count: number) => Array.from({ length: count }, (_, i) => `line ${i + 1}`).join("\n") + "\n"
 
@@ -110,6 +110,17 @@ test("--last-saw suffixes batch reads of unchanged files, every piece of a split
    ])
 })
 
+test("a mark names the commit each repo resolved, or the minute a time resolved to, never the input", () => {
+   const root = repo()
+   const anchor = commit(root, { "same.md": numberedLines(300) }, "2026-01-01T10:00:00Z")
+   commit(root, { "other.md": "x\n" }, "2026-01-03T10:00:00Z")
+   const read = `Read(file_path="${join(root, "same.md")}")`
+   const pickupPath = join(root, "pickup.md")
+
+   assert.equal(expand(`${read}\n`, { pickupPath, lastSaw: "HEAD~1" }).batch.at(-1), `${read} # unchanged (same content as at ${anchor.slice(0, 8)})`)
+   assert.equal(expand(`${read}\n`, { pickupPath, lastSaw: "2026-01-02T08:30:45" }).batch.at(-1), `${read} # unchanged (same content as at 2026-01-02 08:30)`)
+})
+
 test("--last-saw marks nothing when run on the other side of Windows/WSL from the harness", () => {
    const root = repo()
    const anchor = commit(root, { "same.md": numberedLines(300) }, "2026-01-01T10:00:00Z")
@@ -186,4 +197,20 @@ test("stdout says what --last-saw marks only when it resolves, and always says w
       assert.ok(!unmarked.stdout.includes(`Reads marked "unchanged"`))
       assert.match(unmarked.stdout.trimEnd().split("\n").at(-3)!, rightNowLine)
    }
+})
+
+test("the right-now line gives the local time and zone, then HEAD and its branch where there are any", () => {
+   const root = repo()
+   const head = commit(root, { "a.md": "1\n" }, "2026-01-01T10:00:00Z").slice(0, 8)
+   git(root, ["checkout", "--quiet", "-b", "trunk"])
+   const anyZone = (line: string) => line.replace(/UTC[+-]\d\d:\d\d/, "UTC±hh:mm")
+
+   assert.equal(anyZone(rightNow(now, root)), `(Right now: Tue 2026-10-06 14:00 UTC±hh:mm, HEAD at ${head} (trunk).)`)
+   git(root, ["checkout", "--quiet", "--detach"])
+   assert.equal(anyZone(rightNow(now, root)), `(Right now: Tue 2026-10-06 14:00 UTC±hh:mm, HEAD at ${head}.)`)
+   const outside = mkdtempSync(join(tmpdir(), "last-saw-outside-"))
+   assert.equal(anyZone(rightNow(now, outside)), "(Right now: Tue 2026-10-06 14:00 UTC±hh:mm.)")
+
+   const [, sign, hours, minutes] = /UTC([+-])(\d\d):(\d\d)/.exec(rightNow(now, outside))!
+   assert.equal((sign === "-" ? -1 : 1) * (+hours * 60 + +minutes), -now.getTimezoneOffset())
 })
