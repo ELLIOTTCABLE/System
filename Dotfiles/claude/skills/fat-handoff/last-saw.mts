@@ -29,9 +29,8 @@ function named(names: string[], word: string): number {
    return names.findIndex((name) => word === name || word === name.slice(0, 3))
 }
 
-// Claude Code's turn stamps as pasted, e.g. "Worked for 3m 44s · done Monday 11:57", taken as the most
-// recent such moment. "done" is when the turn that read ended, so the turn's length comes off and the
-// minute is floored, keeping the anchor no later than the reads.
+// Claude Code's pasted turn stamps, e.g. "Worked for 3m 44s · done Monday 11:57": "done" ends the turn
+// that read, so its length comes off and the minute is floored, keeping the anchor no later than the reads
 function parseStamp(text: string, now: Date): number | undefined {
    const stamp = text.trim().toLowerCase()
    const worked = /^worked for\s+((?:\d+\s*[hms]\s*)+)[^\w\s]*\s*/.exec(stamp)
