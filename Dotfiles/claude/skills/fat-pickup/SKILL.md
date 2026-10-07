@@ -17,3 +17,12 @@ Run the command the human gave you, then do what it prints.
 In the pickup document, a read followed by a `<result>` block has already been read for you; don't issue it again.
 
 A read marked `[when] <circumstance>` is made only if that circumstance arises. Claims in the handoff's own prose are ~SUSPECT at most; verify them before relying on them.
+
+## Annotating unchanged content
+
+If the human's provided `expand-handoff.mts` invocation didn't include a `--last-saw` argument, you may add one. This will annotate each read with a hint when it appears to be the same on-disk as when you last saw it. The argument must be either:
+
+1. a git-SHA at-or-before your earliest file-read
+2. a timestamp at-or-before your earliest file-read.
+
+Include this only if you happen to have it in-context-window from other actions. Do not use an extra turn or tool-call to attempt to establish it, if you do not have any such already-in-window.
