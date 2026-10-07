@@ -366,3 +366,44 @@ Second run: a rewind, then a fresh `/fat-handoff` under the split skill. It wrot
   - Untracked and ignored files go unannotated. The human cares less about them, since the heavy, stable documents are all committed.
 - **Implementation preference:** a git library if it's tractable, and if not, a few batched git CLI calls, without mechanizing many shell calls. The human will tune the stdout steering line.
 - Context: `core.autocrlf=input` in System and Dorc; their working trees are LF.
+
+## 9. `--last-saw` as built (2026-10-06/07)
+
+Commits `618ddb4` through `0508820`; the code is in `last-saw.mts`. The full test command is now `node --test expand-handoff.test.mts steering.test.mts last-saw.test.mts`, and 62 of 62 tests pass.
+
+**Mechanism.** The tool calls the git CLI, three or four calls per repo. A library was rejected because isomorphic-git compares raw blobs without git's line-ending filters, and it would add a dependency.
+
+- Each file is assigned to a repo by resolving symlinks and walking up to the nearest `.git`.
+- A file counts as unchanged when `git diff --name-only <anchor> -- <tracked>` leaves it out. That diff runs against the working tree, so uncommitted edits count as changes.
+- Untracked and ignored files are never marked. Neither are files in a repo where the anchor doesn't resolve.
+
+**Anchors.** The tool first tries the value as a commit in each of the batch's repos. Otherwise it is a time, and each repo uses its last commit at or before that time, by committer date.
+
+- **Strict parsing.** git's approxidate is not used, because it reads junk as "now", which is the unsafe direction.
+- **Accepted times:**
+  - ISO 8601, or `YYYY-MM-DD[ HH:MM[:SS]]`, in local time unless a zone is given;
+  - Claude Code turn stamps as the human pastes them, e.g. `Worked for 3m 44s · done Monday 11:57` or `done 18:58`;
+  - month-day forms such as `Oct 1 11:57`. These are a guess: nobody knows how the UI stamps turns older than a week.
+- **Resolution:** a stamp resolves to the most recent past moment that matches it.
+- **Safety:** "done" marks the end of the turn that did the reads. The tool subtracts the `Worked for` duration, and every time anchor is floored to the minute.
+
+**Output.** The pickup document is unchanged; it is still the handoff plus `<result>` blocks.
+
+- **Batch lines:** each matching read gets `# unchanged (same content as at <x>)`. Here `<x>` is the resolved commit's 8-character SHA, or the resolved time as `YYYY-MM-DD HH:MM`, as the human ruled.
+- **Line A:** after the human's two steering lines comes `(Reads marked "unchanged" have the same content now as at your --last-saw <input as given>.)`. It is printed only if the anchor resolved in at least one repo, so its claim is never false.
+- **Line B:** `(Right now: <Ddd YYYY-MM-DD HH:MM UTC±hh:mm>, HEAD at <sha8> (<branch>).)`, for the repo containing the working directory.
+  - It is printed on every run, with or without the flag. That is the conductor's reading of the human's "for other reasons", and the human may flip it.
+  - If HEAD is detached, the branch is left out; outside a repo, the HEAD clause is left out.
+
+**Run 3 on 2026-10-07:**
+
+- The stamp `Worked for 3m 44s · done Monday 11:57` resolved to 2026-10-05 11:53. The commit used is `bd5554e8` in Dorc and `f595c90` in System. It marked 14 reads.
+- `bd5554e8` marked 12; the two System skill files are marked only under a time anchor.
+- Note 315 dropped out of both counts because Dorc's `491b6c52` capitalized model terms.
+
+**Open:**
+
+- **Daylight-saving gap.** A stamp inside the hour skipped when the clocks go forward is shifted an hour later, which is unsafe, on one day a year.
+- **Dirty-then-reverted files.** A file read with uncommitted edits and later reverted is marked unchanged, though the agent saw the edited version.
+- **Line B covers only the working directory's repo.**
+- **Nothing tells a successor to add `--last-saw`.** It's added only when the human puts a stamp in their prompt or steering tells the successor to append one.
