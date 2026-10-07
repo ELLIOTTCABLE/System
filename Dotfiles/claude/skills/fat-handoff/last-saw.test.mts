@@ -57,9 +57,9 @@ test("a value naming no commit and no time, or a time before any commit, warns o
    commit(root, { "a.md": "1\n" }, "2026-01-01T10:00:00Z")
    const files = [join(root, "a.md")]
 
-   for (const lastSaw of ["no-such-commit", "done Monday 11:57", "2025-12-31 23:59"]) {
+   for (const lastSaw of ["no-such-commit", "done someday 11:57", "2025-12-31 23:59"]) {
       const warnings: string[] = []
-      assert.equal(unchangedSince(lastSaw, files, warnings).size, 0, lastSaw)
+      assert.equal(unchangedSince(lastSaw, files, warnings), undefined, lastSaw)
       assert.equal(warnings.length, 1, lastSaw)
       assert.match(warnings[0], /names no commit or time/)
    }
@@ -75,12 +75,12 @@ test("a commit from one repo marks nothing in another", () => {
    assert.deepEqual([...unchangedSince(anchor, files, [])], [join(first, "a.md")])
 })
 
-test("times are taken only in strict forms, local unless zoned, never guessed", () => {
+test("ISO times are taken strictly, local unless zoned, never guessed", () => {
    assert.equal(parseTime("2026-10-05T17:30:00Z"), Date.UTC(2026, 9, 5, 17, 30))
    assert.equal(parseTime("2026-10-05T17:30+02:00"), Date.UTC(2026, 9, 5, 15, 30))
    assert.equal(parseTime("2026-10-05 17:30"), new Date(2026, 9, 5, 17, 30).getTime())
    assert.equal(parseTime("2026-10-05"), new Date(2026, 9, 5).getTime())
-   for (const text of ["2026-02-31 10:00", "2026-10-05 24:00", "Monday 11:57", "yesterday", "bd5554e8"])
+   for (const text of ["2026-02-31 10:00", "2026-10-05 24:00", "yesterday", "bd5554e8"])
       assert.equal(parseTime(text), undefined, text)
 })
 

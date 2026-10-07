@@ -81,9 +81,11 @@ left un-inlined. Stderr gets any warnings and a summary.
                        the path form the harness reads; set it when this runs on the other side
                        of Windows/WSL from the harness (default: the form of the side running this)
   --last-saw <commit|time>
-                       a commit, or a time like "2026-10-05 17:30" (local unless zoned), at or before
-                       the reads the successor already holds (too new is unsafe); batch reads of
-                       tracked files unchanged since then get "# unchanged (…)", never dropped
+                       a commit, or a time like "2026-10-05 17:30" (local unless zoned) or a pasted
+                       turn stamp like "Worked for 3m 44s · done Monday 11:57", at or before the
+                       reads the successor already holds (too new is unsafe; a bare "done" stamp is
+                       a little late); batch reads of tracked files unchanged since then get
+                       "# unchanged (…)", never dropped
 
 Paths in either form are accepted anywhere, translated by WSL's wslpath: C:\\x and
 \\\\wsl.localhost\\<distro>\\x on the Windows side are /mnt/c/x and /x on the WSL side.
@@ -747,6 +749,7 @@ export type Expansion = {
    widened: number
    keptForSteering: number
    unchanged: number
+   lastSawResolved: boolean
    pages: number
    estimatedTokens: number
 }
@@ -783,14 +786,14 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
    const targets = calls.map((call) => resolveTarget(call, lines, warnings))
    const plan = planReads(targets, lines, settings, resolve(options.pickupPath), warnings)
 
-   let unchanged = new Set<string>()
+   let unchanged: Set<string> | undefined
    if (options.lastSaw !== undefined) {
       const files = [...plan.actions.values()].flatMap((action) => action.issue ?? []).flatMap((read) => read.file ?? [])
       if (settings.form === localForm()) unchanged = unchangedSince(options.lastSaw, files, warnings)
       else warnings.push("--last-saw needs this run on the harness's side of Windows/WSL; nothing is marked unchanged")
    }
    const unchangedNote = ` # unchanged (same content as at ${options.lastSaw})`
-   const mark = ({ text, file }: Issued) => (file !== undefined && unchanged.has(file) ? text + unchangedNote : text)
+   const mark = ({ text, file }: Issued) => (file !== undefined && unchanged?.has(file) ? text + unchangedNote : text)
 
    const out: string[] = []
    const issued = new Map<number, string[]>() // keyed by output line
@@ -821,6 +824,7 @@ export function expand(handoff: string, options: ExpandOptions): Expansion {
       widened: plan.widened,
       keptForSteering: plan.keptForSteering,
       unchanged: batch.filter((read) => read.endsWith(unchangedNote)).length,
+      lastSawResolved: unchanged !== undefined,
       pages: steps.filter((step) => typeof step !== "string").length,
       estimatedTokens: tokens(output) + out.length * harness.lineNumberTokens,
    }
@@ -937,6 +941,8 @@ function main(): void {
    process.stderr.write(`expand-handoff: ${summary.join("; ")}.\n`)
    process.stdout.write(`Read all these in a single turn.\n`)
    process.stdout.write(`(If you've been partially-rewound, and have some in-context above, you may omit any such that are unlikely to have changed.)\n`)
+   if (result.lastSawResolved)
+      process.stdout.write(`(files checked for recency, and annotated if they haven't changed since ${values["last-saw"]}.)\n`)
    process.stdout.write(result.batch.join("\n") + "\n")
 }
 
