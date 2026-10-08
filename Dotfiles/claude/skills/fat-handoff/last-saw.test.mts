@@ -156,6 +156,12 @@ test("the turn length pasted with a stamp comes off it, floored to the minute", 
    assert.equal(parseTime("Worked for 45s · done 11:57", now), local(10, 6, 11, 56))
 })
 
+test("a stamp's verb and leading glyph are ignored; the duration before the middot still comes off", () => {
+   assert.equal(parseTime("Brewed for 1m 58s · done Monday 12:34", now), local(10, 5, 12, 32))
+   assert.equal(parseTime("✻ Baked for 33s · done 12:48", now), local(10, 6, 12, 47))
+   assert.equal(parseTime("✻ Cogitated for 5m 24s · done 12:50", now), local(10, 6, 12, 44))
+})
+
 test("a month-day stamp is the latest such day already past", () => {
    assert.equal(parseTime("done Oct 5, 11:57", now), local(10, 5, 11, 57))
    assert.equal(parseTime("5 October 11:57", now), local(10, 5, 11, 57))
@@ -166,6 +172,7 @@ test("stamps that don't read unambiguously are refused", () => {
    for (const text of [
       "done someday 11:57",
       "Worked for a while · done 11:57",
+      "✻ Baked · done 12:48",
       "done 11:60",
       "done 25:00",
       "done 13:05 pm",
