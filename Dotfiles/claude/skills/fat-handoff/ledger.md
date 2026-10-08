@@ -407,3 +407,33 @@ Commits `618ddb4` through `0508820`; the code is in `last-saw.mts`. The full tes
 - **Dirty-then-reverted files.** A file read with uncommitted edits and later reverted is marked unchanged, though the agent saw the edited version.
 - **Line B covers only the working directory's repo.**
 - **Nothing tells a successor to add `--last-saw`.** It's added only when the human puts a stamp in their prompt or steering tells the successor to append one.
+
+## 10. Turn stamps keyed on the middot; `[when]` reads unmarked (2026-10-08)
+
+**The bug.** A pickup's `--last-saw "Brewed for 1m 58s · done Monday 12:34"` warned and marked nothing. The parser accepted only the literal prefix `Worked for`, but Claude Code picks a random past-tense verb ("Brewed", "Baked", "Cogitated"), and the human may also paste the leading `✻` glyph.
+
+**Human ruling:** key on the middot (`·`, U+00B7), not on the verb or on "for".
+
+**The fix** (commits `f54fcee`, `1c8c806`, `8a1b79c`, `9323cb6`; 64 of 64 tests pass):
+
+- **Parsing:** when a `·` is present, the text before it must end in a duration of h/m/s tokens; anything before that duration is ignored. If no duration is there, the value is rejected.
+  - The text after the `·` parses as before, and stamps with no `·` are unchanged.
+  - This supersedes §9's "subtracts the `Worked for` duration".
+- **No longer accepted:** a stamp with no middot, or with some other separator such as `•` or mojibake. These now get the first warning below, which fails safe.
+- **The single warning is now two:**
+  - the value is neither a commit in the batch's repos nor a time the tool reads;
+  - the value is a time, shown resolved, but no repo has a commit at or before it.
+- **Verified:** `✻ Baked for 33s · done Monday 12:34` resolved to 2026-10-05 12:33 and marked 14 reads. Git Bash passes `✻` and `·` through intact.
+- **Minor open points:**
+  - The second warning also fires when no batch file is in any repo, which reads as though repos were checked.
+  - One test's fixed instants would fail in UTC−11 or UTC−12.
+
+**The pickup agent reported a gap:** `[when]` reads get no "unchanged" markers. Several were already in its window from 10-05 (312d, 311t, 312cg, 26Ob, 28Q, 312f, 311u). This is by design so far: markers are only appended to stdout batch lines, and `[when]` reads are never batched.
+
+- **Option 1, recommended by the conductor:** insert a marker line under each unchanged `[when]` read in the pickup, where an inlined `<result>` would go.
+  - It sits next to the trigger the agent consults later.
+  - It widens the invariant to "the handoff plus `<result>` blocks plus marker lines", still insertion only.
+- **Option 2:** a single stdout line listing the conditional reads that are unchanged.
+  - The pickup stays exactly the handoff plus results.
+  - The marker sits far from the trigger.
+- **Awaiting the human's ruling.**
