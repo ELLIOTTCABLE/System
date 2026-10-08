@@ -131,7 +131,11 @@ export function unchangedSince(lastSaw: string, files: string[], warnings: strin
    if (minute !== undefined)
       for (const top of repos.keys()) anchors.set(top, firstLine(git(top, ["rev-list", "-1", `--before=@${minute / 1000}`, "HEAD"])))
    if (![...anchors.values()].some(Boolean)) {
-      warnings.push(`--last-saw ${lastSaw} names no commit or time in the batch's repos; nothing is marked unchanged`)
+      warnings.push(
+         minute === undefined
+            ? `--last-saw ${lastSaw} is neither a commit in the batch's repos nor a time this tool reads; nothing is marked unchanged`
+            : `--last-saw ${lastSaw} resolves to ${localMinute(new Date(minute))}, but no repo in the batch has a commit at or before then; nothing is marked unchanged`,
+      )
       return undefined
    }
 

@@ -53,17 +53,27 @@ test("a time picks the last commit by then", () => {
    assert.deepEqual([...unchangedSince("2026-01-04", files, [])!.keys()], files)
 })
 
-test("a value naming no commit and no time, or a time before any commit, warns once and marks nothing", () => {
+test("a value naming no commit and no time warns once that it is neither, and marks nothing", () => {
    const root = repo()
    commit(root, { "a.md": "1\n" }, "2026-01-01T10:00:00Z")
    const files = [join(root, "a.md")]
 
-   for (const lastSaw of ["no-such-commit", "done someday 11:57", "2025-12-31 23:59"]) {
+   for (const lastSaw of ["no-such-commit", "done someday 11:57"]) {
       const warnings: string[] = []
       assert.equal(unchangedSince(lastSaw, files, warnings), undefined, lastSaw)
-      assert.equal(warnings.length, 1, lastSaw)
-      assert.match(warnings[0], /names no commit or time/)
+      assert.deepEqual(warnings, [`--last-saw ${lastSaw} is neither a commit in the batch's repos nor a time this tool reads; nothing is marked unchanged`])
    }
+})
+
+test("a time before every repo's first commit warns once with the minute it resolved to, and marks nothing", () => {
+   const root = repo()
+   commit(root, { "a.md": "1\n" }, "2026-01-01T10:00:00Z")
+   const warnings: string[] = []
+
+   assert.equal(unchangedSince("2025-12-31T23:59:30", [join(root, "a.md")], warnings), undefined)
+   assert.deepEqual(warnings, [
+      "--last-saw 2025-12-31T23:59:30 resolves to 2025-12-31 23:59, but no repo in the batch has a commit at or before then; nothing is marked unchanged",
+   ])
 })
 
 test("a commit from one repo marks nothing in another", () => {
