@@ -29,12 +29,15 @@ function named(names: string[], word: string): number {
    return names.findIndex((name) => word === name || word === name.slice(0, 3))
 }
 
-// Claude Code's pasted turn stamps, e.g. "Worked for 3m 44s · done Monday 11:57": "done" ends the turn
-// that read, so its length comes off and the minute is floored, keeping the anchor no later than the reads
+// Claude Code's pasted turn stamps, e.g. "✻ Baked for 33s · done Monday 11:57": "done" ends the turn
+// that read, so its length comes off and the minute is floored, keeping the anchor no later than the reads.
+// The verb is random, so only the middot marks a duration
 function parseStamp(text: string, now: Date): number | undefined {
    const stamp = text.trim().toLowerCase()
-   const worked = /^worked for\s+((?:\d+\s*[hms]\s*)+)[^\w\s]*\s*/.exec(stamp)
-   const rest = stamp.slice(worked?.[0].length ?? 0).replace(/^done\s+/, "")
+   const middot = stamp.indexOf("·")
+   const duration = middot < 0 ? undefined : /(?:^|\s)((?:\d+\s*[hms]\s*)+)$/.exec(stamp.slice(0, middot))
+   if (middot >= 0 && !duration) return undefined
+   const rest = stamp.slice(middot + 1).trim().replace(/^done\s+/, "")
    const clock = /(?:^|\s)(\d{1,2}):(\d{2})(?:\s*([ap]m))?$/.exec(rest)
    if (!clock) return undefined
    const [, clockHour, minute, meridiem] = clock
@@ -64,8 +67,8 @@ function parseStamp(text: string, now: Date): number | undefined {
       }
    }
    if (!when) return undefined
-   const workedMs = [...(worked?.[1] ?? "").matchAll(/(\d+)\s*([hms])/g)].reduce((sum, [, n, unit]) => sum + +n * UNIT_MS[unit], 0)
-   return Math.floor((when.getTime() - workedMs) / 60_000) * 60_000
+   const durationMs = [...(duration?.[1] ?? "").matchAll(/(\d+)\s*([hms])/g)].reduce((sum, [, n, unit]) => sum + +n * UNIT_MS[unit], 0)
+   return Math.floor((when.getTime() - durationMs) / 60_000) * 60_000
 }
 
 function git(top: string, args: string[]): string | undefined {
