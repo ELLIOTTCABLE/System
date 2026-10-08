@@ -30,8 +30,8 @@ function named(names: string[], word: string): number {
 }
 
 // Claude Code's pasted turn stamps, e.g. "✻ Baked for 33s · done Monday 11:57": "done" ends the turn
-// that read, so its length comes off and the minute is floored, keeping the anchor no later than the reads.
-// The verb is random, so only the middot marks a duration
+// that read, so its length comes off and the minute is floored, keeping the anchor no later than the reads;
+// the verb varies, so only the middot marks a duration
 function parseStamp(text: string, now: Date): number | undefined {
    const stamp = text.trim().toLowerCase()
    const middot = stamp.indexOf("·")
