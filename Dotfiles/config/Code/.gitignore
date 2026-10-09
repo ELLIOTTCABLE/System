@@ -10,6 +10,7 @@ User/workspaceStorage/
 User/chatLanguageModels.json
 
 Backups/
+blob_storage/
 Cache/
 CachedConfigurations/
 CachedData/
