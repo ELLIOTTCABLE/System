@@ -12,6 +12,9 @@ if [[ "$DEBUG_PATH" == true ]]; then
    echo $PATH | tr ':' "\n" | nl
 fi
 
+# Shouldn't be necessary, but Claude Code is a dumbass on macOS:
+#    <https://github.com/anthropics/claude-code/issues/19247#issuecomment-3883788562>
+if [[ "${-}" != *i* ]]; then return; fi
 
 
 source "$HOME/.profile"
