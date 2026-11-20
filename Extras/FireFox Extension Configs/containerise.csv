@@ -420,6 +420,8 @@ cvs.com, Health, yellow, tree
 *.cvs.com, Health, yellow, tree
 endeavorhealth.org, Health, yellow, tree
 *.endeavorhealth.org, Health, yellow, tree
+epic.com, Health, yellow, tree
+*.epic.com, Health, yellow, tree
 helloklarity.com, Health, yellow, tree
 *.helloklarity.com, Health, yellow, tree
 hospital.uillinois.edu, Health, yellow, tree
